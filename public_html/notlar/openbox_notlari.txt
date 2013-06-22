@@ -250,97 +250,97 @@
   </keybind>
 
   <!-- Keybindings for running applications -->
-	<keybind key="C-W-r">
-		<action name="ShowMenu">
-			<menu>root-menu</menu>
-		</action>
-	</keybind>
+        <keybind key="C-W-r">
+                <action name="ShowMenu">
+                        <menu>root-menu</menu>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-a">
-		<action name="ShowMenu">
-      			<menu>client-list-combined-menu</menu>
-		</action>
-	</keybind>
+        <keybind key="C-W-a">
+                <action name="ShowMenu">
+                        <menu>client-list-combined-menu</menu>
+                </action>
+        </keybind>
 
-	<!-- P4 2.8GHz islemciye gore olceklendi -->
-	<keybind key="C-W-1"><action name="Execute"><command>sudo cpufreq-set -f 349991</command></action></keybind>
-	<keybind key="C-W-2"><action name="Execute"><command>sudo cpufreq-set -f 699982</command></action></keybind>
-	<keybind key="C-W-3"><action name="Execute"><command>sudo cpufreq-set -f 1049973</command></action></keybind>
-	<keybind key="C-W-4"><action name="Execute"><command>sudo cpufreq-set -f 1399965</command></action></keybind>
-	<keybind key="C-W-5"><action name="Execute"><command>sudo cpufreq-set -f 1749956</command></action></keybind>
-	<keybind key="C-W-6"><action name="Execute"><command>sudo cpufreq-set -f 2099947</command></action></keybind>
-	<keybind key="C-W-7"><action name="Execute"><command>sudo cpufreq-set -f 2449938</command></action></keybind>
-	<keybind key="C-W-8"><action name="Execute"><command>sudo cpufreq-set -f 2799930</command></action></keybind>
+        <!-- P4 2.8GHz islemciye gore olceklendi -->
+        <keybind key="C-W-1"><action name="Execute"><command>sudo cpufreq-set -f 349991</command></action></keybind>
+        <keybind key="C-W-2"><action name="Execute"><command>sudo cpufreq-set -f 699982</command></action></keybind>
+        <keybind key="C-W-3"><action name="Execute"><command>sudo cpufreq-set -f 1049973</command></action></keybind>
+        <keybind key="C-W-4"><action name="Execute"><command>sudo cpufreq-set -f 1399965</command></action></keybind>
+        <keybind key="C-W-5"><action name="Execute"><command>sudo cpufreq-set -f 1749956</command></action></keybind>
+        <keybind key="C-W-6"><action name="Execute"><command>sudo cpufreq-set -f 2099947</command></action></keybind>
+        <keybind key="C-W-7"><action name="Execute"><command>sudo cpufreq-set -f 2449938</command></action></keybind>
+        <keybind key="C-W-8"><action name="Execute"><command>sudo cpufreq-set -f 2799930</command></action></keybind>
 
-	<keybind key="W-c">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>Chromium Browser</name>
-			</startupnotify>
-			<command>chromium-browser</command>
-		</action>
-	</keybind>
+        <keybind key="W-c">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>Chromium Browser</name>
+                        </startupnotify>
+                        <command>chromium-browser</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-f">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>Iceweasel</name>
-			</startupnotify>
-			<command>iceweasel</command>
-		</action>
-	</keybind>
+        <keybind key="W-f">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>Iceweasel</name>
+                        </startupnotify>
+                        <command>iceweasel</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-l">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>xtrlock</name>
-			</startupnotify>
-			<command>xtrlock</command>
-		</action>
-	</keybind>
+        <keybind key="W-l">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>xtrlock</name>
+                        </startupnotify>
+                        <command>xtrlock</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-p">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>IPython</name>
-			</startupnotify>
-			<command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "IPython" -e /usr/bin/ipython</command>
-		</action>
-	</keybind>
+        <keybind key="W-p">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>IPython</name>
+                        </startupnotify>
+                        <command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "IPython" -e /usr/bin/ipython</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-q">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>QT Designer</name>
-			</startupnotify>
-			<command>designer</command>
-		</action>
-	</keybind>
+        <keybind key="W-q">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>QT Designer</name>
+                        </startupnotify>
+                        <command>designer</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-s">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>Screensaver</name>
-			</startupnotify>
-			<command>x-terminal-emulator -e xset dpms force off</command>
-		</action>
-	</keybind>
+        <keybind key="W-s">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>Screensaver</name>
+                        </startupnotify>
+                        <command>x-terminal-emulator -e xset dpms force off</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-t">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>Terminal</name>
-			</startupnotify>
-			<command>x-terminal-emulator -vb +sb -sl 65000 -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "Bash" -e /bin/bash -i</command>
-		</action>
-	</keybind>
+        <keybind key="W-t">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>Terminal</name>
+                        </startupnotify>
+                        <command>x-terminal-emulator -vb +sb -sl 65000 -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "Bash" -e /bin/bash -i</command>
+                </action>
+        </keybind>
 
         <keybind key="W-u">
                 <action name="Execute">
@@ -352,132 +352,132 @@
                 </action>
         </keybind>
 
-	<keybind key="W-w">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>Weechat</name>
-			</startupnotify>
-			<command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "Weechat" -e tmux new-session /usr/bin/weechat-curses</command>
-		</action>
-	</keybind>
+        <keybind key="W-w">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>Weechat</name>
+                        </startupnotify>
+                        <command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "Weechat" -e tmux new-session /usr/bin/weechat-curses</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-v">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>VirtualBox</name>
-			</startupnotify>
-			<command>/usr/bin/VirtualBox</command>
-		</action>
-	</keybind>
+        <keybind key="W-v">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>VirtualBox</name>
+                        </startupnotify>
+                        <command>/usr/bin/VirtualBox</command>
+                </action>
+        </keybind>
 
-	<keybind key="W-z">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>Zargan</name>
-			</startupnotify>
-			<command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "Zargan" -e bash -c "zargan.py `xsel` | head -n 10; read -n1 -s -t 10"</command>
-		</action>
-	</keybind>
+        <keybind key="W-z">
+                <action name="Execute">
+                        <startupnotify>
+                                <enabled>true</enabled>
+                                <name>Zargan</name>
+                        </startupnotify>
+                        <command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "9x15" -T "Zargan" -e bash -c "zargan.py `xsel` | head -n 10; read -n1 -s -t 10"</command>
+                </action>
+        </keybind>
 
-	<!-- Keybindings for windows -->
-	<keybind key="C-W-m">
-		<action name="ToggleMaximizeFull"/>
-	</keybind>
+        <!-- Keybindings for windows -->
+        <keybind key="C-W-m">
+                <action name="ToggleMaximizeFull"/>
+        </keybind>
 
-	<keybind key="C-W-h">
-		<action name="ToggleMaximizeHorz"/>
-	</keybind>
+        <keybind key="C-W-h">
+                <action name="ToggleMaximizeHorz"/>
+        </keybind>
 
-	<keybind key="C-W-v">
-		<action name="ToggleMaximizeVert"/>
-	</keybind>
+        <keybind key="C-W-v">
+                <action name="ToggleMaximizeVert"/>
+        </keybind>
 
-	<keybind key="C-W-i">
-		<action name="Iconify"/>
-	</keybind>
+        <keybind key="C-W-i">
+                <action name="Iconify"/>
+        </keybind>
 
-	<keybind key="C-W-c">
-		<action name="Close"/>
-	</keybind>
+        <keybind key="C-W-c">
+                <action name="Close"/>
+        </keybind>
 
-	<keybind key="C-W-d">
-		<action name="ToggleDecorations"/>
-	</keybind>
+        <keybind key="C-W-d">
+                <action name="ToggleDecorations"/>
+        </keybind>
 
-	<keybind key="W-Up">
-		<action name="MoveRelative">
-		<y>-10</y>
-		</action>
-	</keybind>
+        <keybind key="W-Up">
+                <action name="MoveRelative">
+                <y>-10</y>
+                </action>
+        </keybind>
 
-	<keybind key="W-Down">
-		<action name="MoveRelative">
-		<y>10</y>
-		</action>
-	</keybind>
+        <keybind key="W-Down">
+                <action name="MoveRelative">
+                <y>10</y>
+                </action>
+        </keybind>
 
-	<keybind key="W-Left">
-		<action name="MoveRelative">
-		<x>-10</x>
-		</action>
-	</keybind>
+        <keybind key="W-Left">
+                <action name="MoveRelative">
+                <x>-10</x>
+                </action>
+        </keybind>
 
-	<keybind key="W-Right">
-		<action name="MoveRelative">
-		<x>10</x>
-		</action>
-	</keybind>
+        <keybind key="W-Right">
+                <action name="MoveRelative">
+                <x>10</x>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-Up">
-		<action name="ResizeRelative">
-		<bottom>-1</bottom>
-		</action>
-	</keybind>
+        <keybind key="C-W-Up">
+                <action name="ResizeRelative">
+                <bottom>-1</bottom>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-Down">
-		<action name="ResizeRelative">
-		<bottom>1</bottom>
-		</action>
-	</keybind>
+        <keybind key="C-W-Down">
+                <action name="ResizeRelative">
+                <bottom>1</bottom>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-Left">
-		<action name="ResizeRelative">
-		<right>-1</right>
-		</action>
-	</keybind>
+        <keybind key="C-W-Left">
+                <action name="ResizeRelative">
+                <right>-1</right>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-Right">
-		<action name="ResizeRelative">
-		<right>1</right>
-		</action>
-	</keybind>
+        <keybind key="C-W-Right">
+                <action name="ResizeRelative">
+                <right>1</right>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-A-Up">
-		<action name="ResizeRelative">
-		<bottom>-10</bottom>
-		</action>
-	</keybind>
+        <keybind key="C-W-A-Up">
+                <action name="ResizeRelative">
+                <bottom>-10</bottom>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-A-Down">
-		<action name="ResizeRelative">
-		<bottom>10</bottom>
-		</action>
-	</keybind>
+        <keybind key="C-W-A-Down">
+                <action name="ResizeRelative">
+                <bottom>10</bottom>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-A-Left">
-		<action name="ResizeRelative">
-		<right>-10</right>
-		</action>
-	</keybind>
+        <keybind key="C-W-A-Left">
+                <action name="ResizeRelative">
+                <right>-10</right>
+                </action>
+        </keybind>
 
-	<keybind key="C-W-A-Right">
-		<action name="ResizeRelative">
-		<right>10</right>
-		</action>
-	</keybind>
+        <keybind key="C-W-A-Right">
+                <action name="ResizeRelative">
+                <right>10</right>
+                </action>
+        </keybind>
 
 </keyboard>
 
@@ -510,7 +510,7 @@
     </mousebind>
     <mousebind button="A-Right" action="Drag">
       <action name="Resize"/>
-    </mousebind> 
+    </mousebind>
 
     <mousebind button="A-Middle" action="Press">
       <action name="Lower"/>
@@ -802,7 +802,7 @@
     <!-- Menus -->
     <mousebind button="Middle" action="Press">
       <action name="ShowMenu"><menu>client-list-combined-menu</menu></action>
-    </mousebind> 
+    </mousebind>
     <mousebind button="Right" action="Press">
       <action name="ShowMenu"><menu>root-menu</menu></action>
     </mousebind>
@@ -868,7 +868,7 @@
   # order that they appear in this list
 
 
-    # each element can be left out or set to 'default' to specify to not 
+    # each element can be left out or set to 'default' to specify to not
     # change that attribute of the window
 
     <decor>yes</decor>
@@ -920,42 +920,42 @@
 
   # end of the example
 -->
-	<application class="*">
-		<decor>no</decor>
-	</application>
+        <application class="*">
+                <decor>no</decor>
+        </application>
 
-	<application class="URxvt">
-		<position>
-			<x>0</x>
-			<y>0</y>
-		</position>
-		<maximized>Horizontal</maximized>
+        <application class="URxvt">
+                <position>
+                        <x>0</x>
+                        <y>0</y>
+                </position>
+                <maximized>Horizontal</maximized>
 
-	</application>
+        </application>
 
-	<application class="Firefox-bin">
-		<position>
-			<x>0</x>
-			<y>0</y>
-		</position>
-		<maximized>Horizontal</maximized>
-	</application>
+        <application class="Firefox-bin">
+                <position>
+                        <x>0</x>
+                        <y>0</y>
+                </position>
+                <maximized>Horizontal</maximized>
+        </application>
 
-	<application class="Uzbl-core">
-		<position>
-			<x>0</x>
-			<y>0</y>
-		</position>
-		<maximized>Horizontal</maximized>
-	</application>
+        <application class="Uzbl-core">
+                <position>
+                        <x>0</x>
+                        <y>0</y>
+                </position>
+                <maximized>Horizontal</maximized>
+        </application>
 
-	<application class="Uzbl-tabbed">
-		<position>
-			<x>0</x>
-			<y>0</y>
-		</position>
-		<maximized>Horizontal</maximized>
-	</application>
+        <application class="Uzbl-tabbed">
+                <position>
+                        <x>0</x>
+                        <y>0</y>
+                </position>
+                <maximized>Horizontal</maximized>
+        </application>
 </applications>
 
 </openbox_config>

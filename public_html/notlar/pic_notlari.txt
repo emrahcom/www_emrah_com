@@ -3,151 +3,151 @@ PIC NOTLARI
 
 * picprog
 
-	- apt-get install picprog
+        - apt-get install picprog
 
-	- yazma
-	  picprog --erase --burn --input dosya.hex --pic /dev/ttyS0
+        - yazma
+          picprog --erase --burn --input dosya.hex --pic /dev/ttyS0
 
-	- okuma
-	  picprog --skip-ones --output dosya.hex --pic /dev/ttyS0
+        - okuma
+          picprog --skip-ones --output dosya.hex --pic /dev/ttyS0
 
 
 
 * gputils
 
-	- apt-get install gputils
+        - apt-get install gputils
 
-	- gpasm dosya.asm
+        - gpasm dosya.asm
 
-	- gpdasm -p 16f84a dosya.hex 
+        - gpdasm -p 16f84a dosya.hex
 
 
 
 * gpsim
 
-	- apt-get install gpsim
-		-> libgtkextra-x11-2.0-1
-	
-	- gpsim -p 16f84 dosya.hex
+        - apt-get install gpsim
+                -> libgtkextra-x11-2.0-1
+
+        - gpsim -p 16f84 dosya.hex
 
 
 
 * PIC16F84 pinleri
 
-	- 01 -> RA2
-	- 02 -> RA3
-	- 03 -> 
-	- 04 -> CLR
-	- 05 -> Vss (toprak)
-	- 06 -> RB0
-	- 07 -> RB1
-	- 08 -> RB2
-	- 09 -> RB3
-	- 10 -> RB4
-	- 11 -> RB5
-	- 12 -> RB6
-	- 13 -> RB7
-	- 14 -> Vdd
-	- 15 -> OSC2
-	- 16 -> OSC1
-	- 17 -> RA0
-	- 18 -> RA1
+        - 01 -> RA2
+        - 02 -> RA3
+        - 03 ->
+        - 04 -> CLR
+        - 05 -> Vss (toprak)
+        - 06 -> RB0
+        - 07 -> RB1
+        - 08 -> RB2
+        - 09 -> RB3
+        - 10 -> RB4
+        - 11 -> RB5
+        - 12 -> RB6
+        - 13 -> RB7
+        - 14 -> Vdd
+        - 15 -> OSC2
+        - 16 -> OSC1
+        - 17 -> RA0
+        - 18 -> RA1
 
 
 
 * __CONFIG
 
-	_CP_ON		EQU	0x000F		;kod koruma açık
-	_CP_OFF		EQU	0x3FFF		;kod koruma kapalı
-	_PWRTE_ON	EQU	0x3FF7		;power-on reset enable
-	_PWRTE_OFF	EQU	0x3FFF		;power-on reset disable
-	_WDT_ON		EQU	0x3FFF		;watch dog timer enable
-	_WDT_OFF	EQU	0x3FFB		;watch dog timer disable
-	_LP_OSC		EQU	0x3FFC		;low power osilatör
-	_XT_OSC		EQU	0x3FFD		;kristal osilatör
-	_HS_OSC		EQU	0x3FFE		;high speed osilatör
-	_RC_OSC		EQU	0x3FFF		;dirençli-kondansatörlü asilatör
-	
+        _CP_ON          EQU     0x000F          ;kod koruma açık
+        _CP_OFF         EQU     0x3FFF          ;kod koruma kapalı
+        _PWRTE_ON       EQU     0x3FF7          ;power-on reset enable
+        _PWRTE_OFF      EQU     0x3FFF          ;power-on reset disable
+        _WDT_ON         EQU     0x3FFF          ;watch dog timer enable
+        _WDT_OFF        EQU     0x3FFB          ;watch dog timer disable
+        _LP_OSC         EQU     0x3FFC          ;low power osilatör
+        _XT_OSC         EQU     0x3FFD          ;kristal osilatör
+        _HS_OSC         EQU     0x3FFE          ;high speed osilatör
+        _RC_OSC         EQU     0x3FFF          ;dirençli-kondansatörlü asilatör
+
 
 
 * örnek kod
 
-			list	p=16f84a	;PIC tipini belirt
-			__CONFIG	0x3ffb & 0x3ffd & 0x3fff
-			
-	status		equ	0x03		;status registeri icin sabit
-	porta		equ	0x05		;porta icin sabit
-	portb		equ	0x06		;portb icin sabit
-	trisa		equ	0x85		;trisa icin sabit
-	trisb		equ	0x86		;trisb icin sabit
-	basla		movlw	0x00
-			bsf	status,5	;bank1'e gec
-			clrf	trisb^0x80	;portb'nin butun pinlerini cikis yap  0=output 1=input
-			bcf	status,5	;bank0'a gec
-			movlw	0x07		;ilk 3 pini
-			movwf	portb		;set et
-			end
-	
-	
+                        list    p=16f84a        ;PIC tipini belirt
+                        __CONFIG        0x3ffb & 0x3ffd & 0x3fff
+
+        status          equ     0x03            ;status registeri icin sabit
+        porta           equ     0x05            ;porta icin sabit
+        portb           equ     0x06            ;portb icin sabit
+        trisa           equ     0x85            ;trisa icin sabit
+        trisb           equ     0x86            ;trisb icin sabit
+        basla           movlw   0x00
+                        bsf     status,5        ;bank1'e gec
+                        clrf    trisb^0x80      ;portb'nin butun pinlerini cikis yap  0=output 1=input
+                        bcf     status,5        ;bank0'a gec
+                        movlw   0x07            ;ilk 3 pini
+                        movwf   portb           ;set et
+                        end
+
+
 
 * komutlar
 
-	- addlw		k	-> w = w + k
-	- addwf		f,d	-> d = w + f
-	- andlw		k	-> w = w & k
-	- andwf		f,d	-> d = w & f
-	- bcf		f,b	-> f[b] = 0 
-	- bsf		f,b	-> f[b] = 1
-	- btfsc		f,b	-> if f[b] == 0 then skip
-	- btfss		f,b	-> if f[b] == 1 then skip
-	- call		k	-> k()
-	- clrf		f	-> f = 0x00
-	- clrw			-> w = 0x00
-	- clrwdt		-> watch dog timer'i resetle
-	- comf		f,d	-> d = !f
-	- decf		f,d	-> d = f - 1
-	- decfsz	f,d	-> if ((d = f-1) == 0) then skip
-	- goto		k	-> goto k
-	- incf		f,d	-> d = f + 1
-	- incfsz	f,d	-> if ((d = f + 1) == 0) then skip
-	- iorlw		k	-> w = w | k
-	- iorwf		f,d	-> d = w | f
-	- movf		f,d	-> if d==0 then w=f else f=d
-	- movlw		k	-> w = k
-	- movwf		f	-> w = f
-	- nop			-> sleep(1 cyc)
-	- retfie		-> return (interrupt alt programından...)
-	- retlw		k	-> return w=k (interrupt alt programından...)
-	- return		-> return
-	- rlf		f,d	-> d = f << 1
-	- rrf		f,d	-> d = f >> 1
-	- sleep			-> pause
-	- sublw		k	-> w = w - k
-	- swapf		f,d	-> 
-	- xorlw		k	-> w = w XOR k
-	- xorwf		f,d	-> d = w XOR f
+        - addlw         k       -> w = w + k
+        - addwf         f,d     -> d = w + f
+        - andlw         k       -> w = w & k
+        - andwf         f,d     -> d = w & f
+        - bcf           f,b     -> f[b] = 0
+        - bsf           f,b     -> f[b] = 1
+        - btfsc         f,b     -> if f[b] == 0 then skip
+        - btfss         f,b     -> if f[b] == 1 then skip
+        - call          k       -> k()
+        - clrf          f       -> f = 0x00
+        - clrw                  -> w = 0x00
+        - clrwdt                -> watch dog timer'i resetle
+        - comf          f,d     -> d = !f
+        - decf          f,d     -> d = f - 1
+        - decfsz        f,d     -> if ((d = f-1) == 0) then skip
+        - goto          k       -> goto k
+        - incf          f,d     -> d = f + 1
+        - incfsz        f,d     -> if ((d = f + 1) == 0) then skip
+        - iorlw         k       -> w = w | k
+        - iorwf         f,d     -> d = w | f
+        - movf          f,d     -> if d==0 then w=f else f=d
+        - movlw         k       -> w = k
+        - movwf         f       -> w = f
+        - nop                   -> sleep(1 cyc)
+        - retfie                -> return (interrupt alt programından...)
+        - retlw         k       -> return w=k (interrupt alt programından...)
+        - return                -> return
+        - rlf           f,d     -> d = f << 1
+        - rrf           f,d     -> d = f >> 1
+        - sleep                 -> pause
+        - sublw         k       -> w = w - k
+        - swapf         f,d     ->
+        - xorlw         k       -> w = w XOR k
+        - xorwf         f,d     -> d = w XOR f
 
 
 
 * ipuçları
 
-	- $
-		bulunulan satirin adresini verir. 2 satir ileri atlamak için
-		goto	$+2
+        - $
+                bulunulan satirin adresini verir. 2 satir ileri atlamak için
+                goto    $+2
 
 
-	- filtre
-		Vdd ve Vss arasına 100nf'lık kondansatör konulmalı
+        - filtre
+                Vdd ve Vss arasına 100nf'lık kondansatör konulmalı
 
 
-	- bank1 uyarısı
-		0x79 adresinden daha büyük bir adrese yazıldığında gpasm'nin uyarı vermemesi
-		için ^0x80 kullanılabilir
+        - bank1 uyarısı
+                0x79 adresinden daha büyük bir adrese yazıldığında gpasm'nin uyarı vermemesi
+                için ^0x80 kullanılabilir
 
-		"clrf trisa" yerine "clrf trisa^0x80"
-	
-	
-	- pull-down/pull-up
-		giriş pinleri normalde 0 olacaksa 10K'lık direnç ile toprağa
-		giriş pinleri normalde 1 olacaksa 10K'lık direnç ile +5 volta bağlanır
-		kullanılmayan girişler, doğrudan toprağa bağlanır
+                "clrf trisa" yerine "clrf trisa^0x80"
+
+
+        - pull-down/pull-up
+                giriş pinleri normalde 0 olacaksa 10K'lık direnç ile toprağa
+                giriş pinleri normalde 1 olacaksa 10K'lık direnç ile +5 volta bağlanır
+                kullanılmayan girişler, doğrudan toprağa bağlanır

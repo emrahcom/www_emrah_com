@@ -1,423 +1,423 @@
 * Paketler
 
-	- Paket kaynakları
-	
-		- /etc/apt/sources.list
-	
-			deb	http://bdi4emc.ourproject.org/debian	sarge		non-free extras
-			deb	http://www.backports.org/debian		sarge-backports	main contrib non-free
-			deb-src	http://www.backports.org/debian		sarge-backports	main contrib non-free
+        - Paket kaynakları
 
-		
-		- /etc/apt/preferences
-			
-			Package: *
-			Pin: release a=sarge-backports
-			Pin-Priority: 200
+                - /etc/apt/sources.list
+
+                        deb     http://bdi4emc.ourproject.org/debian    sarge           non-free extras
+                        deb     http://www.backports.org/debian         sarge-backports main contrib non-free
+                        deb-src http://www.backports.org/debian         sarge-backports main contrib non-free
 
 
-		- /etc/apt/apt.conf
+                - /etc/apt/preferences
 
-			APT::Default-Release "stable";
-			APT::Cache-Limit "134217728";
-
-
-	
-	- linux-image-2.6.12.6-rtai
-		EMC için hazırlanmış Linux çekirdeğini içeren paket...
-		RTAI modulleri ile birlikte çalışacak şekilde derlenmiş...
+                        Package: *
+                        Pin: release a=sarge-backports
+                        Pin-Priority: 200
 
 
-	- rtai-modules-2.6.12.6-rtai
-		Çekirdek için yüklenebilir RTAI modullerini içeren paket...
-		Bu modul seti ile birlikte çekirdek, gerçek zamanlı (realtime) olarak kullanılabilir
+                - /etc/apt/apt.conf
+
+                        APT::Default-Release "stable";
+                        APT::Cache-Limit "134217728";
 
 
-	- emc2-modules-2.6.12.6-rtai
-		Çekirdek için yüklenebilir EMC2 modullerini içeren paket...
-		EMC2'nin gerçek zamanlı çalışacak bölümleri için gerekli...
+
+        - linux-image-2.6.12.6-rtai
+                EMC için hazırlanmış Linux çekirdeğini içeren paket...
+                RTAI modulleri ile birlikte çalışacak şekilde derlenmiş...
 
 
-	- emc2
-		Ana EMC2 paketi...
-		Bu paket, yukarıda adı geçen paketlere bağımlıdır
+        - rtai-modules-2.6.12.6-rtai
+                Çekirdek için yüklenebilir RTAI modullerini içeren paket...
+                Bu modul seti ile birlikte çekirdek, gerçek zamanlı (realtime) olarak kullanılabilir
 
 
-	- emc2-axis
-		EMC2 için Python ile hazırlanmış kullanıcı arayüzü
-		Bir müddet sonra ana EMC2 paketini içinde yer alacak, ayrı bir paket olarak dağıtılmayacak
+        - emc2-modules-2.6.12.6-rtai
+                Çekirdek için yüklenebilir EMC2 modullerini içeren paket...
+                EMC2'nin gerçek zamanlı çalışacak bölümleri için gerekli...
 
 
-	- emc2-dev
-		EMC2'nin çalışması için gerekli değil, geliştiriciler için... 
-		Alternatif EMC2 arayüzleri geliştirmek ve geliştirilen arayüzleri derleyebilmek
-		için gerekli...
-
-		
-	- linux-headers-2.6.12.6-rtai
-		EMC2'nin çalışması için gerekli değil, geliştiriciler için...
-		Header dosyaları...
-		Derlenmek için çekirdek header dosyalarına ihtiyaç duyan yazılımlar için gerekli...
+        - emc2
+                Ana EMC2 paketi...
+                Bu paket, yukarıda adı geçen paketlere bağımlıdır
 
 
-	- rtai-dev-2.6.12.6-rtai
-		EMC2'nin çalışması için gerekli değil, geliştiriciler için...
-		Gerçek zamanlı moduller derleyebilmek için gerekli olan RTAI header dosyaları...
+        - emc2-axis
+                EMC2 için Python ile hazırlanmış kullanıcı arayüzü
+                Bir müddet sonra ana EMC2 paketini içinde yer alacak, ayrı bir paket olarak dağıtılmayacak
+
+
+        - emc2-dev
+                EMC2'nin çalışması için gerekli değil, geliştiriciler için...
+                Alternatif EMC2 arayüzleri geliştirmek ve geliştirilen arayüzleri derleyebilmek
+                için gerekli...
+
+
+        - linux-headers-2.6.12.6-rtai
+                EMC2'nin çalışması için gerekli değil, geliştiriciler için...
+                Header dosyaları...
+                Derlenmek için çekirdek header dosyalarına ihtiyaç duyan yazılımlar için gerekli...
+
+
+        - rtai-dev-2.6.12.6-rtai
+                EMC2'nin çalışması için gerekli değil, geliştiriciler için...
+                Gerçek zamanlı moduller derleyebilmek için gerekli olan RTAI header dosyaları...
 
 
 
 * kaynak koddan derleme
 
-	- apt-get install	linux-image-2.6.12.6-rtai
-				rtai-modules-2.6.12.6-rtai
+        - apt-get install       linux-image-2.6.12.6-rtai
+                                rtai-modules-2.6.12.6-rtai
 
 
-	- reboot		( yeni çekirdek ile boot edilecek	)
+        - reboot                ( yeni çekirdek ile boot edilecek       )
 
 
-	- apt-get install	linux-headers-2.6.12.6-rtai
-				rtai-dev-2.6.12.6-rtai
-					-> gcc-2.95
-					-> cpp-2.95
-				python2.4
-				python2.4-tk
-				python2.4-dev
-				python2.4-imaging	-t sarge-backports	( image-to-gcode için ... )
-				python2.4-imaging-tk	-t sarge-backports	( image-to-gcode için ... )
-				python2.4-numarray				( image-to-gcode için ... )
-				yapps2
-					-> yapps2-runtime
-				tcl8.4-dev
-				tk8.4-dev
-					-> libice-dev
-					-> libsm-dev
-					-> libx11-dev
-					-> libxext-dev
-					-> libxt-dev
-					-> libxv-dev
-					-> x-dev
-					-> xlibs-static-dev
-					-> zlib1g-dev
-				libgtk2.0-dev
-					-> libatk1.0-dev
-					-> libexpat1-dev
-					-> libfontconfig1-dev
-					-> libfreetype6-dev
-					-> libglib2.0-dev
-					-> libpango1.0-dev
-					-> libxft-dev
-					-> libxrender-dev
-					-> render-dev
-				libncurses5-dev
-				libreadline5-dev
-				libxmu-dev
-				libxaw7-dev
-				xlibmesa-dev
-					-> xlibmesa-gl-dev
-					-> xlibmesa-glu-dev
-				libgnomeprintui2.2-dev
-					-> libart-2.0-dev
-					-> libgnomecanvas2-dev
-					-> libgnomeprint2.2-dev
-				pciutils-dev
-				bwidget
-				cvs
-				latex2html				( dokumanlar derlenecekse... )
-					-> tetex-base
-					-> tetex-bin
-					-> tetex-extra
-					-> libkpathsea3
-					-> libwww0
-				preview-latex-style			( dokumanlar derlenecekse... )
-				latex-xft-fonts				( dokumanlar derlenecekse... )
-				libaiksaurus0c102			( dokumanlar derlenecekse... )
-					-> libaiksaurus-data
-				imagemagick				( dokumanlar derlenecekse... )
-					-> libmagick6
-				lyx -t sarge-backports			( dokumanlar derlenecekse...)
-					-> lyx-common
-					-> lyx-qt
+        - apt-get install       linux-headers-2.6.12.6-rtai
+                                rtai-dev-2.6.12.6-rtai
+                                        -> gcc-2.95
+                                        -> cpp-2.95
+                                python2.4
+                                python2.4-tk
+                                python2.4-dev
+                                python2.4-imaging       -t sarge-backports      ( image-to-gcode için ... )
+                                python2.4-imaging-tk    -t sarge-backports      ( image-to-gcode için ... )
+                                python2.4-numarray                              ( image-to-gcode için ... )
+                                yapps2
+                                        -> yapps2-runtime
+                                tcl8.4-dev
+                                tk8.4-dev
+                                        -> libice-dev
+                                        -> libsm-dev
+                                        -> libx11-dev
+                                        -> libxext-dev
+                                        -> libxt-dev
+                                        -> libxv-dev
+                                        -> x-dev
+                                        -> xlibs-static-dev
+                                        -> zlib1g-dev
+                                libgtk2.0-dev
+                                        -> libatk1.0-dev
+                                        -> libexpat1-dev
+                                        -> libfontconfig1-dev
+                                        -> libfreetype6-dev
+                                        -> libglib2.0-dev
+                                        -> libpango1.0-dev
+                                        -> libxft-dev
+                                        -> libxrender-dev
+                                        -> render-dev
+                                libncurses5-dev
+                                libreadline5-dev
+                                libxmu-dev
+                                libxaw7-dev
+                                xlibmesa-dev
+                                        -> xlibmesa-gl-dev
+                                        -> xlibmesa-glu-dev
+                                libgnomeprintui2.2-dev
+                                        -> libart-2.0-dev
+                                        -> libgnomecanvas2-dev
+                                        -> libgnomeprint2.2-dev
+                                pciutils-dev
+                                bwidget
+                                cvs
+                                latex2html                              ( dokumanlar derlenecekse... )
+                                        -> tetex-base
+                                        -> tetex-bin
+                                        -> tetex-extra
+                                        -> libkpathsea3
+                                        -> libwww0
+                                preview-latex-style                     ( dokumanlar derlenecekse... )
+                                latex-xft-fonts                         ( dokumanlar derlenecekse... )
+                                libaiksaurus0c102                       ( dokumanlar derlenecekse... )
+                                        -> libaiksaurus-data
+                                imagemagick                             ( dokumanlar derlenecekse... )
+                                        -> libmagick6
+                                lyx -t sarge-backports                  ( dokumanlar derlenecekse...)
+                                        -> lyx-common
+                                        -> lyx-qt
 
 
-	- kaynak kodların alınması	( 2 seçenek var )
+        - kaynak kodların alınması      ( 2 seçenek var )
 
-		1.	tar.gz paketini download etmek
-			http://sourceforge.net/project/showfiles.php?group_id=6744
-	
-		2.	CVS'ten almak
+                1.      tar.gz paketini download etmek
+                        http://sourceforge.net/project/showfiles.php?group_id=6744
 
-				- export CVS_RSH=ssh
-				
-				- çalışma alanının oluşturulması
-				
-					  cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs co -rHEAD -demc2-head emc2
+                2.      CVS'ten almak
 
-						-z5	sıkıştırma oranı, 0-9 arası, default 0
-						-d	ROOT klasörün konumu
-						-r	HEAD, TESTING, RELEASE_xxx veya BASE  olabilir
-						co	checkout'un kısaltılmışı
-							co yerine export da kullanılabilir. 
-							o zaman, CVS ile ilgili veriler gelmez
-						-d	alınan dosyaların konulacağı klasör
+                                - export CVS_RSH=ssh
 
-						Bu komut, tekrar kullanıldığında update gibi etki eder.
-						Yalnız en üst klasörde çalıştırılması gerekir.
+                                - çalışma alanının oluşturulması
 
+                                          cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs co -rHEAD -demc2-head emc2
 
-				- çalışma alanının güncellenmesi
-				
-					  cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs update -dP emc2-head
+                                                -z5     sıkıştırma oranı, 0-9 arası, default 0
+                                                -d      ROOT klasörün konumu
+                                                -r      HEAD, TESTING, RELEASE_xxx veya BASE  olabilir
+                                                co      checkout'un kısaltılmışı
+                                                        co yerine export da kullanılabilir.
+                                                        o zaman, CVS ile ilgili veriler gelmez
+                                                -d      alınan dosyaların konulacağı klasör
 
-					  	-d	yeni oluşturulmuş klasörleri ekler
-						-P	içi boşalmış klasörleri siler
-						
-						Bu komut, alt klasörler için de kullanılabilir. Parametre olarak
-						klasör adını alır.
+                                                Bu komut, tekrar kullanıldığında update gibi etki eder.
+                                                Yalnız en üst klasörde çalıştırılması gerekir.
 
 
-	- kaynak kodların derlenmesi
+                                - çalışma alanının güncellenmesi
 
-		cd src		(cvs komutundaki -d ile verilen klasörün altındaki src klasörü... )
-		export KDIR=/usr/src/linux-headers-2.6.12.6-rtai
-		./configure --enable-run-in-place --enable-build-documentation --with-python=python2.4
-		make
-		su -c "make setuid"
+                                          cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs update -dP emc2-head
+
+                                                -d      yeni oluşturulmuş klasörleri ekler
+                                                -P      içi boşalmış klasörleri siler
+
+                                                Bu komut, alt klasörler için de kullanılabilir. Parametre olarak
+                                                klasör adını alır.
 
 
-	- derleme işini otomatikleştirmek için betik
+        - kaynak kodların derlenmesi
 
-		#!/bin/bash
+                cd src          (cvs komutundaki -d ile verilen klasörün altındaki src klasörü... )
+                export KDIR=/usr/src/linux-headers-2.6.12.6-rtai
+                ./configure --enable-run-in-place --enable-build-documentation --with-python=python2.4
+                make
+                su -c "make setuid"
 
-		base='/home/kullanici/emc2'	# cvs klasorunu icine alan ana klasor
-		tarih=`date +%Y%m%d`
-		export KDIR=/usr/src/linux-headers-2.6.12.6-rtai
 
-		cd $base
-		cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs update -dP emc2-head
-		rm emc2-$tarih -rf
-		cp emc2-head emc2-$tarih -R
+        - derleme işini otomatikleştirmek için betik
 
-		cd $base/emc2-$tarih/src
-		./configure --enable-run-in-place --with-python=python2.4
-		make
-		su -c "make setuid"
+                #!/bin/bash
+
+                base='/home/kullanici/emc2'     # cvs klasorunu icine alan ana klasor
+                tarih=`date +%Y%m%d`
+                export KDIR=/usr/src/linux-headers-2.6.12.6-rtai
+
+                cd $base
+                cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs update -dP emc2-head
+                rm emc2-$tarih -rf
+                cp emc2-head emc2-$tarih -R
+
+                cd $base/emc2-$tarih/src
+                ./configure --enable-run-in-place --with-python=python2.4
+                make
+                su -c "make setuid"
 
 
 
 * Udev için rtai_shm bağlantı noktasının oluşturulması
 
-	- aygıt sürücüleri, Udev tarafından yönetilmiyorsa, bu ayarın yapılmasına gerek yok
+        - aygıt sürücüleri, Udev tarafından yönetilmiyorsa, bu ayarın yapılmasına gerek yok
 
 
-	- /etc/udev/emc2.rules dosyası
-		KERNEL="RTAI_SHM",      SYMLINK="rtai_shm",     MODE="0666"
+        - /etc/udev/emc2.rules dosyası
+                KERNEL="RTAI_SHM",      SYMLINK="rtai_shm",     MODE="0666"
 
 
-	- /etc/udev/rules.d/ klasöründen bu dosyaya link verilmesi
+        - /etc/udev/rules.d/ klasöründen bu dosyaya link verilmesi
 
-		cd /etc/udev/rules.d
-		ln -s ../emc2.rules 010_emc2.rules
-		
-		
-	- Udev servisinin yeniden başlatılması
+                cd /etc/udev/rules.d
+                ln -s ../emc2.rules 010_emc2.rules
 
-		/etc/init.d/udev restart
+
+        - Udev servisinin yeniden başlatılması
+
+                /etc/init.d/udev restart
 
 
 
 
 * temel dosyalar
 
-	- EMC2'yi başlatan betik
-	
-		/usr/bin/emc2		( deb paketi ile kurulduysa	)
-		sudo scripts/emc	( kaynaktan kurulduysa		)
-	  
-			. emc2 <ini-dosya> formatında da başlatılabilir
-			. emc2 -v -d formatında başlatılırsa çalışma esnasında detaylı bilgi verir. test için...
+        - EMC2'yi başlatan betik
+
+                /usr/bin/emc2           ( deb paketi ile kurulduysa     )
+                sudo scripts/emc        ( kaynaktan kurulduysa          )
+
+                        . emc2 <ini-dosya> formatında da başlatılabilir
+                        . emc2 -v -d formatında başlatılırsa çalışma esnasında detaylı bilgi verir. test için...
 
 
-	- Ana yar dosyaları
-	
-		/etc/emc2/ 		( deb paketi ile kurulduysa	)
-		configs/		( kaynaktan kurulduysa		)
-	
-	
-	- Kullanıcı ayar dosyaları
-		
-		~/.emcrc
-	
+        - Ana yar dosyaları
 
-	- Betiklerin yer aldigi klasör
-	
-		/usr/share/emc/		( deb paketi ile kurulduysa	)
-		tcl/ ve bin/		( kaynaktan kurulduysa		)
-	  
+                /etc/emc2/              ( deb paketi ile kurulduysa     )
+                configs/                ( kaynaktan kurulduysa          )
+
+
+        - Kullanıcı ayar dosyaları
+
+                ~/.emcrc
+
+
+        - Betiklerin yer aldigi klasör
+
+                /usr/share/emc/         ( deb paketi ile kurulduysa     )
+                tcl/ ve bin/            ( kaynaktan kurulduysa          )
+
 
 
 * Ayarlar
 
-	- örnek ayarlar bozulmayıp ayarlar için yeni bölüm açılsın
-		. mkdir /etc/emc2/sample-configs/config_01
-		. cp /etc/emc2/sample-configs/stepper/* /etc/emc2/sample-configs/config_01/
+        - örnek ayarlar bozulmayıp ayarlar için yeni bölüm açılsın
+                . mkdir /etc/emc2/sample-configs/config_01
+                . cp /etc/emc2/sample-configs/stepper/* /etc/emc2/sample-configs/config_01/
 
 
-	- başlıca ayar dosyaları
-		.ini dosyası	: asıl ayar dosyası
-		.hal dosyası	: pin ayarlarının yapıldığı dosya
-		.nml dosyası	: EMC2 sunucu ve istemcisi iletişimi ile ilgili ayarlar
-		.var dosyası	: parametre tablosu
-		.tbl dosyası	: takımların uzunluk ve çap bilgileri
-	
-
-	- ini dosyası
-		
-		[EMC]
-			# G21	metrik sistem
-			# G90	absolute mod
-			# G54	1. koordinat sistemi
-			RS274NGC_STARTUP_CODE	= G21 G90 G54
-		
-		
-		[DISPLAY]
-			DISPLAY			= tkemc
-						= axis
-			PROGRAM_PREFIX		= ~/gcode
-			INTRO_GRAPHIC		= emc2.gif
-			INTRO_TIME		= 5
+        - başlıca ayar dosyaları
+                .ini dosyası    : asıl ayar dosyası
+                .hal dosyası    : pin ayarlarının yapıldığı dosya
+                .nml dosyası    : EMC2 sunucu ve istemcisi iletişimi ile ilgili ayarlar
+                .var dosyası    : parametre tablosu
+                .tbl dosyası    : takımların uzunluk ve çap bilgileri
 
 
-		[TASK]
-			TASK			= milltask
-						= minimilltask
+        - ini dosyası
 
-		[EMCMOT]
-			BASE_PERIOD		= 50000			# default
-						= 10000			# nano saniye olarak realtime çevrimi
-
-		[HAL]
-			HALFILE			= ../common/core_stepper.hal
-			HALFILE			= standart_pinout.hal
+                [EMC]
+                        # G21   metrik sistem
+                        # G90   absolute mod
+                        # G54   1. koordinat sistemi
+                        RS274NGC_STARTUP_CODE   = G21 G90 G54
 
 
-		[TRAJ]
-			AXES			= 3
-			COORDINATES		= X Y Z
-			HOME			= 0 0 0			# her eksen için home pozisyonun koordinatı
-			LINEAR_UNITS		= 1.0
-			ANGULAR_UNITS		= 1.0
-			DEFAULT_VELOCITY	= 0.500			# ilk hız
-			MAX_VELOCITY		= 30.0
-			DEFAULT_ACCELERATION	= 300.0			# ilk ivme
-			MAX_ACCELERATION	= 500.0
-			PROBE_INDEX		= 0
-			PROBE_POLARITY		= 1
-		
-
-		[AXIS_0]
-			TYPE			= LINEAR
-						= ANGULAR
-			UNITS			= 1.0
-			HOME			= 0.0			# HOME işleminden sonra gidilecek nokta
-			MAX_VELOCITY		= 30.0
-			MAX_ACCELERATION	= 500.0
-			STEPGEN_MAXVEL		= 35			# MAX_VELOCITY'den br miktar büyük...
-			STEPGEN_MAXACCEL	= 520.0			# MAX_ACCELERATION'dan bir miktar büyük...
-			BACKLASH		= 0.0
-			INPUT_SCALE		= 200 0			# step motorda, birim ölçü için gereken sinyal sayısı
-			OUTPUT_SCALE		= 1.000 0		# servo için scale ve offset output
-			MIN_LIMIT		= -1000.0
-			MAX_LIMIT		= 1000.0
-			FERROR			= 1.270			# izin verilen maksimum yol takip etme hatası
-			MIN_FERROR		= 0.254			# MIN_FERROR varsa, hıza göre FERROR ölçeklenir
-			HOME_OFFSET		= 0.0			# HOME switch'in bulunduğu koordinat
-			HOME_SEARCH_VEL		= 10.0			# HOME switch'ini arama hızı
-									# HOME switch yoksa bu değer 0 olacak
-			HOME_LATCH_VEL		= 1.0			# HOME switch'ine dokunma hızı
-			HOME_USE_INDEX		= NO			# eksende kullanılan enkoderın indeks sinyali var mı
-			HOME_IGNORE_LIMIT	= YES			# HOME switch aranırken 
-									# LIMIT switch göz ardı edilsin mi
-
-		[EMCSERVER]
-			EMCSERVER		= emcsvr		# program, uzak masaüstündeyse, bu satır iptal
+                [DISPLAY]
+                        DISPLAY                 = tkemc
+                                                = axis
+                        PROGRAM_PREFIX          = ~/gcode
+                        INTRO_GRAPHIC           = emc2.gif
+                        INTRO_TIME              = 5
 
 
+                [TASK]
+                        TASK                    = milltask
+                                                = minimilltask
 
-	- /etc/X11/app-defaults/TkEmc2
-		
-		tkemc.tcl için ayar dosyası
-		arayüzün nasıl görüneceğini ayarlar
+                [EMCMOT]
+                        BASE_PERIOD             = 50000                 # default
+                                                = 10000                 # nano saniye olarak realtime çevrimi
+
+                [HAL]
+                        HALFILE                 = ../common/core_stepper.hal
+                        HALFILE                 = standart_pinout.hal
+
+
+                [TRAJ]
+                        AXES                    = 3
+                        COORDINATES             = X Y Z
+                        HOME                    = 0 0 0                 # her eksen için home pozisyonun koordinatı
+                        LINEAR_UNITS            = 1.0
+                        ANGULAR_UNITS           = 1.0
+                        DEFAULT_VELOCITY        = 0.500                 # ilk hız
+                        MAX_VELOCITY            = 30.0
+                        DEFAULT_ACCELERATION    = 300.0                 # ilk ivme
+                        MAX_ACCELERATION        = 500.0
+                        PROBE_INDEX             = 0
+                        PROBE_POLARITY          = 1
+
+
+                [AXIS_0]
+                        TYPE                    = LINEAR
+                                                = ANGULAR
+                        UNITS                   = 1.0
+                        HOME                    = 0.0                   # HOME işleminden sonra gidilecek nokta
+                        MAX_VELOCITY            = 30.0
+                        MAX_ACCELERATION        = 500.0
+                        STEPGEN_MAXVEL          = 35                    # MAX_VELOCITY'den br miktar büyük...
+                        STEPGEN_MAXACCEL        = 520.0                 # MAX_ACCELERATION'dan bir miktar büyük...
+                        BACKLASH                = 0.0
+                        INPUT_SCALE             = 200 0                 # step motorda, birim ölçü için gereken sinyal sayısı
+                        OUTPUT_SCALE            = 1.000 0               # servo için scale ve offset output
+                        MIN_LIMIT               = -1000.0
+                        MAX_LIMIT               = 1000.0
+                        FERROR                  = 1.270                 # izin verilen maksimum yol takip etme hatası
+                        MIN_FERROR              = 0.254                 # MIN_FERROR varsa, hıza göre FERROR ölçeklenir
+                        HOME_OFFSET             = 0.0                   # HOME switch'in bulunduğu koordinat
+                        HOME_SEARCH_VEL         = 10.0                  # HOME switch'ini arama hızı
+                                                                        # HOME switch yoksa bu değer 0 olacak
+                        HOME_LATCH_VEL          = 1.0                   # HOME switch'ine dokunma hızı
+                        HOME_USE_INDEX          = NO                    # eksende kullanılan enkoderın indeks sinyali var mı
+                        HOME_IGNORE_LIMIT       = YES                   # HOME switch aranırken
+                                                                        # LIMIT switch göz ardı edilsin mi
+
+                [EMCSERVER]
+                        EMCSERVER               = emcsvr                # program, uzak masaüstündeyse, bu satır iptal
+
+
+
+        - /etc/X11/app-defaults/TkEmc2
+
+                tkemc.tcl için ayar dosyası
+                arayüzün nasıl görüneceğini ayarlar
 
 
 
 * kendi hazırladığımız AXIS temelli arayüzün kullanılması
 
-	- .ini ayarları
+        - .ini ayarları
 
-		cp configs/sim/axis.ini configs/sim/arayuz.ini
-		
-		configs/sim/arayuz.ini dosyasında
-			DISPLAY=arayuz
+                cp configs/sim/axis.ini configs/sim/arayuz.ini
 
-
-	- scripts/emc dosyasına eklenecek kod ( axis kodunun altına )
-
-		if [ "$EMCDISPLAY" = "arayuz" ]; then
-			axis-remote --ping && axis-remote --quit
-		fi
+                configs/sim/arayuz.ini dosyasında
+                        DISPLAY=arayuz
 
 
-	- basit bir arayüz örneği 
-	  dosya	: bin/arayuz
-	  mod	: 755
+        - scripts/emc dosyasına eklenecek kod ( axis kodunun altına )
 
-	  	#!/usr/bin/python2.4
+                if [ "$EMCDISPLAY" = "arayuz" ]; then
+                        axis-remote --ping && axis-remote --quit
+                fi
 
-		import sys, os
-		BASE = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
-		sys.path.insert(0, os.path.join(BASE, "lib", "python"))
 
-		import emc
+        - basit bir arayüz örneği
+          dosya : bin/arayuz
+          mod   : 755
 
-		c = emc.command()
-		s = emc.stat()
-		m = ''
+                #!/usr/bin/python2.4
 
-		c.state(emc.STATE_ESTOP)
-		c.state(emc.STATE_OFF)
-		c.mode(emc.MODE_MANUAL)
-			
-		try:
-			while m != 'q':
-				m = raw_input("MDI> ")
-				if m == 's':
-					c.state(emc.STATE_ESTOP)
-					c.state(emc.STATE_OFF)
-				elif m == 'o':
-					c.state(emc.STATE_ESTOP_RESET)
-					c.state(emc.STATE_ON)
-				elif m == 'i':
-					s.poll()
-					print s.task_state
-				elif m == 'q':
-					pass
-				elif m == 'h':
-					c.mode(emc.MODE_MANUAL)
-					c.home(1)
-				elif m == '':
-					s.poll()
-					print s.position
-				else:
-					c.mode(emc.MODE_MDI)
-					c.mdi(m)
+                import sys, os
+                BASE = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+                sys.path.insert(0, os.path.join(BASE, "lib", "python"))
 
-		except (SystemExit, EOFError, KeyboardInterrupt): pass
- 
- 
-	
+                import emc
+
+                c = emc.command()
+                s = emc.stat()
+                m = ''
+
+                c.state(emc.STATE_ESTOP)
+                c.state(emc.STATE_OFF)
+                c.mode(emc.MODE_MANUAL)
+
+                try:
+                        while m != 'q':
+                                m = raw_input("MDI> ")
+                                if m == 's':
+                                        c.state(emc.STATE_ESTOP)
+                                        c.state(emc.STATE_OFF)
+                                elif m == 'o':
+                                        c.state(emc.STATE_ESTOP_RESET)
+                                        c.state(emc.STATE_ON)
+                                elif m == 'i':
+                                        s.poll()
+                                        print s.task_state
+                                elif m == 'q':
+                                        pass
+                                elif m == 'h':
+                                        c.mode(emc.MODE_MANUAL)
+                                        c.home(1)
+                                elif m == '':
+                                        s.poll()
+                                        print s.position
+                                else:
+                                        c.mode(emc.MODE_MDI)
+                                        c.mdi(m)
+
+                except (SystemExit, EOFError, KeyboardInterrupt): pass
+
+
+
 
 
 * ilgili kelimeler
-	emc emc2 axis emc2-axis debian sarge 
-	install build build-dep compile source scratch
-	cnc linuxcnc step servo
+        emc emc2 axis emc2-axis debian sarge
+        install build build-dep compile source scratch
+        cnc linuxcnc step servo

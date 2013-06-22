@@ -8,128 +8,128 @@ RTAI PROGRAMLAMA NOTLARI
 
 - Basit bir modül
 
-	module_test.c
-	-------------
-	#include <linux/module.h>
-	#include </asm/io.h>
+        module_test.c
+        -------------
+        #include <linux/module.h>
+        #include </asm/io.h>
 
-	MODULE_LICENSE("GPL");
+        MODULE_LICENSE("GPL");
 
-	int init_module(void) {
-		printk("Modul yuklendi\n");
-		return 0;
-	}
+        int init_module(void) {
+                printk("Modul yuklendi\n");
+                return 0;
+        }
 
-	void cleanup_module(void) {
-		printk("Modul kaldirildi");
-	}
-	
-
-	Makefile
-	--------
-	KDIR = /usr/src/linux/
-	SUBDIRS = $(PWD)
-	obj-m += module_test.o
-	modules:
-		$(MAKE) -C $(KDIR) M=$(SUBDIRS) $@
-
-	
-	Derlenmesi
-	----------
-	make modules
+        void cleanup_module(void) {
+                printk("Modul kaldirildi");
+        }
 
 
-	Yüklenmesi
-	----------
-	su -c "insmod module_test.ko"
+        Makefile
+        --------
+        KDIR = /usr/src/linux/
+        SUBDIRS = $(PWD)
+        obj-m += module_test.o
+        modules:
+                $(MAKE) -C $(KDIR) M=$(SUBDIRS) $@
 
 
-	Kaldırılması
-	------------
-	su -c "rmmod module_test"
+        Derlenmesi
+        ----------
+        make modules
+
+
+        Yüklenmesi
+        ----------
+        su -c "insmod module_test.ko"
+
+
+        Kaldırılması
+        ------------
+        su -c "rmmod module_test"
 
 
 
 - Basit bir RTAI modülü
 
-	module_rtai.c
-	-------------
-	#include <linux/module.h>
-	#include <asm/io.h>
-	#include <rtai.h>
-	#include <rtai_sched.h>
+        module_rtai.c
+        -------------
+        #include <linux/module.h>
+        #include <asm/io.h>
+        #include <rtai.h>
+        #include <rtai_sched.h>
 
-	MODULE_LICENSE("GPL");
-	MODULE_DESCRIPTION("RTAI test modulu");
-	MODULE_AUTHOR("Emrah <emrah_5@yahoo.com>");
+        MODULE_LICENSE("GPL");
+        MODULE_DESCRIPTION("RTAI test modulu");
+        MODULE_AUTHOR("Emrah <emrah_5@yahoo.com>");
 
-					// 1: sadece CPU 0
-					// 2: sadece CPU 1
-	#define RUNNABLE_ON_CPUS 3	// 3: herhangi birinde
-	#define RUN_ON_CPUS (num_online_cpus() > 1 ? RUNNABLE_ON_CPUS : 1)
-	#define TICK_PERIOD 2000000000
+                                        // 1: sadece CPU 0
+                                        // 2: sadece CPU 1
+        #define RUNNABLE_ON_CPUS 3      // 3: herhangi birinde
+        #define RUN_ON_CPUS (num_online_cpus() > 1 ? RUNNABLE_ON_CPUS : 1)
+        #define TICK_PERIOD 2000000000
 
-	RT_TASK thread;
-	RTIME period;
+        RT_TASK thread;
+        RTIME period;
 
-	// gercek zamanli calisacak olan thread
-	void fun(long thread) {
-		int counter = 0;
+        // gercek zamanli calisacak olan thread
+        void fun(long thread) {
+                int counter = 0;
 
-		while(1) {
-			printk("fun %d\n", counter);
-			counter++;
-			rt_task_wait_period();
-		}
-	}
+                while(1) {
+                        printk("fun %d\n", counter);
+                        counter++;
+                        rt_task_wait_period();
+                }
+        }
 
-	// modul yuklendiginde calisacak bolum
-	static int __module_init(void) {
-		rt_task_init(&thread, fun, 0, 5000, 0, 0, 0);
-		rt_set_runnable_on_cpus(&thread, RUN_ON_CPUS);
+        // modul yuklendiginde calisacak bolum
+        static int __module_init(void) {
+                rt_task_init(&thread, fun, 0, 5000, 0, 0, 0);
+                rt_set_runnable_on_cpus(&thread, RUN_ON_CPUS);
 
-		rt_set_periodic_mode();
-		period = start_rt_timer(nano2count(TICK_PERIOD));
-		rt_task_make_periodic(&thread, rt_get_time() + period, period);
+                rt_set_periodic_mode();
+                period = start_rt_timer(nano2count(TICK_PERIOD));
+                rt_task_make_periodic(&thread, rt_get_time() + period, period);
 
-		printk("module yuklendi\n");
-		return 0;
-	}
+                printk("module yuklendi\n");
+                return 0;
+        }
 
-	// modul kaldirildiginda calisacak bolum
-	static void __module_exit(void) {
-		stop_rt_timer();
-		rt_task_delete(&thread);
-		printk("module kaldirildi\n");
-	}
+        // modul kaldirildiginda calisacak bolum
+        static void __module_exit(void) {
+                stop_rt_timer();
+                rt_task_delete(&thread);
+                printk("module kaldirildi\n");
+        }
 
-	module_init(__module_init);
-	module_exit(__module_exit);
-
-
-
-	Makefile
-	--------
-	KDIR = /usr/src/linux
-	SUBDIRS = $(PWD)
-	EXTRA_CFLAGS = -I/usr/realtime/include -I/usr/include
-	obj-m += module_rtai.o
-
-	default:
-		$(MAKE) -C $(KDIR) SUBDIRS=$(SUBDIRS) modules
-	
-
-	Derlemesi
-	---------
-	make
+        module_init(__module_init);
+        module_exit(__module_exit);
 
 
-	Yüklemesi
-	---------
-	su 
-	insmod /usr/realtime/modules/rtai_hal.ko
-	insmod /usr/realtime/modules/rtai_sched.ko
-	insmod module_rtai.ko
+
+        Makefile
+        --------
+        KDIR = /usr/src/linux
+        SUBDIRS = $(PWD)
+        EXTRA_CFLAGS = -I/usr/realtime/include -I/usr/include
+        obj-m += module_rtai.o
+
+        default:
+                $(MAKE) -C $(KDIR) SUBDIRS=$(SUBDIRS) modules
+
+
+        Derlemesi
+        ---------
+        make
+
+
+        Yüklemesi
+        ---------
+        su
+        insmod /usr/realtime/modules/rtai_hal.ko
+        insmod /usr/realtime/modules/rtai_sched.ko
+        insmod module_rtai.ko
 
 
 
@@ -137,99 +137,99 @@ RTAI PROGRAMLAMA NOTLARI
   module_fifos gerçek zamanlı olarak /dev/rtf0 aygıtına veri ekler.
   scope_fifos aygıttan verileri alır. scope_fifos gerçek zamanlı çalışmaz.
 
-	module_fifos.c
-	--------------
-	#include <linux/module.h>
-	#include <asm/io.h>
-	#include <rtai.h>
-	#include <rtai_sched.h>
-	#include <rtai_fifos.h>
+        module_fifos.c
+        --------------
+        #include <linux/module.h>
+        #include <asm/io.h>
+        #include <rtai.h>
+        #include <rtai_sched.h>
+        #include <rtai_fifos.h>
 
-	MODULE_LICENSE("GPL");
-	MODULE_DESCRIPTION("RTAI test modulu");
-	MODULE_AUTHOR("Emrah <emrah_5@yahoo.com>");
+        MODULE_LICENSE("GPL");
+        MODULE_DESCRIPTION("RTAI test modulu");
+        MODULE_AUTHOR("Emrah <emrah_5@yahoo.com>");
 
-					// 1: sadece CPU 0
-					// 2: sadece CPU 1
-	#define RUNNABLE_ON_CPUS 3	// 3: herhangi birinde
-	#define RUN_ON_CPUS (num_online_cpus() > 1 ? RUNNABLE_ON_CPUS : 1)
-	#define TICK_PERIOD 2000000000
-	#define FIFO 0
+                                        // 1: sadece CPU 0
+                                        // 2: sadece CPU 1
+        #define RUNNABLE_ON_CPUS 3      // 3: herhangi birinde
+        #define RUN_ON_CPUS (num_online_cpus() > 1 ? RUNNABLE_ON_CPUS : 1)
+        #define TICK_PERIOD 2000000000
+        #define FIFO 0
 
-	RT_TASK thread;
-	RTIME period;
+        RT_TASK thread;
+        RTIME period;
 
-	// gercek zamanli calisacak olan thread
-	void fun(long thread) {
-		int counter = 0;
+        // gercek zamanli calisacak olan thread
+        void fun(long thread) {
+                int counter = 0;
 
-		while(1) {
-			printk("fun %d\n", counter);
-			rtf_put(FIFO, &counter, sizeof(counter));
-			counter++;
-			rt_task_wait_period();
-		}
-	}
+                while(1) {
+                        printk("fun %d\n", counter);
+                        rtf_put(FIFO, &counter, sizeof(counter));
+                        counter++;
+                        rt_task_wait_period();
+                }
+        }
 
-	// modul yuklendiginde calisacak bolum
-	int __module_init(void) {
-		rt_task_init(&thread, fun, 0, 5000, 0, 0, 0);
-		rt_set_runnable_on_cpus(&thread, RUN_ON_CPUS);
+        // modul yuklendiginde calisacak bolum
+        int __module_init(void) {
+                rt_task_init(&thread, fun, 0, 5000, 0, 0, 0);
+                rt_set_runnable_on_cpus(&thread, RUN_ON_CPUS);
 
-		rtf_create(FIFO, 8000);
+                rtf_create(FIFO, 8000);
 
-		rt_set_periodic_mode();
-		period = start_rt_timer(nano2count(TICK_PERIOD));
-		rt_task_make_periodic(&thread, rt_get_time() + period, period);
+                rt_set_periodic_mode();
+                period = start_rt_timer(nano2count(TICK_PERIOD));
+                rt_task_make_periodic(&thread, rt_get_time() + period, period);
 
-		printk("module yuklendi\n");
-		return 0;
-	}
+                printk("module yuklendi\n");
+                return 0;
+        }
 
-	// modul kaldirildiginda calisacak bolum
-	void __module_exit(void) {
-		stop_rt_timer();
-		rtf_destroy(FIFO);
-		rt_task_delete(&thread);
-		printk("module kaldirildi\n");
-	}
+        // modul kaldirildiginda calisacak bolum
+        void __module_exit(void) {
+                stop_rt_timer();
+                rtf_destroy(FIFO);
+                rt_task_delete(&thread);
+                printk("module kaldirildi\n");
+        }
 
-	module_init(__module_init);
-	module_exit(__module_exit);
+        module_init(__module_init);
+        module_exit(__module_exit);
 
 
-	scope_fifos.c
-	-------------
-	#include <stdio.h>
-	#include <unistd.h>
-	#include <sys/types.h>
-	#include <sys/mman.h>
-	#include <sys/stat.h>
-	#include <fcntl.h>
-	#include <signal.h>
+        scope_fifos.c
+        -------------
+        #include <stdio.h>
+        #include <unistd.h>
+        #include <sys/types.h>
+        #include <sys/mman.h>
+        #include <sys/stat.h>
+        #include <fcntl.h>
+        #include <signal.h>
 
-	static int end;
-	static void endme(int dummy) {
-		end = 1;
-	}
+        static int end;
+        static void endme(int dummy) {
+                end = 1;
+        }
 
-	int main (void) {
-		int fifo, counter;
+        int main (void) {
+                int fifo, counter;
 
-		if ((fifo = open("/dev/rtf0", O_RDONLY)) < 0) {
-			fprintf(stderr, "Error opening /dev/rtf0\n");
-			return 1;
-		}
+                if ((fifo = open("/dev/rtf0", O_RDONLY)) < 0) {
+                        fprintf(stderr, "Error opening /dev/rtf0\n");
+                        return 1;
+                }
 
-		signal(SIGINT, endme);
+                signal(SIGINT, endme);
 
-		while (!end) {
-			read(fifo, &counter, sizeof(counter));
-			printf("Counter : %d\n", counter);
-		}
+                while (!end) {
+                        read(fifo, &counter, sizeof(counter));
+                        printf("Counter : %d\n", counter);
+                }
 
-		return 0;
-	}
+                return 0;
+        }
 
 
 
@@ -237,106 +237,106 @@ RTAI PROGRAMLAMA NOTLARI
   module_shm gerçek zamanlı olarak /dev/rtai_shm aygıtına veri yazar.
   scope_shm aygıttan veriyi okur. scope_shm gerçek zamanlı çalışmaz.
 
-	module_shm.c
-	--------------
-	#include <linux/module.h>
-	#include <asm/io.h>
-	#include <rtai.h>
-	#include <rtai_sched.h>
-	#include <rtai_shm.h>
-	#include <rtai_nam2num.h>
+        module_shm.c
+        --------------
+        #include <linux/module.h>
+        #include <asm/io.h>
+        #include <rtai.h>
+        #include <rtai_sched.h>
+        #include <rtai_shm.h>
+        #include <rtai_nam2num.h>
 
-	MODULE_LICENSE("GPL");
-	MODULE_DESCRIPTION("RTAI test modulu");
-	MODULE_AUTHOR("Emrah <emrah_5@yahoo.com>");
+        MODULE_LICENSE("GPL");
+        MODULE_DESCRIPTION("RTAI test modulu");
+        MODULE_AUTHOR("Emrah <emrah_5@yahoo.com>");
 
-					// 1: sadece CPU 0
-					// 2: sadece CPU 1
-	#define RUNNABLE_ON_CPUS 3	// 3: herhangi birinde
-	#define RUN_ON_CPUS (num_online_cpus() > 1 ? RUNNABLE_ON_CPUS : 1)
-	#define TICK_PERIOD 2000000000
-	#define SHMNAM "EMRAH_SHM"
+                                        // 1: sadece CPU 0
+                                        // 2: sadece CPU 1
+        #define RUNNABLE_ON_CPUS 3      // 3: herhangi birinde
+        #define RUN_ON_CPUS (num_online_cpus() > 1 ? RUNNABLE_ON_CPUS : 1)
+        #define TICK_PERIOD 2000000000
+        #define SHMNAM "EMRAH_SHM"
 
-	struct struct_data {
-		int counter;
-	};
+        struct struct_data {
+                int counter;
+        };
 
-	static struct struct_data *data;
-	static RT_TASK thread;
-	RTIME period;
+        static struct struct_data *data;
+        static RT_TASK thread;
+        RTIME period;
 
-	// gercek zamanli calisacak olan thread
-	static void fun(long thread) {
-		int counter = 0;
+        // gercek zamanli calisacak olan thread
+        static void fun(long thread) {
+                int counter = 0;
 
-		while(1) {
-			printk("fun %d\n", counter);
-			data->counter = counter;
-			counter++;
-			rt_task_wait_period();
-		}
-	}
+                while(1) {
+                        printk("fun %d\n", counter);
+                        data->counter = counter;
+                        counter++;
+                        rt_task_wait_period();
+                }
+        }
 
-	// modul yuklendiginde calisacak bolum
-	int __module_init(void) {
-		rt_task_init(&thread, fun, 0, 5000, 0, 0, 0);
-		rt_set_runnable_on_cpus(&thread, RUN_ON_CPUS);
+        // modul yuklendiginde calisacak bolum
+        int __module_init(void) {
+                rt_task_init(&thread, fun, 0, 5000, 0, 0, 0);
+                rt_set_runnable_on_cpus(&thread, RUN_ON_CPUS);
 
-		data = rtai_kmalloc(nam2num(SHMNAM), sizeof(struct struct_data));
+                data = rtai_kmalloc(nam2num(SHMNAM), sizeof(struct struct_data));
 
-		rt_set_periodic_mode();
-		period = start_rt_timer(nano2count(TICK_PERIOD));
-		rt_task_make_periodic(&thread, rt_get_time() + period, period);
+                rt_set_periodic_mode();
+                period = start_rt_timer(nano2count(TICK_PERIOD));
+                rt_task_make_periodic(&thread, rt_get_time() + period, period);
 
-		printk("module yuklendi\n");
-		return 0;
-	}
+                printk("module yuklendi\n");
+                return 0;
+        }
 
-	// modul kaldirildiginda calisacak bolum
-	void __module_exit(void) {
-		stop_rt_timer();
-		rt_task_delete(&thread);
-		rtai_kfree(nam2num(SHMNAM));
-		printk("module kaldirildi\n");
-	}
+        // modul kaldirildiginda calisacak bolum
+        void __module_exit(void) {
+                stop_rt_timer();
+                rt_task_delete(&thread);
+                rtai_kfree(nam2num(SHMNAM));
+                printk("module kaldirildi\n");
+        }
 
-	module_init(__module_init);
-	module_exit(__module_exit);
+        module_init(__module_init);
+        module_exit(__module_exit);
 
-	
-	scope_shm.c
-	-----------
-	#include <stdio.h>
-	#include <unistd.h>
-	#include <sys/types.h>
-	#include <sys/mman.h>
-	#include <sys/stat.h>
-	#include <fcntl.h>
-	#include <signal.h>
-	#include <rtai_shm.h>
 
-	#define SHMNAM "EMRAH_SHM"
+        scope_shm.c
+        -----------
+        #include <stdio.h>
+        #include <unistd.h>
+        #include <sys/types.h>
+        #include <sys/mman.h>
+        #include <sys/stat.h>
+        #include <fcntl.h>
+        #include <signal.h>
+        #include <rtai_shm.h>
 
-	struct struct_data {
-		int counter;
-	};
+        #define SHMNAM "EMRAH_SHM"
 
-	static int end;
-	static void endme(int dummy) {
-		end=1;
-	}
+        struct struct_data {
+                int counter;
+        };
 
-	int main (void) {
-		struct struct_data *data;
+        static int end;
+        static void endme(int dummy) {
+                end=1;
+        }
 
-		signal(SIGINT, endme);
-		data = rtai_malloc(nam2num(SHMNAM), sizeof(struct struct_data));
+        int main (void) {
+                struct struct_data *data;
 
-		while (!end) {
-			printf("Counter : %d\n", data->counter);
-		}
+                signal(SIGINT, endme);
+                data = rtai_malloc(nam2num(SHMNAM), sizeof(struct struct_data));
 
-		rtai_free(nam2num(SHMNAM), &data);
+                while (!end) {
+                        printf("Counter : %d\n", data->counter);
+                }
 
-		return 0;
-	}
+                rtai_free(nam2num(SHMNAM), &data);
+
+                return 0;
+        }

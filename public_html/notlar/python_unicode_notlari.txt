@@ -1,26 +1,26 @@
 Python Unicode Notları
 ----------------------
 
-'ğüşi'					<- string
-u'ĞÜŞİ'					<- unicode
+'ğüşi'                                  <- string
+u'ĞÜŞİ'                                 <- unicode
 
 
-'ğüşi' + u'ĞÜŞİ'			<- yanlış
-'ğüşi' + u'ĞÜŞİ'.encode('utf-8')	<- doğru bir kullanım, sonu. string
-'ğüşi%s' % u'ĞÜŞİ'			<- doğru bir kullanım, sonuç unicode
-'ğüşi'.decode() + u'ĞÜŞİ'		<- doğru bir kullanım, sonuç unicode
-u'a\u0061'				<- doğru bir kullanım, sonuç unicode u'aa'
+'ğüşi' + u'ĞÜŞİ'                        <- yanlış
+'ğüşi' + u'ĞÜŞİ'.encode('utf-8')        <- doğru bir kullanım, sonu. string
+'ğüşi%s' % u'ĞÜŞİ'                      <- doğru bir kullanım, sonuç unicode
+'ğüşi'.decode() + u'ĞÜŞİ'               <- doğru bir kullanım, sonuç unicode
+u'a\u0061'                              <- doğru bir kullanım, sonuç unicode u'aa'
 
 
-'ğüşi'.decode('utf-8')			<- utf-8 string'i, unicode'a çevirir
-u'ĞÜŞİ'.encode('utf-8')			<- unicode'u, utf-8 stribg'e çevirir
+'ğüşi'.decode('utf-8')                  <- utf-8 string'i, unicode'a çevirir
+u'ĞÜŞİ'.encode('utf-8')                 <- unicode'u, utf-8 stribg'e çevirir
 
 
 # ekran, dosya, socket v.b. ortamlara yazdırmadan önce string'e çevirmek gerekir
-print u'ĞÜŞİ'				<- print komutu otomatik string çevrimi yapar
-print u'ĞÜŞİ'.encode('utf-8')		<- print komutuna manuel çevrim yaptırma
-print str.encode('utf-8', 'ignore')	<- basılamayan karakterleri gözardı eder
-print str.encode('utf-8', 'replace')	<- basılamayan karakterlerin yerine ? karakterini basar
+print u'ĞÜŞİ'                           <- print komutu otomatik string çevrimi yapar
+print u'ĞÜŞİ'.encode('utf-8')           <- print komutuna manuel çevrim yaptırma
+print str.encode('utf-8', 'ignore')     <- basılamayan karakterleri gözardı eder
+print str.encode('utf-8', 'replace')    <- basılamayan karakterlerin yerine ? karakterini basar
 
 d.write(u'ĞÜŞİ'.encode('utf-8'))
 os.system('echo %s' % u'ĞÜŞİ'.encode('utf-8'))
@@ -31,12 +31,12 @@ sock.send(u'ĞÜŞİ'.encode('utf-8'))
 cnn = sqlite.connect(DATABASE, timeout=DATABASE_TIMEOUT)
 crs = cnn.cursor()
 sql = """SELECT *
-	FROM tablo"""
+        FROM tablo"""
 crs.execute(sql)
 row = crs.fetchone()
 cnn.close()
 
-type(row[0])				<- <type 'unicode'>
+type(row[0])                            <- <type 'unicode'>
 alan1 = row[0].encode('utf-8')
 
 
@@ -49,11 +49,11 @@ d.close()
 # regex için unicode desteği almak isteniyorsa re.UNICODE
 # bu sayede unicode'a uygun işlem yapılır
 sablon = re.compile('doku', re.UNICODE)
-type(str)				<- <type 'str'>
+type(str)                               <- <type 'str'>
 
 
 # locale'de kullanılan encopding hakkında bilgi almak için
 (dil, encoding) = locale.getdefaultlocale()
 
-dil		<- 'tr_TR'
-encoding	<- 'UTF8'
+dil             <- 'tr_TR'
+encoding        <- 'UTF8'

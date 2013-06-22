@@ -1,62 +1,62 @@
 PLC NOTLARI
 
 * Bileşenler
-	- giriş rölesi	( input relay	)
-	- iç röle	( internal relay)
-	- sayaç		( counter	)
-	- saat		( timer		)
-	- çıkış rölesi	( output relay	)
-	- yazmaç	( register	)
+        - giriş rölesi  ( input relay   )
+        - iç röle       ( internal relay)
+        - sayaç         ( counter       )
+        - saat          ( timer         )
+        - çıkış rölesi  ( output relay  )
+        - yazmaç        ( register      )
 
 
 * Döngü
-	1- girdilerin okunması
-	2- programın işletilmesi
-	3- çıktıların yazılması
+        1- girdilerin okunması
+        2- programın işletilmesi
+        3- çıktıların yazılması
 
 
 * Cevap süresi
-	- bir girdinin yakalanması azami (1 girdi süresi + 1 döngü süresi) sürer
-	- cevap süresi, azami (2 döngü süresi - 1 girdi süresi) sürer
-	- girdi, girdi okuma anına denk gelmeyecek kadar kısa sürerse girdi yakalanamayabilir. 
-	  bu durumdan kaçınmak için iki yöntem kullanılabilir:
-	  	- sinyal uzatma	: girdi okuma süresine erişilinceye kadar girdi değeri saklanır
-		- kesme		: bir girdi olduğunda mevcut işe ara verilip girdi okunur. Daha sonra
-				  kalınılan noktaya geri dönülüp normal işleyişe devam edilir
+        - bir girdinin yakalanması azami (1 girdi süresi + 1 döngü süresi) sürer
+        - cevap süresi, azami (2 döngü süresi - 1 girdi süresi) sürer
+        - girdi, girdi okuma anına denk gelmeyecek kadar kısa sürerse girdi yakalanamayabilir.
+          bu durumdan kaçınmak için iki yöntem kullanılabilir:
+                - sinyal uzatma : girdi okuma süresine erişilinceye kadar girdi değeri saklanır
+                - kesme         : bir girdi olduğunda mevcut işe ara verilip girdi okunur. Daha sonra
+                                  kalınılan noktaya geri dönülüp normal işleyişe devam edilir
 
 
 * Semboller
-		-||-		Load	(XIO)
-	
-		-|/|-		LoadNot (XIC)
-	
-		-()-		Out
-	
-		-(/)-		OutNot
-	
-		-(SET)-		Set Output
-	
-		-(RES)-		Reset Output
-	
-		  -------
-	reset	-| C000  |
-		 |       |-	Counter
-	pulse	-| 1000  |
-		  -------
-	
-		  -------
-		 | T000  |
-	enable	-|       |-	Timer
-		 | 1000  |
-		  -------
-	
-		  -------
-	enable	-| T000  |
-		 |       |-	Accumulating timer
-	reset	-| 1000  |
-		  -------
+                -||-            Load    (XIO)
+
+                -|/|-           LoadNot (XIC)
+
+                -()-            Out
+
+                -(/)-           OutNot
+
+                -(SET)-         Set Output
+
+                -(RES)-         Reset Output
+
+                  -------
+        reset   -| C000  |
+                 |       |-     Counter
+        pulse   -| 1000  |
+                  -------
+
+                  -------
+                 | T000  |
+        enable  -|       |-     Timer
+                 | 1000  |
+                  -------
+
+                  -------
+        enable  -| T000  |
+                 |       |-     Accumulating timer
+        reset   -| 1000  |
+                  -------
 
 
 * Kısa notlar
-	- Sayaç ve saatler, aynı yazmacı kullandıkları için aynı ada sahip olamazlar
+        - Sayaç ve saatler, aynı yazmacı kullandıkları için aynı ada sahip olamazlar
 

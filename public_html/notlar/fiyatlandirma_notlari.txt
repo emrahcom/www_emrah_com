@@ -1,54 +1,54 @@
 FİYATLANDIRMA NOTLARI
 ---------------------
 
-- Debian temel kurulum:			<  200 puan		>
-	. temel sistemin kurulumu
-	. sık kullanılan yazılımlar
-	. ağ ayarları
-	. SSH sunucu
+- Debian temel kurulum:                 <  200 puan             >
+        . temel sistemin kurulumu
+        . sık kullanılan yazılımlar
+        . ağ ayarları
+        . SSH sunucu
 
 - Sunucu yazılımlar
-	. Firewall			<  100 puan 		>
-	. FTP sunucu			<   50 puan 		>
-	. Web sunucu			<   50 puan 		>
-	. DNS sunucu			<   50 puan 		>
-	. MySQL sunucu			<   50 puan 		>
-	. PostgreSQL sunucu		<   50 puan 		>
-	. NTP sunucu			<   50 puan 		>
-	. X sunucu			<   50 puan 		>
-	
+        . Firewall                      <  100 puan             >
+        . FTP sunucu                    <   50 puan             >
+        . Web sunucu                    <   50 puan             >
+        . DNS sunucu                    <   50 puan             >
+        . MySQL sunucu                  <   50 puan             >
+        . PostgreSQL sunucu             <   50 puan             >
+        . NTP sunucu                    <   50 puan             >
+        . X sunucu                      <   50 puan             >
+
 - Uygulamalar
-	. RTAI kurulumu			<  200 puan 		>
-	. EMC kurulumu			<  200 puan 		>
-	. Sqlite3 kurulumu		<   10 puan		>
+        . RTAI kurulumu                 <  200 puan             >
+        . EMC kurulumu                  <  200 puan             >
+        . Sqlite3 kurulumu              <   10 puan             >
 
 - Servisler
-	. Python kodlama (büyük proje)	<    3 puan/satır 	>
-	. Python kodlama (ufak proje)	<    5 puan/satır 	>
-	. SQL veritabanı tasarım	<    5 puan/satır	>
-	. RTAI çekirdek modul yazımı	<  400 puan 		>
-	. EMC HAL modul yazımı		<  200 puan		>
-	. Özelleştirilmiş EMC arayüzü	<  400 puan 		>
-	. Yeni EMC arayüzü		< 1000 puan 		>
-	. Özelleştirilmiş X		<  100 puan		>
-	. Pencere tasarımı		<  200 puan/pencere	>
+        . Python kodlama (büyük proje)  <    3 puan/satır       >
+        . Python kodlama (ufak proje)   <    5 puan/satır       >
+        . SQL veritabanı tasarım        <    5 puan/satır       >
+        . RTAI çekirdek modul yazımı    <  400 puan             >
+        . EMC HAL modul yazımı          <  200 puan             >
+        . Özelleştirilmiş EMC arayüzü   <  400 puan             >
+        . Yeni EMC arayüzü              < 1000 puan             >
+        . Özelleştirilmiş X             <  100 puan             >
+        . Pencere tasarımı              <  200 puan/pencere     >
 
 - Ekstra
-	. Git-gel (masraflar hariç)	<  100 puan		>
-	. Uzaktan destek		<   50 puan/saat	>
-	. AR-GE (büyük proje)		<   30 puan/saat	>
-	. AR-GE (küçük proje)		<  100 puan/saat	>
-	. Dökümantasyon			<  100 puan/saat	>
+        . Git-gel (masraflar hariç)     <  100 puan             >
+        . Uzaktan destek                <   50 puan/saat        >
+        . AR-GE (büyük proje)           <   30 puan/saat        >
+        . AR-GE (küçük proje)           <  100 puan/saat        >
+        . Dökümantasyon                 <  100 puan/saat        >
 
 
 Örnek satır sayıları:
-	. IETT SQL		:  100 satır
-	. MP SQL		:   65 satır
-	. DNSproxy SQL		:   54 satır
-	. Sulama SQL		:  160 satır
-	. IETT Python		: 3600 satır
-	. MP Python		: 2350 satır
-	. GPS Python		: 3200 satır
-	. DNSproxy Python	:  400 satır
-	. Delta Python		:  330 satır
-	. Sulama Python		: 8800 satır
+        . IETT SQL              :  100 satır
+        . MP SQL                :   65 satır
+        . DNSproxy SQL          :   54 satır
+        . Sulama SQL            :  160 satır
+        . IETT Python           : 3600 satır
+        . MP Python             : 2350 satır
+        . GPS Python            : 3200 satır
+        . DNSproxy Python       :  400 satır
+        . Delta Python          :  330 satır
+        . Sulama Python         : 8800 satır

@@ -1,102 +1,102 @@
 - /usr/local/sbin/usb_modeswitch
-	http://www.draisberghof.de/usb_modeswitch/
+        http://www.draisberghof.de/usb_modeswitch/
 
 
 
 - /usr/local/sbin/usb_modeswitch_zte.sh
-	#!/bin/bash
-	sleep 5
-	usb_modeswitch  -v 0x19d2 -p 0x2000 -m 0x05 -M 5553424378758b88000000000000061b010000000000000000000000000000
-	sleep 1
-	rmmod usb_storage
+        #!/bin/bash
+        sleep 5
+        usb_modeswitch  -v 0x19d2 -p 0x2000 -m 0x05 -M 5553424378758b88000000000000061b010000000000000000000000000000
+        sleep 1
+        rmmod usb_storage
 
 
 
 - /etc/udev/rules.d/z15_zte_mf622.rules
 
-	ACTION!="add", GOTO="zte_not_add_event"
+        ACTION!="add", GOTO="zte_not_add_event"
 
-	# Is this the ZeroCD device?
-	SUBSYSTEM=="usb", SYSFS{idProduct}=="2000",SYSFS{idVendor}=="19d2", RUN+="/usr/local/sbin/usb_modeswitch_zte.sh"
+        # Is this the ZeroCD device?
+        SUBSYSTEM=="usb", SYSFS{idProduct}=="2000",SYSFS{idVendor}=="19d2", RUN+="/usr/local/sbin/usb_modeswitch_zte.sh"
 
-	# Is this the actual modem?
-	SUBSYSTEM=="usb", SYSFS{idProduct}=="0001",SYSFS{idVendor}=="19d2", MODE="0660", GROUP="dialout", RUN+="/sbin/modprobe usbserial vendor=0x19d2 product=0x0001"
+        # Is this the actual modem?
+        SUBSYSTEM=="usb", SYSFS{idProduct}=="0001",SYSFS{idVendor}=="19d2", MODE="0660", GROUP="dialout", RUN+="/sbin/modprobe usbserial vendor=0x19d2 product=0x0001"
 
-	LABEL="zte_not_add_event"
+        LABEL="zte_not_add_event"
 
 
 
 - halt
-	Bilgisayar kapatılıp açılacak. Kapatıldıktan sonra ana enerji girişini kesmek ve yeniden açmak gerekiyor.
+        Bilgisayar kapatılıp açılacak. Kapatıldıktan sonra ana enerji girişini kesmek ve yeniden açmak gerekiyor.
 
 
 
 - /etc/wvdial.conf
-	[Dialer turkcell]
-	Init1 = ATZ
-	Init2 = ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
-	Init3 = AT+CGDCONT=1, "IP", "internet"
-	Modem = /dev/ttyUSB2
-	Baud = 460800
-	ISDN = 0
-	New PPPD = yes
-	Modem Type = Analog Modem
-	Phone = *99#
-	Username = wap
-	Password = wap
-	Stupid Mode = 1
-	Dial Command = ATDT
+        [Dialer turkcell]
+        Init1 = ATZ
+        Init2 = ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
+        Init3 = AT+CGDCONT=1, "IP", "internet"
+        Modem = /dev/ttyUSB2
+        Baud = 460800
+        ISDN = 0
+        New PPPD = yes
+        Modem Type = Analog Modem
+        Phone = *99#
+        Username = wap
+        Password = wap
+        Stupid Mode = 1
+        Dial Command = ATDT
 
-	[Dialer zte]
-	Init1 = ATZ
-	Init2 = ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
-	Init3 = AT+CGDCONT=1, "IP", "apn_adi"
-	Modem = /dev/ttyUSB2
-	Baud = 460800
-	ISDN = 0
-	New PPPD = yes
-	Modem Type = Analog Modem
-	Phone = *99#
-	Username = kullanici
-	Password = parola
-	Stupid Mode = 1
-	Dial Command = ATDT
-
-
-	apn_adi, kullanici, parola yazan yerler asıl bilgilere göre düzenlenecek.
-	Turkcell için:
-		apn_adi		= internet
-		kullanici	= wap
-		parola		= wap
-	
-	Bu dosyanın otomatik oluşturulması için 'wvdialconf' komutu kullanılabilir ama 
-	elle düzenleme yapmak yine de gerekiyor.
+        [Dialer zte]
+        Init1 = ATZ
+        Init2 = ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
+        Init3 = AT+CGDCONT=1, "IP", "apn_adi"
+        Modem = /dev/ttyUSB2
+        Baud = 460800
+        ISDN = 0
+        New PPPD = yes
+        Modem Type = Analog Modem
+        Phone = *99#
+        Username = kullanici
+        Password = parola
+        Stupid Mode = 1
+        Dial Command = ATDT
 
 
-- Bağlanmak için 
-	Ethernet üzerinden de ağ bağlantısı varsa öncelikle gateway'i ayarlamak veya etherneti durdurmak gerekebilir.
+        apn_adi, kullanici, parola yazan yerler asıl bilgilere göre düzenlenecek.
+        Turkcell için:
+                apn_adi         = internet
+                kullanici       = wap
+                parola          = wap
 
-	- Turkcell üzerinden internete bağlanmak için
-		wvdial turkcell
-	
-	- Alternatif bağlantı (zte) üzerinden ağa bağlanmak için
-		wvdial zte
+        Bu dosyanın otomatik oluşturulması için 'wvdialconf' komutu kullanılabilir ama
+        elle düzenleme yapmak yine de gerekiyor.
+
+
+- Bağlanmak için
+        Ethernet üzerinden de ağ bağlantısı varsa öncelikle gateway'i ayarlamak veya etherneti durdurmak gerekebilir.
+
+        - Turkcell üzerinden internete bağlanmak için
+                wvdial turkcell
+
+        - Alternatif bağlantı (zte) üzerinden ağa bağlanmak için
+                wvdial zte
 
 
 
 - Sorunlar
-	- Hatalı aygıt (device) seçiminde şu çıktı alınır:
+        - Hatalı aygıt (device) seçiminde şu çıktı alınır:
 
-		--> WvDial: Internet dialer version 1.60
-		--> Cannot get information for serial port.
-		--> Initializing modem.
-		--> Sending: ATZ
-		--> Sending: ATQ0
-		--> Re-Sending: ATZ
-		--> Modem not responding.
+                --> WvDial: Internet dialer version 1.60
+                --> Cannot get information for serial port.
+                --> Initializing modem.
+                --> Sending: ATZ
+                --> Sending: ATQ0
+                --> Re-Sending: ATZ
+                --> Modem not responding.
 
 
-		Çözmek için /etc/wvdial.conf dosyasında Modem bölümündeki aygıtın 
-		numarasını değiştirip deneyerek doğru aygıt numarasını bulmak gerekir.
+                Çözmek için /etc/wvdial.conf dosyasında Modem bölümündeki aygıtın
+                numarasını değiştirip deneyerek doğru aygıt numarasını bulmak gerekir.
 
 

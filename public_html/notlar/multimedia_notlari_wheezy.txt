@@ -113,30 +113,30 @@ alsamixer ile ses kartı olarak HDMI seçilir. S/PDIF "M" tuşuna basılarak akt
 hale getirilir.
 
 # Line in'den ses alınırken iyi sonuç veren bazı ayarlar:
-	Playback
-		Master		-> 80
-		Headphone	-> 80
-		PCM		-> 80
-		Front		-> 80
-		Front mic	-> MM
-		Surround	-> 80
-		Center		-> 80
-		LFE		-> MM
-		Line		-> MM
-		CD		-> MM
-		S/PDIF		-> MM
-		S/PDIF Defa	-> MM
-		Dynamic Pow	-> Disabled
-		Independent	-> OFF
-		Loopback Mi	-> Disabled
-		Rear Mic	-> MM
-		Smart 5.1	-> MM
+        Playback
+                Master          -> 80
+                Headphone       -> 80
+                PCM             -> 80
+                Front           -> 80
+                Front mic       -> MM
+                Surround        -> 80
+                Center          -> 80
+                LFE             -> MM
+                Line            -> MM
+                CD              -> MM
+                S/PDIF          -> MM
+                S/PDIF Defa     -> MM
+                Dynamic Pow     -> Disabled
+                Independent     -> OFF
+                Loopback Mi     -> Disabled
+                Rear Mic        -> MM
+                Smart 5.1       -> MM
 
-	Capture
-		Capture		-> 0
-		Capture 1	-> 0
-		Digital		-> 50
-		Input Source	-> Line
+        Capture
+                Capture         -> 0
+                Capture 1       -> 0
+                Digital         -> 50
+                Input Source    -> Line
 
 
 
@@ -173,19 +173,19 @@ cp -arp ../nginx_rtmp/arut-nginx-rtmp-module-* nginx-1.2.1/debian/modules/nginx-
 
 # Derleme hazırlıkları
 
-	- vim nginx-1.2.1/debian/rules
-	config.status.extras
-		...
-		...
-		# satir 170
-		--add-module=$(MODULESDIR)/nginx-rtmp-module \
+        - vim nginx-1.2.1/debian/rules
+        config.status.extras
+                ...
+                ...
+                # satir 170
+                --add-module=$(MODULESDIR)/nginx-rtmp-module \
 
-	- build-dep
-	su -
-	aptitude install libexpat1-dev liblua5.1-0-dev
-	aptitude build-dep nginx-extras
-	aptitude install libavcodec-dev libavformat-dev libavutil-dev
-	exit
+        - build-dep
+        su -
+        aptitude install libexpat1-dev liblua5.1-0-dev
+        aptitude build-dep nginx-extras
+        aptitude install libavcodec-dev libavformat-dev libavutil-dev
+        exit
 
 
 # Derleme
@@ -201,36 +201,36 @@ aptitude hold nginx-common nginx-extras
 
 # Nginx ayarları
 
-	- /etc/nginx/nginx.conf
-		rtmp {
-			server {
-				listen 1935;
+        - /etc/nginx/nginx.conf
+                rtmp {
+                        server {
+                                listen 1935;
 
-				application live {
-					live on;
-					allow publish 127.0.0.1;
-					deny publish all;
-					allow play all;
+                                application live {
+                                        live on;
+                                        allow publish 127.0.0.1;
+                                        deny publish all;
+                                        allow play all;
 
-					hls on;
-					hls_path /tmp/live;
-					hls_fragment 5s;
-				}
-			}
-		}
+                                        hls on;
+                                        hls_path /tmp/live;
+                                        hls_fragment 5s;
+                                }
+                        }
+                }
 
-	- /etc/nginx/sites-available/default
-		location /hls {
-			alias /tmp/live;
-		}
+        - /etc/nginx/sites-available/default
+                location /hls {
+                        alias /tmp/live;
+                }
 
-	- tmpfs altında hls path
-		mkdir /tmp/live
-		chown www-data: /tmp/live
+        - tmpfs altında hls path
+                mkdir /tmp/live
+                chown www-data: /tmp/live
 
-	- restart
-		/etc/init.d/nginx configtest
-		/etc/init.d/nginx restart
+        - restart
+                /etc/init.d/nginx configtest
+                /etc/init.d/nginx restart
 
 
 
@@ -335,7 +335,7 @@ ffmpeg  -re -i - \
 # -----------------------------------------------------------------------------
 
 # Debian Wheezy makine
-	Ireland
-	ami-d81b12ac
-	379101102735/debian-wheezy-amd64-20130208
-	Default user: admin
+        Ireland
+        ami-d81b12ac
+        379101102735/debian-wheezy-amd64-20130208
+        Default user: admin

@@ -1,979 +1,979 @@
 DEBIAN KURULUM NOTLARI (LENNY)
 
 *** Temel Kurulum
-	. Netinstall CD'si ile kurulum yap
-	. Software Selection bölümünde hiçbir senaryoyu seçme. Standart veya Base kurulum yap
-	. Kuruluma başlamadan önce kurulum CD'sinin sağlamlığını MD5 ile kontrol et
-	. Kurulum esnasinda kullanılabilecek DNS sunucular
-		208.67.222.222
-		208.67.220.220
-		
-	. Örnek bir partition tablosu
-	  mount seçeneklerinden 'noatime' seçilecek
-		/boot	100 MB	sda1
-		/	 10 GB	sda5	( normalde 3 GB yeterli; cekirdek derlenecekse, ilave 1 GB her cekirdek icin... )
-		/home	 50 GB	sda6
-		/var	 20 GB	sda7	( deb dosyalari bu bolumde tutulacak; web ve veritabani sunucu verileri de burada... )
-		/tmp	200 MB	sda8
-		swap	  1 GB	sda9
-		
+        . Netinstall CD'si ile kurulum yap
+        . Software Selection bölümünde hiçbir senaryoyu seçme. Standart veya Base kurulum yap
+        . Kuruluma başlamadan önce kurulum CD'sinin sağlamlığını MD5 ile kontrol et
+        . Kurulum esnasinda kullanılabilecek DNS sunucular
+                208.67.222.222
+                208.67.220.220
 
-	. Temel sistemin paket listesini sakla
-		cd
-		mkdir test
-		dpkg -l > dpkg_list_01.txt
+        . Örnek bir partition tablosu
+          mount seçeneklerinden 'noatime' seçilecek
+                /boot   100 MB  sda1
+                /        10 GB  sda5    ( normalde 3 GB yeterli; cekirdek derlenecekse, ilave 1 GB her cekirdek icin... )
+                /home    50 GB  sda6
+                /var     20 GB  sda7    ( deb dosyalari bu bolumde tutulacak; web ve veritabani sunucu verileri de burada... )
+                /tmp    200 MB  sda8
+                swap      1 GB  sda9
 
-	. /etc/hosts
-		127.0.0.1       localhost
-		127.0.1.1       debian.gnu.loc  debian
-		74.125.45.100	youtube.com     www.youtube.com
 
-	. /etc/apt/sources.list dosyasını düzenle
-		deb     http://ftp.debian.org/debian/                       lenny           main
-		deb-src http://ftp.debian.org/debian/                       lenny           main
-		deb     http://security.debian.org/                         lenny/updates   main
-		deb-src http://security.debian.org/                         lenny/updates   main
-		deb     http://volatile.debian.org/debian-volatile          lenny/volatile  main
-		deb-src http://volatile.debian.org/debian-volatile          lenny/volatile  main
-		deb     http://download.virtualbox.org/virtualbox/debian    lenny           non-free
-	
-	. /etc/apt/apt.conf.d/80recommends
-		APT::Install-Recommends "0";
-		APT::Install-Suggests "0";
-	
-	. Temel kurulumu güncelle
-		aptitude update && aptitude safe-upgrade
-	
-	. Temel kurulumdaki kullanılmayacak paketleri kaldır
-		aptitude purge	tasksel \
-				tasksel-data \
-				installation-report \
-				laptop-detect \
-				nano \
-				dhcp-client \
-				dhcp3-client \
-				dhcp3-common \ 
-				gcc-4.2-base
-	
-	. dhcp istemci kalacaksa ve istemcinin resolv.conf dosyasında
-	  kayıtlı DNS adreslerini değiştirmesi istenmiyorsa
-		/etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
-			#!/bin/sh
-			make_resolv_conf(){
-				:
-			}
+        . Temel sistemin paket listesini sakla
+                cd
+                mkdir test
+                dpkg -l > dpkg_list_01.txt
 
-		chmod +x /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
+        . /etc/hosts
+                127.0.0.1       localhost
+                127.0.1.1       debian.gnu.loc  debian
+                74.125.45.100   youtube.com     www.youtube.com
 
-	. /usr/src
-		cp -a /usr/src /home/src
-		mv /usr/src /usr/src.org
-		ln -s /home/src /usr/src
-	
-	. /etc/fstab
-		noatime kullanılacak
+        . /etc/apt/sources.list dosyasını düzenle
+                deb     http://ftp.debian.org/debian/                       lenny           main
+                deb-src http://ftp.debian.org/debian/                       lenny           main
+                deb     http://security.debian.org/                         lenny/updates   main
+                deb-src http://security.debian.org/                         lenny/updates   main
+                deb     http://volatile.debian.org/debian-volatile          lenny/volatile  main
+                deb-src http://volatile.debian.org/debian-volatile          lenny/volatile  main
+                deb     http://download.virtualbox.org/virtualbox/debian    lenny           non-free
 
-		partitionlar, UUID belirtilecek
-			ls -alh /dev/disk/by-uuid/
-		
-		swap icin UUID yoksa
-			swapoff -a
-			mkswap /dev/hda9
+        . /etc/apt/apt.conf.d/80recommends
+                APT::Install-Recommends "0";
+                APT::Install-Suggests "0";
 
-		iceweasel cache'i ramdisk olacaksa
-			mkdir /var/cache/iceweasel
-		/etc/fstab içine
-		tmpfs	/var/cache/iceweasel	tmpfs	noatime,size=90M,nr_inodes=10k,mode=777	0	0
+        . Temel kurulumu güncelle
+                aptitude update && aptitude safe-upgrade
 
-		tmpfs	/tmp			tmpfs	defaults,noatime			0	0
-		tmpfs	/var/tmp		tmpfs	defaults,noatime			0	0
-		tmpfs	/var/run		tmpfs	defaults,noatime			0	0
-		tmpfs	/var/lock		tmpfs	defaults,noatime			0	0
-		# live sistemlerde /var/log da tmpfs
-		tmpfs	/var/log		tmpfs	defaults,noatime			0	0
-		tmpfs	/etc/network/run	tmpfs	defaults,noatime			0	0
+        . Temel kurulumdaki kullanılmayacak paketleri kaldır
+                aptitude purge  tasksel \
+                                tasksel-data \
+                                installation-report \
+                                laptop-detect \
+                                nano \
+                                dhcp-client \
+                                dhcp3-client \
+                                dhcp3-common \
+                                gcc-4.2-base
 
-	. GRUB ayarları /boot/grub/menu.lst
-		- zaman aşımı
-			timeout 2
-			hiddenmenu
-			#color cyan/blue white/blue
-			password --md5 $1$gLhU0/$aW78kHK1QfV3P2b2znUoe/
+        . dhcp istemci kalacaksa ve istemcinin resolv.conf dosyasında
+          kayıtlı DNS adreslerini değiştirmesi istenmiyorsa
+                /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
+                        #!/bin/sh
+                        make_resolv_conf(){
+                                :
+                        }
 
-			parolayı belirlemek için 
-			/usr/sbin/grub
-				grub> md5crypt
-				Password: ************
-				Encrypted: $1$gLhU0/$aW78kHK1QfV3P2b2znUoe/
+                chmod +x /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
 
-			Her bölüm için title satırından sonra
-				lock
+        . /usr/src
+                cp -a /usr/src /home/src
+                mv /usr/src /usr/src.org
+                ln -s /home/src /usr/src
 
-		- partitionlar, UUID ile belirtilsin
+        . /etc/fstab
+                noatime kullanılacak
 
-		- vga
-			kernel	/vmlinuz-2.6.26-1-686 root=UUID=... ro quiet vga=773
-			
-			renk		640x480		800x600		1024x768	1280x1024
-			-------------	---------	---------	---------	---------
-			256	(8b )	769		771		773		775
-			32000	(15b)	784		787		790		793
-			65000	(16b)	785		788		791		794
-			16.7 M	(24b)	786		789		792		795
+                partitionlar, UUID belirtilecek
+                        ls -alh /dev/disk/by-uuid/
 
-	. ipv6 kapatılabilir
-		 /etc/modprobe.d/aliases
-			# alias net-pf-10 ipv6
-			alias net-pf-10 off
-			alias ipv6 off
+                swap icin UUID yoksa
+                        swapoff -a
+                        mkswap /dev/hda9
 
-	. live sistemler
-	  	rm /etc/mtab
-		ln -s /proc/mounts /etc/mtab
-		rm /etc/blkid.tab*
-		ln -s /dev/null /etc/blkid.tab
+                iceweasel cache'i ramdisk olacaksa
+                        mkdir /var/cache/iceweasel
+                /etc/fstab içine
+                tmpfs   /var/cache/iceweasel    tmpfs   noatime,size=90M,nr_inodes=10k,mode=777 0       0
+
+                tmpfs   /tmp                    tmpfs   defaults,noatime                        0       0
+                tmpfs   /var/tmp                tmpfs   defaults,noatime                        0       0
+                tmpfs   /var/run                tmpfs   defaults,noatime                        0       0
+                tmpfs   /var/lock               tmpfs   defaults,noatime                        0       0
+                # live sistemlerde /var/log da tmpfs
+                tmpfs   /var/log                tmpfs   defaults,noatime                        0       0
+                tmpfs   /etc/network/run        tmpfs   defaults,noatime                        0       0
+
+        . GRUB ayarları /boot/grub/menu.lst
+                - zaman aşımı
+                        timeout 2
+                        hiddenmenu
+                        #color cyan/blue white/blue
+                        password --md5 $1$gLhU0/$aW78kHK1QfV3P2b2znUoe/
+
+                        parolayı belirlemek için
+                        /usr/sbin/grub
+                                grub> md5crypt
+                                Password: ************
+                                Encrypted: $1$gLhU0/$aW78kHK1QfV3P2b2znUoe/
+
+                        Her bölüm için title satırından sonra
+                                lock
+
+                - partitionlar, UUID ile belirtilsin
+
+                - vga
+                        kernel  /vmlinuz-2.6.26-1-686 root=UUID=... ro quiet vga=773
+
+                        renk            640x480         800x600         1024x768        1280x1024
+                        -------------   ---------       ---------       ---------       ---------
+                        256     (8b )   769             771             773             775
+                        32000   (15b)   784             787             790             793
+                        65000   (16b)   785             788             791             794
+                        16.7 M  (24b)   786             789             792             795
+
+        . ipv6 kapatılabilir
+                 /etc/modprobe.d/aliases
+                        # alias net-pf-10 ipv6
+                        alias net-pf-10 off
+                        alias ipv6 off
+
+        . live sistemler
+                rm /etc/mtab
+                ln -s /proc/mounts /etc/mtab
+                rm /etc/blkid.tab*
+                ln -s /dev/null /etc/blkid.tab
 
 
 
 -------------------------------------------------------------------------
 *** Paketlerin kurulumu
-	. Çekirdek
-		dpkg -l | grep linux
-		aptitude purge eski_cekirdek
-	
-
-	. Yardımcı yazılımlar
-		aptitude install
-			vim			-> vim-runtime
-			screen
-			dash
-			vlock
-			openssh-client		-> libedit2 libkeyutils1 libkrb53
-			sshfs			-> fuse-utils libfuse2 libglib2.0-0 libglib2.0-data libpcre3
-			cstream
-			patch
-			diff
-			colordiff		-> perl perl-doc perl-modules
-			pciutils		-> libpci3
-			lshw
-			htop
-			iotop
-			tree
-			bzip2
-			zip			-> unzip
-			rsync
-			ncftp
-			tcpdump
-			fping
-			nmap			-> libpcap0.8 libpcre3
-			curl			-> ca-certificates libcurl3 libidn11 libssh2-1 openssl
-			bwm-ng			-> libstatgrab6
-			whois
-			wodim			-> genisoimage libcap2 libmagic1
-			dvd+rw-tools
-			mc			->  libglib2.0-0 libglib2.0-data
-			bitlbee			-> libevent1
-			weechat			-> aspell aspell-en dictionaries-common file libaspell15 libdb4.5 
-						-> liblua5.1-0 libperl5.10 libruby1.8 libsqlite3-0 mime-support 
-						-> python2.5 python2.5-minimal weechat-common weechat-curses weechat-plugins
-			weechat-plugins
-			sysv-rc-conf		-> perl perl-doc perl-modules libcurses-perl libcurses-ui-perl
-			pmount			-> dbus dbus-x11 libdbus-1-3 libexpat1 libhal-storage1 libhal1 libsysfs2
-			splay			-> libid3-3.8.3c2a
-			feh			-> giblib1
-			splashy			-> (boot ve halt sırasında resim gorunmesi için...)
-			popularity-contest	-> (Debian projesine yardımcı olmak için...)
-
-
-		- sshfs
-			adduser kullanici fuse
-
-		- vim
-			vim notlarında anlatıldığı gibi kullanıcı ve root için .vimrc oluşturulacak.
-			NERD_tree kurulacak
-
-		- dash
-			dpkg-reconfigure dash
-			(default shell)
-
-
-		- ~/.bashrc
-			# alias
-			alias l='ls -alh'
-			alias ll='ls -alh'
-
-			# vi modunda calis
-			set -o vi
-
-			# root icin
-			export TMOUT=300
-			unset HISTSIZE
-			unset HISTFILESIZE
-
-			# normal kullanici icin
-			export HISTSIZE=200
-			export HISTFILESIZE=0
-
-			# google translator
-			trans(){
-				 wget -qO- "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=$1&langpair=${2:en}|${3:-tr}" \
-				 | sed 's/.*"translatedText":"\([^"]*\)".*}/\1\n/';
-			}
-
-		- mc
-			Seçenekler -> Yapılandırma
-				[ ] kendi düzenleyicisini kullan
-				[ ] Kendi göstericisini Kullan
-
-			Seçenekler -> Ayarları kaydet
-
-		- weechat
-			- .weechat/weechat.rc
-				server_name = "freenode"
-				server_address = "irc.freenode.net"
-				server_port = 7000
-				server_ssl = on
-				server_password = "..."
-
-			- bigbrother
-				mkdir -p ~/.weechat/python/autoload
-				cp bigbrother.py ~/.weechat/python/autoload/
-
-
-		- bitlbee
-			su -
-			dpkg-reconfigure bitlbee
-				....		(6667 harci bir port)
-				
-			vim /etc/bitlbee/bitlbee.conf
-				RunMode = Daemon
-				DaemonInterface = 127.0.0.1
-				AuthMode = Closed
-				AuthPassword = parola1
-
-			/etc/init.d/bitlbee restart
-			exit
-			
-			vim ~/.weechat/weechat.rc 
-				server_name = "bitlbee"
-				server_autoconnect = on
-				server_address = "localhost"
-				server_port = ....	(belirleen port numarası)
-				server_password = "parola1"
-				server_nick1 = "nick"
-				server_command = "/msg nickserv identify parola2"
-				...
-				...
-
-			weechat
-				register parola2
-				identify parola2
-				account add protokol account parola3
-				set charset utf-8
-
-		- splashy
-			/boot/grub/menu.lst
-				kernel          /boot/vmlinuz-2.6.26-1-486 root=/dev/hdb1 ro vga=791 splash quiet
-
-			Ayarlar:
-				/etc/splashy/themes/default/theme.xml
-				/etc/splashy/themes/default/background.png
-
-			Değişiklik yapıldıysa:
-				update-initramfs -u
-			
-
-
-	. Programlama
-		aptitude install
-			git-core		-> libdigest-sha1-perl liberror-perl
-			gitk			( X kullanılacaksa)
-			python			-> file libdb4.5 libsqlite3-0 mime-support python-minimal 
-						-> python2.5 python2.5-minimal
-			python-support
-			python-central
-			ipython			-> python-pexpect
-			python-nose		-> python-pkg-resources
-			python-httplib2		( http protokolünü kullanan uygulamalar yazılacaksa		)
-			python-serial		( Seri portu kullanan Python uygulamaları yazılacaksa...	)
-			python-parallel		( Parallel portu kullanan Python uygulamaları yazılacaksa...	)
-			python-psycopg2		( PostgreSQL kullanılacaksa...					)
-						-> libpq5 python-egenix-mxdatetime python-egenix-mxtools
-			python-mysqldb		( MySQL kullanılacaksa...					)
-						-> libmysqlclient15off mysql-common
-			sqlite3			( sqlite kullanılacaksa... 					)
-			python-sqlite		( sqlite kullanılacaksa... 					)
-						-> libsqlite0
-
-			qt4-designer		( qt4 kullanılacaksa...						)
-						-> binutils defoma fontconfig fontconfig-config gcc gcc-4.2 
-						-> libaudio2 libc6-dev libdrm2 libexpat1 libfontconfig1 libfreetype6 
-						-> libgl1-mesa-dev libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev 
-						-> libice6 libjpeg62 liblcms1 libmng1 libpng12-0 libpthread-stubs0 
-						-> libpthread-stubs0-dev libqt4-assistant libqt4-dbus libqt4-designer 
-						-> libqt4-dev libqt4-help libqt4-network libqt4-opengl libqt4-opengl-dev 
-						-> libqt4-qt3support libqt4-script libqt4-sql libqt4-sql-mysql libqt4-svg
-						-> libqt4-test libqt4-webkit libqt4-xml libqt4-xmlpatterns libqtcore4 
-						-> libqtgui4 libsm6 libtiff4 libx11-dev libxau-dev libxcb-xlib0-dev 
-						-> libxcb1-dev libxdamage1 libxdmcp-dev libxfixes3 libxi6 libxrandr2 
-						-> libxrender1 libxt6 libxxf86vm1 linux-libc-dev mesa-common-dev 
-						-> perl perl-doc perl-modules qt4-qtconfig ttf-dejavu ttf-dejavu-core 
-						-> ttf-dejavu-extra ucf x11proto-core-dev x11proto-input-dev 
-						-> x11proto-kb-dev xtrans-dev
-			qt4-dev-tools		( qt4 kullanılacaksa...						)
-			qt4-doc			( qt4 kullanılacaksa...						)
-			pyqt4-dev-tools		( qt4 kullanılacaksa...						)
-			python-qt4		( qt4 kullanılacaksa...						)
-			python-qt4-sql		( qt4 kullanılacaksa...						)
-			python-qt4-doc		( qt4 kullanılacaksa...						)
-
-			python-scipy		( signal ve görüntü analizi yapılacaksa				)
-						-> binutils cpp cpp-4.3 g++ g++-4.3 gcc gcc-4.3 libblas3gf libc6-dev 
-						-> libfftw3-3 libfreetype6 libgfortran3 libgmp3c2 libgomp1 libjpeg62 
-						-> liblapack3gf libmpfr1ldbl libstdc++6-4.3-dev libsuitesparse-3.1.0 
-						-> linux-libc-dev python-imaging python-numpy
-			python-matplotlib	( matlab tarzı grafikler çizdirilecekse				)
-						-> blt defoma dvidvi dvipdfmx dvipng fontconfig fontconfig-config 
-						-> ghostscript gsfonts hicolor-icon-theme lacheck latex-beamer 
-						-> latex-xcolor libatk1.0-0 libatk1.0-data libcairo2 libcups2 libcupsimage2 
-						-> libcupsys2 libdatrie0 libdrm2 libexpat1 libffi5 libfontconfig1 
-						-> libfontenc1 libgd2-xpm libgl1-mesa-glx libglade2-0 libgs8 libgtk2.0-0 
-						-> libgtk2.0-bin libgtk2.0-common libice6 libkpathsea4 libpango1.0-0 
-						-> libpango1.0-common libpaper-utils libpaper1 libpixman-1-0 libpng12-0 
-						-> libpoppler3 libsm6 libt1-5 libthai-data libthai0 libtiff4 libxaw7 
-						-> libxcb-render-util0 libxcb-render0 libxcomposite1 libxcursor1 
-						-> libxdamage1 libxfixes3 libxfont1 libxft2 libxi6 libxinerama1 libxmu6 
-						-> libxpm4 libxrandr2 libxrender1 libxt6 libxtst6 libxv1 libxxf86dga1 
-						-> libxxf86vm1 lmodern perl-tk pgf prosper ps2eps psfontmgr python-cairo 
-						-> python-configobj python-dateutil python-dev python-enthought-traits 
-						-> python-excelerator python-gd python-glade2 python-gobject python-gtk2 
-						-> python-matplotlib python-matplotlib-data python-numeric python-pyparsing 
-						-> python-tk python-tz python2.5-dev tcl8.4 tetex-bin tex-common texlive 
-						-> texlive-base texlive-base-bin texlive-base-bin-doc texlive-common 
-						-> texlive-doc-base texlive-extra-utils texlive-fonts-recommended 
-						-> texlive-fonts-recommended-doc texlive-generic-recommended 
-						-> texlive-latex-base texlive-latex-base-doc texlive-latex-recommended 
-						-> texlive-latex-recommended-doc texlive-pstricks texlive-pstricks-doc 
-						-> tipa tk8.4 ttf-dejavu ttf-dejavu-core ttf-dejavu-extra ucf 
-						-> x-ttcidfont-conf x11-utils xbitmaps xfonts-encodings xfonts-utils xterm
-			php5-cli		-> php5-common
-
-	. Sunucu yazılımlar
-		aptitude install
-			ntpdate
-			shorewall		-> dash iproute libatm1 shorewall-common shorewall-shell
-			openssh-server		-> libx11-6 libx11-data libxau6 libxcb-xlib0 libxcb1 libxdmcp6
-						-> libxext6 libxmuu1 openssh-blacklist openssh-blacklist-extra
-						-> x11-common xauth
-			exim4			-> bsd-mailx exim4-base exim4-config exim4-daemon-light liblockfile1 
-						-> mailx psmisc
-			pure-ftpd		-> libcap1 perl perl-doc perl-modules pure-ftpd-common
-			bind9			-> libbind9-30 libdns32 libisc32 libisccc30 libisccfg30 liblwres30
-			postgresql		-> libpq5 libxml2 openssl-blacklist perl perl-doc perl-modules 
-						-> postgresql-8.3 postgresql-client-8.3 postgresql-client-common 
-						-> postgresql-common sgml-base ssl-cert xml-core
-			mysql-server		-> bsd-mailx exim4 exim4-base exim4-config exim4-daemon-light 
-						-> libdbd-mysql-perl libdbi-perl libhtml-template-perl liblockfile1 
-						-> libnet-daemon-perl libplrpc-perl libterm-readkey-perl mailx 
-						-> mysql-client-5.0 mysql-server-5.0 perl perl-doc perl-modules psmisc
-			apache2			-> apache2-mpm-worker apache2-utils apache2.2-common libapr1 libaprutil1 
-						-> libexpat1 libpq5
-			libapache2-mod-python
-			python-moinmoin		-> moinmoin-common
-			lighttpd		-> fam libfam0 libterm-readline-perl-perl portmap update-inetd
-
-
-		- ntpdate ayarları
-			ntpdate-debian
-			hwclock -w
-			
-			komutlarını açılışta ve saatte bir çalıştırmak için 
-			crontab ve init.d ayarları yapılır
-
-		- shorewall ayarları
-			Shorewall kurulum notlarında anlatıldığı gibi kurulum yapılır
-
-		- sshd ayarları 
-			- /etc/ssh/sshd_config
-				Port 22
-				PermitRootLogin	no
-				AllowUsers	kullanici_adi
-				PasswordAuthentication no		(sadece key ile girilecekse)
-	
-			- /home/kullanici/.ssh/rc
-				MAIL="mail@adres.com"
-
-				makine=`hostname -f`
-				kimlik=`whoami`
-				adres=$SSH_CONNECTION
-				ip=`echo $adres | awk '{print $1}'`
-				tarih=`date +'%d/%m/%Y %H:%M'`
-	
-				KONU="ssh: $kimlik@$makine $ip $tarih"
-				MESAJ="makine\t: $makine\n\
-				kimlik\t: $kimlik\n\
-				adres\t: $adres\n\
-				tarih\t: $tarih"
-
-				echo $MESAJ | mail -s "$KONU" $MAIL
-
-			- /home/kullanici/.ssh/config
-				Host *
-					Cipher=blowfish
-					CompressionLevel=9
-
-
-		- exim4 ayarları
-			E-mail Notları'nda anlatıldığı gibi kurulacak
-
-		- pure-ftpd ayarları
-			- /etc/default/pure-ftpd-common (openbsd-inetd kurulu degilse...)
-				STANDALONE_OR_INETD=standalone
-				
-			- echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
-			- echo "yes" > /etc/pure-ftpd/conf/NoAnonymous
-			- echo "yes" > /etc/pure-ftpd/conf/DontResolve
-			- echo "yes" > /etc/pure-ftpd/conf/DisplayDotFiles
-
-			- readonly anonymous ftp olacaksa
-				adduser --system --group ftp
-				echo "no" > /etc/pure-ftpd/conf/NoAnonymous
-				echo "no" > /etc/pure-ftpd/conf/AnonymousCanCreateDirs
-				echo "yes" > /etc/pure-ftpd/conf/AnonymousCantUpload
-
-			- binary moda geçmede problem varsa
-				/etc/init.d/pure-ftpd
-					# 12. satira eklenebilir
-					LANG=
-
-			- sanal kullanıcılar olacaksa
-				mkdir -p /home/emrah/ftpdata/kullanici1
-				pure-pw useradd kullanici1 -u emrah -d /home/emrah/ftpdata/kullanici1
-				pure-pw mkdb
-				echo "/etc/pure-ftpd/pureftpd.pdb" > /etc/pure-ftpd/conf/PureDB
-				ln -s ../conf/PureDB /etc/pure-ftpd/auth/60puredb
-				/etc/init.d/pure-ftpd restart
-
-				mkdir /home/emrah/ftpdata/kullanici2
-				pure-pw useradd kullanici2 -u emrah -d /home/emrah/ftpdata/kullanici2
-				pure-pw mkdb
-
-				. Kullanıcı parolası değiştirme
-				pure-pw passwd kullanici1
-				pure-pw mkdb
-
-				. Kullanıcı silme
-				pure-pw userdel kullanici1
-				pure-pw mkdb
-
-				. Kullanıcıları listeleme
-				pure-pw list
-
-				. Kullanıcı bilgilerini görme
-				pure-pw show kullanici1
-
-		- bind9
-			- /etc/resolv.conf
-				nameserver localhost
-
-			- /etc/network/interfaces
-				dns-nameservers localhost
-
-		- apache2
-			- /etc/apache2/conf.d/security
-				ServerTokens Prod
-				ServerSignature Off
-				TraceEnable Off
-
-			- site.com ayarları
-				- mkdir /var/www/site_com
-
-				- echo "" > /var/www/site_com/index.html
-
-				- /etc/apache2/site-available/site_com
-					<VirtualHost *>
-						ServerName      www.site.com
-						ServerAlias     site.com *.site.com
-						DocumentRoot    /var/www/site_com/
-						ErrorLog        /var/log/apache2/error_site_com.log
-						TransferLog     /var/log/apache2/access_site_com.log
-
-						<Directory /var/www/site_com/>
-							Options -Indexes FollowSymLinks MultiViews
-							AllowOverride AuthConfig Options
-							Order allow,deny
-							Allow from all
-						</Directory>
-					</VirtualHost>
-
-				- cd /etc/apache2/site-enabled
-				  ln -s ../site-available/site_com site_com
-
-
-			- Gizli dosyalar için htaccess ayarları
-				- cd ~
-				  mkdir htaccess
-				  cd htaccess
-				  htpasswd -sc htpasswd kullanici1
-				  htpasswd -s htpasswd kullanici2
-					-s sha
-					-m md5
-				  chmod 644 htpasswd    (640 Ubuntu'da sorun çıkardı)
-							(öncelikle 640 denensin veya dosya Apache kullanıcısına verilsin)
-
-				- cd /var/www/site_com
-				  mkdir gizli
-				  cd gizli
-				  touch .htaccess
-
-				- /var/www/site_com/gizli/.htaccess
-					 AuthUserFile	/home/kullanici/htaccess/htpasswd
-					 AuthType	Basic
-					 AuthName	"..."
-					 Require	valid-user
-					 Options	Indexes
-				
-
-
-			
-	. X uygulamaları
-		aptitude install
-			xorg			-> dbus dbus-x11 defoma fontconfig-config libdbus-1-3 libdrm2 libfontconfig1 
-						-> libfontenc1 libfreetype6 libfs6 libgl1-mesa-dri libgl1-mesa-glx 
-						-> libglu1-mesa libhal1 libice6 libpixman-1-0 libpng12-0 libsm6 libxaw7 
-						-> libxcursor1 libxdamage1 libxfixes3 libxfont1 libxft2 libxi6 libxinerama1 
-						-> libxkbfile1 libxmu6 libxpm4 libxrandr2 libxrender1 libxt6 libxtrap6 
-						-> libxtst6 libxv1 libxxf86dga1 libxxf86misc1 libxxf86vm1 ttf-dejavu 
-						-> ttf-dejavu-core ttf-dejavu-extra ucf x11-apps x11-session-utils x11-utils 
-						-> x11-xfs-utils x11-xkb-utils x11-xserver-utils xbitmaps xfonts-100dpi 
-						-> xfonts-75dpi xfonts-base xfonts-encodings xfonts-scalable xfonts-utils 
-						-> xinit xkb-data xorg xorg-docs xserver-xorg xserver-xorg-core 
-						-> xserver-xorg-input-all xserver-xorg-input-evdev xserver-xorg-input-kbd 
-						-> xserver-xorg-input-mouse xserver-xorg-input-synaptics 
-						-> xserver-xorg-input-wacom xserver-xorg-video-all xserver-xorg-video-apm 
-						-> xserver-xorg-video-ark xserver-xorg-video-ati xserver-xorg-video-chips 
-						-> xserver-xorg-video-cirrus xserver-xorg-video-cyrix 
-						-> xserver-xorg-video-dummy xserver-xorg-video-fbdev 
-						-> xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 
-						-> xserver-xorg-video-imstt xserver-xorg-video-intel xserver-xorg-video-mga 
-						-> xserver-xorg-video-neomagic xserver-xorg-video-newport 
-						-> xserver-xorg-video-nsc xserver-xorg-video-nv xserver-xorg-video-rendition 
-						-> xserver-xorg-video-s3 xserver-xorg-video-s3virge 
-						-> xserver-xorg-video-savage xserver-xorg-video-siliconmotion 
-						-> xserver-xorg-video-sis xserver-xorg-video-sisusb xserver-xorg-video-tdfx 
-						-> xserver-xorg-video-tga xserver-xorg-video-trident 
-						-> xserver-xorg-video-tseng xserver-xorg-video-v4l xserver-xorg-video-vesa 
-						-> xserver-xorg-video-vga xserver-xorg-video-via xserver-xorg-video-vmware 
-						-> xserver-xorg-video-voodoo xterm
-			openbox			-> fontconfig libcairo2 libdatrie0 libobparser21 libobrender21 libpango1.0-0 
-						-> libpango1.0-common libstartup-notification0 libthai-data libthai0 libxml2 
-						-> openbox-themes sgml-base x-ttcidfont-conf xml-core xutils xutils-dev
-			menu
-			rxvt
-			rxvt-unicode		-> hicolor-icon-theme libafterimage0 libatk1.0-0 libatk1.0-data libcroco3 
-						-> libcups2 libcupsys2 libgif4 libgsf-1-114 libgsf-1-common libgtk2.0-0 
-						-> libgtk2.0-bin libgtk2.0-common libjpeg62 libperl5.10 librsvg2-2 libtiff4 
-						-> libxcomposite1
-			rox-filer		-> binutils libbeecrypt6 libffi5 libglade2-0 libneon27 librpm4.4 lzma 
-						-> python-cairo python-glade2 python-gobject python-gtk2 python-numeric 
-						-> rpm shared-mime-info zeroinstall-injector
-			xpdf			-> gsfonts gsfonts-x11 lesstif2 libpaper-utils libpaper1 libt1-5 libxp6 
-						-> xpdf-common xpdf-reader xpdf-utils
-			iceweasel		-> dictionaries-common libhunspell-1.2-0 libnspr4-0d libnss3-1d libxp6 
-						-> myspell-en-us
-			mozilla-plugin-gnash	-> gnash gnash-common gstreamer0.10-fluendo-mp3 libboost-date-time1.34.1 
-						-> libboost-thread1.34.1
-			smplayer		->
-			audacious		->
-			wireshark		-> gksu jackd libadns1 libadns1-bin libaudio2 libavc1394-0
-						-> libflac8 libfreebob0 libgksu2-0 libgtop2-7 libgtop2-common
-						-> libiec61883-0 libjack0 liblcms1 libmng1 libogg0 libportaudio2
-						-> libqt3-mt libraw1394-8 libsndfile1 qjackctl sudo wireshark-common
-			xtrlock
-			unclutter
-			conky			-> libcurl3-gnutls libiw29
-			numlockx
-			alsa-base		-> alsa-utils libasound2 linux-sound-base lsof
-			kicad			-> libaudiofile0 esound-common esound-clients libesd0 
-						-> libwxgtk2.6-0 libwxbase2.6-0 kicad
-			qucs			-> freehdl guile-1.6 guile-1.6-libs libaudio2 libfreehdl0
-						-> libfreehdl0-dev libguile-ltdl-1 liblcms1 libmng1
-						-> libqt3-mt libqthreads-12 verilog
-			x11vnc			-> libavahi-client3 libavahi-common-data libavahi-common3 libvncserver0
-			xvnc4viewer
-			rdesktop
-
-
-		aptitude purge xterm
-
-		- /etc/X11/xorg.conf ayarları
-			Grafik kart ve monitor için uygun değerler set edilir
-
-			Bazı ayarlar: 
-
-			Section "InputDevice"
-				Identifier	"Generic Keyboard"
-				...
-				Option		"XkbModel"	"pc105"
-				Option		"XkbLayout"	"tr"
-			EndSection
-			Section "Device"
-				...
-				Option		"Rotate"	"CCW"
-			EndSection
-			Section "Monitor"
-				...
-				HorizSync	30-70
-				VertRefresh	50-160
-			EndSection
-			Section "Screen"
-				...
-				SubSection "Display"
-					Modes	"1152x864" "1024x768" "832x624" "800x600" "720x400" "640x480
-				EndSubSection
-			EndSection
-			Section "ServerFlags"
-				# ctrl+alt+backspace ile X'in kapanmasini engeller(kiosk)
-				Option		"DontZap"	"yes"
-				# ctrl+alt+"+/-" ile zoomlama yapmayi engeller (kiosk)
-				Option		"DontZoom"	"yes"
-				# ctrl+alt+Fx ile sanal terminallere gecmeyi engeller (kiosk)
-				Option		"DontVTSwitch"	"yes"
-			EndSection
-
-		- fluxbox ayarları
-			- update-menus
-
-			- ~/.fluxbox/keys dosyası, "Fluxbox Kısayolları" notundaki gibi düzenlenecek
-
-			- Başlangıçta çalışacak programlar ~/.fluxbox/startup dosyasina
-				unclutter -idle 2 &
-		
-			- styles
-				Spiff veya Twice veya Operation
-	
-			- saat
-				%d/%m/%Y %H:%M:%S
-
-			
-		- openbox ayarları
-			- update-menus
-
-			- mkdir ~/.config/openbox
-			  cd .config/openbox/
-			  cp /etc/xdg/openbox/menu.xml .
-			  cp /etc/xdg/openbox/rc.xml .
-			  cp /etc/xdg/openbox/autostart.sh .
-
-			  Bu dosyalar "Openbox Ayarları" notundaki gibi düzenlenecek
-
-			  
-		- iceweasel ayarları
-
-			- about:config
-				. browser.cache.disk.parent_directory		/var/cache/iceweasel
-				. browser.download.manager.showWhenStarting	false
-				. browser.sessionstore.interval			60000
-				. content.notify.backoffcount			0
-				. intl.charset.default				UTF-8
-				. mousewheel.withnokey.numlines			7
-				. mousewheel.withnokey.sysnumlines		false
-				. network.http.pipelining			true
-				. network.http.pipelining.maxrequests		50
-				. network.http.request.max-start-delay		100
-				. network.dns.disableIPv6			true
-				
-			- extensions
-				. Vimperator
-				. NoScript
-				. BetterPrivacy
-					- .macromedia klasör
-					- Auto-delete Flash cookies by timer 30 min
-					- Also auto-delete Flashplayer default cookie (settings.sol)
-
-			- live mozilla ayarları
-				todisk.sh ve toram.sh uygulamaları hazırlanıp openbox açılış scriptine toram.sh eklenecek
-				cp -arp .mozilla .mozilla.org
-				rm -rf .mozilla 
-				ln -s /var/cache/iceweasel/mozilla .mozilla
-
-		- conky
-			~/.conkyrc
-				alignment bottom_left
-				background no
-				border_width 1
-				cpu_avg_samples 2
-				default_color white
-				default_outline_color white
-				default_shade_color white
-				draw_borders no
-				draw_graph_borders yes
-				draw_outline no
-				draw_shades no
-				font 9x15
-				gap_x 10
-				gap_y 10
-				minimum_size 5 5
-				net_avg_samples 2
-				no_buffers yes
-				out_to_console no
-				own_window no
-				own_window_class Conky
-				own_window_type normal
-				stippled_borders 0
-				update_interval 3.0
-				uppercase no
-				use_spacer none
-
-				TEXT
-				${color orange}$nodename      $time
-				${color blue}eth0      :${color} ${addr eth0}
-				${color blue}eth1      :${color} ${addr eth1}
-				$color$hr
-				${color orange}$sysname $kernel on $machine
-				${color blue}Uptime    :${color} $uptime
-				${color blue}Frequency :${color} $freq
-				${color blue}CPU Usage :${color} $cpu% ${cpubar 4}
-				${color blue}CPU Temp  :${color} ${platform w83627hf.656 temp 2}
-				${cpugraph cpu0 20,350 000F83 B0B6E3}
-				${color blue}Processes :${color} $processes  ${color blue}Running: ${color}$running_processes
-				${color blue}RAM Usage :${color} $mem/$memmax - $memperc% ${membar 4}
-				${color blue}Swap Usage:${color} $swap/$swapmax - $swapperc% ${swapbar 4}
-				$hr
-				${color orange}File systems:
-				 ${color blue}/     $color${fs_free /}/${fs_size /} ${fs_bar 6 /}
-				 ${color blue}/home $color${fs_free /home}/${fs_size /home} ${fs_bar 6 /home}
-				 ${color blue}/var  $color${fs_free /var}/${fs_size /var} ${fs_bar 6 /var}
-				 ${color blue}/tmp  $color${fs_free /tmp}/${fs_size /tmp} ${fs_bar 6 /tmp}
-
-				${color orange}Networking:
-				${color blue}Up: $color${upspeed eth0} k/s  ${color blue}Down: $color${downspeed eth0} k/s
-				$hr
-				${color orange}Name               PID   CPU%   MEM%
-				${color lightgrey} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
-				${color lightgrey} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
-				${color lightgrey} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
-				${color lightgrey} ${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}
-				${color lightgrey} ${top name 5} ${top pid 5} ${top cpu 5} ${top mem 5}
-				${color lightgrey} ${top name 6} ${top pid 6} ${top cpu 6} ${top mem 6}
-				${color lightgrey} ${top name 7} ${top pid 7} ${top cpu 7} ${top mem 7}
-				${color lightgrey} ${top name 8} ${top pid 8} ${top cpu 8} ${top mem 8}
-				${color lightgrey} ${top name 9} ${top pid 9} ${top cpu 9} ${top mem 9}
-
-		- numlockx
-			grafik ekranda terminal açıp
-			numlockx on
-
-		- alsa ayarları
-			alsaconf
-
-		- x11vnc
-			x11vnc -storepasswd
-
-
-
-			~/.fluxbox/startup veya ~/.config/openbox/autostart.sh
-				x11vnc -display :0 -nolookup -forever -rfbauth ~/.vnc/passwd -autoport 5900 -localhost &
-
-
-			~/.bashrc
-				alias vnc='vncviewer localhost:5900'
-
-
-			Sadece ssh ile baglanan kullanicinin X oturumuna gecmesine izin verilecek.
-
-
-		- zekr
-			mkdir ~/progs
-			cd ~/progs
-
-			http://zekr.org/quran/quran-for-linux
-			http://sourceforge.net/projects/zekr/ adresinden tar.gz indirilip bu klasöre konulacak
-
-			tar zxf zekr-x.y.z-linux.tar.gz
-			cd zekr
-
-			vim zekr.sh
-				export MOZILLA_FIVE_HOME=/usr/lib/iceweasel
-
-			http://zekr.org/resources.html adresinden Türkçe mealleri indir, arayüzden ekle
-			
+        . Çekirdek
+                dpkg -l | grep linux
+                aptitude purge eski_cekirdek
+
+
+        . Yardımcı yazılımlar
+                aptitude install
+                        vim                     -> vim-runtime
+                        screen
+                        dash
+                        vlock
+                        openssh-client          -> libedit2 libkeyutils1 libkrb53
+                        sshfs                   -> fuse-utils libfuse2 libglib2.0-0 libglib2.0-data libpcre3
+                        cstream
+                        patch
+                        diff
+                        colordiff               -> perl perl-doc perl-modules
+                        pciutils                -> libpci3
+                        lshw
+                        htop
+                        iotop
+                        tree
+                        bzip2
+                        zip                     -> unzip
+                        rsync
+                        ncftp
+                        tcpdump
+                        fping
+                        nmap                    -> libpcap0.8 libpcre3
+                        curl                    -> ca-certificates libcurl3 libidn11 libssh2-1 openssl
+                        bwm-ng                  -> libstatgrab6
+                        whois
+                        wodim                   -> genisoimage libcap2 libmagic1
+                        dvd+rw-tools
+                        mc                      ->  libglib2.0-0 libglib2.0-data
+                        bitlbee                 -> libevent1
+                        weechat                 -> aspell aspell-en dictionaries-common file libaspell15 libdb4.5
+                                                -> liblua5.1-0 libperl5.10 libruby1.8 libsqlite3-0 mime-support
+                                                -> python2.5 python2.5-minimal weechat-common weechat-curses weechat-plugins
+                        weechat-plugins
+                        sysv-rc-conf            -> perl perl-doc perl-modules libcurses-perl libcurses-ui-perl
+                        pmount                  -> dbus dbus-x11 libdbus-1-3 libexpat1 libhal-storage1 libhal1 libsysfs2
+                        splay                   -> libid3-3.8.3c2a
+                        feh                     -> giblib1
+                        splashy                 -> (boot ve halt sırasında resim gorunmesi için...)
+                        popularity-contest      -> (Debian projesine yardımcı olmak için...)
+
+
+                - sshfs
+                        adduser kullanici fuse
+
+                - vim
+                        vim notlarında anlatıldığı gibi kullanıcı ve root için .vimrc oluşturulacak.
+                        NERD_tree kurulacak
+
+                - dash
+                        dpkg-reconfigure dash
+                        (default shell)
+
+
+                - ~/.bashrc
+                        # alias
+                        alias l='ls -alh'
+                        alias ll='ls -alh'
+
+                        # vi modunda calis
+                        set -o vi
+
+                        # root icin
+                        export TMOUT=300
+                        unset HISTSIZE
+                        unset HISTFILESIZE
+
+                        # normal kullanici icin
+                        export HISTSIZE=200
+                        export HISTFILESIZE=0
+
+                        # google translator
+                        trans(){
+                                 wget -qO- "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=$1&langpair=${2:en}|${3:-tr}" \
+                                 | sed 's/.*"translatedText":"\([^"]*\)".*}/\1\n/';
+                        }
+
+                - mc
+                        Seçenekler -> Yapılandırma
+                                [ ] kendi düzenleyicisini kullan
+                                [ ] Kendi göstericisini Kullan
+
+                        Seçenekler -> Ayarları kaydet
+
+                - weechat
+                        - .weechat/weechat.rc
+                                server_name = "freenode"
+                                server_address = "irc.freenode.net"
+                                server_port = 7000
+                                server_ssl = on
+                                server_password = "..."
+
+                        - bigbrother
+                                mkdir -p ~/.weechat/python/autoload
+                                cp bigbrother.py ~/.weechat/python/autoload/
+
+
+                - bitlbee
+                        su -
+                        dpkg-reconfigure bitlbee
+                                ....            (6667 harci bir port)
+
+                        vim /etc/bitlbee/bitlbee.conf
+                                RunMode = Daemon
+                                DaemonInterface = 127.0.0.1
+                                AuthMode = Closed
+                                AuthPassword = parola1
+
+                        /etc/init.d/bitlbee restart
+                        exit
+
+                        vim ~/.weechat/weechat.rc
+                                server_name = "bitlbee"
+                                server_autoconnect = on
+                                server_address = "localhost"
+                                server_port = ....      (belirleen port numarası)
+                                server_password = "parola1"
+                                server_nick1 = "nick"
+                                server_command = "/msg nickserv identify parola2"
+                                ...
+                                ...
+
+                        weechat
+                                register parola2
+                                identify parola2
+                                account add protokol account parola3
+                                set charset utf-8
+
+                - splashy
+                        /boot/grub/menu.lst
+                                kernel          /boot/vmlinuz-2.6.26-1-486 root=/dev/hdb1 ro vga=791 splash quiet
+
+                        Ayarlar:
+                                /etc/splashy/themes/default/theme.xml
+                                /etc/splashy/themes/default/background.png
+
+                        Değişiklik yapıldıysa:
+                                update-initramfs -u
+
+
+
+        . Programlama
+                aptitude install
+                        git-core                -> libdigest-sha1-perl liberror-perl
+                        gitk                    ( X kullanılacaksa)
+                        python                  -> file libdb4.5 libsqlite3-0 mime-support python-minimal
+                                                -> python2.5 python2.5-minimal
+                        python-support
+                        python-central
+                        ipython                 -> python-pexpect
+                        python-nose             -> python-pkg-resources
+                        python-httplib2         ( http protokolünü kullanan uygulamalar yazılacaksa             )
+                        python-serial           ( Seri portu kullanan Python uygulamaları yazılacaksa...        )
+                        python-parallel         ( Parallel portu kullanan Python uygulamaları yazılacaksa...    )
+                        python-psycopg2         ( PostgreSQL kullanılacaksa...                                  )
+                                                -> libpq5 python-egenix-mxdatetime python-egenix-mxtools
+                        python-mysqldb          ( MySQL kullanılacaksa...                                       )
+                                                -> libmysqlclient15off mysql-common
+                        sqlite3                 ( sqlite kullanılacaksa...                                      )
+                        python-sqlite           ( sqlite kullanılacaksa...                                      )
+                                                -> libsqlite0
+
+                        qt4-designer            ( qt4 kullanılacaksa...                                         )
+                                                -> binutils defoma fontconfig fontconfig-config gcc gcc-4.2
+                                                -> libaudio2 libc6-dev libdrm2 libexpat1 libfontconfig1 libfreetype6
+                                                -> libgl1-mesa-dev libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev
+                                                -> libice6 libjpeg62 liblcms1 libmng1 libpng12-0 libpthread-stubs0
+                                                -> libpthread-stubs0-dev libqt4-assistant libqt4-dbus libqt4-designer
+                                                -> libqt4-dev libqt4-help libqt4-network libqt4-opengl libqt4-opengl-dev
+                                                -> libqt4-qt3support libqt4-script libqt4-sql libqt4-sql-mysql libqt4-svg
+                                                -> libqt4-test libqt4-webkit libqt4-xml libqt4-xmlpatterns libqtcore4
+                                                -> libqtgui4 libsm6 libtiff4 libx11-dev libxau-dev libxcb-xlib0-dev
+                                                -> libxcb1-dev libxdamage1 libxdmcp-dev libxfixes3 libxi6 libxrandr2
+                                                -> libxrender1 libxt6 libxxf86vm1 linux-libc-dev mesa-common-dev
+                                                -> perl perl-doc perl-modules qt4-qtconfig ttf-dejavu ttf-dejavu-core
+                                                -> ttf-dejavu-extra ucf x11proto-core-dev x11proto-input-dev
+                                                -> x11proto-kb-dev xtrans-dev
+                        qt4-dev-tools           ( qt4 kullanılacaksa...                                         )
+                        qt4-doc                 ( qt4 kullanılacaksa...                                         )
+                        pyqt4-dev-tools         ( qt4 kullanılacaksa...                                         )
+                        python-qt4              ( qt4 kullanılacaksa...                                         )
+                        python-qt4-sql          ( qt4 kullanılacaksa...                                         )
+                        python-qt4-doc          ( qt4 kullanılacaksa...                                         )
+
+                        python-scipy            ( signal ve görüntü analizi yapılacaksa                         )
+                                                -> binutils cpp cpp-4.3 g++ g++-4.3 gcc gcc-4.3 libblas3gf libc6-dev
+                                                -> libfftw3-3 libfreetype6 libgfortran3 libgmp3c2 libgomp1 libjpeg62
+                                                -> liblapack3gf libmpfr1ldbl libstdc++6-4.3-dev libsuitesparse-3.1.0
+                                                -> linux-libc-dev python-imaging python-numpy
+                        python-matplotlib       ( matlab tarzı grafikler çizdirilecekse                         )
+                                                -> blt defoma dvidvi dvipdfmx dvipng fontconfig fontconfig-config
+                                                -> ghostscript gsfonts hicolor-icon-theme lacheck latex-beamer
+                                                -> latex-xcolor libatk1.0-0 libatk1.0-data libcairo2 libcups2 libcupsimage2
+                                                -> libcupsys2 libdatrie0 libdrm2 libexpat1 libffi5 libfontconfig1
+                                                -> libfontenc1 libgd2-xpm libgl1-mesa-glx libglade2-0 libgs8 libgtk2.0-0
+                                                -> libgtk2.0-bin libgtk2.0-common libice6 libkpathsea4 libpango1.0-0
+                                                -> libpango1.0-common libpaper-utils libpaper1 libpixman-1-0 libpng12-0
+                                                -> libpoppler3 libsm6 libt1-5 libthai-data libthai0 libtiff4 libxaw7
+                                                -> libxcb-render-util0 libxcb-render0 libxcomposite1 libxcursor1
+                                                -> libxdamage1 libxfixes3 libxfont1 libxft2 libxi6 libxinerama1 libxmu6
+                                                -> libxpm4 libxrandr2 libxrender1 libxt6 libxtst6 libxv1 libxxf86dga1
+                                                -> libxxf86vm1 lmodern perl-tk pgf prosper ps2eps psfontmgr python-cairo
+                                                -> python-configobj python-dateutil python-dev python-enthought-traits
+                                                -> python-excelerator python-gd python-glade2 python-gobject python-gtk2
+                                                -> python-matplotlib python-matplotlib-data python-numeric python-pyparsing
+                                                -> python-tk python-tz python2.5-dev tcl8.4 tetex-bin tex-common texlive
+                                                -> texlive-base texlive-base-bin texlive-base-bin-doc texlive-common
+                                                -> texlive-doc-base texlive-extra-utils texlive-fonts-recommended
+                                                -> texlive-fonts-recommended-doc texlive-generic-recommended
+                                                -> texlive-latex-base texlive-latex-base-doc texlive-latex-recommended
+                                                -> texlive-latex-recommended-doc texlive-pstricks texlive-pstricks-doc
+                                                -> tipa tk8.4 ttf-dejavu ttf-dejavu-core ttf-dejavu-extra ucf
+                                                -> x-ttcidfont-conf x11-utils xbitmaps xfonts-encodings xfonts-utils xterm
+                        php5-cli                -> php5-common
+
+        . Sunucu yazılımlar
+                aptitude install
+                        ntpdate
+                        shorewall               -> dash iproute libatm1 shorewall-common shorewall-shell
+                        openssh-server          -> libx11-6 libx11-data libxau6 libxcb-xlib0 libxcb1 libxdmcp6
+                                                -> libxext6 libxmuu1 openssh-blacklist openssh-blacklist-extra
+                                                -> x11-common xauth
+                        exim4                   -> bsd-mailx exim4-base exim4-config exim4-daemon-light liblockfile1
+                                                -> mailx psmisc
+                        pure-ftpd               -> libcap1 perl perl-doc perl-modules pure-ftpd-common
+                        bind9                   -> libbind9-30 libdns32 libisc32 libisccc30 libisccfg30 liblwres30
+                        postgresql              -> libpq5 libxml2 openssl-blacklist perl perl-doc perl-modules
+                                                -> postgresql-8.3 postgresql-client-8.3 postgresql-client-common
+                                                -> postgresql-common sgml-base ssl-cert xml-core
+                        mysql-server            -> bsd-mailx exim4 exim4-base exim4-config exim4-daemon-light
+                                                -> libdbd-mysql-perl libdbi-perl libhtml-template-perl liblockfile1
+                                                -> libnet-daemon-perl libplrpc-perl libterm-readkey-perl mailx
+                                                -> mysql-client-5.0 mysql-server-5.0 perl perl-doc perl-modules psmisc
+                        apache2                 -> apache2-mpm-worker apache2-utils apache2.2-common libapr1 libaprutil1
+                                                -> libexpat1 libpq5
+                        libapache2-mod-python
+                        python-moinmoin         -> moinmoin-common
+                        lighttpd                -> fam libfam0 libterm-readline-perl-perl portmap update-inetd
+
+
+                - ntpdate ayarları
+                        ntpdate-debian
+                        hwclock -w
+
+                        komutlarını açılışta ve saatte bir çalıştırmak için
+                        crontab ve init.d ayarları yapılır
+
+                - shorewall ayarları
+                        Shorewall kurulum notlarında anlatıldığı gibi kurulum yapılır
+
+                - sshd ayarları
+                        - /etc/ssh/sshd_config
+                                Port 22
+                                PermitRootLogin no
+                                AllowUsers      kullanici_adi
+                                PasswordAuthentication no               (sadece key ile girilecekse)
+
+                        - /home/kullanici/.ssh/rc
+                                MAIL="mail@adres.com"
+
+                                makine=`hostname -f`
+                                kimlik=`whoami`
+                                adres=$SSH_CONNECTION
+                                ip=`echo $adres | awk '{print $1}'`
+                                tarih=`date +'%d/%m/%Y %H:%M'`
+
+                                KONU="ssh: $kimlik@$makine $ip $tarih"
+                                MESAJ="makine\t: $makine\n\
+                                kimlik\t: $kimlik\n\
+                                adres\t: $adres\n\
+                                tarih\t: $tarih"
+
+                                echo $MESAJ | mail -s "$KONU" $MAIL
+
+                        - /home/kullanici/.ssh/config
+                                Host *
+                                        Cipher=blowfish
+                                        CompressionLevel=9
+
+
+                - exim4 ayarları
+                        E-mail Notları'nda anlatıldığı gibi kurulacak
+
+                - pure-ftpd ayarları
+                        - /etc/default/pure-ftpd-common (openbsd-inetd kurulu degilse...)
+                                STANDALONE_OR_INETD=standalone
+
+                        - echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
+                        - echo "yes" > /etc/pure-ftpd/conf/NoAnonymous
+                        - echo "yes" > /etc/pure-ftpd/conf/DontResolve
+                        - echo "yes" > /etc/pure-ftpd/conf/DisplayDotFiles
+
+                        - readonly anonymous ftp olacaksa
+                                adduser --system --group ftp
+                                echo "no" > /etc/pure-ftpd/conf/NoAnonymous
+                                echo "no" > /etc/pure-ftpd/conf/AnonymousCanCreateDirs
+                                echo "yes" > /etc/pure-ftpd/conf/AnonymousCantUpload
+
+                        - binary moda geçmede problem varsa
+                                /etc/init.d/pure-ftpd
+                                        # 12. satira eklenebilir
+                                        LANG=
+
+                        - sanal kullanıcılar olacaksa
+                                mkdir -p /home/emrah/ftpdata/kullanici1
+                                pure-pw useradd kullanici1 -u emrah -d /home/emrah/ftpdata/kullanici1
+                                pure-pw mkdb
+                                echo "/etc/pure-ftpd/pureftpd.pdb" > /etc/pure-ftpd/conf/PureDB
+                                ln -s ../conf/PureDB /etc/pure-ftpd/auth/60puredb
+                                /etc/init.d/pure-ftpd restart
+
+                                mkdir /home/emrah/ftpdata/kullanici2
+                                pure-pw useradd kullanici2 -u emrah -d /home/emrah/ftpdata/kullanici2
+                                pure-pw mkdb
+
+                                . Kullanıcı parolası değiştirme
+                                pure-pw passwd kullanici1
+                                pure-pw mkdb
+
+                                . Kullanıcı silme
+                                pure-pw userdel kullanici1
+                                pure-pw mkdb
+
+                                . Kullanıcıları listeleme
+                                pure-pw list
+
+                                . Kullanıcı bilgilerini görme
+                                pure-pw show kullanici1
+
+                - bind9
+                        - /etc/resolv.conf
+                                nameserver localhost
+
+                        - /etc/network/interfaces
+                                dns-nameservers localhost
+
+                - apache2
+                        - /etc/apache2/conf.d/security
+                                ServerTokens Prod
+                                ServerSignature Off
+                                TraceEnable Off
+
+                        - site.com ayarları
+                                - mkdir /var/www/site_com
+
+                                - echo "" > /var/www/site_com/index.html
+
+                                - /etc/apache2/site-available/site_com
+                                        <VirtualHost *>
+                                                ServerName      www.site.com
+                                                ServerAlias     site.com *.site.com
+                                                DocumentRoot    /var/www/site_com/
+                                                ErrorLog        /var/log/apache2/error_site_com.log
+                                                TransferLog     /var/log/apache2/access_site_com.log
+
+                                                <Directory /var/www/site_com/>
+                                                        Options -Indexes FollowSymLinks MultiViews
+                                                        AllowOverride AuthConfig Options
+                                                        Order allow,deny
+                                                        Allow from all
+                                                </Directory>
+                                        </VirtualHost>
+
+                                - cd /etc/apache2/site-enabled
+                                  ln -s ../site-available/site_com site_com
+
+
+                        - Gizli dosyalar için htaccess ayarları
+                                - cd ~
+                                  mkdir htaccess
+                                  cd htaccess
+                                  htpasswd -sc htpasswd kullanici1
+                                  htpasswd -s htpasswd kullanici2
+                                        -s sha
+                                        -m md5
+                                  chmod 644 htpasswd    (640 Ubuntu'da sorun çıkardı)
+                                                        (öncelikle 640 denensin veya dosya Apache kullanıcısına verilsin)
+
+                                - cd /var/www/site_com
+                                  mkdir gizli
+                                  cd gizli
+                                  touch .htaccess
+
+                                - /var/www/site_com/gizli/.htaccess
+                                         AuthUserFile   /home/kullanici/htaccess/htpasswd
+                                         AuthType       Basic
+                                         AuthName       "..."
+                                         Require        valid-user
+                                         Options        Indexes
+
+
+
+
+        . X uygulamaları
+                aptitude install
+                        xorg                    -> dbus dbus-x11 defoma fontconfig-config libdbus-1-3 libdrm2 libfontconfig1
+                                                -> libfontenc1 libfreetype6 libfs6 libgl1-mesa-dri libgl1-mesa-glx
+                                                -> libglu1-mesa libhal1 libice6 libpixman-1-0 libpng12-0 libsm6 libxaw7
+                                                -> libxcursor1 libxdamage1 libxfixes3 libxfont1 libxft2 libxi6 libxinerama1
+                                                -> libxkbfile1 libxmu6 libxpm4 libxrandr2 libxrender1 libxt6 libxtrap6
+                                                -> libxtst6 libxv1 libxxf86dga1 libxxf86misc1 libxxf86vm1 ttf-dejavu
+                                                -> ttf-dejavu-core ttf-dejavu-extra ucf x11-apps x11-session-utils x11-utils
+                                                -> x11-xfs-utils x11-xkb-utils x11-xserver-utils xbitmaps xfonts-100dpi
+                                                -> xfonts-75dpi xfonts-base xfonts-encodings xfonts-scalable xfonts-utils
+                                                -> xinit xkb-data xorg xorg-docs xserver-xorg xserver-xorg-core
+                                                -> xserver-xorg-input-all xserver-xorg-input-evdev xserver-xorg-input-kbd
+                                                -> xserver-xorg-input-mouse xserver-xorg-input-synaptics
+                                                -> xserver-xorg-input-wacom xserver-xorg-video-all xserver-xorg-video-apm
+                                                -> xserver-xorg-video-ark xserver-xorg-video-ati xserver-xorg-video-chips
+                                                -> xserver-xorg-video-cirrus xserver-xorg-video-cyrix
+                                                -> xserver-xorg-video-dummy xserver-xorg-video-fbdev
+                                                -> xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740
+                                                -> xserver-xorg-video-imstt xserver-xorg-video-intel xserver-xorg-video-mga
+                                                -> xserver-xorg-video-neomagic xserver-xorg-video-newport
+                                                -> xserver-xorg-video-nsc xserver-xorg-video-nv xserver-xorg-video-rendition
+                                                -> xserver-xorg-video-s3 xserver-xorg-video-s3virge
+                                                -> xserver-xorg-video-savage xserver-xorg-video-siliconmotion
+                                                -> xserver-xorg-video-sis xserver-xorg-video-sisusb xserver-xorg-video-tdfx
+                                                -> xserver-xorg-video-tga xserver-xorg-video-trident
+                                                -> xserver-xorg-video-tseng xserver-xorg-video-v4l xserver-xorg-video-vesa
+                                                -> xserver-xorg-video-vga xserver-xorg-video-via xserver-xorg-video-vmware
+                                                -> xserver-xorg-video-voodoo xterm
+                        openbox                 -> fontconfig libcairo2 libdatrie0 libobparser21 libobrender21 libpango1.0-0
+                                                -> libpango1.0-common libstartup-notification0 libthai-data libthai0 libxml2
+                                                -> openbox-themes sgml-base x-ttcidfont-conf xml-core xutils xutils-dev
+                        menu
+                        rxvt
+                        rxvt-unicode            -> hicolor-icon-theme libafterimage0 libatk1.0-0 libatk1.0-data libcroco3
+                                                -> libcups2 libcupsys2 libgif4 libgsf-1-114 libgsf-1-common libgtk2.0-0
+                                                -> libgtk2.0-bin libgtk2.0-common libjpeg62 libperl5.10 librsvg2-2 libtiff4
+                                                -> libxcomposite1
+                        rox-filer               -> binutils libbeecrypt6 libffi5 libglade2-0 libneon27 librpm4.4 lzma
+                                                -> python-cairo python-glade2 python-gobject python-gtk2 python-numeric
+                                                -> rpm shared-mime-info zeroinstall-injector
+                        xpdf                    -> gsfonts gsfonts-x11 lesstif2 libpaper-utils libpaper1 libt1-5 libxp6
+                                                -> xpdf-common xpdf-reader xpdf-utils
+                        iceweasel               -> dictionaries-common libhunspell-1.2-0 libnspr4-0d libnss3-1d libxp6
+                                                -> myspell-en-us
+                        mozilla-plugin-gnash    -> gnash gnash-common gstreamer0.10-fluendo-mp3 libboost-date-time1.34.1
+                                                -> libboost-thread1.34.1
+                        smplayer                ->
+                        audacious               ->
+                        wireshark               -> gksu jackd libadns1 libadns1-bin libaudio2 libavc1394-0
+                                                -> libflac8 libfreebob0 libgksu2-0 libgtop2-7 libgtop2-common
+                                                -> libiec61883-0 libjack0 liblcms1 libmng1 libogg0 libportaudio2
+                                                -> libqt3-mt libraw1394-8 libsndfile1 qjackctl sudo wireshark-common
+                        xtrlock
+                        unclutter
+                        conky                   -> libcurl3-gnutls libiw29
+                        numlockx
+                        alsa-base               -> alsa-utils libasound2 linux-sound-base lsof
+                        kicad                   -> libaudiofile0 esound-common esound-clients libesd0
+                                                -> libwxgtk2.6-0 libwxbase2.6-0 kicad
+                        qucs                    -> freehdl guile-1.6 guile-1.6-libs libaudio2 libfreehdl0
+                                                -> libfreehdl0-dev libguile-ltdl-1 liblcms1 libmng1
+                                                -> libqt3-mt libqthreads-12 verilog
+                        x11vnc                  -> libavahi-client3 libavahi-common-data libavahi-common3 libvncserver0
+                        xvnc4viewer
+                        rdesktop
+
+
+                aptitude purge xterm
+
+                - /etc/X11/xorg.conf ayarları
+                        Grafik kart ve monitor için uygun değerler set edilir
+
+                        Bazı ayarlar:
+
+                        Section "InputDevice"
+                                Identifier      "Generic Keyboard"
+                                ...
+                                Option          "XkbModel"      "pc105"
+                                Option          "XkbLayout"     "tr"
+                        EndSection
+                        Section "Device"
+                                ...
+                                Option          "Rotate"        "CCW"
+                        EndSection
+                        Section "Monitor"
+                                ...
+                                HorizSync       30-70
+                                VertRefresh     50-160
+                        EndSection
+                        Section "Screen"
+                                ...
+                                SubSection "Display"
+                                        Modes   "1152x864" "1024x768" "832x624" "800x600" "720x400" "640x480
+                                EndSubSection
+                        EndSection
+                        Section "ServerFlags"
+                                # ctrl+alt+backspace ile X'in kapanmasini engeller(kiosk)
+                                Option          "DontZap"       "yes"
+                                # ctrl+alt+"+/-" ile zoomlama yapmayi engeller (kiosk)
+                                Option          "DontZoom"      "yes"
+                                # ctrl+alt+Fx ile sanal terminallere gecmeyi engeller (kiosk)
+                                Option          "DontVTSwitch"  "yes"
+                        EndSection
+
+                - fluxbox ayarları
+                        - update-menus
+
+                        - ~/.fluxbox/keys dosyası, "Fluxbox Kısayolları" notundaki gibi düzenlenecek
+
+                        - Başlangıçta çalışacak programlar ~/.fluxbox/startup dosyasina
+                                unclutter -idle 2 &
+
+                        - styles
+                                Spiff veya Twice veya Operation
+
+                        - saat
+                                %d/%m/%Y %H:%M:%S
+
+
+                - openbox ayarları
+                        - update-menus
+
+                        - mkdir ~/.config/openbox
+                          cd .config/openbox/
+                          cp /etc/xdg/openbox/menu.xml .
+                          cp /etc/xdg/openbox/rc.xml .
+                          cp /etc/xdg/openbox/autostart.sh .
+
+                          Bu dosyalar "Openbox Ayarları" notundaki gibi düzenlenecek
+
+
+                - iceweasel ayarları
+
+                        - about:config
+                                . browser.cache.disk.parent_directory           /var/cache/iceweasel
+                                . browser.download.manager.showWhenStarting     false
+                                . browser.sessionstore.interval                 60000
+                                . content.notify.backoffcount                   0
+                                . intl.charset.default                          UTF-8
+                                . mousewheel.withnokey.numlines                 7
+                                . mousewheel.withnokey.sysnumlines              false
+                                . network.http.pipelining                       true
+                                . network.http.pipelining.maxrequests           50
+                                . network.http.request.max-start-delay          100
+                                . network.dns.disableIPv6                       true
+
+                        - extensions
+                                . Vimperator
+                                . NoScript
+                                . BetterPrivacy
+                                        - .macromedia klasör
+                                        - Auto-delete Flash cookies by timer 30 min
+                                        - Also auto-delete Flashplayer default cookie (settings.sol)
+
+                        - live mozilla ayarları
+                                todisk.sh ve toram.sh uygulamaları hazırlanıp openbox açılış scriptine toram.sh eklenecek
+                                cp -arp .mozilla .mozilla.org
+                                rm -rf .mozilla
+                                ln -s /var/cache/iceweasel/mozilla .mozilla
+
+                - conky
+                        ~/.conkyrc
+                                alignment bottom_left
+                                background no
+                                border_width 1
+                                cpu_avg_samples 2
+                                default_color white
+                                default_outline_color white
+                                default_shade_color white
+                                draw_borders no
+                                draw_graph_borders yes
+                                draw_outline no
+                                draw_shades no
+                                font 9x15
+                                gap_x 10
+                                gap_y 10
+                                minimum_size 5 5
+                                net_avg_samples 2
+                                no_buffers yes
+                                out_to_console no
+                                own_window no
+                                own_window_class Conky
+                                own_window_type normal
+                                stippled_borders 0
+                                update_interval 3.0
+                                uppercase no
+                                use_spacer none
+
+                                TEXT
+                                ${color orange}$nodename      $time
+                                ${color blue}eth0      :${color} ${addr eth0}
+                                ${color blue}eth1      :${color} ${addr eth1}
+                                $color$hr
+                                ${color orange}$sysname $kernel on $machine
+                                ${color blue}Uptime    :${color} $uptime
+                                ${color blue}Frequency :${color} $freq
+                                ${color blue}CPU Usage :${color} $cpu% ${cpubar 4}
+                                ${color blue}CPU Temp  :${color} ${platform w83627hf.656 temp 2}
+                                ${cpugraph cpu0 20,350 000F83 B0B6E3}
+                                ${color blue}Processes :${color} $processes  ${color blue}Running: ${color}$running_processes
+                                ${color blue}RAM Usage :${color} $mem/$memmax - $memperc% ${membar 4}
+                                ${color blue}Swap Usage:${color} $swap/$swapmax - $swapperc% ${swapbar 4}
+                                $hr
+                                ${color orange}File systems:
+                                 ${color blue}/     $color${fs_free /}/${fs_size /} ${fs_bar 6 /}
+                                 ${color blue}/home $color${fs_free /home}/${fs_size /home} ${fs_bar 6 /home}
+                                 ${color blue}/var  $color${fs_free /var}/${fs_size /var} ${fs_bar 6 /var}
+                                 ${color blue}/tmp  $color${fs_free /tmp}/${fs_size /tmp} ${fs_bar 6 /tmp}
+
+                                ${color orange}Networking:
+                                ${color blue}Up: $color${upspeed eth0} k/s  ${color blue}Down: $color${downspeed eth0} k/s
+                                $hr
+                                ${color orange}Name               PID   CPU%   MEM%
+                                ${color lightgrey} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
+                                ${color lightgrey} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
+                                ${color lightgrey} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
+                                ${color lightgrey} ${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}
+                                ${color lightgrey} ${top name 5} ${top pid 5} ${top cpu 5} ${top mem 5}
+                                ${color lightgrey} ${top name 6} ${top pid 6} ${top cpu 6} ${top mem 6}
+                                ${color lightgrey} ${top name 7} ${top pid 7} ${top cpu 7} ${top mem 7}
+                                ${color lightgrey} ${top name 8} ${top pid 8} ${top cpu 8} ${top mem 8}
+                                ${color lightgrey} ${top name 9} ${top pid 9} ${top cpu 9} ${top mem 9}
+
+                - numlockx
+                        grafik ekranda terminal açıp
+                        numlockx on
+
+                - alsa ayarları
+                        alsaconf
+
+                - x11vnc
+                        x11vnc -storepasswd
+
+
+
+                        ~/.fluxbox/startup veya ~/.config/openbox/autostart.sh
+                                x11vnc -display :0 -nolookup -forever -rfbauth ~/.vnc/passwd -autoport 5900 -localhost &
+
+
+                        ~/.bashrc
+                                alias vnc='vncviewer localhost:5900'
+
+
+                        Sadece ssh ile baglanan kullanicinin X oturumuna gecmesine izin verilecek.
+
+
+                - zekr
+                        mkdir ~/progs
+                        cd ~/progs
+
+                        http://zekr.org/quran/quran-for-linux
+                        http://sourceforge.net/projects/zekr/ adresinden tar.gz indirilip bu klasöre konulacak
+
+                        tar zxf zekr-x.y.z-linux.tar.gz
+                        cd zekr
+
+                        vim zekr.sh
+                                export MOZILLA_FIVE_HOME=/usr/lib/iceweasel
+
+                        http://zekr.org/resources.html adresinden Türkçe mealleri indir, arayüzden ekle
+
 
 
 
 -------------------------------------------------------------------------
 *** Kurulum sonrası ayarlar
-	- saat	(NTPdate kullanılmıyorsa...)
-		date mmddhhmm
+        - saat  (NTPdate kullanılmıyorsa...)
+                date mmddhhmm
 
 
-	- home yetkileri
-		chmod o-xrw /root -R
-		chmod o-xrw /home/kullanici -R
+        - home yetkileri
+                chmod o-xrw /root -R
+                chmod o-xrw /home/kullanici -R
 
 
-	- sysv-rc-conf
-		kullanılmayacak servisleri kapat
+        - sysv-rc-conf
+                kullanılmayacak servisleri kapat
 
 
-	- kullanılmayan paketlerin temizlenmesi
-		aptitude autoclean
+        - kullanılmayan paketlerin temizlenmesi
+                aptitude autoclean
 
 
-	- kullanılmayacaksa tty sayısını azalt
-		/etc/inittab
-			#2:23:respawn:/sbin/getty 38400 tty2
-			#3:23:respawn:/sbin/getty 38400 tty3
-			#4:23:respawn:/sbin/getty 38400 tty4
-			#5:23:respawn:/sbin/getty 38400 tty5
-			#6:23:respawn:/sbin/getty 38400 tty6
-
-	
-	- crontab
-		. Dinamik IP'li makineler için 
-			01 *    * * *   root    /root/scripts/cron_sendip.sh >/dev/null 2>&1
-
-			/root/scripts/cron_sendip.sh
-			#!/bin/sh
-
-			echo "Send IP address"
-			ps aux | grep python | grep sendip | awk '{print $2}' | xargs kill >/dev/null 2>&1
-			/root/scripts/sendip.py &
+        - kullanılmayacaksa tty sayısını azalt
+                /etc/inittab
+                        #2:23:respawn:/sbin/getty 38400 tty2
+                        #3:23:respawn:/sbin/getty 38400 tty3
+                        #4:23:respawn:/sbin/getty 38400 tty4
+                        #5:23:respawn:/sbin/getty 38400 tty5
+                        #6:23:respawn:/sbin/getty 38400 tty6
 
 
-		. Güncelleme hazırlığı
-			05 5    * * *   root    /root/scripts/cron_aptitude.sh >/dev/null 2>&1
+        - crontab
+                . Dinamik IP'li makineler için
+                        01 *    * * *   root    /root/scripts/cron_sendip.sh >/dev/null 2>&1
 
-			/root/scripts/cron_aptitude.sh
-				#!/bin/sh
-	
-				aptitude update && aptitude -d -y safe-upgrade
-				aptitude update && aptitude -d -y full-upgrade
-				aptitude autoclean
+                        /root/scripts/cron_sendip.sh
+                        #!/bin/sh
 
-
-		. NTPdate
-			01 *	* * *	root	/root/scripts/cron_ntpdate.sh >/dev/null 2>&1
-
-			/root/scripts/cron_ntpdate.sh
-				#!/bin/sh
-
-				echo "NTPdate update"
-				(ntpdate-debian >/dev/null 2>&1 && hwclock -w >/dev/null 2>&1) &
-
-	
-	- init.d
-		cd /etc/init.d
-		ln -s /root/scripts/cron_ntpdate.sh ntpdate
-		ln -s /root/scripts/cron_sendip.sh sendip
-		update-rc.d ntpdate start 99 2 .
-		update-rc.d sendip start 99 2 .
+                        echo "Send IP address"
+                        ps aux | grep python | grep sendip | awk '{print $2}' | xargs kill >/dev/null 2>&1
+                        /root/scripts/sendip.py &
 
 
-	- Yedekleme
-		Yedekleme Notları'ndaki talimatlara göre yedekleme yapılacak
-			
+                . Güncelleme hazırlığı
+                        05 5    * * *   root    /root/scripts/cron_aptitude.sh >/dev/null 2>&1
+
+                        /root/scripts/cron_aptitude.sh
+                                #!/bin/sh
+
+                                aptitude update && aptitude -d -y safe-upgrade
+                                aptitude update && aptitude -d -y full-upgrade
+                                aptitude autoclean
+
+
+                . NTPdate
+                        01 *    * * *   root    /root/scripts/cron_ntpdate.sh >/dev/null 2>&1
+
+                        /root/scripts/cron_ntpdate.sh
+                                #!/bin/sh
+
+                                echo "NTPdate update"
+                                (ntpdate-debian >/dev/null 2>&1 && hwclock -w >/dev/null 2>&1) &
+
+
+        - init.d
+                cd /etc/init.d
+                ln -s /root/scripts/cron_ntpdate.sh ntpdate
+                ln -s /root/scripts/cron_sendip.sh sendip
+                update-rc.d ntpdate start 99 2 .
+                update-rc.d sendip start 99 2 .
+
+
+        - Yedekleme
+                Yedekleme Notları'ndaki talimatlara göre yedekleme yapılacak
+
 
 
 -------------------------------------------------------------------------
 *** Çekirdek derleme
-	- Paketlerin kurulması
-		aptitude update && aptitude upgrade
-		aptitude install linux-source \
-				 kernel-package \
-				 dh-make \
-				 build-essential \
-				 module-assistant \
-				 libncurses5-dev
+        - Paketlerin kurulması
+                aptitude update && aptitude upgrade
+                aptitude install linux-source \
+                                 kernel-package \
+                                 dh-make \
+                                 build-essential \
+                                 module-assistant \
+                                 libncurses5-dev
 
-		linux-source	-> linux-source-2.6.22
-		kernel-package	-> gettext gettext-base intltool-debian libcompress-raw-zlib-perl libcompress-zlib-perl 
-				-> libdigest-hmac-perl libdigest-sha1-perl libfile-remove-perl libio-compress-base-perl
-				-> libio-compress-zlib-perl libio-stringy-perl libmail-box-perl libmail-sendmail-perl
-				-> libmailtools-perl libmime-types-perl libobject-realize-later-perl libtimedate-perl
-				-> liburi-perl libuser-identity-perl po-debconf
-	
-		dh-make		-> debhelper html2text
+                linux-source    -> linux-source-2.6.22
+                kernel-package  -> gettext gettext-base intltool-debian libcompress-raw-zlib-perl libcompress-zlib-perl
+                                -> libdigest-hmac-perl libdigest-sha1-perl libfile-remove-perl libio-compress-base-perl
+                                -> libio-compress-zlib-perl libio-stringy-perl libmail-box-perl libmail-sendmail-perl
+                                -> libmailtools-perl libmime-types-perl libobject-realize-later-perl libtimedate-perl
+                                -> liburi-perl libuser-identity-perl po-debconf
 
-		build-essential	-> g++ g++-4.2 libstdc++6-4.2-dev
+                dh-make         -> debhelper html2text
 
-
-	- Çekirdeğin derlenmesi
-		cd /usr/src/
-		tar jxf linux-source-2.6.22.tar.bz2
-		ln -s linux-source-2.6.22 linux
-		make oldconfig
-		make menuconfig
-
-		make-kpkg clean
-		make-kpkg --append-to-version -emrah \
-			  --revision r1 \
-			  --initrd \
-			  --config menuconfig \
-			  kernel_image \
-			  kernel_headers \
-			  kernel_source
+                build-essential -> g++ g++-4.2 libstdc++6-4.2-dev
 
 
-	- Çekirdeğin kurulması
-		dpkg -i linux-image-2.6.22-emrah_r1_i386.deb
-		dpkg -i linux-headers-2.6.22-emrah_r1_i386.deb
-		reboot
-			
+        - Çekirdeğin derlenmesi
+                cd /usr/src/
+                tar jxf linux-source-2.6.22.tar.bz2
+                ln -s linux-source-2.6.22 linux
+                make oldconfig
+                make menuconfig
+
+                make-kpkg clean
+                make-kpkg --append-to-version -emrah \
+                          --revision r1 \
+                          --initrd \
+                          --config menuconfig \
+                          kernel_image \
+                          kernel_headers \
+                          kernel_source
+
+
+        - Çekirdeğin kurulması
+                dpkg -i linux-image-2.6.22-emrah_r1_i386.deb
+                dpkg -i linux-headers-2.6.22-emrah_r1_i386.deb
+                reboot
+
 
 
 -------------------------------------------------------------------------
 *** EMC2 ile ilgili paketler
-	aptitude install cvs \
-			 tk-dev \
-			 bwidget \
-			 build-essential \
-			 gettext \
-			 python-dev \
-			 libglu1-mesa-dev \
-			 libxmu-dev \
-			 libgtk2.0-dev \
-			 libgnomeprintui2.2-dev \
-			 libxaw7-dev \
-			 libncurses5-dev \
-			 libreadline5-dev \
-			 pciutils-dev \
-			 python-tk \
-			 python-glade2 \
-			 python-xml \
-			 bc
-			 
-	
+        aptitude install cvs \
+                         tk-dev \
+                         bwidget \
+                         build-essential \
+                         gettext \
+                         python-dev \
+                         libglu1-mesa-dev \
+                         libxmu-dev \
+                         libgtk2.0-dev \
+                         libgnomeprintui2.2-dev \
+                         libxaw7-dev \
+                         libncurses5-dev \
+                         libreadline5-dev \
+                         pciutils-dev \
+                         python-tk \
+                         python-glade2 \
+                         python-xml \
+                         bc
 
-	tk-dev			-> libice-dev libsm-dev libx11-dev libxau-dev libxdmcp-dev libxext-dev
-				-> libxt-dev tcl tcl-dev tcl8.4 tcl8.4-dev tk tk8.4 tk8.4-dev x11proto-core-dev
-				-> x11proto-input-dev x11proto-kb-dev x11proto-xext-dev xtrans-dev
 
-	build-essential 	-> g++ g++-4.2 libstdc++6-4.2-dev
-	gettext			-> gettext-base
-	python-dev		-> python2.4-dev
-	libglu1-mesa-dev	-> libgl1-mesa-dev mesa-common-dev
-	libxmu-dev		-> libxmu-headers
-	libgtk2.0-dev		-> libatk1.0-dev libcairo2-dev libexpat1-dev libfontconfig1-dev libfreetype6-dev
-				-> libglib2.0-dev libpango1.0-dev libpng12-dev libxcomposite-dev libxcursor-dev
-				-> libxdamage-dev libxfixes-dev libxft-dev libxi-dev libxinerama-dev libxrandr-dev
-				-> libxrender-dev pkg-config x11proto-composite-dev x11proto-damage-dev
-				-> x11proto-fixes-dev x11proto-randr-dev x11proto-render-dev x11proto-xinerama-dev
-				-> zlib1g-dev
-				
-	libgnomeprintui2.2-dev	-> avahi-daemon cups-pdf cupsys cupsys-client cupsys-common dbus dbus-x11 
-				-> foomatic-db foomatic-db-engine foomatic-filters gnome-icon-theme gs-common gs-esp
-				-> libart-2.0-2 libart-2.0-dev libavahi-client3 libavahi-common-data libavahi-common3
-				-> libavahi-compat-libdnssd1 libavahi-core5 libcroco3 libcupsimage2 libdaemon0
-				-> libdbus-1-3 libgail-common libgail-dev libgail18 libglade2-0 libgnomecanvas2-0
-				-> libgnomecanvas2-common libgnomecanvas2-dev libgnomecups1.0-1 libgnomeprint2.2-0
-				-> libgnomeprint2.2-data libgnomeprint2.2-dev libgnomeprintui2.2-0 
-				-> libgnomeprintui2.2-common libgsf-1-114 libgsf-1-common libnss-mdns librsvg2-2
-				-> librsvg2-common libslp1 libxml2-dev openssl psfontmgr samba-common smbclient ssl-cert
-	
-	libxaw7-dev		-> libxaw-headers libxpm-dev
-	pciutils-dev		-> libpci2
-	python-tk		-> blt
-	python-glade2		-> libffi4 python-cairo python-gobject python-gtk2 python-numeric
-	
-					
+
+        tk-dev                  -> libice-dev libsm-dev libx11-dev libxau-dev libxdmcp-dev libxext-dev
+                                -> libxt-dev tcl tcl-dev tcl8.4 tcl8.4-dev tk tk8.4 tk8.4-dev x11proto-core-dev
+                                -> x11proto-input-dev x11proto-kb-dev x11proto-xext-dev xtrans-dev
+
+        build-essential         -> g++ g++-4.2 libstdc++6-4.2-dev
+        gettext                 -> gettext-base
+        python-dev              -> python2.4-dev
+        libglu1-mesa-dev        -> libgl1-mesa-dev mesa-common-dev
+        libxmu-dev              -> libxmu-headers
+        libgtk2.0-dev           -> libatk1.0-dev libcairo2-dev libexpat1-dev libfontconfig1-dev libfreetype6-dev
+                                -> libglib2.0-dev libpango1.0-dev libpng12-dev libxcomposite-dev libxcursor-dev
+                                -> libxdamage-dev libxfixes-dev libxft-dev libxi-dev libxinerama-dev libxrandr-dev
+                                -> libxrender-dev pkg-config x11proto-composite-dev x11proto-damage-dev
+                                -> x11proto-fixes-dev x11proto-randr-dev x11proto-render-dev x11proto-xinerama-dev
+                                -> zlib1g-dev
+
+        libgnomeprintui2.2-dev  -> avahi-daemon cups-pdf cupsys cupsys-client cupsys-common dbus dbus-x11
+                                -> foomatic-db foomatic-db-engine foomatic-filters gnome-icon-theme gs-common gs-esp
+                                -> libart-2.0-2 libart-2.0-dev libavahi-client3 libavahi-common-data libavahi-common3
+                                -> libavahi-compat-libdnssd1 libavahi-core5 libcroco3 libcupsimage2 libdaemon0
+                                -> libdbus-1-3 libgail-common libgail-dev libgail18 libglade2-0 libgnomecanvas2-0
+                                -> libgnomecanvas2-common libgnomecanvas2-dev libgnomecups1.0-1 libgnomeprint2.2-0
+                                -> libgnomeprint2.2-data libgnomeprint2.2-dev libgnomeprintui2.2-0
+                                -> libgnomeprintui2.2-common libgsf-1-114 libgsf-1-common libnss-mdns librsvg2-2
+                                -> librsvg2-common libslp1 libxml2-dev openssl psfontmgr samba-common smbclient ssl-cert
+
+        libxaw7-dev             -> libxaw-headers libxpm-dev
+        pciutils-dev            -> libpci2
+        python-tk               -> blt
+        python-glade2           -> libffi4 python-cairo python-gobject python-gtk2 python-numeric
+
+

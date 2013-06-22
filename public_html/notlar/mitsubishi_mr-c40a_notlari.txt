@@ -3,127 +3,127 @@ MITSUBISHI MR-C40A SERVO NOTLARI
 
 - CN1 Pinler
 
-	. SON	17	in	Servo ON (bkz. parametre 06)
-	. LSP	15	in	Pozitif limit switch (bkz. parametre 06)
-	. LSN	14	in	Negatif limit switch (bkz. parametre 06)
+        . SON   17      in      Servo ON (bkz. parametre 06)
+        . LSP   15      in      Pozitif limit switch (bkz. parametre 06)
+        . LSN   14      in      Negatif limit switch (bkz. parametre 06)
 
-	. ALM	02	out	Alarm (Alarm yokken ALM-SG bağlı)
-	. SG	05	in	Common ground
-	. SD	11	in	Shield ground
+        . ALM   02      out     Alarm (Alarm yokken ALM-SG bağlı)
+        . SG    05      in      Common ground
+        . SD    11      in      Shield ground
 
-	. V24	20	in	V24 ve V5 aynı anda kullanılmaz, sadece biri kullanılır.
-	. V5	16	in	Output pinleri için besleme
+        . V24   20      in      V24 ve V5 aynı anda kullanılmaz, sadece biri kullanılır.
+        . V5    16      in      Output pinleri için besleme
 
-	. PP	09	in	Step ground (bkz. parametre 07)
-	. PG	10	in	Step (bkz. parametre 07)
-	. NP	07	in	Dir ground (bkz. parametre 07)
-	. NG	08	in	Dir (bkz. parametre 07)
-				Step/dir sinyalleri dökümanda belirtilenin tersi şekilde
-				çalışıyor.
-	
-	. OP	04	out	Zero-point signal of the encoder (INDEX)
+        . PP    09      in      Step ground (bkz. parametre 07)
+        . PG    10      in      Step (bkz. parametre 07)
+        . NP    07      in      Dir ground (bkz. parametre 07)
+        . NG    08      in      Dir (bkz. parametre 07)
+                                Step/dir sinyalleri dökümanda belirtilenin tersi şekilde
+                                çalışıyor.
+
+        . OP    04      out     Zero-point signal of the encoder (INDEX)
 
 
 
 - Parametreler
-	. P01	ATU	Auto tuning
-			ABC	C -> response setting
-				     1 -> slow
-				     2 ->
-				     3 -> medium
-				     4 ->
-				     5 -> fast
+        . P01   ATU     Auto tuning
+                        ABC     C -> response setting
+                                     1 -> slow
+                                     2 ->
+                                     3 -> medium
+                                     4 ->
+                                     5 -> fast
 
-				B -> machine selection (friction-position setting characteristic)
-				     0 -> small-ordinary
-				     1 -> large-ordinary
-				     2 -> small- better
-				     3 -> large-better
+                                B -> machine selection (friction-position setting characteristic)
+                                     0 -> small-ordinary
+                                     1 -> large-ordinary
+                                     2 -> small- better
+                                     3 -> large-better
 
-				A -> auto tuning selection
-				     0 -> execute for both position and speed loops
-				     1 -> interpolation axis control
-				     2 -> Not executed
+                                A -> auto tuning selection
+                                     0 -> execute for both position and speed loops
+                                     1 -> interpolation axis control
+                                     2 -> Not executed
 
-	. P02	CMX	Electronic gear (multiplier)
-	  (5mm hatveli mil için 4 değeri uygun)
-	. P03	CDV	Electronic gear (denominator)
-	  (5mm hatveli mil için 1 değeri uygun)
+        . P02   CMX     Electronic gear (multiplier)
+          (5mm hatveli mil için 4 değeri uygun)
+        . P03   CDV     Electronic gear (denominator)
+          (5mm hatveli mil için 1 değeri uygun)
 
-	. P04	PST	Acceleration/deceleration time (ms)
+        . P04   PST     Acceleration/deceleration time (ms)
 
-	. P06	IP1
-	  (10 değeri uygun; limit switch yok, 
-			ABC	C -> SON
-				     0 -> servo on when SON-SG conected
-				     1 -> servo on when SON-SG not connected
+        . P06   IP1
+          (10 değeri uygun; limit switch yok,
+                        ABC     C -> SON
+                                     0 -> servo on when SON-SG conected
+                                     1 -> servo on when SON-SG not connected
 
-				B -> LSP / LSN
-				     0 -> Pin-SG off ise o yöne gitmez
-				     1 -> Limit switch yok
+                                B -> LSP / LSN
+                                     0 -> Pin-SG off ise o yöne gitmez
+                                     1 -> Limit switch yok
 
-	. P07	OP1	
-	  (001 değeri uygun)
-			011 -> negative logic, step/dir
-			001 -> positive logic, step/dir
+        . P07   OP1
+          (001 değeri uygun)
+                        011 -> negative logic, step/dir
+                        001 -> positive logic, step/dir
 
-	. P12	BLK	Parameter write disable
-			00C olunca 0-22 arası yazılabilir.
-			Normalde (000 olunca) 0-12 arası yazılabiliyor.
-	
-	. P20	DIF	Input signal selection
-	  (default değer uygun)
-			ABC	C -> pin 15
-				B -> pin 14
-				A -> pin 13
+        . P12   BLK     Parameter write disable
+                        00C olunca 0-22 arası yazılabilir.
+                        Normalde (000 olunca) 0-12 arası yazılabiliyor.
 
-	. P21	DOF	Output signal selection
-	  (02 değeri uygun; pin4 -> RD  pin3 -> OP)
-			0 -> OP
-			1 -> PF
-			2 -> RD
-			3 -> ZSP
-			4 -> TLC
-			5 -> BRK
+        . P20   DIF     Input signal selection
+          (default değer uygun)
+                        ABC     C -> pin 15
+                                B -> pin 14
+                                A -> pin 13
 
-			ABC	C -> Pin 4
-				B -> Pin 3
+        . P21   DOF     Output signal selection
+          (02 değeri uygun; pin4 -> RD  pin3 -> OP)
+                        0 -> OP
+                        1 -> PF
+                        2 -> RD
+                        3 -> ZSP
+                        4 -> TLC
+                        5 -> BRK
+
+                        ABC     C -> Pin 4
+                                B -> Pin 3
 
 
 - Panel
-	. Menu
-	  Mode tuşu ile menu değiştiriliyor.
+        . Menu
+          Mode tuşu ile menu değiştiriliyor.
 
-	  Status <> Diagnosis <> Alarm <> Basic Param. <> Expansion Param. <> Application Param.
+          Status <> Diagnosis <> Alarm <> Basic Param. <> Expansion Param. <> Application Param.
 
-	. Status (görüntülenecek olan)
-		CL  -> low position
-		CH  -> high position
-		r   -> r/min (10 katı alınacak)
-	
-	. Diagnosis
-		roF -> off
-		ron -> on
+        . Status (görüntülenecek olan)
+                CL  -> low position
+                CH  -> high position
+                r   -> r/min (10 katı alınacak)
 
-		external I/O
-		1. satır (soldan sağa) -, -, LSN, LSP, CR, SON
-		2. satır (soldan sağa) OP,-,-,-,ALM,PF
-	
-	. don (forced output)
+        . Diagnosis
+                roF -> off
+                ron -> on
 
- 	. rsr (test sürüşü)
+                external I/O
+                1. satır (soldan sağa) -, -, LSN, LSP, CR, SON
+                2. satır (soldan sağa) OP,-,-,-,ALM,PF
+
+        . don (forced output)
+
+        . rsr (test sürüşü)
 
 
 
 - Bazı panel işlemleri
-	. Jog	
-	  Diagnosis -> rsr -> set (2s) -> d01 -> up/down -> set (2s)
+        . Jog
+          Diagnosis -> rsr -> set (2s) -> d01 -> up/down -> set (2s)
 
-	. alarm silme
-	  Alarma sebep olan şey düzeltilir -> Alarm -> A.. -> set
+        . alarm silme
+          Alarma sebep olan şey düzeltilir -> Alarm -> A.. -> set
 
-	. parametre değiştirme
-	  parametre -> up/down -> set (2 kere) -> up/down -> set
+        . parametre değiştirme
+          parametre -> up/down -> set (2 kere) -> up/down -> set
 
-	. output force
-	  diagnosis -> don -> set (2s) -> mode (kolon seçme) -> up/down -> set (2s)
+        . output force
+          diagnosis -> don -> set (2s) -> mode (kolon seçme) -> up/down -> set (2s)

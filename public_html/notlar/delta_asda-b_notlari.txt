@@ -3,67 +3,67 @@ DELTA ASDA-B SERVO NOTLARI
 
 - CN1 Pinler
 
-	. DO3		 1	out	DO3 (ALRM)
-	. DO2		 2	out	DO2 (ZSPD)
-	. V24+		 4	in	Digital input common voltage rail (24V+)
-	. V24+		 7	in	24V power output
-	. V24-		13	in	24V ground
-	. DO1		16	out	DO1 (SRDY)
-	. /SIGN		19	in	Yön sinyali (+)
-	. SIGN		20	in	Yön sinyali (-)
-	. /PULSE	21	in	Adım sinyali (+)
-	. PULSE		22	in	Adım sinyali (-)
+        . DO3            1      out     DO3 (ALRM)
+        . DO2            2      out     DO2 (ZSPD)
+        . V24+           4      in      Digital input common voltage rail (24V+)
+        . V24+           7      in      24V power output
+        . V24-          13      in      24V ground
+        . DO1           16      out     DO1 (SRDY)
+        . /SIGN         19      in      Yön sinyali (+)
+        . SIGN          20      in      Yön sinyali (-)
+        . /PULSE        21      in      Adım sinyali (+)
+        . PULSE         22      in      Adım sinyali (-)
 
 
 - Parametreler
-	. P1-00		External pulse input type (2)
-			ABC	C -> pulse type
-				     2 -> Pulse+Direction
+        . P1-00         External pulse input type (2)
+                        ABC     C -> pulse type
+                                     2 -> Pulse+Direction
 
-				B -> reserved
+                                B -> reserved
 
-				C -> logic type
-				     0 -> positive logic
-				     1 -> negative logic
+                                C -> logic type
+                                     0 -> positive logic
+                                     1 -> negative logic
 
-	. P1-01		Control mode and output direction (0)
-			ABC	C -> Control mode
-				     0 -> position mode
-				     1 -> speed mode
-				     2 -> torque mode
-				     6 -> position + speed
-				     7 -> position + torque
+        . P1-01         Control mode and output direction (0)
+                        ABC     C -> Control mode
+                                     0 -> position mode
+                                     1 -> speed mode
+                                     2 -> torque mode
+                                     6 -> position + speed
+                                     7 -> position + torque
 
-	. P1-44		Electronic gear ratio (1st Numerator) (10)
-	
-	. P1-45		Electronic gear ratio (denominator) (1)
+        . P1-44         Electronic gear ratio (1st Numerator) (10)
 
-	. P1-55		Maximum speed limit (3000)
+        . P1-45         Electronic gear ratio (denominator) (1)
 
-	. P2-00		Proportional position loop gain (50)
+        . P1-55         Maximum speed limit (3000)
 
-	. P2-01		Position loop gain switching rate (100)
+        . P2-00         Proportional position loop gain (50)
 
-	. P2-02		Position feed forward gain (0)
+        . P2-01         Position loop gain switching rate (100)
 
-	. P2-10		Digital input terminal 1 (101 -> 001)
-			SON default aktif
+        . P2-02         Position feed forward gain (0)
 
-	. P2-11		Digital input terminal 2 (102 - ARST)
+        . P2-10         Digital input terminal 1 (101 -> 001)
+                        SON default aktif
 
-	. P2-12		Digital input terminal 3 (104 - CCLR)
+        . P2-11         Digital input terminal 2 (102 - ARST)
 
-	. P2-13		Digital input terminal 4 (22 -> 122)
-			CWL default izinli
-	
-	. P2-14		Digital input terminal 5 (23 -> 123)
-			CCWL default izinli
+        . P2-12         Digital input terminal 3 (104 - CCLR)
 
-	. P2-15		Digital input terminal 6 (21 -> 121)
-			EMGS default kapali
+        . P2-13         Digital input terminal 4 (22 -> 122)
+                        CWL default izinli
 
-	. P2-18		Digital Output Terminal 1 (DO1) (101 - SRDY)
+        . P2-14         Digital input terminal 5 (23 -> 123)
+                        CCWL default izinli
 
-	. P2-19		Digital Output Terminal 2 (DO2) (103 - ZSPD)
+        . P2-15         Digital input terminal 6 (21 -> 121)
+                        EMGS default kapali
 
-	. P2-20		Digital Output Terminal 3 (DO3) (7 - ALRM)
+        . P2-18         Digital Output Terminal 1 (DO1) (101 - SRDY)
+
+        . P2-19         Digital Output Terminal 2 (DO2) (103 - ZSPD)
+
+        . P2-20         Digital Output Terminal 3 (DO3) (7 - ALRM)

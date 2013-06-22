@@ -3,97 +3,97 @@ RTAI-LAB NOTLARI
 
 - Executable dosyanın oluşturulması
 
-	- Scilab açılıp scicos yazılarak boş bir .cos dosyası oluşturulur
+        - Scilab açılıp scicos yazılarak boş bir .cos dosyası oluşturulur
 
-	- Edit -> Palettes menusunden gereken bloklar eklenir
-		- Sources -> Kırmızı timer (ilişkilendirilen blokların periodunu belirler)
-		- RTAI-Lib -> Square veya Sine  (sinyal üretir)
-		- RTAI-Lib -> Scope (sinyali xrtailab içerisinden gözlemlememizi sağlar)
-		- RTAI-Lib -> COMEDI DO (sinyali, I/O kartından almamızı sağlar)
-	
-	- Blokların ilişkilendirilmesi
-		- Bütün bloklara timer'dan sinyal gider
-		- Sinyal üreticiden çıkan sinyal, Scope ve COMEDI DO bloklarına gider
-	
-	- Super Blok oluşturulması
-		- Menuden Diagram -> Region to Super Block seçilir
-		- Timer dışarıda kalacak şekilde diğer bloklar aynı Super Blok içine alınır
-	
-	- Executable dosyanın oluşturulması
-		- Diagram -> Save As bölümünde .cos uzantısı ile kaydedilir
-		- RTAI -> RTAI CodeGen seçildikten sonra Super Blok ikonuna tıklanır
-		- Gerekiyorsa isim değişiklikleri yapılır
+        - Edit -> Palettes menusunden gereken bloklar eklenir
+                - Sources -> Kırmızı timer (ilişkilendirilen blokların periodunu belirler)
+                - RTAI-Lib -> Square veya Sine  (sinyal üretir)
+                - RTAI-Lib -> Scope (sinyali xrtailab içerisinden gözlemlememizi sağlar)
+                - RTAI-Lib -> COMEDI DO (sinyali, I/O kartından almamızı sağlar)
+
+        - Blokların ilişkilendirilmesi
+                - Bütün bloklara timer'dan sinyal gider
+                - Sinyal üreticiden çıkan sinyal, Scope ve COMEDI DO bloklarına gider
+
+        - Super Blok oluşturulması
+                - Menuden Diagram -> Region to Super Block seçilir
+                - Timer dışarıda kalacak şekilde diğer bloklar aynı Super Blok içine alınır
+
+        - Executable dosyanın oluşturulması
+                - Diagram -> Save As bölümünde .cos uzantısı ile kaydedilir
+                - RTAI -> RTAI CodeGen seçildikten sonra Super Blok ikonuna tıklanır
+                - Gerekiyorsa isim değişiklikleri yapılır
 
 
 - Executable dosyanın çalıştırılması
 
-	- modulleri yükleyen script; root olarak çalıştırılmalı
+        - modulleri yükleyen script; root olarak çalıştırılmalı
 
-		#!/bin/bash
-		insmod /usr/realtime/modules/rtai_hal.ko
-		insmod /usr/realtime/modules/rtai_up.ko
-		insmod /usr/realtime/modules/rtai_fifos.ko
-		insmod /usr/realtime/modules/rtai_sem.ko
-		insmod /usr/realtime/modules/rtai_mbx.ko
-		insmod /usr/realtime/modules/rtai_msg.ko
-		insmod /usr/realtime/modules/rtai_netrpc.ko ThisNode="127.0.0.1"
-		insmod /usr/realtime/modules/rtai_shm.ko
-		insmod /usr/realtime/modules/rtai_leds.ko
-		insmod /usr/realtime/modules/rtai_signal.ko
-		insmod /usr/realtime/modules/rtai_tasklets.ko
-		modprobe comedi
-		modprobe kcomedilib
-		modprobe comedi_fc
-		modprobe comedi_parport
-		modprobe comedi_rt_timer
-		insmod /usr/realtime/modules/rtai_comedi.ko
-		comedi_config /dev/comedi0 comedi_parport 0x378,7
-		#comedi_config /dev/comedi1 comedi_rt_timer 0,0
-
-
-	- Hazırlanmış olan executable dosyanın çalıştırılması
-
-		cd ~/denemeler
-		./deneme01 -v
+                #!/bin/bash
+                insmod /usr/realtime/modules/rtai_hal.ko
+                insmod /usr/realtime/modules/rtai_up.ko
+                insmod /usr/realtime/modules/rtai_fifos.ko
+                insmod /usr/realtime/modules/rtai_sem.ko
+                insmod /usr/realtime/modules/rtai_mbx.ko
+                insmod /usr/realtime/modules/rtai_msg.ko
+                insmod /usr/realtime/modules/rtai_netrpc.ko ThisNode="127.0.0.1"
+                insmod /usr/realtime/modules/rtai_shm.ko
+                insmod /usr/realtime/modules/rtai_leds.ko
+                insmod /usr/realtime/modules/rtai_signal.ko
+                insmod /usr/realtime/modules/rtai_tasklets.ko
+                modprobe comedi
+                modprobe kcomedilib
+                modprobe comedi_fc
+                modprobe comedi_parport
+                modprobe comedi_rt_timer
+                insmod /usr/realtime/modules/rtai_comedi.ko
+                comedi_config /dev/comedi0 comedi_parport 0x378,7
+                #comedi_config /dev/comedi1 comedi_rt_timer 0,0
 
 
-	- xrtailab programının çalıştırılması; normal kullanıcı olarak
+        - Hazırlanmış olan executable dosyanın çalıştırılması
 
-		cd /usr/realtime/bin
-		./xrtailab -v
-
-
-		- Çalışan uygulamayı gözlemlemek için öncelikle bağlantı kurulur
-			File -> connect
-		
-
-		- Çalışan sistem içinde scope tanımlandıysa gözlemlemek için
-			View -> Scope -> Hide/show
-		
-
-		- Çalışan executable dosyayı durdurmak için "Stop real time code" düğmesine tıklanır.
+                cd ~/denemeler
+                ./deneme01 -v
 
 
-	- modulleri kaldıren script; root olarak çalıştırılmalı
+        - xrtailab programının çalıştırılması; normal kullanıcı olarak
 
-		#!/bin/bash
-		rmmod comedi_rt_timer
-		rmmod comedi_parport
-		rmmod rtai_comedi
-		rmmod comedi_fc
-		rmmod kcomedilib
-		rmmod comedi
-		rmmod rtai_tasklets
-		rmmod rtai_signal
-		rmmod rtai_leds
-		rmmod rtai_shm
-		rmmod rtai_netrpc
-		rmmod rtai_msg
-		rmmod rtai_mbx
-		rmmod rtai_sem
-		rmmod rtai_fifos
-		rmmod rtai_sched
-		rmmod rtai_hal
+                cd /usr/realtime/bin
+                ./xrtailab -v
+
+
+                - Çalışan uygulamayı gözlemlemek için öncelikle bağlantı kurulur
+                        File -> connect
+
+
+                - Çalışan sistem içinde scope tanımlandıysa gözlemlemek için
+                        View -> Scope -> Hide/show
+
+
+                - Çalışan executable dosyayı durdurmak için "Stop real time code" düğmesine tıklanır.
+
+
+        - modulleri kaldıren script; root olarak çalıştırılmalı
+
+                #!/bin/bash
+                rmmod comedi_rt_timer
+                rmmod comedi_parport
+                rmmod rtai_comedi
+                rmmod comedi_fc
+                rmmod kcomedilib
+                rmmod comedi
+                rmmod rtai_tasklets
+                rmmod rtai_signal
+                rmmod rtai_leds
+                rmmod rtai_shm
+                rmmod rtai_netrpc
+                rmmod rtai_msg
+                rmmod rtai_mbx
+                rmmod rtai_sem
+                rmmod rtai_fifos
+                rmmod rtai_sched
+                rmmod rtai_hal
 
 
 

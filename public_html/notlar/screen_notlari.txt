@@ -5,59 +5,59 @@ tmux paketini de incele. Screen'den daha iyi olabilir.
 
 - Yükleme
 
-	aptitude install screen
+        aptitude install screen
 
-	/etc/screenrc
-		defscrollback 10000
-		bind F hardstatus ignore        
-		bind f hardstatus alwayslastline
-		hardstatus on
-		#hardstatus lastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
-		hardstatus lastline "%{Gk}%d %M %Y %{Yk}%c:%s %{kW}%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
-		hardstatus alwayslastline
+        /etc/screenrc
+                defscrollback 10000
+                bind F hardstatus ignore
+                bind f hardstatus alwayslastline
+                hardstatus on
+                #hardstatus lastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+                hardstatus lastline "%{Gk}%d %M %Y %{Yk}%c:%s %{kW}%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+                hardstatus alwayslastline
 
 
 - Başlatma
-	
-	# yeni başlatırken
-	screen
 
-	# detach olunmuş screen'e yeniden bağlanmak için
-	screen -r
+        # yeni başlatırken
+        screen
 
-	# kullanılmakta olan screen'e bağlanmak (multiuser mode)
-	screen -x
+        # detach olunmuş screen'e yeniden bağlanmak için
+        screen -r
 
-	# çalışmakta olan screen'lerin listesi
-	screen -ls
-	screen -list
+        # kullanılmakta olan screen'e bağlanmak (multiuser mode)
+        screen -x
+
+        # çalışmakta olan screen'lerin listesi
+        screen -ls
+        screen -list
 
 
 - Sık kullanılan kısayollar
 
-	ctrl+a ?		yardım
-	ctrl+a c		(create) yeni pencere oluşturma
-	ctrl+a "		mevcut pencerelerin listesi
-	ctrl+a ctrl+a		bir önceki pencereye geç
-	ctrl+a A		pencereye isim ver
-	ctrl+a 0..9		numarası verilen pencereye geç
-	ctrl+a d		(detach) screen'den ayrıl
-	ctrl+a \		screen'i sonlandır
-	ctrl+a x		ekranı kilitler, kullanıcı parolası girilince açılır
-	ctrl+a K		penceredeki uygulamayı kill eder
+        ctrl+a ?                yardım
+        ctrl+a c                (create) yeni pencere oluşturma
+        ctrl+a "                mevcut pencerelerin listesi
+        ctrl+a ctrl+a           bir önceki pencereye geç
+        ctrl+a A                pencereye isim ver
+        ctrl+a 0..9             numarası verilen pencereye geç
+        ctrl+a d                (detach) screen'den ayrıl
+        ctrl+a \                screen'i sonlandır
+        ctrl+a x                ekranı kilitler, kullanıcı parolası girilince açılır
+        ctrl+a K                penceredeki uygulamayı kill eder
 
-	ctrl+a C		(clear) ekranı temizler
-	ctrl+a S		(split) pencereyi yatay bölme
-	ctrl+a |		pencereyi dikey bölme
-	ctrl+a tab		pencereler arasında geçiş
-	ctrl+a X		bölümü siler (merge)
+        ctrl+a C                (clear) ekranı temizler
+        ctrl+a S                (split) pencereyi yatay bölme
+        ctrl+a |                pencereyi dikey bölme
+        ctrl+a tab              pencereler arasında geçiş
+        ctrl+a X                bölümü siler (merge)
 
-	ctrl+a esc		copy moda geçer
-	ctrl+a [		copy moda geçer
-	enter			copy modda kopyalanacak bölümün başını ve sonunu işaretlemek için kullanılır
-	ctrl+a ]		paste, kopyalanan bölümü yapıştırır
+        ctrl+a esc              copy moda geçer
+        ctrl+a [                copy moda geçer
+        enter                   copy modda kopyalanacak bölümün başını ve sonunu işaretlemek için kullanılır
+        ctrl+a ]                paste, kopyalanan bölümü yapıştırır
 
-	ctrl+a t		time, upload bilgilerini gösterir
-	ctrl+a :		komut modu
-		-> hardstatus lastline off		status satırını kapatır
+        ctrl+a t                time, upload bilgilerini gösterir
+        ctrl+a :                komut modu
+                -> hardstatus lastline off              status satırını kapatır
 

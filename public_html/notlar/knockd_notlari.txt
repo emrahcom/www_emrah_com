@@ -3,44 +3,44 @@ KNOCKD NOTLARI
 -------------------------------------------------------------------------------
 
 # Yükleme
-	aptitude install knockd
+        aptitude install knockd
 
 
 # Ayarlar
-	- knockd.conf
-	[openSERVICE]
-	sequence        = 7000,8000:udp,9000
-	seq_timeout     = 10
-	tcpflags        = syn
-	start_command   = /sbin/iptables -I INPUT -s %IP% -p tcp --dport 8080 -j ACCEPT
-	cmd_timeout     = 600
-	stop_command    = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 8080 -j ACCEPT
+        - knockd.conf
+        [openSERVICE]
+        sequence        = 7000,8000:udp,9000
+        seq_timeout     = 10
+        tcpflags        = syn
+        start_command   = /sbin/iptables -I INPUT -s %IP% -p tcp --dport 8080 -j ACCEPT
+        cmd_timeout     = 600
+        stop_command    = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 8080 -j ACCEPT
 
-	[closeSERVICE]
-	sequence        = 9000,8000:udp,7000
-	seq_timeout     = 10
-	command         = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 8080 -j ACCEPT
-	tcpflags        = syn
+        [closeSERVICE]
+        sequence        = 9000,8000:udp,7000
+        seq_timeout     = 10
+        command         = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 8080 -j ACCEPT
+        tcpflags        = syn
 
-	- /etc/default/knockd
-	START_KNOCKD=1
+        - /etc/default/knockd
+        START_KNOCKD=1
 
-	- Yeni ayarlarla başlatma
-	/etc/init.d/knockd restart
+        - Yeni ayarlarla başlatma
+        /etc/init.d/knockd restart
 
 
 # TCP portlarına syn
-	knock 111.111.111.111 7000 8000:udp 9000
+        knock 111.111.111.111 7000 8000:udp 9000
 
 
 # Iptables default olarak porta erişimi kapatmak
   /etc/rc.local içine yazılabilir.
-	iptables -A INPUT -p tcp --dport 8080 -j REJECT
+        iptables -A INPUT -p tcp --dport 8080 -j REJECT
 
 
 # Iptables'in durumunu görmek için
-	iptables -L
+        iptables -L
 
 
 # Iptables kurallarının hepsini silmek için
-	iptables -F
+        iptables -F

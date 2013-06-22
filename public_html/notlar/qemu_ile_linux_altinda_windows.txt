@@ -1,205 +1,205 @@
 * kernel-source yükle ve derle
 
-	su -
-	apt-get install kernel-source-2.6.xxx
-	cd /usr/src
-	tar xjf kernel-source-2.6.xxx
-	ln -s kernel-source-2.6.xxx/ linux
-	cd linux
-	cp /boot/config-2.6.xxx .config
-	make oldconfig
-	make bzImage
+        su -
+        apt-get install kernel-source-2.6.xxx
+        cd /usr/src
+        tar xjf kernel-source-2.6.xxx
+        ln -s kernel-source-2.6.xxx/ linux
+        cd linux
+        cp /boot/config-2.6.xxx .config
+        make oldconfig
+        make bzImage
 
 
 
 * qemu paketini derlemek için gerekli olan paketleri yükle
 
-	apt-get install sudo libsdl1.2-dev
+        apt-get install sudo libsdl1.2-dev
 
-	Bağımlılıklardan dolayı libsdl1.2-dev paketiyle birlikte şunlar da 
-	otomatik olarak yükleniyor:
+        Bağımlılıklardan dolayı libsdl1.2-dev paketiyle birlikte şunlar da
+        otomatik olarak yükleniyor:
 
-		aalib1-dev
-		libartsc0-dev
-		libasound2-dev
-		libaudiofile-dev
-		libesd0-dev
-		libglib2.0-dev
-		libsvga1-dev
-		slang1-dev
+                aalib1-dev
+                libartsc0-dev
+                libasound2-dev
+                libaudiofile-dev
+                libesd0-dev
+                libglib2.0-dev
+                libsvga1-dev
+                slang1-dev
 
 
 
 * qemu ve kqemu dosyalarını download et.
 
-	http://fabrice.bellard.free.fr/qemu/download.html
-	qemu-0.7.0.tar.gz	(versiyon numarası değişmiş olabilir)
-	kqemu-0.6.2-1.tar.gz	(versiyon numarası değişmiş olabilir)
+        http://fabrice.bellard.free.fr/qemu/download.html
+        qemu-0.7.0.tar.gz       (versiyon numarası değişmiş olabilir)
+        kqemu-0.6.2-1.tar.gz    (versiyon numarası değişmiş olabilir)
 
 
 
 * paketleri tar ile aç
 
-	tar xzvf qemu-0.7.0.tar.gz
-	tar xzvf kqemu-0.6.2-1.tar.gz
+        tar xzvf qemu-0.7.0.tar.gz
+        tar xzvf kqemu-0.6.2-1.tar.gz
 
 
 
 * kqemu klasörünü qemu-0.7.0 klasörü içine taşı
 
-	mv kqemu qemu-0.7.0/
+        mv kqemu qemu-0.7.0/
 
 
 
 * kodu derle ve yükle
 
-	cd qemu-0.7.0/
-	./configure
-	make
+        cd qemu-0.7.0/
+        ./configure
+        make
 
-	su -
-	make install
+        su -
+        make install
 
 
 
 * yükleme sonrası ayarlar
 
-	- kqemu ve tun modüllerinin açılışta yüklenmesi için /etc/modules 
-	  içine modül isimlerini ekle. 
-	
-		/etc/modules dosyasının son satırına eklenecekler:
-	
-		kqemu
-		tun
+        - kqemu ve tun modüllerinin açılışta yüklenmesi için /etc/modules
+          içine modül isimlerini ekle.
+
+                /etc/modules dosyasının son satırına eklenecekler:
+
+                kqemu
+                tun
 
 
-	- /etc/qemu-ifup dosyasını oluştur.
+        - /etc/qemu-ifup dosyasını oluştur.
 
-		/etc/qemu-ifup içeriği:
-	
-		#!/bin/sh
-		sudo -p "Password for $0:" /sbin/ifconfig $1 172.20.0.1
+                /etc/qemu-ifup içeriği:
 
-
-	- ifconfig'de sorun çıkarsa
-
-		apt-get install uml-utilities
-		tunctl -u 'kullanici_adi' -t tun0
+                #!/bin/sh
+                sudo -p "Password for $0:" /sbin/ifconfig $1 172.20.0.1
 
 
-	- /etc/qemu-ifup dosyasını çalışabilir yap
+        - ifconfig'de sorun çıkarsa
 
-		chmod 755 /etc/qemu-ifup
-
-
-	- kullanıcının parola yazmadan sudo gerektiren komutları çalıştırabilmesi 
-	  için /etc/sudoers dosyasına kullanıcı adını ekle. 
-
-		/etc/sudoers dosyasının son satırına eklenecekler:
-		
-		kullanıcı_adı	ALL=NOPASSWD: /sbin/ifconfig
+                apt-get install uml-utilities
+                tunctl -u 'kullanici_adi' -t tun0
 
 
-	- /etc/init.d/c_qemu dosyasının hazırlanması
-	  udev kullanıldığı için her açılışta kqemu için gerekli node oluşturulmalı
+        - /etc/qemu-ifup dosyasını çalışabilir yap
 
-		#! /bin/bash
-		mknod /dev/kqemu c 250 0
-		chmod 666 /dev/kqemu
-		chmod o+rw /dev/net/tun
+                chmod 755 /etc/qemu-ifup
 
 
-	- /etc/rc2.d/S99c_qemu için sembolik link oluştur
+        - kullanıcının parola yazmadan sudo gerektiren komutları çalıştırabilmesi
+          için /etc/sudoers dosyasına kullanıcı adını ekle.
 
-		chmod 750 /etc/init.d/c_qemu
-		cd /etc/rc2.d
-		ln -s ../init.d/c_qemu S99c_qemu
+                /etc/sudoers dosyasının son satırına eklenecekler:
+
+                kullanıcı_adı   ALL=NOPASSWD: /sbin/ifconfig
+
+
+        - /etc/init.d/c_qemu dosyasının hazırlanması
+          udev kullanıldığı için her açılışta kqemu için gerekli node oluşturulmalı
+
+                #! /bin/bash
+                mknod /dev/kqemu c 250 0
+                chmod 666 /dev/kqemu
+                chmod o+rw /dev/net/tun
+
+
+        - /etc/rc2.d/S99c_qemu için sembolik link oluştur
+
+                chmod 750 /etc/init.d/c_qemu
+                cd /etc/rc2.d
+                ln -s ../init.d/c_qemu S99c_qemu
 
 
 * image dosyası oluşturma
 
-	dd of=win_c.img bs=1024 seek=1200000 count=0
-	dd of=win_d.img bs=1024	seek=200000  count=0
+        dd of=win_c.img bs=1024 seek=1200000 count=0
+        dd of=win_d.img bs=1024 seek=200000  count=0
 
-	veya
+        veya
 
-	qemu-img create win_c.img 1200M
-	qemu-img create win_d.img 200M
+        qemu-img create win_c.img 1200M
+        qemu-img create win_d.img 200M
 
-	win_c.img: sistemin yükleneceği partition olarak kullanılacak
-	win_d.img: verilerin yükleneceği partition olarak kullanılacak
+        win_c.img: sistemin yükleneceği partition olarak kullanılacak
+        win_d.img: verilerin yükleneceği partition olarak kullanılacak
 
-	qemu-img ile oluşturulan image dosyası, söylenen uzunlukta görünse bile 
-	sadece içindeki veri kadar sabitdiskte yer kaplar.
+        qemu-img ile oluşturulan image dosyası, söylenen uzunlukta görünse bile
+        sadece içindeki veri kadar sabitdiskte yer kaplar.
 
 
 
 * Windows yükleme
 
-	- Windows CD'si CD sürücüye taıldıktan sonra şu komutu çalıştır
-	
-		qemu -localtime -m 200 -hda win_c.img -hdb win_d.img -cdrom /dev/cdrom -boot d
-	
+        - Windows CD'si CD sürücüye taıldıktan sonra şu komutu çalıştır
 
-	- Sadece Windows 2000'de görülen bir sorun var. Yükleme esnasında <SHIFT>F10 ile 
-	  MS-DOS konsolunu açıp WINNT\security\*.log dosyalarını silmek gerekiyor.
+                qemu -localtime -m 200 -hda win_c.img -hdb win_d.img -cdrom /dev/cdrom -boot d
+
+
+        - Sadece Windows 2000'de görülen bir sorun var. Yükleme esnasında <SHIFT>F10 ile
+          MS-DOS konsolunu açıp WINNT\security\*.log dosyalarını silmek gerekiyor.
 
 
 
 * QEMU kullanırken
 
-	- başlatmak için 
-	  qemu -localtime -m 200 -hda win_c.img -hdb win_d.img -boot c
+        - başlatmak için
+          qemu -localtime -m 200 -hda win_c.img -hdb win_d.img -boot c
 
-	- mouse ile tıklanınca QEMU penceresi içinde mouse hareket eder. 
-	  Sisteme geri dönmek için <CTRL><ALT>
-
-
-	- tam ekran moduna geçmek için <CTRL><ALT>F
-	  bu modda çıkmak için de yine aynı kısayol...
+        - mouse ile tıklanınca QEMU penceresi içinde mouse hareket eder.
+          Sisteme geri dönmek için <CTRL><ALT>
 
 
-	- Açılış esnasında fullscreen moda geçmek için 
-
-		qemu -full-screen ...
-
-
-	- Sesi devreye sokmak için
-
-		qemu -enable-audio
+        - tam ekran moduna geçmek için <CTRL><ALT>F
+          bu modda çıkmak için de yine aynı kısayol...
 
 
-	- image dosyayı sisteme mount etmek için
+        - Açılış esnasında fullscreen moda geçmek için
 
-		mount [image] [klasör] -t [tip] -o loop,uid=[kullaniciID],offset=32256
-		mount dos_c.img mnt_c/ -t msdos -o loop,uid=1001,offset=32256
-
-
-	- image dosyayı umount etmek için
-
-		umount [image]
+                qemu -full-screen ...
 
 
-	- target, monitor, serial arasında geçiş
+        - Sesi devreye sokmak için
 
-		<CTRL><ALT>n	(n = 1 veya 2 veya 3)
-
-	- monitor penceresinde yardım için 
-		help
-	
-
-	- CD değiştirmek için
-	
-		monitör ekranına geç
-		<CTRL><ALT>2
-
-		eject [-f] device
-		change device dosya
+                qemu -enable-audio
 
 
-	- Sistemi resetlemek için	
-	
-		monitör ekranına geç
-		<CTRL><ALT>2
+        - image dosyayı sisteme mount etmek için
 
-		system_reset
+                mount [image] [klasör] -t [tip] -o loop,uid=[kullaniciID],offset=32256
+                mount dos_c.img mnt_c/ -t msdos -o loop,uid=1001,offset=32256
+
+
+        - image dosyayı umount etmek için
+
+                umount [image]
+
+
+        - target, monitor, serial arasında geçiş
+
+                <CTRL><ALT>n    (n = 1 veya 2 veya 3)
+
+        - monitor penceresinde yardım için
+                help
+
+
+        - CD değiştirmek için
+
+                monitör ekranına geç
+                <CTRL><ALT>2
+
+                eject [-f] device
+                change device dosya
+
+
+        - Sistemi resetlemek için
+
+                monitör ekranına geç
+                <CTRL><ALT>2
+
+                system_reset

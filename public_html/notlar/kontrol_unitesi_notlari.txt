@@ -3,436 +3,436 @@ Kontrol Ünitesi Notları
 
 - Kullanılabilecek donanımlar
 
-	- Ana kart
-	  Intel D945GCLF2 mini-itx anakart
-	  Tümleşik Atom 330 1.6 Ghz
-	  Yaklaşık fiyatı 170 TL
-	  http://www.sanalmarketim.com/urun/3120d04de001890947ee75878162ee7b/INTEL-D945GCLF2-mITX-Anakart-(Tumlesik-Atom-330-1.6-Ghz)
-	  http://www.merpazar.com/asp/product/10512/Intel-D945GCLF2-ATOM-Mini-ITX-Anakart
-	  http://www.novabazar.com/urun/55365a9588dcb182edc78c152705219a/INTEL-945GCLF2-945-+-ATOM-330-CPU-BULK
+        - Ana kart
+          Intel D945GCLF2 mini-itx anakart
+          Tümleşik Atom 330 1.6 Ghz
+          Yaklaşık fiyatı 170 TL
+          http://www.sanalmarketim.com/urun/3120d04de001890947ee75878162ee7b/INTEL-D945GCLF2-mITX-Anakart-(Tumlesik-Atom-330-1.6-Ghz)
+          http://www.merpazar.com/asp/product/10512/Intel-D945GCLF2-ATOM-Mini-ITX-Anakart
+          http://www.novabazar.com/urun/55365a9588dcb182edc78c152705219a/INTEL-945GCLF2-945-+-ATOM-330-CPU-BULK
 
 
-	- RAM
-	  1 GB DDR2 667 Mhz
-	  Sorun çıkarmayacak herhangi bir marka olabilir, örneğin CORSAIR
-	  Yaklaşık fiyatı 50 TL
-	  http://www.sanalmarketim.com/urun/VS1GB667D2/CORSAIR-1-GB-DDR2-667-MHz-PC2-5300
-	  http://www.novabazar.com/urun/8a85acd9632b5f4b4b48dd45fff96082/KINGSTON-1-GB-DDR2-667-MHz-(KINGSTON)
+        - RAM
+          1 GB DDR2 667 Mhz
+          Sorun çıkarmayacak herhangi bir marka olabilir, örneğin CORSAIR
+          Yaklaşık fiyatı 50 TL
+          http://www.sanalmarketim.com/urun/VS1GB667D2/CORSAIR-1-GB-DDR2-667-MHz-PC2-5300
+          http://www.novabazar.com/urun/8a85acd9632b5f4b4b48dd45fff96082/KINGSTON-1-GB-DDR2-667-MHz-(KINGSTON)
 
 
-	- PCI Parallel kart
-	  EPP destekli 2 portu olan
-	  Yaklasik fiyatı 50 TL
-	  http://www.netsiparis.com/detay/27971067028/DS-33011-DIGITUS-2-PORT-PARALEL-PCI-KART
-	  http://www.garantialisveris.com/4smeb/ProductDetail.aspx?ProductId=60028&StockId=80800&Name=Digitus+2+Port+Paralel+(DB25+Di%c5%9fi)+PCI+Kart%2c+SUN1888+chipset
-	  http://www.garantialisveris.com/4smeb/ProductDetail.aspx?ProductId=60669&StockId=81441&Name=PCI%20PARALEL%20KART%202%20PORT
-	  http://www.sanalmarketim.com/urun/ddb57a84994a06e09e26181afda91b02/DIGITUS-DS-33010-1-Port-Paralel-PCI-Kart-
+        - PCI Parallel kart
+          EPP destekli 2 portu olan
+          Yaklasik fiyatı 50 TL
+          http://www.netsiparis.com/detay/27971067028/DS-33011-DIGITUS-2-PORT-PARALEL-PCI-KART
+          http://www.garantialisveris.com/4smeb/ProductDetail.aspx?ProductId=60028&StockId=80800&Name=Digitus+2+Port+Paralel+(DB25+Di%c5%9fi)+PCI+Kart%2c+SUN1888+chipset
+          http://www.garantialisveris.com/4smeb/ProductDetail.aspx?ProductId=60669&StockId=81441&Name=PCI%20PARALEL%20KART%202%20PORT
+          http://www.sanalmarketim.com/urun/ddb57a84994a06e09e26181afda91b02/DIGITUS-DS-33010-1-Port-Paralel-PCI-Kart-
 
 
-	- Sabitdisk
-	  Titreşimden ve darbelerden etkilenmemesi için SSD disk
-	  Yaklaşık fiyatı 300 TL
-	  http://www.hepsiburada.com/kingston-40gb-ssdnow-v-serisi-flash-sabit-disk-snv125-s2bd40gb/productDetails.aspx?categoryid=114814&productid=bd847315
-	  http://www.hepsiburada.com/bigboy-ssd-1-flash-disk/productDetails.aspx?categoryid=114814&productid=bd84223
+        - Sabitdisk
+          Titreşimden ve darbelerden etkilenmemesi için SSD disk
+          Yaklaşık fiyatı 300 TL
+          http://www.hepsiburada.com/kingston-40gb-ssdnow-v-serisi-flash-sabit-disk-snv125-s2bd40gb/productDetails.aspx?categoryid=114814&productid=bd847315
+          http://www.hepsiburada.com/bigboy-ssd-1-flash-disk/productDetails.aspx?categoryid=114814&productid=bd84223
 
 
-	- USB bellek (2 adet)
-	  4 GB kapasiteli; hepsi aynı tip olsun
-	  Yaklaşık fiyatı: 25 TL x 2 = 50 TL
-	  http://www.sanalmarketim.com/urun/AB760KIN05/KINGSTON-DTI/4GB-4GB-Usb2.0-Flash-Disk
-	  http://www.hepsiburada.com/kingston-usb-2.0-4gb-memory-dti4gb/productDetails.aspx?categoryid=970&productid=bd70571
+        - USB bellek (2 adet)
+          4 GB kapasiteli; hepsi aynı tip olsun
+          Yaklaşık fiyatı: 25 TL x 2 = 50 TL
+          http://www.sanalmarketim.com/urun/AB760KIN05/KINGSTON-DTI/4GB-4GB-Usb2.0-Flash-Disk
+          http://www.hepsiburada.com/kingston-usb-2.0-4gb-memory-dti4gb/productDetails.aspx?categoryid=970&productid=bd70571
 
 
-	- Compact Flash
-	  4 GB kapasiteli
-	  Yaklaşık fiyatı 30 TL
-	  http://www.sanalmarketim.com/urun/69d7528fd8862d34696e0ff5f9c9fcfb/KINGSTON-CF/4GB-Compact-Flash-Kart
-	  http://www.netsiparis.com/detay/12241165128/KINGSTON-4GB-COMPACT-FLASH-KART
+        - Compact Flash
+          4 GB kapasiteli
+          Yaklaşık fiyatı 30 TL
+          http://www.sanalmarketim.com/urun/69d7528fd8862d34696e0ff5f9c9fcfb/KINGSTON-CF/4GB-Compact-Flash-Kart
+          http://www.netsiparis.com/detay/12241165128/KINGSTON-4GB-COMPACT-FLASH-KART
 
 
-	- Compact Flash to IDE/SATA Adaptör
-	  Yaklaşık fiyatı 35 TL
-	  http://www.merpazar.com/asp/product/10581/CF-to-SATA-Adapter
-	  http://www.merpazar.com/asp/product/219/CF-to-IDE-40-Pin-Adapter
+        - Compact Flash to IDE/SATA Adaptör
+          Yaklaşık fiyatı 35 TL
+          http://www.merpazar.com/asp/product/10581/CF-to-SATA-Adapter
+          http://www.merpazar.com/asp/product/219/CF-to-IDE-40-Pin-Adapter
 
 
-	- Disk on Module (IDE/SATA)
-	  2 GB kapasiteli
-	  Yaklaşık fiyatı 120 TL
-	  http://www.merpazar.com/asp/product/117/2-GB-DOM-Module-40-pin-IDE
-	  http://www.merpazar.com/asp/product/10563/2GB-DOM-Module-IDE-Yatay-Endustriyel-
-	  http://www.merpazar.com/asp/product/10562/2GB-DOM-Module-Sata-Dikey
+        - Disk on Module (IDE/SATA)
+          2 GB kapasiteli
+          Yaklaşık fiyatı 120 TL
+          http://www.merpazar.com/asp/product/117/2-GB-DOM-Module-40-pin-IDE
+          http://www.merpazar.com/asp/product/10563/2GB-DOM-Module-IDE-Yatay-Endustriyel-
+          http://www.merpazar.com/asp/product/10562/2GB-DOM-Module-Sata-Dikey
 
 
-	- Disk on Module (USB)
-	  2 GB kapasiteli
-	  Yaklaşık fiyatı 100 TL
-	  http://www.merpazar.com/asp/product/10605/2GB-DOM-Module-USB-Dikey
+        - Disk on Module (USB)
+          2 GB kapasiteli
+          Yaklaşık fiyatı 100 TL
+          http://www.merpazar.com/asp/product/10605/2GB-DOM-Module-USB-Dikey
 
 
-	- PSU
-	  Yaklaşık fiyatı 50 TL
-	  http://www.sanalmarketim.com/urun/579210d9e2f4bdd322b9b6ad62171767/DARK-150W-TFX-Guc-Kaynagi
+        - PSU
+          Yaklaşık fiyatı 50 TL
+          http://www.sanalmarketim.com/urun/579210d9e2f4bdd322b9b6ad62171767/DARK-150W-TFX-Guc-Kaynagi
 
 
-	- Mini-itx kasa
-	  Yaklaşık 150 TL
-	  http://www.sanalmarketim.com/urun/9375708171ac0d0d1d9b5f4670d71757/DARK-Mini-Type-C-150W-Mini-ITX-Kasa-(Fircalanmis-Koyu-Gri)
+        - Mini-itx kasa
+          Yaklaşık 150 TL
+          http://www.sanalmarketim.com/urun/9375708171ac0d0d1d9b5f4670d71757/DARK-Mini-Type-C-150W-Mini-ITX-Kasa-(Fircalanmis-Koyu-Gri)
 
 
-	- PCI Riser Kart
-	  Yaklaşık fiyatı 30 TL
-	  http://www.merpazar.com/asp/product/39/1U-PCI-Riser-Kart
-	  http://www.merpazar.com/asp/product/10511/PCI-Riser-Card-2-li-27xx-serileri-icin
+        - PCI Riser Kart
+          Yaklaşık fiyatı 30 TL
+          http://www.merpazar.com/asp/product/39/1U-PCI-Riser-Kart
+          http://www.merpazar.com/asp/product/10511/PCI-Riser-Card-2-li-27xx-serileri-icin
 
 
-	- Opto-coupler devreli klemens
-	  Yaklaşık fiyatı 10 TL/adet
-	  http://www.klemsanotomasyon.com/default.asp?L=TR&mid=products&CatID=319
-	  http://www.klemsanotomasyon.com/default.asp?L=TR&mid=products&CatID=320
-	  http://www.klemsanotomasyon.com/default.asp?L=TR&mid=products&CatID=321
-	
+        - Opto-coupler devreli klemens
+          Yaklaşık fiyatı 10 TL/adet
+          http://www.klemsanotomasyon.com/default.asp?L=TR&mid=products&CatID=319
+          http://www.klemsanotomasyon.com/default.asp?L=TR&mid=products&CatID=320
+          http://www.klemsanotomasyon.com/default.asp?L=TR&mid=products&CatID=321
+
 
 
 
 - Ekstradan verilebilecek donanımlar
 
-	- Klavye, mouse
-	  Standart veya panel tip
+        - Klavye, mouse
+          Standart veya panel tip
 
-	- Monitor
-	  Dokunmatik, LCD veya panel tip
-	
-	- Ara kartlar
-	  . I/O izolatör
-	  . Röle tetikleme
-	  . DB25 -> X çevirici kartları
-	  . pwm-analog veya pulse-analog çevirici
+        - Monitor
+          Dokunmatik, LCD veya panel tip
 
-	- Servo motor ve sürücüler
+        - Ara kartlar
+          . I/O izolatör
+          . Röle tetikleme
+          . DB25 -> X çevirici kartları
+          . pwm-analog veya pulse-analog çevirici
 
-	- spindle motoru ve invertör
+        - Servo motor ve sürücüler
 
-	- Mekanik düzenek
-	
+        - spindle motoru ve invertör
+
+        - Mekanik düzenek
+
 
 
 - Ürün ve servis tipleri
 
-	- Standart kontrol ünitesi
-		. 3, 4 veya 6 eksen
-		. step/dir sinyali üreten
-		. home switch (her eksen bağımsız)
-		. limit switch
-		. su aç/kapa
-		. hava aç/kapa
-		. acil stop
-		. spindle aç/kapa (devir yok)
-		. el çarkı (?)
+        - Standart kontrol ünitesi
+                . 3, 4 veya 6 eksen
+                . step/dir sinyali üreten
+                . home switch (her eksen bağımsız)
+                . limit switch
+                . su aç/kapa
+                . hava aç/kapa
+                . acil stop
+                . spindle aç/kapa (devir yok)
+                . el çarkı (?)
 
-	- Sektöre özel kontrol üniteleri
+        - Sektöre özel kontrol üniteleri
 
-	- Müşteriye özel kontrol üniteleri
+        - Müşteriye özel kontrol üniteleri
 
-	- Komple makine yapımı
+        - Komple makine yapımı
 
-	- Servisler
-		. Kurulum hizmeti
-		. Özelleştirme servisi
-		. Yıllık bakım anlaşması
+        - Servisler
+                . Kurulum hizmeti
+                . Özelleştirme servisi
+                . Yıllık bakım anlaşması
 
-	- Internet üzerinden ücretsiz destek ve döküman
+        - Internet üzerinden ücretsiz destek ve döküman
 
 
 
 - I/O
-	- Output (16 + 8)
-		. X dir			<= stepgen.0.dir
-		. X step		<= stepgen.0.step
-		. Y dir			<= stepgen.1.dir
-		. Y step		<= stepgen.1.step
-		. Z dir			<= stepgen.2.dir
-		. Z step		<= stepgen.2.step
-		. A/B/C dir		<= stepgen.3.dir
-		. A/B/C step		<= stepgen.3.step
+        - Output (16 + 8)
+                . X dir                 <= stepgen.0.dir
+                . X step                <= stepgen.0.step
+                . Y dir                 <= stepgen.1.dir
+                . Y step                <= stepgen.1.step
+                . Z dir                 <= stepgen.2.dir
+                . Z step                <= stepgen.2.step
+                . A/B/C dir             <= stepgen.3.dir
+                . A/B/C step            <= stepgen.3.step
 
-		. flood on/off		<= iocontrol.0.coolant-flood
-		. mist on/off		<= iocontrol.0.coolant-mist
-		. spindle on/off	<= motion.spindle-on
-		. spindle forward	<= motion.spindle-forward
-		. spindle reverse	<= motion.spindle-reverse
-		. spindle pulse 	<= stepgen.6.step
+                . flood on/off          <= iocontrol.0.coolant-flood
+                . mist on/off           <= iocontrol.0.coolant-mist
+                . spindle on/off        <= motion.spindle-on
+                . spindle forward       <= motion.spindle-forward
+                . spindle reverse       <= motion.spindle-reverse
+                . spindle pulse         <= stepgen.6.step
 
-		. machine is-on		<= halui.machine.is-on
-		. DO0			<= motion.digital-out-00
-		. DO1			<= motion.digital-out-01
+                . machine is-on         <= halui.machine.is-on
+                . DO0                   <= motion.digital-out-00
+                . DO1                   <= motion.digital-out-01
 
-	- Input (10)
-		. X home		=> axis.0.home-sw-in
-		. Y home		=> axis.1.home-sw-in
-		. Z home		=> axis.2.home-sw-in
-		. A/B/C home		=> axis.3.home-sw-in
-		. limit			=> axis.0.neg-lim-sw-in
-		. servo alarm		=> motion.enable
-		. acil stop		=> iocontrol.0.emc-enable-in
-		. machine on		=> halui.machine.on
-		. ? machine off		=> halui.machine.off
-		. ? auto mode		=> halui.mode.auto
-		. ? başla		=> halui.program.run
-		. iptal			=> halui.abort 
-		. ? pause		=> halui.program.pause
-		. ? devam		=> halui.program.resume
-		. ? adım		=> halui.program.step
-		. ? probe		=> motion.probe-input
-		. ? spindle phase A	=> encoder.0.phase-A
-		. ? spindle index	=> encoder.0.phase-Z
+        - Input (10)
+                . X home                => axis.0.home-sw-in
+                . Y home                => axis.1.home-sw-in
+                . Z home                => axis.2.home-sw-in
+                . A/B/C home            => axis.3.home-sw-in
+                . limit                 => axis.0.neg-lim-sw-in
+                . servo alarm           => motion.enable
+                . acil stop             => iocontrol.0.emc-enable-in
+                . machine on            => halui.machine.on
+                . ? machine off         => halui.machine.off
+                . ? auto mode           => halui.mode.auto
+                . ? başla               => halui.program.run
+                . iptal                 => halui.abort
+                . ? pause               => halui.program.pause
+                . ? devam               => halui.program.resume
+                . ? adım                => halui.program.step
+                . ? probe               => motion.probe-input
+                . ? spindle phase A     => encoder.0.phase-A
+                . ? spindle index       => encoder.0.phase-Z
 
-	- ground
-		. X dir ground
-		. X step ground
-		. Y dir ground
-		. Y step ground
-		. Z dir ground
-		. Z step ground
-		. A/B/C dir ground
-		. A/B/C step ground
-		. spindle pwm ground
+        - ground
+                . X dir ground
+                . X step ground
+                . Y dir ground
+                . Y step ground
+                . Z dir ground
+                . Z step ground
+                . A/B/C dir ground
+                . A/B/C step ground
+                . spindle pwm ground
 
-	- El paneli (8 + 5 input; 4 output)
+        - El paneli (8 + 5 input; 4 output)
 
 
 
 
 - BIOS ayarları
-	- Main
-		. Intel Hyper-Threading Technology -> Disable
-	
-	- Advanced
-		. Boot Configuration
-			. System Fan Control -> Enable
-			. Display Setup Prompt -> Off
-		. Peripheral Configuration
-			. Parallel Port -> Enable
-			. Mode -> EPP
-		. Video Configuration
-			. IGD DVMT Memory -> 32 MB
-			. IGD Aperture Size -> 128 MB
-		. Chipset Configuration
-			. HPET -> Disable
-	
-	- Security
-		. Set Supervisor Password: xxx
-		. User Access Level -> View Only
+        - Main
+                . Intel Hyper-Threading Technology -> Disable
 
-	- Power
-		. After Power Failure -> Power On (Power off yapılıp düğmeye bağlanabilir)
-		. Wake on LAN from S5 -> Stay Off
-	
-	- Boot
-		. Boot Device Priority:	CD/DVD ROM Drive
-					Hard Disk Drive
-					Ethernet
-					Floppy Drive
-		. Hard Disk Order -> USB
-		. Boot USB Device First -> Enable
-		. USB Mass Storage Emulation Type -> All Fixed Disc
-		. Boot to Network -> Disable
+        - Advanced
+                . Boot Configuration
+                        . System Fan Control -> Enable
+                        . Display Setup Prompt -> Off
+                . Peripheral Configuration
+                        . Parallel Port -> Enable
+                        . Mode -> EPP
+                . Video Configuration
+                        . IGD DVMT Memory -> 32 MB
+                        . IGD Aperture Size -> 128 MB
+                . Chipset Configuration
+                        . HPET -> Disable
+
+        - Security
+                . Set Supervisor Password: xxx
+                . User Access Level -> View Only
+
+        - Power
+                . After Power Failure -> Power On (Power off yapılıp düğmeye bağlanabilir)
+                . Wake on LAN from S5 -> Stay Off
+
+        - Boot
+                . Boot Device Priority: CD/DVD ROM Drive
+                                        Hard Disk Drive
+                                        Ethernet
+                                        Floppy Drive
+                . Hard Disk Order -> USB
+                . Boot USB Device First -> Enable
+                . USB Mass Storage Emulation Type -> All Fixed Disc
+                . Boot to Network -> Disable
 
 
 
 - Kurulum
-	- Standart kurulum yapılacak
-		IP		: 192.168.1.100
-		DNS		: 208.67.222.222 208.67.220.220
-		Makine adı	: goo
-		Alan adı	: gnu.loc
+        - Standart kurulum yapılacak
+                IP              : 192.168.1.100
+                DNS             : 208.67.222.222 208.67.220.220
+                Makine adı      : goo
+                Alan adı        : gnu.loc
 
-	- dd ile kopyalamada sorun çıkmaması için diskin tamamını kullanma, sonda boşluk bırak
-	  #1   primary   3.8 GB  Bootable  ext3   /
-	  ~220 MB bos
+        - dd ile kopyalamada sorun çıkmaması için diskin tamamını kullanma, sonda boşluk bırak
+          #1   primary   3.8 GB  Bootable  ext3   /
+          ~220 MB bos
 
 
 
 - Kurulacak uygulama ve servisler
   Sık sık "aptitude clean" yapılsın
-	- ntpdate
-	- vim
-	- screen
-	- openssh-server
-	- sshfs
-	- pciutils
-	- lshw
-	- htop
-	- iotop
-	- bzip2
-	- zip
-	- unzip
-	- encfs
-	- python
-	- python-minimal
-	- python-support
-	- python-serial
-	- python-parallel
-	- python-httplib2
-	- ipython
-	- xorg
-	- openbox
-	- rxvt
-	- rxvt-unicode
-	- unclutter
-	- numlockx
-	- x11vnc
-	- leafpad
-	- thunar
-	- pure-ftpd
-	- sudo
+        - ntpdate
+        - vim
+        - screen
+        - openssh-server
+        - sshfs
+        - pciutils
+        - lshw
+        - htop
+        - iotop
+        - bzip2
+        - zip
+        - unzip
+        - encfs
+        - python
+        - python-minimal
+        - python-support
+        - python-serial
+        - python-parallel
+        - python-httplib2
+        - ipython
+        - xorg
+        - openbox
+        - rxvt
+        - rxvt-unicode
+        - unclutter
+        - numlockx
+        - x11vnc
+        - leafpad
+        - thunar
+        - pure-ftpd
+        - sudo
 
-	- samba (default çalışmayacak)
+        - samba (default çalışmayacak)
 
-	- purge list
-		. tasksel
-		. tasksel-data
-		. installation-report 
-		. laptop-detect
-		. nano
-		. xterm
+        - purge list
+                . tasksel
+                . tasksel-data
+                . installation-report
+                . laptop-detect
+                . nano
+                . xterm
 
 
 
 
 - Ayarlar
-	- /etc/udev/rules.d/70-persistent-net.rules
-		SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="*", ATTR{dev_id}=="0x0", ATTR{type}=="1", KERNEL=="eth*", NAME="eth0"
+        - /etc/udev/rules.d/70-persistent-net.rules
+                SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="*", ATTR{dev_id}=="0x0", ATTR{type}=="1", KERNEL=="eth*", NAME="eth0"
 
-	  reboot
-
-
-	- /etc/apt/sources.list
-		deb     http://ftp.debian.org/debian/           lenny           main
-		deb-src http://ftp.debian.org/debian            lenny           main
-		deb     http://security.debian.org/             lenny/updates   main
-		deb-src http://security.debian.org/             lenny/updates   main
-
-	  /etc/apt/apt.conf.d/80recommends
-		APT::Install-Recommends "0";
-		APT::Install-Suggests "0";
-
-	  aptitude update
-	  aptitude purge tasksel tasksel-data installation-report laptop-detect nano
+          reboot
 
 
-	- /etc/hosts
-		127.0.0.1       localhost
-		127.0.1.1       goo.gnu.loc     goo
+        - /etc/apt/sources.list
+                deb     http://ftp.debian.org/debian/           lenny           main
+                deb-src http://ftp.debian.org/debian            lenny           main
+                deb     http://security.debian.org/             lenny/updates   main
+                deb-src http://security.debian.org/             lenny/updates   main
+
+          /etc/apt/apt.conf.d/80recommends
+                APT::Install-Recommends "0";
+                APT::Install-Suggests "0";
+
+          aptitude update
+          aptitude purge tasksel tasksel-data installation-report laptop-detect nano
 
 
-	- read-only
-		rm /etc/mtab
-		ln -s /proc/mounts /etc/mtab
-		rm /etc/blkid.tab*
-		ln -s /dev/null /etc/blkid.tab
+        - /etc/hosts
+                127.0.0.1       localhost
+                127.0.1.1       goo.gnu.loc     goo
 
 
-	- Tarih
-	  aptitude install ntpdate
-	  ntpdate-debian
-	  hwclock -w
+        - read-only
+                rm /etc/mtab
+                ln -s /proc/mounts /etc/mtab
+                rm /etc/blkid.tab*
+                ln -s /dev/null /etc/blkid.tab
 
 
-	- Güncellemeler
-	  aptitude update && aptitude -d -y full-upgrade && aptitude full-upgrade
-	  aptitude clean
+        - Tarih
+          aptitude install ntpdate
+          ntpdate-debian
+          hwclock -w
 
 
-	- vim 
-	  aptitude install vim
-
-	  .vimrc (root ve motio için...)
-		  :syntax on
-		  :set is
-		  :set ic
-		  :set hidden
-		  :set encoding=utf-8
-		  :set bg=dark
-		  :autocmd BufNewFile,BufRead *.py setlocal
-			  \ tabstop=8
-			  \ shiftwidth=4
-			  \ softtabstop=4
-			  \ expandtab
-			  \ autoindent
-			  \ list
-			  \ listchars=tab:»·,trail:·
-		  :autocmd InsertEnter * set cursorline cursorcolumn
-		  :autocmd InsertLeave * set nocursorline nocursorcolumn
-		  :highlight cursorline cterm=none ctermfg=7 ctermbg=4
-		  :highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
-
-	  - NERDTree (root ve motio için...)
-	  	download NERD_tree.zip
-		mkdir ~/.vim/
-		cd ~/.vim/
-		download NERD_tree.zip
-		unzip NERD_tree.zip
-		rm NERD_tree.zip
+        - Güncellemeler
+          aptitude update && aptitude -d -y full-upgrade && aptitude full-upgrade
+          aptitude clean
 
 
-	- .bashrc   (root ve motio icin...)
-		export LS_OPTIONS='--color=auto'
-		eval "`dircolors`"
-		alias ls='ls $LS_OPTIONS'
-		export TMOUT=300  # sadece root icin
-		export HISTSIZE=200
-		export HISTFILESIZE=0
+        - vim
+          aptitude install vim
+
+          .vimrc (root ve motio için...)
+                  :syntax on
+                  :set is
+                  :set ic
+                  :set hidden
+                  :set encoding=utf-8
+                  :set bg=dark
+                  :autocmd BufNewFile,BufRead *.py setlocal
+                          \ tabstop=8
+                          \ shiftwidth=4
+                          \ softtabstop=4
+                          \ expandtab
+                          \ autoindent
+                          \ list
+                          \ listchars=tab:»·,trail:·
+                  :autocmd InsertEnter * set cursorline cursorcolumn
+                  :autocmd InsertLeave * set nocursorline nocursorcolumn
+                  :highlight cursorline cterm=none ctermfg=7 ctermbg=4
+                  :highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
+
+          - NERDTree (root ve motio için...)
+                download NERD_tree.zip
+                mkdir ~/.vim/
+                cd ~/.vim/
+                download NERD_tree.zip
+                unzip NERD_tree.zip
+                rm NERD_tree.zip
 
 
-	- screen
-	  aptitude install screen
+        - .bashrc   (root ve motio icin...)
+                export LS_OPTIONS='--color=auto'
+                eval "`dircolors`"
+                alias ls='ls $LS_OPTIONS'
+                export TMOUT=300  # sadece root icin
+                export HISTSIZE=200
+                export HISTFILESIZE=0
 
 
-	- openssh server
-	  aptitude install openssh-server
-
-	  /etc/ssh/sshd_config
-		Port 22
-		PermitRootLogin no
-		AllowUsers motio
-
-	  ~/.ssh/config   (root ve motio için...)
-		Host *
-			Cipher=blowfish
-			CompressionLevel=9
-	
-	  ssh key
-	  	ssh-keygen -t rsa -b 2048 -f motio
-		scp -P22 .ssh/motio.pub motio@192.168.1.100:~/.ssh/authorized_keys
-		scp -P22 .ssh/gnu.pub motio@192.168.1.100:~/.ssh/
-		ssh -p22 motio@192.168.1.100
-		cd .ssh
-		cat gnu.pub >>authorized_keys
-		rm gnu.pub
+        - screen
+          aptitude install screen
 
 
-	- grub
-	  /boot/grub/menu.lst
-		default		0
-		timeout		1
-		hiddenmenu
-		#color cyan/blue white/blue
-		password --md5 parola_hashed
+        - openssh server
+          aptitude install openssh-server
 
-		# RTAI bolumu, rtai kurulumundan sonra gelecek
-		title           GOO GNU/Linux, kernel 2.6.30.5-rtai                                            
-		root            (hd0,0)                                                                           
-		kernel          /boot/vmlinuz-2.6.30.5-rtai root=UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0 ro quiet isolcpus=1
-		initrd          /boot/initrd.img-2.6.30.5-rtai                                                    
-														  
-		title           GOO GNU/Linux, kernel 2.6.30.5-rtai (single-user mode)                         
-		lock                                                                                              
-		root            (hd0,0)                                                                           
-		kernel          /boot/vmlinuz-2.6.30.5-rtai root=UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0 ro single
-		initrd          /boot/initrd.img-2.6.30.5-rtai
+          /etc/ssh/sshd_config
+                Port 22
+                PermitRootLogin no
+                AllowUsers motio
 
-		## ## End Default Options ##
+          ~/.ssh/config   (root ve motio için...)
+                Host *
+                        Cipher=blowfish
+                        CompressionLevel=9
+
+          ssh key
+                ssh-keygen -t rsa -b 2048 -f motio
+                scp -P22 .ssh/motio.pub motio@192.168.1.100:~/.ssh/authorized_keys
+                scp -P22 .ssh/gnu.pub motio@192.168.1.100:~/.ssh/
+                ssh -p22 motio@192.168.1.100
+                cd .ssh
+                cat gnu.pub >>authorized_keys
+                rm gnu.pub
+
+
+        - grub
+          /boot/grub/menu.lst
+                default         0
+                timeout         1
+                hiddenmenu
+                #color cyan/blue white/blue
+                password --md5 parola_hashed
+
+                # RTAI bolumu, rtai kurulumundan sonra gelecek
+                title           GOO GNU/Linux, kernel 2.6.30.5-rtai
+                root            (hd0,0)
+                kernel          /boot/vmlinuz-2.6.30.5-rtai root=UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0 ro quiet isolcpus=1
+                initrd          /boot/initrd.img-2.6.30.5-rtai
+
+                title           GOO GNU/Linux, kernel 2.6.30.5-rtai (single-user mode)
+                lock
+                root            (hd0,0)
+                kernel          /boot/vmlinuz-2.6.30.5-rtai root=UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0 ro single
+                initrd          /boot/initrd.img-2.6.30.5-rtai
+
+                ## ## End Default Options ##
 
                 title           Debian GNU/Linux, kernel 2.6.26-2-686
                 lock
@@ -446,27 +446,27 @@ Kontrol Ünitesi Notları
                 kernel          /boot/vmlinuz-2.6.26-2-686 root=UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0 ro single
                 initrd          /boot/initrd.img-2.6.26-2-686
 
-		### END DEBIAN AUTOMAGIC KERNELS LIST
-		#%s/root=\/dev\/sda1/root=UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0/gc
+                ### END DEBIAN AUTOMAGIC KERNELS LIST
+                #%s/root=\/dev\/sda1/root=UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0/gc
 
 
-	  . parolanın md5'ini öğrenmek için grub-md5-crypt programını kullan
+          . parolanın md5'ini öğrenmek için grub-md5-crypt programını kullan
 
-	  . default boot seçeneği dışındakiler için title satırından sonra lock satırı olacak.
-	  2. çekirdek izole edilecek
+          . default boot seçeneği dışındakiler için title satırından sonra lock satırı olacak.
+          2. çekirdek izole edilecek
 
-	  . quiet, splash?
-
-
-	- rsyslog
-	  /etc/init.d/rsyslog stop
-	  update-rc.d -f rsyslog remove
+          . quiet, splash?
 
 
-	- /etc/inittab
-	  ca:12345:ctrlaltdel:/sbin/shutdown -t1 -a -h now
+        - rsyslog
+          /etc/init.d/rsyslog stop
+          update-rc.d -f rsyslog remove
 
-	  1:2345:respawn:/sbin/getty 38400 tty1
+
+        - /etc/inittab
+          ca:12345:ctrlaltdel:/sbin/shutdown -t1 -a -h now
+
+          1:2345:respawn:/sbin/getty 38400 tty1
           2:23:respawn:/sbin/getty 38400 tty2
           #3:23:respawn:/sbin/getty 38400 tty3
           #4:23:respawn:/sbin/getty 38400 tty4
@@ -474,366 +474,366 @@ Kontrol Ünitesi Notları
           #6:23:respawn:/sbin/getty 38400 tty6
 
 
-	- /etc/fstab
-	  proc            /proc                 proc    defaults                   0       0
+        - /etc/fstab
+          proc            /proc                 proc    defaults                   0       0
           UUID=b2b49673-a06a-49b9-8b3b-7033e07283f0     /               ext3    ro,noatime,errors=remount-ro  0       1
-	  UUID=d082a35f-bf95-4e8f-81d9-03964e2b0c3b     /home           ext3    defaults,noatime              0       2
+          UUID=d082a35f-bf95-4e8f-81d9-03964e2b0c3b     /home           ext3    defaults,noatime              0       2
           tmpfs           /tmp                  tmpfs   defaults,noatime           0       0
           tmpfs           /var/run              tmpfs   defaults,noatime           0       0
           tmpfs           /var/tmp              tmpfs   defaults,noatime           0       0
           tmpfs           /var/log              tmpfs   defaults,noatime           0       0
           tmpfs           /var/lock             tmpfs   defaults,noatime           0       0
           tmpfs           /etc/network/run      tmpfs   defaults,noatime           0       0
-          tmpfs           /var/lib/dhcp3	tmpfs   defaults,noatime           0       0
-
-	  sync; rm -rf /var/log/* /var/lock/* /var/tmp/* /var/run/* /tmp/*; reboot
-
-
-	- /etc/init.d/checkfs.sh
-		#logsave -s $FSCK_LOGFILE fsck $spinner -R -A $fix $force $FSCKTYPES_OPT
-		fsck $spinner -R -A $fix $force $FSCKTYPES_OPT
-		...
-		...
-		#logsave -s $FSCK_LOGFILE fsck $spinner -V -R -A $fix $force $FSCKTYPES_OPT
-		fsck $spinner -V -R -A $fix $force $FSCKTYPES_OPT
-
-
-	- /etc/init.d/checkroot.sh
-		#logsave -s $FSCK_LOGFILE fsck $spinner $force $fix -t $roottype $rootdev
-		fsck $spinner $force $fix -t $roottype $rootdev
-		...
-		...
-		#logsave -s $FSCK_LOGFILE fsck $spinner $force $fix -V -t $roottype $rootdev
-		fsck $spinner $force $fix -V -t $roottype $rootdev
-
-
-	- İkinci disk (/home)
-	  diskin hangisi oldugunu doğru tesbit et, sıra farklı olabiliyor
-		ls -al /dev/disk/by-uuid/
-		mount
-
-	  dosya sistemini oluştur
-	  	fdisk /dev/...
-		primary, 1, 1-462, write
-		mkfs.ext3 /dev/...
-		mount /dev/... /mnt
-		mv /home/motio /mnt/
-		sync
-
-	  fstab'a ekle
-	  	UUID=d082a35f-bf95-4e8f-81d9-03964e2b0c3b       /home           ext3    defaults,noatime           0       2
-
-	  reboot
-
-
-	- sifreli alanlar
-		mkdir /home/.secure
-		mkdir /mnt/secure
-		encfs /home/.secure /mnt/secure
-			paronoid
-			home_uuid
-		umount /mnt/secure
-		encfs /home/.secure /mnt/secure
-
-		/etc/init.d/secure
-			#/bin/sh
-			PHRASE=$(vol_id --uuid `mount | grep home | awk '{print $1;}'`)
-			echo $PHRASE | encfs -S --public /home/.secure/ /mnt/secure/
-			unset PHRASE
-
-		chmod 700 /etc/init.d/secure
-
-
-	- /etc/sysctl.conf
-		# disable magic SysRq key
-		kernel.sysrq = 0
-
-		# stop low-level messages on console
-		kernel.printk = 4 4 1 7
-
-
-	- DHCP için DNS değiştirme yasağı
-	  touch /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-	  chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-	  vim /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
-		#!/bin/sh
-		make_resolv_conf(){
-			:
-		}
-
-
-	- xorg
-	  aptitude install xorg
-
-	  /etc/X11/xorg.conf
-		Section "InputDevice"     
-			Identifier      "Generic Keyboard"   
-			Driver          "kbd"                
-			Option          "XkbRules"      "xorg"               
-			Option          "XkbModel"      "pc105"              
-			Option          "XkbLayout"     "tr" 
-		EndSection                
-					  
-		Section "InputDevice"     
-			Identifier      "Configured Mouse"   
-			Driver          "mouse"              
-		EndSection                
-					  
-		Section "Device"          
-			Identifier      "Configured Video Device"            
-		EndSection                
-					  
-		Section "Monitor"         
-			Identifier      "Configured Monitor"
-		EndSection                
-					  
-		Section "Screen"          
-			Identifier      "Default Screen"
-			Monitor         "Configured Monitor"
-			DefaultDepth    16
-		EndSection 
-
-		Section "ServerFlags"
-			# ctrl+alt+backspace ile X'in kapanmasini engeller(kiosk)
-			Option		"DontZap"	"yes"
-			# ctrl+alt+"+/-" ile zoomlama yapmayi engeller (kiosk)
-			Option		"DontZoom"	"yes"
-			# ctrl+alt+Fx ile sanal terminallere gecmeyi engeller (kiosk)
-			Option		"DontVTSwitch"	"yes"
-		EndSection
-
-
-	- openbox
-	  aptitude install openbox
-	  su motio
-	  mkdir -p .config/openbox
-
-	  dosyalar:
-	  	. autostart.sh 
-			renk = #505050
-
-		. menu.xml 
-		. rc.xml
-			<desktops>
-				<number>1</number>
-
-			# Axis için
-			<maximized>Yes</maximized>
-
-			# thunar ve leafpad için
-			<application>
-				<layer>above</layer>
-
-
-	- autologin
-		touch /usr/local/sbin/autologin
-		chmod u+x /usr/local/sbin/autologin
-		vim /usr/local/sbin/autologin
-			#!/usr/bin/python
-			import os
-			import subprocess
-
-			p =subprocess.Popen("/etc/init.d/secure", shell=True)
-			os.waitpid(p.pid, 0)
-			os.execlp('login', 'login', '-f', 'motio', '0')
-
-		chmod 700 /usr/local/sbin/autologin
-
-		/etc/inittab
-			1:2345:respawn:/sbin/getty -n -l /usr/local/sbin/autologin 38400 tty1
-
-		/home/motio/.bashrc
-			# otomatik olarak X'in baslatmasi icin
-			if [ -z "$DISPLAY" ] && [ $(tty) == /dev/tty1 ]; then
-				startx
-			fi
-
-
-	- RTAI kurulumu
-		dpkg -i librtai1_3.7.1-2_i386.deb
-		dpkg -i librtai-dev_3.7.1-2_i386.deb
-		dpkg -i linux-image-2.6.30.5-rtai_r1_i386.deb
-		dpkg -i linux-headers-2.6.30.5-rtai_r1_i386.deb
-		dpkg -i rtai-modules-2.6.30.5-rtai_3.7.1-2+r1_i386.deb
-		cd /usr/src
-		ln -s linux-headers-2.6.30.5-rtai linux
-		cd linux
-		cp Module.symvers Module.symvers.old
-		cat /usr/realtime/modules/Module.symvers >> Module.symvers
-		ln -s /usr/realtime/modules/ /lib/modules/2.6.30.5-rtai/rtai
-		depmod -a
-
-		touch /etc/udev/rules.d/92-rtai.rules
-			ACTION!="add|change", GOTO="rtai_end"
-			KERNEL=="rtf*",                 MODE="0666"
-			KERNEL=="rtai*",                MODE="0666"
-			LABEL="rtai_end"
-
-		vim /etc/security/limits.conf
-			*       hard    memlock 8192
-
-		Grub'u kontrol et
-		RTAI kernel dışındakiler lock'lu
-		vim /boot/grub/menu.lst
-
-
-	- numlockx
-		aptitude install numlockx
-
-		X açıkken terminal açıp
-		numlockx on
-
-
-	- X11vnc
-		aptitude install x11vnc
-		x11vnc -storepasswd
-
-		~/.config/openbox/autostart.sh
-			(sleep 2; x11vnc -display :0 -nolookup -forever -rfbauth ~/.vnc/passwd -autoport 5900) &
-
-
-	- leafpad
-		aptitude install leafpad
-
-		~/.config/leafpad/leafpadrc
-			0.8.13
-			600
-			400
-			Monospace 12
-			0
-			1
-			0
-
-
-	- thunar
-		aptitude install thunar
-
-		~/.config/Thunar/thunarrc
-			[Configuration]
-			DefaultView=void
-			LastCompactViewZoomLevel=THUNAR_ZOOM_LEVEL_SMALLEST
-			LastDetailsViewColumnOrder=THUNAR_COLUMN_NAME,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE,THUNAR_COLUMN_DATE_MODIFIED
-			LastDetailsViewColumnWidths=
-			LastDetailsViewFixedColumns=FALSE
-			LastDetailsViewVisibleColumns=THUNAR_COLUMN_DATE_MODIFIED,THUNAR_COLUMN_NAME,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE
-			LastDetailsViewZoomLevel=THUNAR_ZOOM_LEVEL_SMALLER
-			LastIconViewZoomLevel=THUNAR_ZOOM_LEVEL_NORMAL
-			LastLocationBar=void
-			LastSeparatorPosition=170
-			LastShowHidden=FALSE
-			LastSidePane=void
-			LastSortColumn=THUNAR_COLUMN_NAME
-			LastSortOrder=GTK_SORT_ASCENDING
-			LastStatusbarVisible=TRUE
-			LastView=ThunarIconView
-			LastWindowHeight=480
-			LastWindowWidth=640
-			MiscVolumeManagement=FALSE
-			MiscCaseSensitive=FALSE
-			MiscDateStyle=THUNAR_DATE_STYLE_SIMPLE
-			MiscFoldersFirst=TRUE
-			MiscHorizontalWheelNavigates=FALSE
-			MiscRecursivePermissions=THUNAR_RECURSIVE_PERMISSIONS_ASK
-			MiscRememberGeometry=TRUE
-			MiscShowAboutTemplates=TRUE
-			MiscShowThumbnails=TRUE
-			MiscSingleClick=TRUE
-			MiscSingleClickTimeout=500
-			MiscTextBesideIcons=FALSE
-			ShortcutsIconEmblems=TRUE
-			ShortcutsIconSize=THUNAR_ICON_SIZE_SMALLER
-			TreeIconEmblems=TRUE
-			TreeIconSize=THUNAR_ICON_SIZE_SMALLEST
-
-
-	- pure-ftpd
-		aptitude install pure-ftpd
-		echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
-		echo "yes" > /etc/pure-ftpd/conf/NoAnonymous
-		echo "yes" > /etc/pure-ftpd/conf/DontResolve
-
-		/etc/init.d/pure-ftpd (12. satır)
-			LANG=
-
-		mkdir -p /home/motio/NGC
-		chown motio: /home/motio/NGC
-		pure-pw useradd motio -u motio -d /home/motio/NGC
-		pure-pw mkdb
-		echo "/etc/pure-ftpd/pureftpd.pdb" > /etc/pure-ftpd/conf/PureDB
-		ln -s ../conf/PureDB /etc/pure-ftpd/auth/60puredb
-		/etc/init.d/pure-ftpd restart
-
-
-	- sudo
-	  aptitude install sudo
-	  visudo
-	  	motio   ALL=NOPASSWD: /sbin/halt,/sbin/reboot
-
-
-	- pcspkr iptal
-		mount / -o remount,rw
-		echo install pcspkr /bin/true >/etc/modprobe.d/motio
-
-
-	- Parallel port adresleri (input modda sorun var, data pinleri input'ta kararsız)
-		1018	-> 1. port
-		1010	->
-		1008	-> 2. port
-		1000	->
-
-
-	- Dosya sistemi
-		. / Read-only mount edilecek (/etc/fstab dosyasından)
-		. boot esnasında fsck yapması iptal edilebilir; bütün sistem kurulduktan sonra (/etc/fstab son kolon 0)
-		. /etc/init.d/checkroot.sh dosyasında rootmode=ro yapmak gerekiyor olabilir.
-		. MAC tutmazsa boot etmeyecek
-		. Değişecek bölümler tmpfs
-			. /tmp
-			. /var/tmp
-			. /var/run
-			. /var/log
-			. /var/lock
-			. /var/crash
-			. /var/lib/dhcp3 (DHCP kullanılacaksa)
-			. /media
-
-
-		. makineye ozel ayarlar bu bolumde root'a ait klasorde. Normal kullanıcı sadece okuyacak
-		  bu bölüm encfs olabilir
-
-
-
-	- Ağ ayarları
-		/etc/network/interfaces
-			# The loopback network interface
-			auto lo  
-			iface lo inet loopback
-				 
-			# The primary network interface
-			#allow-hotplug eth0   
-			auto eth0
-			iface eth0 inet static
-				address 192.168.1.100
-				netmask 255.255.255.0
-				network 192.168.1.0
-				broadcast 192.168.1.255
-				#gateway 192.168.1.1
-
-			auto eth0:1
-			iface eth0:1 inet static
-				address 192.168.100.100
-				netmask 255.255.255.0
-				network 192.168.1000.0
-				broadcast 192.168.100.255
-				#gateway 192.168.100.1
-
-			# dhcp
-			auto eth0:2
-			iface eth0:2 inet dhcp
-
-	
-	- Kontroller
-		. Default ngc dosya yok
+          tmpfs           /var/lib/dhcp3        tmpfs   defaults,noatime           0       0
+
+          sync; rm -rf /var/log/* /var/lock/* /var/tmp/* /var/run/* /tmp/*; reboot
+
+
+        - /etc/init.d/checkfs.sh
+                #logsave -s $FSCK_LOGFILE fsck $spinner -R -A $fix $force $FSCKTYPES_OPT
+                fsck $spinner -R -A $fix $force $FSCKTYPES_OPT
+                ...
+                ...
+                #logsave -s $FSCK_LOGFILE fsck $spinner -V -R -A $fix $force $FSCKTYPES_OPT
+                fsck $spinner -V -R -A $fix $force $FSCKTYPES_OPT
+
+
+        - /etc/init.d/checkroot.sh
+                #logsave -s $FSCK_LOGFILE fsck $spinner $force $fix -t $roottype $rootdev
+                fsck $spinner $force $fix -t $roottype $rootdev
+                ...
+                ...
+                #logsave -s $FSCK_LOGFILE fsck $spinner $force $fix -V -t $roottype $rootdev
+                fsck $spinner $force $fix -V -t $roottype $rootdev
+
+
+        - İkinci disk (/home)
+          diskin hangisi oldugunu doğru tesbit et, sıra farklı olabiliyor
+                ls -al /dev/disk/by-uuid/
+                mount
+
+          dosya sistemini oluştur
+                fdisk /dev/...
+                primary, 1, 1-462, write
+                mkfs.ext3 /dev/...
+                mount /dev/... /mnt
+                mv /home/motio /mnt/
+                sync
+
+          fstab'a ekle
+                UUID=d082a35f-bf95-4e8f-81d9-03964e2b0c3b       /home           ext3    defaults,noatime           0       2
+
+          reboot
+
+
+        - sifreli alanlar
+                mkdir /home/.secure
+                mkdir /mnt/secure
+                encfs /home/.secure /mnt/secure
+                        paronoid
+                        home_uuid
+                umount /mnt/secure
+                encfs /home/.secure /mnt/secure
+
+                /etc/init.d/secure
+                        #/bin/sh
+                        PHRASE=$(vol_id --uuid `mount | grep home | awk '{print $1;}'`)
+                        echo $PHRASE | encfs -S --public /home/.secure/ /mnt/secure/
+                        unset PHRASE
+
+                chmod 700 /etc/init.d/secure
+
+
+        - /etc/sysctl.conf
+                # disable magic SysRq key
+                kernel.sysrq = 0
+
+                # stop low-level messages on console
+                kernel.printk = 4 4 1 7
+
+
+        - DHCP için DNS değiştirme yasağı
+          touch /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+          chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+          vim /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate
+                #!/bin/sh
+                make_resolv_conf(){
+                        :
+                }
+
+
+        - xorg
+          aptitude install xorg
+
+          /etc/X11/xorg.conf
+                Section "InputDevice"
+                        Identifier      "Generic Keyboard"
+                        Driver          "kbd"
+                        Option          "XkbRules"      "xorg"
+                        Option          "XkbModel"      "pc105"
+                        Option          "XkbLayout"     "tr"
+                EndSection
+
+                Section "InputDevice"
+                        Identifier      "Configured Mouse"
+                        Driver          "mouse"
+                EndSection
+
+                Section "Device"
+                        Identifier      "Configured Video Device"
+                EndSection
+
+                Section "Monitor"
+                        Identifier      "Configured Monitor"
+                EndSection
+
+                Section "Screen"
+                        Identifier      "Default Screen"
+                        Monitor         "Configured Monitor"
+                        DefaultDepth    16
+                EndSection
+
+                Section "ServerFlags"
+                        # ctrl+alt+backspace ile X'in kapanmasini engeller(kiosk)
+                        Option          "DontZap"       "yes"
+                        # ctrl+alt+"+/-" ile zoomlama yapmayi engeller (kiosk)
+                        Option          "DontZoom"      "yes"
+                        # ctrl+alt+Fx ile sanal terminallere gecmeyi engeller (kiosk)
+                        Option          "DontVTSwitch"  "yes"
+                EndSection
+
+
+        - openbox
+          aptitude install openbox
+          su motio
+          mkdir -p .config/openbox
+
+          dosyalar:
+                . autostart.sh
+                        renk = #505050
+
+                . menu.xml
+                . rc.xml
+                        <desktops>
+                                <number>1</number>
+
+                        # Axis için
+                        <maximized>Yes</maximized>
+
+                        # thunar ve leafpad için
+                        <application>
+                                <layer>above</layer>
+
+
+        - autologin
+                touch /usr/local/sbin/autologin
+                chmod u+x /usr/local/sbin/autologin
+                vim /usr/local/sbin/autologin
+                        #!/usr/bin/python
+                        import os
+                        import subprocess
+
+                        p =subprocess.Popen("/etc/init.d/secure", shell=True)
+                        os.waitpid(p.pid, 0)
+                        os.execlp('login', 'login', '-f', 'motio', '0')
+
+                chmod 700 /usr/local/sbin/autologin
+
+                /etc/inittab
+                        1:2345:respawn:/sbin/getty -n -l /usr/local/sbin/autologin 38400 tty1
+
+                /home/motio/.bashrc
+                        # otomatik olarak X'in baslatmasi icin
+                        if [ -z "$DISPLAY" ] && [ $(tty) == /dev/tty1 ]; then
+                                startx
+                        fi
+
+
+        - RTAI kurulumu
+                dpkg -i librtai1_3.7.1-2_i386.deb
+                dpkg -i librtai-dev_3.7.1-2_i386.deb
+                dpkg -i linux-image-2.6.30.5-rtai_r1_i386.deb
+                dpkg -i linux-headers-2.6.30.5-rtai_r1_i386.deb
+                dpkg -i rtai-modules-2.6.30.5-rtai_3.7.1-2+r1_i386.deb
+                cd /usr/src
+                ln -s linux-headers-2.6.30.5-rtai linux
+                cd linux
+                cp Module.symvers Module.symvers.old
+                cat /usr/realtime/modules/Module.symvers >> Module.symvers
+                ln -s /usr/realtime/modules/ /lib/modules/2.6.30.5-rtai/rtai
+                depmod -a
+
+                touch /etc/udev/rules.d/92-rtai.rules
+                        ACTION!="add|change", GOTO="rtai_end"
+                        KERNEL=="rtf*",                 MODE="0666"
+                        KERNEL=="rtai*",                MODE="0666"
+                        LABEL="rtai_end"
+
+                vim /etc/security/limits.conf
+                        *       hard    memlock 8192
+
+                Grub'u kontrol et
+                RTAI kernel dışındakiler lock'lu
+                vim /boot/grub/menu.lst
+
+
+        - numlockx
+                aptitude install numlockx
+
+                X açıkken terminal açıp
+                numlockx on
+
+
+        - X11vnc
+                aptitude install x11vnc
+                x11vnc -storepasswd
+
+                ~/.config/openbox/autostart.sh
+                        (sleep 2; x11vnc -display :0 -nolookup -forever -rfbauth ~/.vnc/passwd -autoport 5900) &
+
+
+        - leafpad
+                aptitude install leafpad
+
+                ~/.config/leafpad/leafpadrc
+                        0.8.13
+                        600
+                        400
+                        Monospace 12
+                        0
+                        1
+                        0
+
+
+        - thunar
+                aptitude install thunar
+
+                ~/.config/Thunar/thunarrc
+                        [Configuration]
+                        DefaultView=void
+                        LastCompactViewZoomLevel=THUNAR_ZOOM_LEVEL_SMALLEST
+                        LastDetailsViewColumnOrder=THUNAR_COLUMN_NAME,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE,THUNAR_COLUMN_DATE_MODIFIED
+                        LastDetailsViewColumnWidths=
+                        LastDetailsViewFixedColumns=FALSE
+                        LastDetailsViewVisibleColumns=THUNAR_COLUMN_DATE_MODIFIED,THUNAR_COLUMN_NAME,THUNAR_COLUMN_SIZE,THUNAR_COLUMN_TYPE
+                        LastDetailsViewZoomLevel=THUNAR_ZOOM_LEVEL_SMALLER
+                        LastIconViewZoomLevel=THUNAR_ZOOM_LEVEL_NORMAL
+                        LastLocationBar=void
+                        LastSeparatorPosition=170
+                        LastShowHidden=FALSE
+                        LastSidePane=void
+                        LastSortColumn=THUNAR_COLUMN_NAME
+                        LastSortOrder=GTK_SORT_ASCENDING
+                        LastStatusbarVisible=TRUE
+                        LastView=ThunarIconView
+                        LastWindowHeight=480
+                        LastWindowWidth=640
+                        MiscVolumeManagement=FALSE
+                        MiscCaseSensitive=FALSE
+                        MiscDateStyle=THUNAR_DATE_STYLE_SIMPLE
+                        MiscFoldersFirst=TRUE
+                        MiscHorizontalWheelNavigates=FALSE
+                        MiscRecursivePermissions=THUNAR_RECURSIVE_PERMISSIONS_ASK
+                        MiscRememberGeometry=TRUE
+                        MiscShowAboutTemplates=TRUE
+                        MiscShowThumbnails=TRUE
+                        MiscSingleClick=TRUE
+                        MiscSingleClickTimeout=500
+                        MiscTextBesideIcons=FALSE
+                        ShortcutsIconEmblems=TRUE
+                        ShortcutsIconSize=THUNAR_ICON_SIZE_SMALLER
+                        TreeIconEmblems=TRUE
+                        TreeIconSize=THUNAR_ICON_SIZE_SMALLEST
+
+
+        - pure-ftpd
+                aptitude install pure-ftpd
+                echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
+                echo "yes" > /etc/pure-ftpd/conf/NoAnonymous
+                echo "yes" > /etc/pure-ftpd/conf/DontResolve
+
+                /etc/init.d/pure-ftpd (12. satır)
+                        LANG=
+
+                mkdir -p /home/motio/NGC
+                chown motio: /home/motio/NGC
+                pure-pw useradd motio -u motio -d /home/motio/NGC
+                pure-pw mkdb
+                echo "/etc/pure-ftpd/pureftpd.pdb" > /etc/pure-ftpd/conf/PureDB
+                ln -s ../conf/PureDB /etc/pure-ftpd/auth/60puredb
+                /etc/init.d/pure-ftpd restart
+
+
+        - sudo
+          aptitude install sudo
+          visudo
+                motio   ALL=NOPASSWD: /sbin/halt,/sbin/reboot
+
+
+        - pcspkr iptal
+                mount / -o remount,rw
+                echo install pcspkr /bin/true >/etc/modprobe.d/motio
+
+
+        - Parallel port adresleri (input modda sorun var, data pinleri input'ta kararsız)
+                1018    -> 1. port
+                1010    ->
+                1008    -> 2. port
+                1000    ->
+
+
+        - Dosya sistemi
+                . / Read-only mount edilecek (/etc/fstab dosyasından)
+                . boot esnasında fsck yapması iptal edilebilir; bütün sistem kurulduktan sonra (/etc/fstab son kolon 0)
+                . /etc/init.d/checkroot.sh dosyasında rootmode=ro yapmak gerekiyor olabilir.
+                . MAC tutmazsa boot etmeyecek
+                . Değişecek bölümler tmpfs
+                        . /tmp
+                        . /var/tmp
+                        . /var/run
+                        . /var/log
+                        . /var/lock
+                        . /var/crash
+                        . /var/lib/dhcp3 (DHCP kullanılacaksa)
+                        . /media
+
+
+                . makineye ozel ayarlar bu bolumde root'a ait klasorde. Normal kullanıcı sadece okuyacak
+                  bu bölüm encfs olabilir
+
+
+
+        - Ağ ayarları
+                /etc/network/interfaces
+                        # The loopback network interface
+                        auto lo
+                        iface lo inet loopback
+
+                        # The primary network interface
+                        #allow-hotplug eth0
+                        auto eth0
+                        iface eth0 inet static
+                                address 192.168.1.100
+                                netmask 255.255.255.0
+                                network 192.168.1.0
+                                broadcast 192.168.1.255
+                                #gateway 192.168.1.1
+
+                        auto eth0:1
+                        iface eth0:1 inet static
+                                address 192.168.100.100
+                                netmask 255.255.255.0
+                                network 192.168.1000.0
+                                broadcast 192.168.100.255
+                                #gateway 192.168.100.1
+
+                        # dhcp
+                        auto eth0:2
+                        iface eth0:2 inet dhcp
+
+
+        - Kontroller
+                . Default ngc dosya yok
 
 
 
@@ -841,93 +841,93 @@ Kontrol Ünitesi Notları
   Kontrol ünitesinde derlenebilmesi faydalı olabilir.
   O nedenle EMC'yi derlemek için gereken paketler kurulu olsun.
 
-	- Paketler
-		git-core
-		autoconf
-		build-essential
-		tk-dev
-		bwidget
-		gettext
-		python-dev
-		libglu1-mesa-dev
-		libxmu-dev
-		libgtk2.0-dev
-		libgnomeprintui2.2-dev
-		libxaw7-dev
-		libncurses5-dev
-		libreadline5-dev
-		python-tk
-		python-imaging
-		python-imaging-tk
-		python-numarray
-		pciutils
-		libpci-dev
-		python-glade2
-		python-xml
-		bc
-		libpth-dev
+        - Paketler
+                git-core
+                autoconf
+                build-essential
+                tk-dev
+                bwidget
+                gettext
+                python-dev
+                libglu1-mesa-dev
+                libxmu-dev
+                libgtk2.0-dev
+                libgnomeprintui2.2-dev
+                libxaw7-dev
+                libncurses5-dev
+                libreadline5-dev
+                python-tk
+                python-imaging
+                python-imaging-tk
+                python-numarray
+                pciutils
+                libpci-dev
+                python-glade2
+                python-xml
+                bc
+                libpth-dev
 
 
-	- Kurulum
-		echo install parport_pc /bin/true >/etc/modprobe.d/emc2
+        - Kurulum
+                echo install parport_pc /bin/true >/etc/modprobe.d/emc2
 
-		mkdir /home/.emc
-		chown motio: /home/.emc
-		su motio
-		cd /home/.emc
-		git clone git://git.linuxcnc.org/git/emc2.git emc2-dev
+                mkdir /home/.emc
+                chown motio: /home/.emc
+                su motio
+                cd /home/.emc
+                git clone git://git.linuxcnc.org/git/emc2.git emc2-dev
 
-		cd emc2-dev
-		git checkout master
-		git pull --rebase
+                cd emc2-dev
+                git checkout master
+                git pull --rebase
 
-		cd ..
-		cp -arp emc2-dev myplace_2.3.5
-		cd myplace_2.3.5
-		git checkout v2.3.5
+                cd ..
+                cp -arp emc2-dev myplace_2.3.5
+                cd myplace_2.3.5
+                git checkout v2.3.5
 
-		patch -p1 < ../hostmot_device.patch
-		cp tr_TR_axis.po tr_TR_rs274_err.po src/po/
+                patch -p1 < ../hostmot_device.patch
+                cp tr_TR_axis.po tr_TR_rs274_err.po src/po/
 
-		cd src
-		./autogen.sh	(2.4 ve sonrasinda lazim)
-		./configure --enable-run-in-place
-		make
-		su -c "make setuid"
-
-
-	- ayarlar
-		/home/.emc/myplace_2.3.5/bin/goo
-		/home/.emc/myplace_2.3.5/share/axis/tcl/goo.tcl
-
-		cd /home/.emc
-		mkdir -p configs/goo
-		cd configs/goo
-
-		# ayar dosyalari burada oluşturulacak
-		goo.ini
-		goo.nml
-		goo.var
-		goo.hal
-		goo_custom.hal
-		goo_custom_postgui.hal
-		goo_tool.tbl
+                cd src
+                ./autogen.sh    (2.4 ve sonrasinda lazim)
+                ./configure --enable-run-in-place
+                make
+                su -c "make setuid"
 
 
-	
-	- Başlatıcı
-		/usr/local/bin/goo
-			#!/bin/bash
+        - ayarlar
+                /home/.emc/myplace_2.3.5/bin/goo
+                /home/.emc/myplace_2.3.5/share/axis/tcl/goo.tcl
 
-			source /home/.emc/myplace_2.3.5/scripts/emc-environment
-			emc /home/.emc/configs/goo/goo.ini
-			sudo /sbin/halt
+                cd /home/.emc
+                mkdir -p configs/goo
+                cd configs/goo
+
+                # ayar dosyalari burada oluşturulacak
+                goo.ini
+                goo.nml
+                goo.var
+                goo.hal
+                goo_custom.hal
+                goo_custom_postgui.hal
+                goo_tool.tbl
 
 
-		chmod +x /usr/local/bin/goo
+
+        - Başlatıcı
+                /usr/local/bin/goo
+                        #!/bin/bash
+
+                        source /home/.emc/myplace_2.3.5/scripts/emc-environment
+                        emc /home/.emc/configs/goo/goo.ini
+                        sudo /sbin/halt
+
+
+                chmod +x /usr/local/bin/goo
 
 
 
 - Restore
-	- Kullanıcı ev dizini default hali ile saklanacak
-	- Makine ayarları dizini saklanacak
+        - Kullanıcı ev dizini default hali ile saklanacak
+        - Makine ayarları dizini saklanacak

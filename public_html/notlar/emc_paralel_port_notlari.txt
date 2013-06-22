@@ -1,123 +1,123 @@
 EMC PARALEL PORT NOTLARI
 ------------------------
 
-Bilgisayarda toplam 8 adet paralel port kullanılabiliyor. 
-Dolayısıyla ana kart üzerinde yer alan bir adet paralel port haricinde, 
-7 adet daha paralel port ekleme imkanı var, yalnız ana kartta yeterince 
+Bilgisayarda toplam 8 adet paralel port kullanılabiliyor.
+Dolayısıyla ana kart üzerinde yer alan bir adet paralel port haricinde,
+7 adet daha paralel port ekleme imkanı var, yalnız ana kartta yeterince
 PCI yarık olmayabilir. Piyasada, PCI'dan bağlanan paralel port bulunabiliyor;
 yaklaşık fiyatı 15-25 YTL (Kasım 2006)
 
 
 
 * PCI aygıtların listelenmesi
-	- aygıt listesi
-		lspci
-	
-	- detaylı liste
-		lspci -v
+        - aygıt listesi
+                lspci
 
-		00:0a.0 Communication controller: NetMos Technology PCI 1 port parallel adapter (rev 01)
-		Subsystem: LSI Logic / Symbios Logic Unknown device 0010
-		Flags: medium devsel, IRQ 5
-		I/O ports at a000 [size=8]
-		I/O ports at a400 [size=8]
-		I/O ports at a800 [size=8]
-		I/O ports at ac00 [size=8]
-		I/O ports at b000 [size=8]
-		I/O ports at b400 [size=16]
+        - detaylı liste
+                lspci -v
 
-		Eklenen kartın adresini bulmak için I/O ports satırındaki adresleri denemek gerekiyor.
+                00:0a.0 Communication controller: NetMos Technology PCI 1 port parallel adapter (rev 01)
+                Subsystem: LSI Logic / Symbios Logic Unknown device 0010
+                Flags: medium devsel, IRQ 5
+                I/O ports at a000 [size=8]
+                I/O ports at a400 [size=8]
+                I/O ports at a800 [size=8]
+                I/O ports at ac00 [size=8]
+                I/O ports at b000 [size=8]
+                I/O ports at b400 [size=16]
+
+                Eklenen kartın adresini bulmak için I/O ports satırındaki adresleri denemek gerekiyor.
 
 
 
 * Pinler
-	Paralel portun, giriş ya da çıkış olarak seçilmiş olmasına göre pinlerin 
-	fonksiyonları değişmektedir. Default olarak çıkış (output) olduğu kabul edilir.
+        Paralel portun, giriş ya da çıkış olarak seçilmiş olmasına göre pinlerin
+        fonksiyonları değişmektedir. Default olarak çıkış (output) olduğu kabul edilir.
 
-	- çıkış (output) modu
+        - çıkış (output) modu
 
-		01 -> output
-		02 -> output
-		03 -> output
-		04 -> output
-		05 -> output
-		06 -> output
-		07 -> output
-		08 -> output
-		09 -> output
+                01 -> output
+                02 -> output
+                03 -> output
+                04 -> output
+                05 -> output
+                06 -> output
+                07 -> output
+                08 -> output
+                09 -> output
 
-		10 <- input
-		11 <- input
-		12 <- input
-		13 <- input
+                10 <- input
+                11 <- input
+                12 <- input
+                13 <- input
 
-		14 -> output
+                14 -> output
 
-		15 <- input
+                15 <- input
 
-		16 -> output
-		17 -> output
+                16 -> output
+                17 -> output
 
-		18 -- toprak
-		19 -- toprak
-		20 -- toprak
-		21 -- toprak
-		22 -- toprak
-		23 -- toprak
-		24 -- toprak
-		25 -- toprak
+                18 -- toprak
+                19 -- toprak
+                20 -- toprak
+                21 -- toprak
+                22 -- toprak
+                23 -- toprak
+                24 -- toprak
+                25 -- toprak
 
 
-	- Giriş (input) modu
+        - Giriş (input) modu
 
-		01 -> output
+                01 -> output
 
-		02 <- input
-		03 <- input
-		04 <- input
-		05 <- input
-		06 <- input
-		07 <- input
-		08 <- input
-		09 <- input
-		10 <- input
-		11 <- input
-		12 <- input
-		13 <- input
+                02 <- input
+                03 <- input
+                04 <- input
+                05 <- input
+                06 <- input
+                07 <- input
+                08 <- input
+                09 <- input
+                10 <- input
+                11 <- input
+                12 <- input
+                13 <- input
 
-		14 -> output
+                14 -> output
 
-		15 <- input
+                15 <- input
 
-		16 -> output
-		17 -> output
+                16 -> output
+                17 -> output
 
-		18 -- toprak
-		19 -- toprak
-		20 -- toprak
-		21 -- toprak
-		22 -- toprak
-		23 -- toprak
-		24 -- toprak
-		25 -- toprak
+                18 -- toprak
+                19 -- toprak
+                20 -- toprak
+                21 -- toprak
+                22 -- toprak
+                23 -- toprak
+                24 -- toprak
+                25 -- toprak
 
 
 
 * Sinyal-Pin ilişkileri
-	02 -- X dir
-	03 -- X step
+        02 -- X dir
+        03 -- X step
 
-	04 -- Y dir
-	05 -- Y step
+        04 -- Y dir
+        05 -- Y step
 
-	06 -- Z dir
-	07 -- Z step
+        06 -- Z dir
+        07 -- Z step
 
-	08 -- A dir
-	09 -- A step
+        08 -- A dir
+        09 -- A step
 
-	01 -- B dir
-	14 -- B step
+        01 -- B dir
+        14 -- B step
 
-	16 -- C dir
-	17 -- C step
+        16 -- C dir
+        17 -- C step

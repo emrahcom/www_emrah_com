@@ -4,100 +4,100 @@ http://www.gigamonkeys.com/book/
 
 
 - Yükleme
-	aptitude install clisp
+        aptitude install clisp
 
 - REPL (read-evaluate-print loop)
-	clisp
-		:h
-		(quit)
+        clisp
+                :h
+                (quit)
 
 - İlk örnekler
-	# Değerler
-	10
-	"string"
-	T
-	NIL
+        # Değerler
+        10
+        "string"
+        T
+        NIL
 
-	# Matematiksel işlem
-	(+ 2 2)
+        # Matematiksel işlem
+        (+ 2 2)
 
-	# Karşılaştırma
-	(= 2 3)
-	(> 3 1)
-	(equal "a" "b")
+        # Karşılaştırma
+        (= 2 3)
+        (> 3 1)
+        (equal "a" "b")
 
-	# Yazdırma
-	(format t "hello world")
-		hello world
-	(format t "~a ~a" "hello" "world")
-		hello world
-	(format t "~a~10t~a" "hello" "world")
-		hello     world
-	(format t "~a~%~a" "hello" "world")
-		hello
-		world
-	(format t "~{~a~}" (list "hello" "world" "hello" "world"))
-		helloworldhelloworld
-	(format t "~{~a%~}" (list "hello" "world" "hello" "world"))
-		hello
-		world
-		hello
-		world
+        # Yazdırma
+        (format t "hello world")
+                hello world
+        (format t "~a ~a" "hello" "world")
+                hello world
+        (format t "~a~10t~a" "hello" "world")
+                hello     world
+        (format t "~a~%~a" "hello" "world")
+                hello
+                world
+        (format t "~{~a~}" (list "hello" "world" "hello" "world"))
+                helloworldhelloworld
+        (format t "~{~a%~}" (list "hello" "world" "hello" "world"))
+                hello
+                world
+                hello
+                world
 
-	# Lisp dosyasını yükleme
-	(load "dosya.lisp")
-	(load (compile-file "dosya.lisp"))
+        # Lisp dosyasını yükleme
+        (load "dosya.lisp")
+        (load (compile-file "dosya.lisp"))
 
-	# Fonksiyon tanımlama ve çağırma
-	(defun hello ()
-		(format t "hello world"))
+        # Fonksiyon tanımlama ve çağırma
+        (defun hello ()
+                (format t "hello world"))
 
-	# Yapılan son işlemin sonucu fonksiyon değeri olarak gelir.
-	(hello)
+        # Yapılan son işlemin sonucu fonksiyon değeri olarak gelir.
+        (hello)
 
-	# Listeler
-	(list 1 2 3)
-	(list 1 2 "a" "b")
-	(list 1 (list 2 3))
-	(list :dagitim "debian" :kod "squeeze" :surum "6.0")
+        # Listeler
+        (list 1 2 3)
+        (list 1 2 "a" "b")
+        (list 1 (list 2 3))
+        (list :dagitim "debian" :kod "squeeze" :surum "6.0")
 
-	# Anahtarlı listeden değer alma
-	(getf (list :dagitim "debian" :kod "squeeze" :surum "6.0") :surum)
+        # Anahtarlı listeden değer alma
+        (getf (list :dagitim "debian" :kod "squeeze" :surum "6.0") :surum)
 
-	# Global bir değişken tanımlama
-	(defvar *gl* nil)
+        # Global bir değişken tanımlama
+        (defvar *gl* nil)
 
-	# Listeye eleman ekleme
-	(push 1 *gl*)
-	(push 2 *gl*)
-	(push (list 3 4) *gl*)
+        # Listeye eleman ekleme
+        (push 1 *gl*)
+        (push 2 *gl*)
+        (push (list 3 4) *gl*)
 
-	# dolist döngüyü, liste elemanlarının herbiri için çalıştırma
-	(dolist (item (list 1 2 3 4))
-		(print item))
+        # dolist döngüyü, liste elemanlarının herbiri için çalıştırma
+        (dolist (item (list 1 2 3 4))
+                (print item))
 
-	# stdin ve stdout ile çalışma
-	(format *query-io* "isminiz nedir?")
-	(read-line *query-io*)
-	(format *query-io* "yasiniz?")
-	(or (parse-integer (read-line *query-io*) :junk-allowed t) 0)
-	(y-or-n-p "devam mi?")
+        # stdin ve stdout ile çalışma
+        (format *query-io* "isminiz nedir?")
+        (read-line *query-io*)
+        (format *query-io* "yasiniz?")
+        (or (parse-integer (read-line *query-io*) :junk-allowed t) 0)
+        (y-or-n-p "devam mi?")
 
-	# Listeyi, dosyaya yazma.
-	(with-open-file (out "dosya.txt"
-			:direction :output
-			:if-exists :supersede)
-		(with-standard-io-syntax
-			(print (list 1 2) out)))
+        # Listeyi, dosyaya yazma.
+        (with-open-file (out "dosya.txt"
+                        :direction :output
+                        :if-exists :supersede)
+                (with-standard-io-syntax
+                        (print (list 1 2) out)))
 
-	# Dosyadan okunan listeyi, bir değişkene yazma.
-	(with-open-file (in "dosya.txt")
-		(with-standard-io-syntax
-			(setf mylist (read in)))
+        # Dosyadan okunan listeyi, bir değişkene yazma.
+        (with-open-file (in "dosya.txt")
+                (with-standard-io-syntax
+                        (setf mylist (read in)))
 
-	# loop ile döngü
-	(loop
-		(format *query-io* "---")
-		(if (not (y-or-n-p "Devam mi?"))
-			(return)))
-	
+        # loop ile döngü
+        (loop
+                (format *query-io* "---")
+                (if (not (y-or-n-p "Devam mi?"))
+                        (return)))
+

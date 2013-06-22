@@ -3,198 +3,198 @@ PostgreSQL Notları
 -------------------------------------------------------------------------------
 
 - Yükleme
-	aptitude install postgresql postgresql-contrib
-	aptitude install python-psycopg2 postgresql-plpython-8.4
+        aptitude install postgresql postgresql-contrib
+        aptitude install python-psycopg2 postgresql-plpython-8.4
 
 
 - Yönetici paneli olacaksa...
-	aptitude install pgadmin3 pgagent phppgadmin
-	su -l
-	su -l postgres
-	psql template1 < /usr/share/postgresql/8.4/contrib/adminpack.sql
+        aptitude install pgadmin3 pgagent phppgadmin
+        su -l
+        su -l postgres
+        psql template1 < /usr/share/postgresql/8.4/contrib/adminpack.sql
 
 
 - Default klasörün değiştirilmek istenirse...
-	su -l
-	mkdir /home/pgsql
-	chmod 700 /home/pgsql
-	chown postgres: /home/pgsql
+        su -l
+        mkdir /home/pgsql
+        chmod 700 /home/pgsql
+        chown postgres: /home/pgsql
 
-	/etc/init.d/postgresql stop
-	cp -arp /var/lib/postgresql/8.4/main/* /home/pgsql/
+        /etc/init.d/postgresql stop
+        cp -arp /var/lib/postgresql/8.4/main/* /home/pgsql/
 
-	vim /etc/postgresql/8.4/main/postgresql.conf
-		#data_directory = '/var/lib/postgresql/8.4/main'
-		data_directory = '/home/pgsql'
-	
-	/etc/init.d/postgresql start
-	
+        vim /etc/postgresql/8.4/main/postgresql.conf
+                #data_directory = '/var/lib/postgresql/8.4/main'
+                data_directory = '/home/pgsql'
+
+        /etc/init.d/postgresql start
+
 
 - İlk çalıştırma
-	su -l
-	su -l postgres
-	psql
+        su -l
+        su -l postgres
+        psql
 
 
 - Kullanıcı tanımlama ve yetkilendirme
-	# Default olarak sadece postgres kullanıcısı tanımlı ve UNIX socket
-	ile bağlanabiliyor. Yerel postgres kullanıcısının parolası
-	değiştirilsin.
-		su -l
-		passwd postgres
-	
-	# postgres kullanıcısının ağdan da bağlanabilmesi isteniyorsa
-		su -l postgres
-		psql
-		\password postgres
+        # Default olarak sadece postgres kullanıcısı tanımlı ve UNIX socket
+        ile bağlanabiliyor. Yerel postgres kullanıcısının parolası
+        değiştirilsin.
+                su -l
+                passwd postgres
 
-	# Yeni ağ kullanıcısı tanımlama
-		CREATE ROLE kullanici;
-		ALTER ROLE kullanici WITH LOGIN;
-		\password kullanici
+        # postgres kullanıcısının ağdan da bağlanabilmesi isteniyorsa
+                su -l postgres
+                psql
+                \password postgres
 
-	# Sadece bir tabloda okuma yetkisi olan ağ kullanıcısı tanımlama
-		CREATE ROLE okuyucu;
-		ALTER ROLE okuyucu WITH LOGIN;
-		\password okuyucu
-		\c veritabani
-		GRANT SELECT ON TABLE tablo TO okuyucu;
+        # Yeni ağ kullanıcısı tanımlama
+                CREATE ROLE kullanici;
+                ALTER ROLE kullanici WITH LOGIN;
+                \password kullanici
 
-	# Localhost dışında ağdaki hangi makinelerden bağlanılabileceği
-	pg_hba.conf dosyasından tanımlanıyor. Bir kullanıcının ağdaki hangi
-	makineden, hangi veritabanına bağlanabileceğini belirlemek için
+        # Sadece bir tabloda okuma yetkisi olan ağ kullanıcısı tanımlama
+                CREATE ROLE okuyucu;
+                ALTER ROLE okuyucu WITH LOGIN;
+                \password okuyucu
+                \c veritabani
+                GRANT SELECT ON TABLE tablo TO okuyucu;
 
-		/etc/postgresql/8.4/main/pg_hba.conf
-		host  veritabani  kullanici  192.168.2.103/32  md5
+        # Localhost dışında ağdaki hangi makinelerden bağlanılabileceği
+        pg_hba.conf dosyasından tanımlanıyor. Bir kullanıcının ağdaki hangi
+        makineden, hangi veritabanına bağlanabileceğini belirlemek için
 
-	# Yerel sistem kullanıcısına bağlanma yetkisi vermek için
-		/etc/postgresql/8.4/main/pg_hba.conf
-		local  veritabani  kullanici  ident
+                /etc/postgresql/8.4/main/pg_hba.conf
+                host  veritabani  kullanici  192.168.2.103/32  md5
+
+        # Yerel sistem kullanıcısına bağlanma yetkisi vermek için
+                /etc/postgresql/8.4/main/pg_hba.conf
+                local  veritabani  kullanici  ident
 
 
 - Postgresql konsol komutları
-	# SQL script dosyası çalıştırma
-		psql -U kullanici -h localhost -d veritabani -f dosya.sql
-		psql -U kullanici -h localhost -d veritabani < dosya.sql
-		cat dosya.sql | psql -U kullanici -h localhost -d veritabani
-	
-		su -l postgres
-		psql -d veritabani < dosya.sql
-		psql -d veritabani -e < dosya.sql  # echo commands
+        # SQL script dosyası çalıştırma
+                psql -U kullanici -h localhost -d veritabani -f dosya.sql
+                psql -U kullanici -h localhost -d veritabani < dosya.sql
+                cat dosya.sql | psql -U kullanici -h localhost -d veritabani
 
-	# Komut çıktısını alma
-		echo "\l" | psql
-		psql -c "\l"
-		psql -c "SELECT version()"
-		cat dosya.sql | psql
-		echo "\l" | psql -o dosya
-		echo "\l" | psql > dosya
+                su -l postgres
+                psql -d veritabani < dosya.sql
+                psql -d veritabani -e < dosya.sql  # echo commands
 
-	# Veritabanı dökümünü alma (pg_dump)
-		pg_dump veritabani
+        # Komut çıktısını alma
+                echo "\l" | psql
+                psql -c "\l"
+                psql -c "SELECT version()"
+                cat dosya.sql | psql
+                echo "\l" | psql -o dosya
+                echo "\l" | psql > dosya
+
+        # Veritabanı dökümünü alma (pg_dump)
+                pg_dump veritabani
 
 
 - pgsql temel komutlar
-	\q			Çıkış
-	\?			Yardım
-	\h			SQL komutlarının listesi
-	\h KOMUT		SQL komutu ile ilgili yardım
-	\l			Veritabanlarını listele
-	\c VERITABANI		Veritabanina geçer
-	\dt			Tablo listesi
-	\dtS			Tablo listesi, sistem tablolari dahil
-	\d NESNE		Tablo, view sequence, index için detay bilgi gösterme
-	\dv			View listesi
-	\di			Indeks listesi
-	\dn			Sema listesi
-	\du			Role/user listesi
-	\dp			Yetki (privileges) listesi
-	\password KULLANICI	Kullanıcı parolasını değiştirir
+        \q                      Çıkış
+        \?                      Yardım
+        \h                      SQL komutlarının listesi
+        \h KOMUT                SQL komutu ile ilgili yardım
+        \l                      Veritabanlarını listele
+        \c VERITABANI           Veritabanina geçer
+        \dt                     Tablo listesi
+        \dtS                    Tablo listesi, sistem tablolari dahil
+        \d NESNE                Tablo, view sequence, index için detay bilgi gösterme
+        \dv                     View listesi
+        \di                     Indeks listesi
+        \dn                     Sema listesi
+        \du                     Role/user listesi
+        \dp                     Yetki (privileges) listesi
+        \password KULLANICI     Kullanıcı parolasını değiştirir
 
 
 - SQL notları
-	- Serial, timestamp vb alanlar.
-	CREATE TABLE sch.tablo (
-		tablo_id	SERIAL PRIMARY KEY,
-		tablo_foreign	INTEGER NOT NULL REFERENCES sch.tablo2(tablo2_pkey),
-		tablo_kod	VARCHAR(50) NOT NULL UNIQUE,
-		tablo_zaman	TIMESTAMP NOT NULL DEFAULT NOW(),
-		tablo_timeout	TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '15 minutes',
-		tablo_captcha	VARCHAR(6) NOT NULL DEFAULT LPAD(TEXT(TRUNC(RANDOM()*1000000)), 6, '0')
-	);
+        - Serial, timestamp vb alanlar.
+        CREATE TABLE sch.tablo (
+                tablo_id        SERIAL PRIMARY KEY,
+                tablo_foreign   INTEGER NOT NULL REFERENCES sch.tablo2(tablo2_pkey),
+                tablo_kod       VARCHAR(50) NOT NULL UNIQUE,
+                tablo_zaman     TIMESTAMP NOT NULL DEFAULT NOW(),
+                tablo_timeout   TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '15 minutes',
+                tablo_captcha   VARCHAR(6) NOT NULL DEFAULT LPAD(TEXT(TRUNC(RANDOM()*1000000)), 6, '0')
+        );
 
-	- Default degeri kullanmak.
-	UPDATE sch.tablo SET alan = DEFAULT ...
-	INSERT INTO sch.tablo VALUES (DEFAULT, "deger", ...
+        - Default degeri kullanmak.
+        UPDATE sch.tablo SET alan = DEFAULT ...
+        INSERT INTO sch.tablo VALUES (DEFAULT, "deger", ...
 
-	- SQL sonrası oluşan değerleri almak.
-	Değişen kayıt sayısı kadar kayıt geri döner.
-	INSERT INTO sch.tablo VALUES (..) RETURNING (alan1, alan2);
-	UPDATE sch.tablo SET alan1=DEFAULT RETURNING (alan1, alan2);
+        - SQL sonrası oluşan değerleri almak.
+        Değişen kayıt sayısı kadar kayıt geri döner.
+        INSERT INTO sch.tablo VALUES (..) RETURNING (alan1, alan2);
+        UPDATE sch.tablo SET alan1=DEFAULT RETURNING (alan1, alan2);
 
-	- Serial alanın değerini, mevcut maksimum değere bakarak yeniden atama.
-	SELECT SETVAL('field_id_seq', (SELECT MAX(field_id) FROM tablename));
+        - Serial alanın değerini, mevcut maksimum değere bakarak yeniden atama.
+        SELECT SETVAL('field_id_seq', (SELECT MAX(field_id) FROM tablename));
 
 
 - Psycopg notları
-	- Modulun import edilmesi
-		import psycopg2
-		import psycopg2.extras
+        - Modulun import edilmesi
+                import psycopg2
+                import psycopg2.extras
 
-	- Bağlantı kurulması
-		def get_connection():def get_connection():
-			try:
-				cstr = "host=%s dbname=%s user=%s password=%s" % \
-					(PSQL_SERVER, PSQL_DB, PSQL_USER, PSQL_PASSWD)
-				cnn = psycopg2.connect(cstr)
-				crs = cnn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        - Bağlantı kurulması
+                def get_connection():def get_connection():
+                        try:
+                                cstr = "host=%s dbname=%s user=%s password=%s" % \
+                                        (PSQL_SERVER, PSQL_DB, PSQL_USER, PSQL_PASSWD)
+                                cnn = psycopg2.connect(cstr)
+                                crs = cnn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-				result = (cnn, crs)
-			except Exception, err:
-				if DEBUG:
-					raise
-				else:
-					sys.stderr.write(str(err))
+                                result = (cnn, crs)
+                        except Exception, err:
+                                if DEBUG:
+                                        raise
+                                else:
+                                        sys.stderr.write(str(err))
 
-				result = (None, None)
+                                result = (None, None)
 
-			return result
+                        return result
 
-		(cnn, crs) = get_connection()
+                (cnn, crs) = get_connection()
 
-	- Bağlantının kapatılması
-		def close_connection(cnn, crs):
-			try:
-				# Cursori kapat.
-				try:
-					crs.close()
-				except Exception, err:
-					pass
+        - Bağlantının kapatılması
+                def close_connection(cnn, crs):
+                        try:
+                                # Cursori kapat.
+                                try:
+                                        crs.close()
+                                except Exception, err:
+                                        pass
 
-				# Veritabani baglantisini kapat.
-				try:
-					cnn.close()
-				except Exception, err:
-					pass
+                                # Veritabani baglantisini kapat.
+                                try:
+                                        cnn.close()
+                                except Exception, err:
+                                        pass
 
-				result = True
-			except Exception, err:
-				if DEBUG:
-					raise
-				else:
-					sys.stderr.write(str(err))
+                                result = True
+                        except Exception, err:
+                                if DEBUG:
+                                        raise
+                                else:
+                                        sys.stderr.write(str(err))
 
-				result = False
+                                result = False
 
-			return result
+                        return result
 
-		close_connection(cnn, crs)
+                close_connection(cnn, crs)
 
-	- SQL kodunun parametre ile çalıştırılması
-		sql = "SELECT * FROM tablo WHERE id = %s"
-		par = (1212, )
-		crs.execute(sql, par)
-		rows = crs.fetchall()
+        - SQL kodunun parametre ile çalıştırılması
+                sql = "SELECT * FROM tablo WHERE id = %s"
+                par = (1212, )
+                crs.execute(sql, par)
+                rows = crs.fetchall()
 
-	- Çalıştırılan SQL'i parametreler yerlerine konulduktan sonraki şekli.
-		print(crs.mogrify(sql, par))
+        - Çalıştırılan SQL'i parametreler yerlerine konulduktan sonraki şekli.
+                print(crs.mogrify(sql, par))

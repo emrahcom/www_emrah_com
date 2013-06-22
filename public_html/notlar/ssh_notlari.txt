@@ -3,250 +3,250 @@ SSH NOTLARI
 
 
 * Anahtar çiftinin üretilmesi
-	cd ~/.ssh
-	ssh-keygen -t rsa -b 2048 -f dosya_adi
-	
-		-t	anahtarın tipini belirler. rsa veya dsa kullan
-		-b	kaç bitlik şifreleme yapılacağı
-		-f	üretilecek özel anahtarın kaydedileceği dosyanın adı
-			genel anahtar, dosya_adi.pub adlı dosyaya kaydedilir.
-			Dosya adı olarak "sunucu_tip" formatını kullan. 
-			Örnek: fantastics_rsa
+        cd ~/.ssh
+        ssh-keygen -t rsa -b 2048 -f dosya_adi
 
-	Anahtar çifti üretilmeden önce kullanılacak geçiş kelimesi (passphrase) sorulur.
+                -t      anahtarın tipini belirler. rsa veya dsa kullan
+                -b      kaç bitlik şifreleme yapılacağı
+                -f      üretilecek özel anahtarın kaydedileceği dosyanın adı
+                        genel anahtar, dosya_adi.pub adlı dosyaya kaydedilir.
+                        Dosya adı olarak "sunucu_tip" formatını kullan.
+                        Örnek: fantastics_rsa
+
+        Anahtar çifti üretilmeden önce kullanılacak geçiş kelimesi (passphrase) sorulur.
 
 
 
 * Genel anahtarın sunucuya yüklenmesi
-	ssh-copy-id -i dosya_adi.pub kullanici@12.12.12.12
-	ssh-copy-id -i dosya_adi.pub "kullanici@12.12.12.12 -p2222"
+        ssh-copy-id -i dosya_adi.pub kullanici@12.12.12.12
+        ssh-copy-id -i dosya_adi.pub "kullanici@12.12.12.12 -p2222"
 
-	veya
+        veya
 
-	scp dosya_adi.pub kulanici@12.12.12.12:~/.ssh/
-	ssh kullanici@12.12.12.12 'cat ~/.ssh/dosya_adi.pub >> ~/.ssh/authorized_keys'
-	ssh kullanici@12.12.12.12 'rm ~/.ssh/dosya_adi.pub'
-	
-	dosya_adi.pub dosyası bağlanılacak sunucunun ~/.ssh/ klasöründeki authorized_keys 
-	adlı dosyanın sonuna eklenir. Debian harici makinelerde farklı bir dosya adı kullanmak
-	gerekebilir. 
+        scp dosya_adi.pub kulanici@12.12.12.12:~/.ssh/
+        ssh kullanici@12.12.12.12 'cat ~/.ssh/dosya_adi.pub >> ~/.ssh/authorized_keys'
+        ssh kullanici@12.12.12.12 'rm ~/.ssh/dosya_adi.pub'
+
+        dosya_adi.pub dosyası bağlanılacak sunucunun ~/.ssh/ klasöründeki authorized_keys
+        adlı dosyanın sonuna eklenir. Debian harici makinelerde farklı bir dosya adı kullanmak
+        gerekebilir.
 
 
 
 * ssh-agent'ın çalıştırılması
-	ssh-agent, konsola geçildiğinde otomatik olarak çalışır. Ayrıca bir işlem
-	yapmaya gerek yok. 
-		ssh-agent /bin/bash	( başlatmak için	)
-		ssh-agent -k		( öldürmek için		)
+        ssh-agent, konsola geçildiğinde otomatik olarak çalışır. Ayrıca bir işlem
+        yapmaya gerek yok.
+                ssh-agent /bin/bash     ( başlatmak için        )
+                ssh-agent -k            ( öldürmek için         )
 
 
 
 * ssh-agent'a özel anahtarların eklenmesi
-	ssh-add ~/.ssh/dosya_adi
+        ssh-add ~/.ssh/dosya_adi
 
-	Özel anahtar eklenirken geçiş kelimesi (passphrase) sorulur. Aynı anda birçok
-	özel anahtar kullanılabilir. ssh-agent duruma göre hangisi ile işlem yapacağına
-	doğru bir şekilde karar verebilir.
+        Özel anahtar eklenirken geçiş kelimesi (passphrase) sorulur. Aynı anda birçok
+        özel anahtar kullanılabilir. ssh-agent duruma göre hangisi ile işlem yapacağına
+        doğru bir şekilde karar verebilir.
 
-	Hafızadaki bütün anahtarları silmek için:
-	ssh-add -D
+        Hafızadaki bütün anahtarları silmek için:
+        ssh-add -D
 
 
 
 * ssh ile çalışma
-	Bundan sonra parola yazılmadan normal ssh işlemleri yapılabilir.
+        Bundan sonra parola yazılmadan normal ssh işlemleri yapılabilir.
 
-	Örnek:
-	scp dosya 12.12.12.12:~/
-	ssh 12.12.12.12
-	ssh 12.12.12.12 ls -al
+        Örnek:
+        scp dosya 12.12.12.12:~/
+        ssh 12.12.12.12
+        ssh 12.12.12.12 ls -al
 
 
 
 * Cevap vermeyen ssh oturumunu sonlandırma
 
-	<enter>~.
+        <enter>~.
 
 
 
-* ssh sunucuya sadece key kullanılarak bağlanılması isteniyorsa ve parola ile 
+* ssh sunucuya sadece key kullanılarak bağlanılması isteniyorsa ve parola ile
   girişe izin verilmeyecekse
 
-  	/etc/sshd_config
-	PasswordAuthentication no
-		
+        /etc/sshd_config
+        PasswordAuthentication no
+
 
 
 * Uzaktaki makinedeki logu takip etme
-	ssh -t 12.12.12.12 "tail -f /var/log/xxx"
+        ssh -t 12.12.12.12 "tail -f /var/log/xxx"
 
 
 
 * Bağlantıda parola sormasın, key ile bağlanmayı denesin
-	ssh -o PasswordAuthentication=no domain.com
+        ssh -o PasswordAuthentication=no domain.com
 
 
 
 * Key'e göre bağlanan kullanıcının, shell yerine başka bir programı başlatıyor olması için
-	Sunucuda ~/.ssh/authorized_keys dosyasında:
+        Sunucuda ~/.ssh/authorized_keys dosyasında:
 
-	command='/usr/bin/python' ssh-rsa ....
+        command='/usr/bin/python' ssh-rsa ....
 
 
-	
+
 * Host key kontrolunun bir bağlantıda geçici olarak kaldırılması
-	ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no domain.com
+        ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no domain.com
 
 
 
 * ssh ile X uygulamalarının uzaktan çalıştırılması
-	- Sunucuda X yüklü olmayacaksa xauth paketini yüklemek gerekiyor.
-		aptitude install xauth
+        - Sunucuda X yüklü olmayacaksa xauth paketini yüklemek gerekiyor.
+                aptitude install xauth
 
-	- ssh sunucu için X11Forwarding izni verilir
-		/etc/ssh/sshd_config
-		X11Forwarding	yes
-		X11UseLocalhost no	#localnet disindan da baglantiya izin vermek icin
-		
-	- uzaktaki X uygulaması çalıştırılır
-		ssh -X kullanici@12.12.12.12 xchat
+        - ssh sunucu için X11Forwarding izni verilir
+                /etc/ssh/sshd_config
+                X11Forwarding   yes
+                X11UseLocalhost no      #localnet disindan da baglantiya izin vermek icin
+
+        - uzaktaki X uygulaması çalıştırılır
+                ssh -X kullanici@12.12.12.12 xchat
 
 
 
 * sshfs
-	sshfs paketi bir ara incelensin. Debian deposundan yüklenen pakette bir sorun var.
-	
-	- sshfs paketini yükle
-		apt-get install sshfs
-	
-	- sshfs mount yapacak kullanıcıları, 'fuse' grubuna ekle
-		adduser kullanici fuse
+        sshfs paketi bir ara incelensin. Debian deposundan yüklenen pakette bir sorun var.
 
-	- mount
-		modprobe fuse
-		mkdir ~/mnt1
-		sshfs kullanici@12.12.12.12:~/klasor ~/mnt1
-		fusermount -u ~/mnt1
+        - sshfs paketini yükle
+                apt-get install sshfs
 
-	- mount esnasında parametreler
-		sshfs 12.12.12.12:/remote/klasor /mnt/mountpoint \
-		-o allow_other,default_permissions \
-		-o ssh_command="ssh -p22 -l kullanici -i ~/.ssh/key"
-	
+        - sshfs mount yapacak kullanıcıları, 'fuse' grubuna ekle
+                adduser kullanici fuse
+
+        - mount
+                modprobe fuse
+                mkdir ~/mnt1
+                sshfs kullanici@12.12.12.12:~/klasor ~/mnt1
+                fusermount -u ~/mnt1
+
+        - mount esnasında parametreler
+                sshfs 12.12.12.12:/remote/klasor /mnt/mountpoint \
+                -o allow_other,default_permissions \
+                -o ssh_command="ssh -p22 -l kullanici -i ~/.ssh/key"
+
 
 * Transfer edilen verinin sıkıştırılması
-	ssh, scp gibi komutlara -C parametresi eklenir. Bağlantı yavaş ise kullanılmalı. 
-	Hızlı bağlantılarda tersine yavaşlamaya sebep olabilir.
+        ssh, scp gibi komutlara -C parametresi eklenir. Bağlantı yavaş ise kullanılmalı.
+        Hızlı bağlantılarda tersine yavaşlamaya sebep olabilir.
 
-	veya
+        veya
 
-	~/.ssh/config dosyasında
+        ~/.ssh/config dosyasında
 
-		Host *
-			Cipher=blowfish
-			CompressionLevel=9
+                Host *
+                        Cipher=blowfish
+                        CompressionLevel=9
 
 
 * SSH tunel
-	Düz tünel. Bize bağlanabilen makineler, üzerimizden geçip bağlantığımız makine üzerinden bağlantı
-	kurar.
+        Düz tünel. Bize bağlanabilen makineler, üzerimizden geçip bağlantığımız makine üzerinden bağlantı
+        kurar.
 
-	ssh -f -L 0.0.0.0:20001:host2:80 -p22 kullanici@host1 sleep 100
-	curl localhost:20001
-	curl host3:20001
+        ssh -f -L 0.0.0.0:20001:host2:80 -p22 kullanici@host1 sleep 100
+        curl localhost:20001
+        curl host3:20001
 
-	ssh -f -L 20002:www.yahoo.com:80 -p22 emrah.com sleep 100
-	curl localhost:20002
+        ssh -f -L 20002:www.yahoo.com:80 -p22 emrah.com sleep 100
+        curl localhost:20002
 
-	ssh -f -L 20003:host2:5901 -p22 kullanici@host1 sleep 100
-	vncviewer localhost:20003:1
+        ssh -f -L 20003:host2:5901 -p22 kullanici@host1 sleep 100
+        vncviewer localhost:20003:1
 
 
-	-L 0.0.0.0:20001:host2:80	Komutun verildiği makinenin 20001. portuna gelen bağlantılar, host1 üzerinden geçip
-					host2 makinesinin 80. portuna bağlanır. Host1 ve Host2 için IP adresi veya host adı
-					verilir. 0.0.0.0 verilmezse sadece 127.0.0.1 IP adresi dinlenilir.
+        -L 0.0.0.0:20001:host2:80       Komutun verildiği makinenin 20001. portuna gelen bağlantılar, host1 üzerinden geçip
+                                        host2 makinesinin 80. portuna bağlanır. Host1 ve Host2 için IP adresi veya host adı
+                                        verilir. 0.0.0.0 verilmezse sadece 127.0.0.1 IP adresi dinlenilir.
 
-					host2 olarak 127.0.0.1 verilirse bu, host1'den kendi lokaline atlanacağı anlamına gelir.
-					Yani host1'in dışarıya kapalı ama lokale açık portuna bağlanmak için kullanılabilir.
+                                        host2 olarak 127.0.0.1 verilirse bu, host1'den kendi lokaline atlanacağı anlamına gelir.
+                                        Yani host1'in dışarıya kapalı ama lokale açık portuna bağlanmak için kullanılabilir.
 
-					Tünelin oluşabilmesi için (bu örnekte) host1 makinesinin, host2 makinesinin 80. portuna
-					erişebiliyor olması gerekmektedir.
-	
-	-f				ssh üzerinden çalıştırılan komut başlamadan, ssh'ı arkaplana atar
-					böylece bir sonraki komut (örnekte vncviewer ve curl) çalışmaya başlar.
+                                        Tünelin oluşabilmesi için (bu örnekte) host1 makinesinin, host2 makinesinin 80. portuna
+                                        erişebiliyor olması gerekmektedir.
 
-	-p22				host1'in SSH sunucu portu. Default SSH portu (yani 22) kullanılıyorsa, yazılmasa da olur.
+        -f                              ssh üzerinden çalıştırılan komut başlamadan, ssh'ı arkaplana atar
+                                        böylece bir sonraki komut (örnekte vncviewer ve curl) çalışmaya başlar.
 
-	kullanici@host1			Tüneli kuracak olan aradaki makinenin IP adresi veya host adı. SSH sunucuya bağlanırken
-					kullanılacak kullanıcı adı 'kullanici@' şeklinde verilecek.
+        -p22                            host1'in SSH sunucu portu. Default SSH portu (yani 22) kullanılıyorsa, yazılmasa da olur.
 
-	sleep 100			ssh tunel oluşturulunca sunucuda çalışacak komut.
-					sleep komutu, ikinci komut bağlantıyı alıncaya kadar bağlantı kapanmasın diye.
-					sleep bittikten sonra, bağlantı vncviewer'a ait olacağı için bu program işini bitirene kadar
-					tunel kalır, vncviewer kapatılınca tunel de kapanır
+        kullanici@host1                 Tüneli kuracak olan aradaki makinenin IP adresi veya host adı. SSH sunucuya bağlanırken
+                                        kullanılacak kullanıcı adı 'kullanici@' şeklinde verilecek.
 
-	curl localhost:20001		localhost'un 20001. portuna curl ile bağlanıldığında, host1 üzerinden geçilip host2'nin 80.
-					portundan yayınlanan web sunucuya erişilir.
+        sleep 100                       ssh tunel oluşturulunca sunucuda çalışacak komut.
+                                        sleep komutu, ikinci komut bağlantıyı alıncaya kadar bağlantı kapanmasın diye.
+                                        sleep bittikten sonra, bağlantı vncviewer'a ait olacağı için bu program işini bitirene kadar
+                                        tunel kalır, vncviewer kapatılınca tunel de kapanır
 
-	curl host3:20001		Host3, komutun verildiği makinenin IP adresi veya host adı. Bu komut, host3'e erişebilen
-					başka bir makineden veriliyor.
+        curl localhost:20001            localhost'un 20001. portuna curl ile bağlanıldığında, host1 üzerinden geçilip host2'nin 80.
+                                        portundan yayınlanan web sunucuya erişilir.
 
-	vncviewer localhost:20003:1	Kullanılacak uygulama ile komutun verildiği makinenin 20003. portuna bağlanılacak.
-					Bu bağlantının diğer ucu, host2'nin belirtilen portuna çıkacak. :1 vnc için display numarası.
+        curl host3:20001                Host3, komutun verildiği makinenin IP adresi veya host adı. Bu komut, host3'e erişebilen
+                                        başka bir makineden veriliyor.
+
+        vncviewer localhost:20003:1     Kullanılacak uygulama ile komutun verildiği makinenin 20003. portuna bağlanılacak.
+                                        Bu bağlantının diğer ucu, host2'nin belirtilen portuna çıkacak. :1 vnc için display numarası.
 
 
 * Reverse SSH
-	Ters tünel. Bağlandığımız makineye bağlanabilen makineler, üzerimizden geçip bağlantı kurarlar.
+        Ters tünel. Bağlandığımız makineye bağlanabilen makineler, üzerimizden geçip bağlantı kurarlar.
 
-	Host2, host3'e bağlanmak istemektedir ama aradaki firewall blokladığından veya 
-	gerekli yönlendirme kuralları tanımlanmadığından dolayı host3'e erişememektedir.
-	Host1 hem SSH ile host2'ye bağlanabilmekte hem de host3'ün bağlantı kurulmak istenen
-	portuna bağlanabilmektedir. Bu durumda host1'den host2'ye ters tünel açıp host2'nin
-	veya host2'ye bağlanabilen makinelerin, host1 üzerinden geçerek host3'e bağlanmasını
-	sağlayabiliriz.
+        Host2, host3'e bağlanmak istemektedir ama aradaki firewall blokladığından veya
+        gerekli yönlendirme kuralları tanımlanmadığından dolayı host3'e erişememektedir.
+        Host1 hem SSH ile host2'ye bağlanabilmekte hem de host3'ün bağlantı kurulmak istenen
+        portuna bağlanabilmektedir. Bu durumda host1'den host2'ye ters tünel açıp host2'nin
+        veya host2'ye bağlanabilen makinelerin, host1 üzerinden geçerek host3'e bağlanmasını
+        sağlayabiliriz.
 
-	Önce host1, host2'ye bağlanır ve ters tünel oluşturur. Artık host2'nin tünelin bir ucunda
-	kalan portuna bağlanan uygulamalar, host1 üzerinde geçip host3'ün bağlanılmak istenen
-	portuna ulaşabilir.
+        Önce host1, host2'ye bağlanır ve ters tünel oluşturur. Artık host2'nin tünelin bir ucunda
+        kalan portuna bağlanan uygulamalar, host1 üzerinde geçip host3'ün bağlanılmak istenen
+        portuna ulaşabilir.
 
-	Bunun gerçekleşebilmesi için host1 ve host3 firewall'un bloklanmış kısmında (genelde yerel ağda)
-	host2'nin ise erişime açık kısımda (genellikle Internette) olması gerekir.
+        Bunun gerçekleşebilmesi için host1 ve host3 firewall'un bloklanmış kısmında (genelde yerel ağda)
+        host2'nin ise erişime açık kısımda (genellikle Internette) olması gerekir.
 
-	host1:
-		ssh -R 10001:host3:80 -p22 host2
+        host1:
+                ssh -R 10001:host3:80 -p22 host2
 
-		-p22			host2'deki SSH sunucuya 22. porttan bağlan. Default port
-					kullanıldığında yazılmasa da olur çünkü defaultu 22
+                -p22                    host2'deki SSH sunucuya 22. porttan bağlan. Default port
+                                        kullanıldığında yazılmasa da olur çünkü defaultu 22
 
-		-R 10001:host3:80	host2'de 10001. porta bağlantı yapıldığında, bunu host1'in 
-					üzerinden geçirip host3'ün 80. portuna eriştirir.
+                -R 10001:host3:80       host2'de 10001. porta bağlantı yapıldığında, bunu host1'in
+                                        üzerinden geçirip host3'ün 80. portuna eriştirir.
 
-					host3 olarak 127.0.0.1 verilirse, host1 üzerinden atlanıp
-					127.0.0.1'e (yani host1'in kendisine) bağlanılır.
+                                        host3 olarak 127.0.0.1 verilirse, host1 üzerinden atlanıp
+                                        127.0.0.1'e (yani host1'in kendisine) bağlanılır.
 
-	host2:
-		curl -p10001 localhost   Host2'in 10001. portuna bağlanıldığında host1 üzerindeki tünelden
-					 geçilip host3'ün 80. portuna erişilir.
+        host2:
+                curl -p10001 localhost   Host2'in 10001. portuna bağlanıldığında host1 üzerindeki tünelden
+                                         geçilip host3'ün 80. portuna erişilir.
 
-	host2'ye erişebilen herhangi bir host4:
-		curl host2:10001
+        host2'ye erişebilen herhangi bir host4:
+                curl host2:10001
 
 
 * SSH ile SOCK5 server
-	ssh -ND 8080 -p22 host2
+        ssh -ND 8080 -p22 host2
 
-		-p22			host2'deki SSH sunucuya 22. porttan bağlan. Default port
-					kullanıldığında yazılmasa da olur çünkü defaultu 22
+                -p22                    host2'deki SSH sunucuya 22. porttan bağlan. Default port
+                                        kullanıldığında yazılmasa da olur çünkü defaultu 22
 
-		-N			host2'de komut çalıştırılamayacak.
+                -N                      host2'de komut çalıştırılamayacak.
 
-		-D 8080			Bind portu. Komutun verildiği makinede (host1) bu port üzerinden
-					SOCKS sunucuya erişilir.
+                -D 8080                 Bind portu. Komutun verildiği makinede (host1) bu port üzerinden
+                                        SOCKS sunucuya erişilir.
 
-	SOCKS sunucu üzerinden bağlantı kuracak host1 üzerindeki uygulamada (örneğin Iceweasel):
-		SOCKS Host		127.0.0.1
-		SOCKS Port		8080
-		SOCKS Type		SOCKS v5
+        SOCKS sunucu üzerinden bağlantı kuracak host1 üzerindeki uygulamada (örneğin Iceweasel):
+                SOCKS Host              127.0.0.1
+                SOCKS Port              8080
+                SOCKS Type              SOCKS v5
 
-	Iceweasel'de DNS sorgularının da SOCKS üzerinden yapılması için:
-		about:config -> network.proxy.socks_remote_dns -> True
+        Iceweasel'de DNS sorgularının da SOCKS üzerinden yapılması için:
+                about:config -> network.proxy.socks_remote_dns -> True

@@ -2,126 +2,126 @@ Pure-ftpd Notları
 -----------------
 
 - Yükleme
-	aptitude install pure-ftpd
+        aptitude install pure-ftpd
 
 - Ayarlar
-	. pure-ftpd'nin standalone çalışması için
-	vim /etc/default/pure-ftpd-common
-		STANDALONE_OR_INETD=standalone
+        . pure-ftpd'nin standalone çalışması için
+        vim /etc/default/pure-ftpd-common
+                STANDALONE_OR_INETD=standalone
 
-	. pure-ftpd'nin inetd ile çalışması için
-	aptitude install openbsd-inetd
+        . pure-ftpd'nin inetd ile çalışması için
+        aptitude install openbsd-inetd
 
-	vim /etc/default/pure-ftpd-common
-		STANDALONE_OR_INETD=inetd
+        vim /etc/default/pure-ftpd-common
+                STANDALONE_OR_INETD=inetd
 
-	. Kullanıcının kendi klasörü dışına çıkmasını engellemek için
-	echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
+        . Kullanıcının kendi klasörü dışına çıkmasını engellemek için
+        echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
 
-	. Chroot aktif iken kendi klasörü altında olmayan klasörlere yapılmış
-	sembolik linklerin de içeriğinin görünebilmesi için
-	vim /etc/default/pure-ftpd-common
-		VIRTUALCHROOT=true
+        . Chroot aktif iken kendi klasörü altında olmayan klasörlere yapılmış
+        sembolik linklerin de içeriğinin görünebilmesi için
+        vim /etc/default/pure-ftpd-common
+                VIRTUALCHROOT=true
 
-	. Bağlanan kullanıcı için DNS sorgusu yapılmayacaksa
-	echo "yes" > /etc/pure-ftpd/conf/DontResolve
+        . Bağlanan kullanıcı için DNS sorgusu yapılmayacaksa
+        echo "yes" > /etc/pure-ftpd/conf/DontResolve
 
-	. Standart FTP portu değiştirilecekse
-	echo "1021" > /etc/pure-ftpd/conf/Bind
+        . Standart FTP portu değiştirilecekse
+        echo "1021" > /etc/pure-ftpd/conf/Bind
 
-	. Passive mode FTP portları için aralık tanımlama
-	echo "40000 40100" > /etc/pure-ftpd/conf/PassivePortRange
+        . Passive mode FTP portları için aralık tanımlama
+        echo "40000 40100" > /etc/pure-ftpd/conf/PassivePortRange
 
-	. Anonymous FTP erişimi olmayacaksa
-	echo "yes" > /etc/pure-ftpd/conf/NoAnonymous
+        . Anonymous FTP erişimi olmayacaksa
+        echo "yes" > /etc/pure-ftpd/conf/NoAnonymous
 
-	. Nokta ile başlayan dosyalar (örneğin .htaccess) gösterilecekse
-	echo "yes" > /etc/pure-ftpd/conf/DisplayDotFiles 
+        . Nokta ile başlayan dosyalar (örneğin .htaccess) gösterilecekse
+        echo "yes" > /etc/pure-ftpd/conf/DisplayDotFiles
 
-	. Read-Only anonymous FTP erişimi olacaksa
-	adduser --system --group ftp
-	echo "no" > /etc/pure-ftpd/conf/NoAnonymous
-	echo "no" > /etc/pure-ftpd/conf/AnonymousCanCreateDirs
-	echo "yes" > /etc/pure-ftpd/conf/AnonymousCantUpload
-
-
-	. Dosya yüklendiğinde bir scriptin otomatik çalıştırılması isteniyorsa
-	echo "yes" > /etc/pure-ftpd/conf/CallUploadScript
-
-	vim /etc/default/pure-ftpd-common
-		UPLOADSCRIPT=/calisacak/scriptin/pathi
-		UPLOADUID=1000
-		LOADGID=1000 
-
-	Scripti çalıştıracak kullanıcının UID ve GID numaraları yazılır.
-	"id kullanici"	komutu ile ID bilgileri öğrenilebilir. Çalıştırılacak
-	scripte, bu kullanıcı için çalıştırma hakkı verilmiş olması gerekmekte.
-		$1		ile yüklenen dosyanın path'i gelir.
-		$UPLOAD_VUSER	ile yüklemeyi yapan sanal kullanıcı adı gelir.
-		$UPLOAD_SIZE
-		$UPLOAD_PERMS
-		$UPLOAD_UID
-		$UPLOAD_GID
-		$UPLOAD_USER
-		$UPLOAD_GROUP
+        . Read-Only anonymous FTP erişimi olacaksa
+        adduser --system --group ftp
+        echo "no" > /etc/pure-ftpd/conf/NoAnonymous
+        echo "no" > /etc/pure-ftpd/conf/AnonymousCanCreateDirs
+        echo "yes" > /etc/pure-ftpd/conf/AnonymousCantUpload
 
 
-	. TLS ile SFTP desteği verilmesi. Şifreli trafik için
-	aptitude install openssl
-	cd /etc/ssl/private/
-	openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout \
-	/etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem
-		Country Name             :TR
+        . Dosya yüklendiğinde bir scriptin otomatik çalıştırılması isteniyorsa
+        echo "yes" > /etc/pure-ftpd/conf/CallUploadScript
+
+        vim /etc/default/pure-ftpd-common
+                UPLOADSCRIPT=/calisacak/scriptin/pathi
+                UPLOADUID=1000
+                LOADGID=1000
+
+        Scripti çalıştıracak kullanıcının UID ve GID numaraları yazılır.
+        "id kullanici"  komutu ile ID bilgileri öğrenilebilir. Çalıştırılacak
+        scripte, bu kullanıcı için çalıştırma hakkı verilmiş olması gerekmekte.
+                $1              ile yüklenen dosyanın path'i gelir.
+                $UPLOAD_VUSER   ile yüklemeyi yapan sanal kullanıcı adı gelir.
+                $UPLOAD_SIZE
+                $UPLOAD_PERMS
+                $UPLOAD_UID
+                $UPLOAD_GID
+                $UPLOAD_USER
+                $UPLOAD_GROUP
+
+
+        . TLS ile SFTP desteği verilmesi. Şifreli trafik için
+        aptitude install openssl
+        cd /etc/ssl/private/
+        openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout \
+        /etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem
+                Country Name             :TR
                 State or Province Name   :Türkiye
                 Locality Name            :<İl adı>
                 Organization Name        :<Firma Adı>
                 Organizational Unit Name :<Bölüm adı>
                 Common Name              :<web adresi veya kişi adı>
                 Email Address            :<email adresi>
-	echo "1" > /etc/pure-ftpd/conf/TLS
-		TLS 0 olursa: Sadece şifresiz trafiği destekler (FTP)
-		TLS 1 olursa: Hem şifreli hem de şifresiz trafiği destekler
-		TLS 2 olursa: Sadece şifreli trafiği destekler (SFTP)
+        echo "1" > /etc/pure-ftpd/conf/TLS
+                TLS 0 olursa: Sadece şifresiz trafiği destekler (FTP)
+                TLS 1 olursa: Hem şifreli hem de şifresiz trafiği destekler
+                TLS 2 olursa: Sadece şifreli trafiği destekler (SFTP)
 
 
-	. Sanal kullanıcı işlemleri (pure-ftpd'nin kendi veritabanı ile)
-		- İlk kullanıcıyı ekleme
-		mkdir -p /home/ftpdata/kullanici1
-		chown emrah: /home/ftpdata -R
-		pure-pw useradd kullanici1 -u emrah -d /home/ftpdata/kullanici1
-		pure-pw mkdb
+        . Sanal kullanıcı işlemleri (pure-ftpd'nin kendi veritabanı ile)
+                - İlk kullanıcıyı ekleme
+                mkdir -p /home/ftpdata/kullanici1
+                chown emrah: /home/ftpdata -R
+                pure-pw useradd kullanici1 -u emrah -d /home/ftpdata/kullanici1
+                pure-pw mkdb
 
-		echo "/etc/pure-ftpd/pureftpd.pdb" > /etc/pure-ftpd/conf/PureDB
-		ln -s ../conf/PureDB /etc/pure-ftpd/auth/60puredb
-		/etc/init.d/pure-ftpd restart
+                echo "/etc/pure-ftpd/pureftpd.pdb" > /etc/pure-ftpd/conf/PureDB
+                ln -s ../conf/PureDB /etc/pure-ftpd/auth/60puredb
+                /etc/init.d/pure-ftpd restart
 
-		- Yeni kullanıcılar ekleme
-		mkdir /home/ftpdata/kullanici2
-		chown emrah: /home/ftpdata/kullanici2
-		pure-pw useradd kullanici2 -u emrah -d /home/ftpdata/kullanici2
-		pure-pw mkdb
+                - Yeni kullanıcılar ekleme
+                mkdir /home/ftpdata/kullanici2
+                chown emrah: /home/ftpdata/kullanici2
+                pure-pw useradd kullanici2 -u emrah -d /home/ftpdata/kullanici2
+                pure-pw mkdb
 
-		- Kullanıcı parolası değiştirme
-		pure-pw passwd kullanici1
-		pure-pw mkdb
+                - Kullanıcı parolası değiştirme
+                pure-pw passwd kullanici1
+                pure-pw mkdb
 
-		- Kullanıcı silme
-		pure-pw userdel kullanici1
-		pure-pw mkdb
+                - Kullanıcı silme
+                pure-pw userdel kullanici1
+                pure-pw mkdb
 
-		- Kullanıcıları listeleme
-		pure-pw list
+                - Kullanıcıları listeleme
+                pure-pw list
 
-		- Kullanıcı bilgisini görme
-		pure-pw show kullanici1
+                - Kullanıcı bilgisini görme
+                pure-pw show kullanici1
 
 
 - Notlar
-	. Sistem dili 'en_US.UTF-8' olsun. Eğer sistem dili bu değilse
-	pure-ftpd'nin bu dili kullanması için '/etc/init.d/pure-ftpd'
-	scriptinin 13. satırına şu eklensin:
-		LANG=en_US.UTF-8
+        . Sistem dili 'en_US.UTF-8' olsun. Eğer sistem dili bu değilse
+        pure-ftpd'nin bu dili kullanması için '/etc/init.d/pure-ftpd'
+        scriptinin 13. satırına şu eklensin:
+                LANG=en_US.UTF-8
 
-	Bu yapılmazsa bazı yerellerde problem çıkarıyor. En iyisi sistem
-	dilinin 'en_US.UTF-8' yapılması.
+        Bu yapılmazsa bazı yerellerde problem çıkarıyor. En iyisi sistem
+        dilinin 'en_US.UTF-8' yapılması.
 
