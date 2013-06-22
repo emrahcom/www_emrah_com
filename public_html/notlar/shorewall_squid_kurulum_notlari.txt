@@ -1,0 +1,391 @@
+* ağ arayüzleri		( bu makinede DNS sunucunun kurulu olduğu varsayılmıştır)
+
+	- /etc/network/interfaces
+		auto eth0
+		iface eth0 inet static
+		address 192.168.1.2
+		netmask 255.255.255.0
+		network 192.168.1.0
+		broadcast 192.168.1.255
+		gateway 192.168.1.1
+		# dns-* options are implemented by the resolvconf package, if installed
+		dns-nameservers localhost
+		dns-search mynetwork.net
+								
+		auto eth1
+		iface eth1 inet static
+		address 10.0.0.1
+		netmask 255.0.0.0
+		network 10.0.0.0
+		broadcast 10.255.255.255
+
+	- /etc/init.d/networking restart
+
+
+
+* paketlerin kurulumu
+	- /etc/apt/sources.list dosyasına eklenecek satır
+		deb http://volatile.debian.org/debian-volatile etch/volatile main contrib non-free
+
+	- paketlerin yüklenmesi
+		apt-get install shorewall squid dansguardian (sarg?)
+
+		bağımlılıklar:
+			shorewall	-> iptables iproute
+			squid		-> squid-common
+			sarg		-> libgd2-noxpm
+	
+
+
+* Shorewall ayarları
+
+	- /usr/share/doc/shorewall-common/examples/ klasöründen uygun olan örnekler indirilir
+
+
+	- /etc/shorewall/zones
+		fw		firewall
+		net		ipv4
+		loc		ipv4
+		grup1:loc	ipv4		(alt gruplar varsa belirtilir)
+	
+	
+	- /etc/shorewall/hosts	(varsa, sub zone'lar buraya...)
+		grup1		eth0:10.0.0.0/8
+	
+	
+	- /etc/shorewall/interfaces
+		net	eth0	detect	tcpflags,blacklist,routefilter,dhcp,nosmurfs
+		loc	eth1	detect	tcpflags,blacklist,routefilter,dhcp
+
+		-> tcpflags	uygunsuz flag'e sahip TCP paketleri yok edilir
+		-> blacklist	blacklist dosyasından yasaklı adresler kontrol edilir
+		-> routefilter	spoofing'i engellemek için çekirdekte route filtresini, bu arayüz için  açar
+		-> logmartians	mümkün olmayan kaynak adresli paketlerin log'unu tutar
+		-> nosmurfs	broadcast kaynaklı gözüken paketleri yok eder
+		-> dhcp		bu arayüz için IP, DHCP sunucudan alınıyorsa...
+		-> norfc1918	kaynak adresi, RFC1918'de kayıtlı olan paketleri kabul etmez
+
+
+	- /etc/shorewall/policy
+		$FW	grup1	REJECT
+		$FW	loc	REJECT
+		$FW	net	REJECT
+		$FW	all	REJECT
+		
+		grup1	$FW	REJECT
+		grup1	loc	REJECT
+		grup1	net	REJECT
+		grup1	all	REJECT
+		
+		loc	$FW	REJECT
+		loc	grup1	REJECT
+		loc	net	REJECT
+		loc	all	REJECT
+		
+		net	$FW	REJECT
+		net	grup1	REJECT
+		net	loc	REJECT
+		net	all	REJECT
+		
+		all	all	REJECT
+
+	
+	- /etc/shorewall/shorewall.conf
+		IP_FORWARDING=Yes		( yerel ağ için gateway olacaksa...)
+		ADD_SNAT_ALIASES=Yes		( yerel ağ için gateway olacaksa...)
+
+
+	- /etc/shorewall/masq
+		eth0			eth1		( yerel ağ için gateway olacaksa... 	)
+		eth0:!192.168.1.0/24	192.168.1.0/24	( sub zone için gateway olacaksa...	)
+
+
+	- /etc/shorewall/routestopped
+	  proxy için gerekli değil ama bu dosyaya resetlenmemesi gereken bağlantılar yazılacak
+	  zorunlu değilse yapılmamalı çünkü firewall başlarken sunucuyu kısa bir süre güvensiz halde bırakıyor
+	  nfs mount eden disksiz sistemler için uygun
+	  	eth0	192.168.1.1	critical
+
+
+	- touch /etc/shorewall/blacklist
+	
+
+	- /etc/default/shorewall
+		startup=1
+		
+
+	- /etc/shorewall/rules
+		# makro listesi icin /usr/share/shorewall/ klasorune bakilacak
+		# tcp   21      ftp
+		# tcp   22      ssh
+		# tcp   25      smtp
+		# udp   53      dns
+		# tcp   53      dns
+		# udp   67      dhcpd
+		# udp   69      tftpd
+		# tcp   80      http
+		# tcp   110     pop3
+		# tcp   135     samba (smbd)
+		# udp   137     samba (nmbd)
+		# udp   138     samba (nmbd)
+		# tcp   139     samba (smbd)
+		# tcp   143     imap
+		# tcp   443     https
+		# tcp   445     samba (smbd)
+		# tcp	587	gmail
+		# udp   631     cups
+		# tcp   631     cups
+		# tcp   993     imaps
+		# tcp   995     pop3s
+		# tcp   1863    msn
+		# tcp   3000    ntop
+		# tcp   3128    squid
+		# tcp   3306    mysql
+		# tcp   3389	rdesktop
+		# tcp   4559    hylafax
+		# tcp   6667    IRC
+		# tcp   8080    dansguardian
+		# tcp   9999    apt-proxy
+		# tcp   10000   webmin
+	
+		# firewal
+		SSH/ACCEPT              fw              loc
+		ACCEPT                  fw              loc             icmp
+
+		DNS/ACCEPT              fw              net
+		HTTP/ACCEPT             fw              net
+		HTTPS/ACCEPT            fw              net
+		NTP/ACCEPT              fw              net
+		SMTP/ACCEPT             fw              net
+		SMTPS/ACCEPT            fw              net
+		SSH/ACCEPT              fw              net
+		ACCEPT                  fw              net             tcp     587
+		ACCEPT                  fw              net             icmp
+		
+		# local
+		Ping/ACCEPT		loc		net
+		CVS/ACCEPT              loc             net
+		DNS/ACCEPT              loc             net
+		FTP/ACCEPT              loc             net
+		HTTP/ACCEPT             loc             net
+		HTTPS/ACCEPT            loc             net
+		JabberPlain/ACCEPT      loc             net
+		JabberSecure/ACCEPT     loc             net
+		NTP/ACCEPT              loc             net
+		POP3/ACCEPT		loc		net
+		POP3S/ACCEPT		loc		net
+		RDP/ACCEPT              loc             net
+		Rsync/ACCEPT            loc             net
+		SMTP/ACCEPT             loc             net
+		SMTPS/ACCEPT            loc             net
+		SSH/ACCEPT              loc             net
+		VNC/ACCEPT              loc             net
+		Whois/ACCEPT            loc             net
+		ACCEPT                  loc             net             tcp     587
+		ACCEPT                  loc             net             tcp     1863
+		ACCEPT                  loc             net             tcp     6667
+		ACCEPT                  loc             net             tcp     priv_rdesktop
+		ACCEPT                  loc             net             tcp     priv_ssh
+		ACCEPT                  loc             net             tcp     priv_vnc
+
+		Ping/ACCEPT		loc		fw		-	-		3/sec:10
+		DNS/ACCEPT		loc		fw
+		SSH/ACCEPT		loc		fw
+		HTTP/ACCEPT		loc		fw
+		ACCEPT			loc		fw		tcp	priv_ssh
+
+
+		# proxy sunucuya yonlendirme...
+		# dansguardian icin 8080. port'a, squid icin 3128. port'a yonlendirilecek
+		REDIRECT		loc		8080		tcp	80		-		!10.0.0.1
+		#REDIRECT		loc		3128		tcp	80		-		!10.0.0.1
+		
+		# yerel sunucular varsa...
+		FTP/ACCEPT		net		loc:10.0.0.xxx
+		FTP/DNAT		net		loc:10.0.0.xxx
+		
+		# net
+		Ping/ACCEPT		net		fw		-	-		3/sec:10
+		SSH/ACCEPT		net		fw
+		ACCEPT			net		fw		tcp	priv_ssh
+
+
+	- /etc/hosts
+		127.0.0.1	localhost.localdomain	localhost
+		192.168.1.2	host1.mynetwork.net	host1
+		10.0.0.1	host2.mynetwork.net	host2
+
+
+	- /etc/init.d/shorewall restart
+
+	- Eger konsola log yazmasi istenmiyorsa
+		/etc/sysctl.conf
+			kernel.printk = 4 4 1 7
+
+
+
+* Squid ayarları
+
+	- /etc/security/limits.conf
+	
+		*              soft    nofile         8192
+		*              hard    nofile         8192
+
+
+	- /etc/squid/squid.conf
+
+		# Sarge icin yapilacak ayarlar
+		acl				our_networks src 192.168.1.0/24 192.168.2.0/24
+		http_access			allow our_networks
+		httpd_accel_host		virtual
+		httpd_accel_port		80
+		httpd_accel_with_proxy		on
+		httpd_accel_uses_host_header	on
+
+		# Etch icin yapilacak ayarlar
+		acl 				our_networks 	src 192.168.1.0/24 192.168.2.0/24
+		http_access			allow		our_networks
+		http_port			3128		transparent
+
+		# Lenny icin yapilacak ayarlar
+		acl localnet src 10.0.0.0/8
+		acl localnet src 172.16.0.0/12
+		acl localnet src 192.168.0.0/16
+		http_access allow localnet
+		http_port 3128 transparent
+
+
+* blacklist
+
+	- http://urlblacklist.com/ adresinden blacklist download edilir
+
+	- download edilen dosya ile blacklists klasörü oluşturulur
+	
+		cd /etc/dansguardian/lists
+		tar xzf bigblacklist.tar.gz
+
+
+
+* DansGuardian ayarları
+
+	- /etc/dansguardian/dansguardian.conf
+		#UNCONFIGURED		( başına # konularak satır devreden çıkarılır			)
+		maxuploadsize = 0	( POST metodu ile dosya upload etmeyi sınırlandırmak için...	)
+					( 0  tamamen blokluyor						)
+					( x  upload edilecek maksimum dosya boyutunu x Kb yapıyor	)
+					( -1 sınırsız upload hakkı veriyor				)
+		logfileformat=3		( Squid log file format						)
+
+	
+	- /etc/dansguardian/lists/bannedsitelist
+		.Include</etc/dansguardian/lists/blacklists/ads/domains>    
+		.Include</etc/dansguardian/lists/blacklists/adult/domains>  
+		.Include</etc/dansguardian/lists/blacklists/astrology/domains>
+		.Include</etc/dansguardian/lists/blacklists/chat/domains>   
+		.Include</etc/dansguardian/lists/blacklists/dating/domains> 
+		.Include</etc/dansguardian/lists/blacklists/dialers/domains>
+		.Include</etc/dansguardian/lists/blacklists/drugs/domains>  
+		.Include</etc/dansguardian/lists/blacklists/gambling/domains>
+		.Include</etc/dansguardian/lists/blacklists/games/domains>  
+		.Include</etc/dansguardian/lists/blacklists/hacking/domains>
+		.Include</etc/dansguardian/lists/blacklists/instantmessaging/domains>
+		.Include</etc/dansguardian/lists/blacklists/kidstimewasting/domains>
+		.Include</etc/dansguardian/lists/blacklists/malware/domains>
+		.Include</etc/dansguardian/lists/blacklists/mixed_adult/domains>
+		.Include</etc/dansguardian/lists/blacklists/onlinegames/domains>
+		.Include</etc/dansguardian/lists/blacklists/phishing/domains>
+		.Include</etc/dansguardian/lists/blacklists/porn/domains>   
+		.Include</etc/dansguardian/lists/blacklists/proxy/domains>  
+		.Include</etc/dansguardian/lists/blacklists/sexuality/domains>
+		.Include</etc/dansguardian/lists/blacklists/socialnetworking/domains>
+		.Include</etc/dansguardian/lists/blacklists/spyware/domains>
+		.Include</etc/dansguardian/lists/blacklists/virusinfected/domains>
+		.Include</etc/dansguardian/lists/blacklists/warez/domains>  
+		                                                            
+		badboys.com    
+
+
+	- /etc/dansguardian/lists/bannedurllist
+		.Include</etc/dansguardian/lists/blacklists/ads/urls>
+		.Include</etc/dansguardian/lists/blacklists/adult/urls>
+		.Include</etc/dansguardian/lists/blacklists/chat/urls>
+		.Include</etc/dansguardian/lists/blacklists/dating/urls>
+		.Include</etc/dansguardian/lists/blacklists/dialers/urls>
+		.Include</etc/dansguardian/lists/blacklists/drugs/urls>
+		.Include</etc/dansguardian/lists/blacklists/gambling/urls>
+		.Include</etc/dansguardian/lists/blacklists/games/urls>
+		.Include</etc/dansguardian/lists/blacklists/hacking/urls>
+		.Include</etc/dansguardian/lists/blacklists/instantmessaging/urls>
+		.Include</etc/dansguardian/lists/blacklists/kidstimewasting/urls>
+		.Include</etc/dansguardian/lists/blacklists/malware/urls>
+		.Include</etc/dansguardian/lists/blacklists/onlinegames/urls>
+		.Include</etc/dansguardian/lists/blacklists/phishing/urls>
+		.Include</etc/dansguardian/lists/blacklists/porn/urls>
+		.Include</etc/dansguardian/lists/blacklists/proxy/urls>
+		.Include</etc/dansguardian/lists/blacklists/sexuality/urls>
+		.Include</etc/dansguardian/lists/blacklists/socialnetworking/urls>
+		.Include</etc/dansguardian/lists/blacklists/virusinfected/urls>
+		.Include</etc/dansguardian/lists/blacklists/warez/urls>
+
+		members.home.net/uporn
+
+
+	- /etc/dansguardian/lists/exceptionsitelist
+		.tr
+		sourtimes.org
+		video.google.com
+		windowsupdate.microsoft.com
+
+
+	- /etc/dansguardian/lists/weightedphraselist
+	  # Malezyaca ve Portekizce yasakli kelimeler, normal Turkce kelimelerle benzeşiyor
+	  # Bu kelime listesi kullanilirsa, normal Turkce sitelerde problem cikiyor
+	  	
+		#.Include</etc/dansguardian/lists/phraselists/pornography/weighted_japanese>
+		#.Include</etc/dansguardian/lists/phraselists/pornography/weighted_malay>
+		#.Include</etc/dansguardian/lists/phraselists/pornography/weighted_portuguese>
+	
+
+	- /etc/dansguardian/lists/exceptionextensionlist
+		# eklenenler
+		.bz2
+		.doc
+		.gz
+		.iso
+		.pdf
+		.pps
+		.rar
+		.tar
+		.tgz
+		.xls
+		.zip
+	
+
+	- /etc/dansguardian/lists/bannedphraselist
+		#.Include</etc/dansguardian/lists/phraselists/safelabel/banned>
+
+
+
+* SARG ayarları (özellikle istenmiyorsa, kurulmasın)
+
+	- /etc/squid/sarg.conf
+		language		English		(Turkish yapınca raporda bazı format sorunları oluyor)
+		charset			Latin5
+		output_dir		/var/www/squid-reports
+		access_log		/var/log/dansguardian/access.log
+	
+	- /etc/squid/sarg-reports.conf (etch)
+		LOGOIMG=/squid-reports/Daily/images/sarg.png
+		LOGOLINK="http://$(hostname)/squid-reports/"
+
+	- /etc/crontab (etch)
+		00      08-20/1 * * *   root    sarg-reports today
+		00      00      * * *   root    sarg-reports daily
+		00      01      * * 1   root    sarg-reports weekly
+		10      01      1 * *   root    sarg-reports weekly
+	
+	- /etc/crontab (sarge)
+		10 3 * * * root		/etc/squid/sarg-maint.sh >/dev/null 2>&1
+	
+	- /etc/squid/sarg-maint.sh (sarge) 
+		/usr/bin/sarg -d $YESTERDAY-$YESTERDAY -e kullanici@domain.com

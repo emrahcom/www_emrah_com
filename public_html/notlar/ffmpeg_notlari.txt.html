@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<title>ffmpeg_notlari.txt</title>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<pre><code>
+-------------------------------------------------------------------------------
+FFMPEG NOTLARI
+-------------------------------------------------------------------------------
+
+# Yükleme
+
+# aptitude install -t squeeze-backports ffmpeg libavcodec-extra-53 \
+#	libavfilter-extra-2 libavformat-extra-53 libavutil-extra-51 \
+#	libpostproc-extra-52 libswscale-extra-2 x264
+
+aptitude install -t squeeze-backports ffmpeg x264
+
+
+# İzleme
+ffplay video.mpg
+ffplay mmsh://85.111.3.55/ntv
+ffplay mmst://95.0.159.138/tv1
+ffplay mmst://95.0.159.131/trtbelgesel
+
+
+# Çevirme (mpeg -&gt; flv)
+ffmpeg -i video.mpg -r 25  -qmin 1 -qmax 6  -ar 22050 -ab 32k \
+	-vcodec flv -f flv video.flv
+
+
+# Bilgi alma
+ffmpeg --codecs
+ffmpeg --formats
+ffmpeg -protocols
+
+
+# ffmpeg options
+ -vcodec  copy ile kullanılırsa input file video formati aynen aktarılır.
+ -acodec  copy ile kullanılırsa input file audio formati aynen aktarılır.
+ -re	  realtime aktarma. Veriyi akma hızı ile işler. Stream ederken gerekli.
+ -s	  yükselik x genişlik
+ -ar	  audio frame rate
+ -ab	  audio bit rate
+ -r	  video frame rate
+ -b	  video bit rate
+ -sameq	  kaynakla yanı kalitede çıktı verir.
+ -qmin	  minimum kalite kaybı. Değer düştükce kalite artar.
+ -qmax	  maksimum kalite kaybı. Değer düştükçe kalite artar.
+
+
+# Streaming
+ffserver
+
+ffmpeg -re -i video.mpg -vcodec copy -acodec copy http://localhost:8090/feed1.ffm
+mplayer http://localhost:8090/test1.mp # goruntu kalitesi iyi ama takiliyor.
+
+ffmpeg -i video.mpg -s 320x240 http://localhost:8090/feed1.ffm
+mplayer http://localhost:8090/test.asf # ses gelmiyor.
+mplayer http://localhost:8090/test1.mp # goruntu kalitesi dusuk.
+
+
+# Kaynaklar
+http://sonnati.wordpress.com/2011/07/11/ffmpeg-the-swiss-army-knife-of-internet-streaming-part-i/
+http://sonnati.wordpress.com/2011/08/08/ffmpeg-&ndash;-the-swiss-army-knife-of-internet-streaming-&ndash;-part-ii/
+http://sonnati.wordpress.com/2011/08/19/ffmpeg-&ndash;-the-swiss-army-knife-of-internet-streaming-&ndash;-part-iii/
+http://sonnati.wordpress.com/2011/08/30/ffmpeg-&ndash;-the-swiss-army-knife-of-internet-streaming-&ndash;-part-iv/
+http://ffmpeg.org/ffserver.html
+http://stream0.org/2009/10/22/howto_build_ffmpeg_on_debian_s/
+
+
+
+-------------------------------------------------------------------------------
+MENCODER NOTLARI
+-------------------------------------------------------------------------------
+
+# Yükleme
+aptitude install -t squeeze-backports mencoder
+
+# mms yayını kaydetme
+mencoder -nocache mms://85.111.3.55/ntv -ovc copy -oac copy -o ntv.avi
+mencoder -nocache mms://95.0.159.131/trtbelgesel -ovc copy -oac copy -o belgesel.avi
+
+ffmpeg -i ntv.avi -vcodec flv -f flv -r 25 -b 512k -acodec libmp3lame -ar 44100 -ab 40k -y ntv.flv
+ffmpeg -i belgesel.avi -vcodec flv -f flv -r 25 -b 775k -acodec libmp3lame -ar 44100 -ab 48k -y belgesel.flv
+
+
+
+-------------------------------------------------------------------------------
+WOWZA NOTLARI
+-------------------------------------------------------------------------------
+
+# Amazon Panel &amp; Wowza sunucu ekleme
+console.aws.amazon.com
+	EC2 panel-&gt; EC2 Dashboard -&gt; Launch Instance -&gt; My AMIs -&gt; All Images
+	-&gt; wowzamediaserveruseast1/3.0.3.02-x86_64.manifest.xml (ami-77f13f1e)
+
+
+# Wowza sunucuya SSH erişimi
+IP adresini ve keyi öğrenmek için
+	EC2 panel -&gt; Menu -&gt; Instances -&gt; Sunucu seçilecek -&gt; Description -&gt; 
+	Public DNS : ec2-xxx-yyy-www-zzz.compute-1.amazonaws.com
+	(xxx.yyy.www.zzz IP adresi olarak kullanılacak)
+	Key Pair Name: anahtar_adi
+
+	EC2 Panel -&gt; Networks &amp; Security -&gt; Key Pairs (Yüklenmiş olacak)
+
+	ssh-add anahtar_dosyasi
+	ssh ec2-user@xxx.yyy.www.zzz
+
+
+# Wowza sunucu ayarları
+SSH ile bağlanılır. Örnekte &quot;emrah&quot; adında uygulama oluşturuluyor. Başka bir
+isim de verilebilir. Bu örnekteki uygulama, kendisine gönderilen yayını alıp
+sonra yayınlayacak, yani &quot;collector&quot; olacak.
+
+	cd /usr/local/WowzaMediaServer/conf/
+	mkdir emrah
+	cp Application.xml emrah/
+	vim emrah/Application.xml
+		&lt;StreamType&gt;live&lt;/StreamType&gt;
+		&lt;LiveStreamPacketizers&gt;cupertinostreamingpacketizer,
+		 smoothstreamingpacketizer&lt;/LiveStreamPacketizers&gt;
+
+	cd /usr/local/WowzaMediaServer/applications
+	mkdir emrah
+
+
+Yayını collector'den dinleyip tekrar eden uygulamaya &quot;repeater&quot; deniliyor.
+Repeater ayarları, collector gibi yapılıyor ama Application.xml dosyası
+aşağıdaki gibi olacak. &quot;OriginURL&quot; bölümünde yerel veya Internet IP adresi
+kullanılabilir.
+
+	Application.xml
+		&lt;StreamType&gt;liverepeater-edge&lt;/StreamType&gt;
+		&lt;LiveStreamPacketizers&gt;cupertinostreamingrepeater
+		&lt;/LiveStreamPacketizers&gt;
+		&lt;OriginURL&gt;rtmp://xxx.yyy.www.zzz:1935/emrah&lt;/OriginURL&gt;
+
+
+Açılabilir dosya adedi arttırılacak.
+	ulimit -a
+	ulimit -Hn 100000
+	ulimit -Sn 100000
+	ulimit -a
+
+
+# Wowza sunucuya ffmpeg ile stream gönderme
+
+	ffmpeg -i video.mpg \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 20050 -ab 32K \
+	rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+	ffmpeg -re -i rtmp://93.187.203.125:1935/live/planet4 \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 20050 -ab 32K \
+	rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+	ffmpeg -re -i rtmp://93.187.203.125:1935/live/planet4 \
+	-vcodec copy -f flv \
+	-acodec copy  \
+	rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+
+# Pipe kullanımı
+	# Pipe oluşturma
+	mkfifo pipe.mpg
+
+	# Pipe üzerinden Webcam stream
+	ffmpeg -r 25 -f video4linux2 -i /dev/video0 \
+	-vcodec mpeg4 -f mpeg -b 200K -r 25 \
+	-acodec libmp3lame -ar 20050 -ab 32K \
+	-y pipe.mpg &lt;/dev/null &amp;
+
+	cat pipe.mpg | ffmpeg -f mpeg -i - \
+	-f flv \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden MPEG dosya stream
+	ffmpeg -i video.mpg \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 22050 -ab 32K \
+	-y pipe.flv &lt;/dev/null &amp;
+
+	cat pipe.flv | ffmpeg -f flv -i - \
+	-f flv \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden MPEG dosya stream
+	# Named pipe tanimlamadan
+	ffmpeg -i video.mpg \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 22050 -ab 32K \
+	pipe:1 | \
+	ffmpeg -f flv -i - \
+	-f flv \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden mencoder çıktısını
+	# FLV formatında kaydetme
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	ffmpeg -i - \
+	-vcodec flv -f flv -r 25 -b 775k \
+	-acodec libmp3lame -ar 44100 -ab 48k \
+	-y belgesel.flv
+
+	# Pipe üzerinden mencoder çıktısını
+	# Wowza'da yayınlamak
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	ffmpeg -i - \
+	-vcodec flv -f flv -r 25 -b 775k \
+	-acodec libmp3lame -ar 44100 -ab 48k \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden mencoder çıktısını
+	# Wowza'da yayınlarken bir yandan da yayını kaydetme.
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	tee belsegel.avi | \
+	ffmpeg -i - \
+	-vcodec flv -f flv -r 25 -b 775k \
+	-acodec libmp3lame -ar 44100 -ab 48k \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden H264 stream
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	ffmpeg -i - \
+	-threads 0 -vcodec libx264 -vpre medium -crf 15.0 -b 800k \
+	-acodec libvo_aacenc -ar 44100 -ab 48k \
+	-f flv rtmp://xxx.yyy.www.zzz/emrah/yayin1
+	
+
+
+# Yayını izleme
+
+	ffplay rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+
+# Kaynaklar
+http://www.wowza.com/forums/content.php?213-FFmpeg-with-Wowza-Server-(MPEG-TS)
+
+
+
+-------------------------------------------------------------------------------
+JWPLAYER NOTLARI
+-------------------------------------------------------------------------------
+
+# Örnek player sayfası
+&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+    &lt;title&gt;JW Player 5 Test&lt;/title&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;jwplayer.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Birinci Yontem Basi --&gt;
+    &lt;div id=&quot;mediaplayer&quot;&gt;&lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        jwplayer(&quot;mediaplayer&quot;).setup({
+            flashplayer: &quot;player.swf&quot;,
+            id: &quot;yayin&quot;,
+            file: &quot;yayin1&quot;,
+            streamer: &quot;rtmp://xxx.yyy.www.zzz:1935/emrah&quot;,
+            provider: &quot;rtmp&quot;,
+            image: &quot;preview.jpg&quot;
+        });
+    &lt;/script&gt;
+    &lt;!-- Birinci Yontem Sonu --&gt;
+
+    &lt;!-- Ikinci Yontem Basi --&gt;
+    &lt;embed
+        flashvars=&quot;file=yayin1&amp;streamer=rtmp://xxx.yyy.www.zzz:1935/emrah&amp;provider=rtmp&quot;
+        allowfullscreen=&quot;true&quot;
+        allowscripaccess=&quot;always&quot;
+        id=&quot;yayin&quot;
+        name=&quot;yayin&quot;
+        src=&quot;player.swf&quot;
+    /&gt;
+    &lt;!-- Ikinci Yontem Sonu --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+
+# Kaynaklar
+http://www.longtailvideo.com/support/jw-player/jw-player-for-flash-v5/15995/jw-embedder-reference-guide
+http://www.longtailvideo.com/support/jw-player/jw-player-for-flash-v5/12538/supported-player-embed-methods
+http://www.wowza.com/forums/content.php?48-Using-JW-Player-5.x-with-Wowza-Server
+</code></pre>
+</body>
+</html>

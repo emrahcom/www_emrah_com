@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>izlesene_status.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+
+###############################################################################
+# dosya     : izlesene_status.py
+# ilgili    : emrah_5@yahoo.com
+#
+# Bu script, izlesene sitesine yuklenen videonun hazir olup olmadigina bakar.
+#
+###############################################################################
+
+import re
+import sys
+import socket
+import urllib2
+
+# Socket timeout suresi. Web sayfasi isterken bu timeout suresi gecerli olur.
+SOCKET_TIMEOUT = 20
+# izlesene.com durum sayfasi. Linkin sonuna video ID gelecek. ACCOUNT yazan
+# kisma, kendimize ait ismi girecegiz.
+PAGE_STATUS = &quot;http://www.izlesene.com/api/ACCOUNT/video&quot;
+# Debug yapilacak mi? Test ortami icin 1, gercek calisma ortami icin 0
+# Default olarak bu deger, config.py dosyasindan geliyor.
+DEBUG = 1
+
+
+
+# -----------------------------------------------------------------------------
+# Yuklenen videonun bilgilerini alan bolum. Bilgi alinamiyorsa, video hazir
+# degil demektir. Cevap geliyorsa video hazir demektir.
+def get_status(vid):
+    try:
+        # Cevap dogru gelirse icinde asagidaki sablona uygun bir veri olacak.
+        pattern = '&lt;videoid([&circ;&lt;&gt;]+?)videoid=&quot;%s&quot;&gt;' % long(vid)
+        pattern = re.compile(pattern, re.DOTALL)
+
+        # Cevabi al.
+        socket.setdefaulttimeout(SOCKET_TIMEOUT)
+        req = urllib2.Request(&quot;%s/%s&quot; % (PAGE_STATUS, long(vid)))
+        res=urllib2.urlopen(req)
+        data=res.read()
+
+        # Cevap olumlu mu?
+        g = pattern.search(data)
+        if g:
+            result = True
+        else:
+            result = False
+    except Exception, err:
+        if DEBUG:
+            # raise
+            sys.stderr.write(str(err))
+        else:
+            sys.stderr.write(str(err))
+
+        result = False
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# Program ana bolumu
+if __name__ == '__main__':
+    try:
+        # Video ID numarasini al.
+        if len(sys.argv) &lt; 2:
+            raise NameError(&quot;Video ID tesbit edilemedi&quot;)
+        vid = sys.argv[1]
+        vid = long(vid)
+
+        # Status alinabildiyse video hazirdir. Hazirsa 1, degilse 0 yazip cik.
+        if get_status(vid):
+            sys.stdout.write(&quot;1\n&quot;)
+            sys.exit(0)
+        else:
+            sys.stdout.write(&quot;0\n&quot;)
+            sys.exit(1)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        sys.exit(1)
+</code></pre>
+</body>
+</html>

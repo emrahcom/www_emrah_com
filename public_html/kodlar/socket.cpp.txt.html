@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>socket.cpp.txt</title>
+</head>
+<body>
+<pre><code>
+using namespace std;
+
+#include &lt;iostream&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;netdb.h&gt;
+#include &lt;sys/fcntl.h&gt;
+
+#define HOST_PORT		80
+#define HOST_ADI		&quot;www.yahoo.com&quot;
+#define HOST_ISTEK		&quot;GET http://www.yahoo.com/\r\n&quot;
+
+
+int main()
+{
+	int			soket, secenek, uzunluk, alinanByte, sonuc;
+	char			buffer[512 + 1];
+	fd_set			fds;
+	struct hostent		*he;
+	struct sockaddr_in	hostAdres;
+	struct timeval		tv;
+	string			data, strbuffer, istek;
+
+	istek			= HOST_ISTEK;	// host'a gonderilecek olan istek
+	tv.tv_sec		= 30;		// soket zaman asimi suresi (saniye bolumu)
+	tv.tv_usec		= 0;		// soket zaman asimi suresi (milisaniye bolumu)
+
+	// DNS bilgilerini al
+	if ((he=gethostbyname(HOST_ADI)) == NULL) {
+		herror(&quot;gethostbyname&quot;);
+		return 1;
+	}
+
+	// baglanilacak host icin adres/port bilgilerini ata
+	hostAdres.sin_family	= AF_INET;
+	hostAdres.sin_port	= htons(HOST_PORT);
+	hostAdres.sin_addr	= *((struct in_addr *)he-&gt;h_addr);
+	bzero(&amp;(hostAdres.sin_zero),8);
+
+	// baglanti icin kullanilacak soketi olustur
+	if ((soket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		perror(&quot;socket&quot;);
+		return 2;
+	}
+	
+	// soket ile sunucuya baglan
+	if (connect(soket, (struct sockaddr *)&amp;hostAdres, sizeof(struct sockaddr)) == -1) {
+		perror(&quot;connect&quot;);
+		return 3;
+	}
+
+	// istegi, sunucuya gonder
+	// ornekte, Yahoo ana sayfasinin gonderilmesi isteniyor
+	uzunluk = istek.size();
+	if ((sonuc = send(soket, istek.c_str(), uzunluk,0)) == -1) {
+		return 4;
+	}
+
+	// buffer'i sifirla
+	bzero(buffer, 512 + 1);
+	strbuffer = &quot;&quot;;
+	data = &quot;&quot;;
+
+	// nonblocking socket kullanilacak
+	// socket secenekleri buna gore ayarlaniyor
+	// mevcut secenek bilgisi aliniyor
+	secenek = fcntl(soket, F_GETFL);
+	if (secenek &lt; 0) {
+		return 5;
+	}
+	// secenek duzenlenip yeni deger olarak ataniyor
+	secenek = (secenek | O_NONBLOCK);
+	if (fcntl(soket, F_SETFL, secenek) &lt; 0) {
+		return 6;
+	}
+
+	// soket tutamagini (socket handle), dosya tutamagi (read file descriptor) olarak ata
+	FD_ZERO(&amp;fds);
+	FD_SET(soket, &amp;fds);
+
+	// zaman asimi suresi dolana veya veri, okunma için hazir olana kadar soketi blokla
+	// -1 veya 0 gelirse, bekleme sure dolmus veya hata olusmus demektir
+	switch (sonuc = select(soket + 1, &amp;fds, NULL, NULL, &amp;tv)) {
+		case -1:
+		case 0:
+			return 7;
+			break;
+
+		default:
+			// soket, okuma için hazirsa
+			if (FD_ISSET(soket, &amp;fds)) {
+				// veriyi almadan once 3 sn bekle
+				// okumaya erken baslamak, bazi durumlarda soruna neden oluyor
+				tv.tv_sec = 3;
+				tv.tv_usec = 0;
+				sonuc = select(1, NULL, NULL, NULL, &amp;tv);
+
+				// veriyi al
+				while ((uzunluk=recv(soket, buffer, 512, 0)) &gt; 0) {
+					strbuffer = buffer;
+					alinanByte += uzunluk;
+					data += strbuffer.substr(0, uzunluk);
+				}
+			} else {
+				return 8;
+			}
+	}
+
+	// veri geldiyse ekrana yaz
+	if (data.size() &gt; 0) {
+		cout &lt;&lt; data &lt;&lt; &quot;\n&quot;;
+	} else {
+		return 9;
+	}
+
+}
+</code></pre>
+</body>
+</html>

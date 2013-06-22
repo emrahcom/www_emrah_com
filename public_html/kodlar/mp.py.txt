@@ -1,0 +1,416 @@
+#!/usr/bin/python
+
+import os
+import time
+import MySQLdb
+import movidrive
+import markem
+
+MYSQL_SUNUCU            = 'localhost'   		# MySQL sunucu adresi
+MYSQL_KULLANICI         = 'root'        		# MySQL kullanici adi
+MYSQL_PAROLA            = ''            		# MySQL kullanici parolasi
+MYSQL_VERITABANI        = 'mp'          		# MySQL veritabani adi
+SERVO_STEP		= 408.7193			# servonun 1 mm ilerlemesi icin gereken pulse
+SERVO_ARALIK		= 926				# servo home pozisyonundayken kafalar arasi aralik (mm)
+SERVO_BOSLUK		= 5				# servo ile paket arasinda ikac mm bosluk kalacagi
+SERVO_SURUCU		= 0				# servo surucu numarasi
+SERVO_BAUDRATE		= 57600				# servo surucu ile haberlesme hizi
+SERVO_PORT		= 0				# servo ile haberlesilen port
+SERVO_BYTESIZE		= 8				# servo haberlesme bytesize
+SERVO_PARITY		= 'E'				# servo haberlesme parity
+SERVO_STOPBIT		= 1				# servo haberlesme stopbit
+SERVO_TIMEOUT		= 0.20				# servo haberlesme zaman asimi suresi (sn)
+MARKEM_HOST		= '192.168.0.2'			# markem yazici adresi
+MARKEM_HOST		= 'localhost'			# markem yazici adresi
+MARKEM_PORT		= 10001				# markem yazici TCP portu
+MARKEM_NODE		= 1				# markem yazici node adresi
+BEKLEME_DONGU		= 0.20				# hatta paket yoksa ne kadar saniye sonra hatta bakacagi
+BEKLEME_PAKET_GECIS	= 2.00				# paketin hattan gecis suresi (sn)
+BASE			= '/home/kullanici/urunler'	# etiket dosyalarinin oldugu ana klasor
+
+
+
+# --------------------------------------
+# barkod okuma servisini durdurur
+def stop_barkod():
+	try:
+		# aciksa barkod servis(ler)inin process numarasini al
+		plist = os.popen("ps aux | grep -i barkod.py | grep -v grep | awk '{print $2}'")
+
+		# tesbit edilen her processi sonlandir
+		for pid in plist:
+			os.system('kill %d' % int(pid))
+
+		return True
+	except:
+		return False
+
+
+
+# --------------------------------------
+# barkod okuma servisini baslat
+def start_barkod():
+	try:
+		os.system('./barkod.py &')
+
+		return True
+	except:
+		return False
+
+
+
+# --------------------------------------
+# baslangic ayarlarini set eder
+def initialize():
+	try:
+		cnn = MySQLdb.connect(host=MYSQL_SUNUCU,user=MYSQL_KULLANICI,passwd=MYSQL_PAROLA,db=MYSQL_VERITABANI)
+		crs = cnn.cursor(MySQLdb.cursors.DictCursor)
+		# bekliyor gorunen paket kayitlarini, bekleme durumundan cikar
+		# sistem basladiginda hatta paket olmamasi lazim
+		sql = """UPDATE hat01 
+			SET hat01_durum = '12' 
+			WHERE hat01_durum in (0, 1)"""
+		crs.execute(sql)
+
+		# ana donguyu baslat
+		sql = """UPDATE ayar 
+			SET ayar_devam_mi = '1'"""
+		crs.execute(sql)
+		cnn.close()
+
+		return True
+	except:
+		return False
+
+
+
+# --------------------------------------
+# sistem calismaya devam etsin mi
+def devam_mi():
+	try:
+		cnn = MySQLdb.connect(host=MYSQL_SUNUCU,user=MYSQL_KULLANICI,passwd=MYSQL_PAROLA,db=MYSQL_VERITABANI)
+		crs = cnn.cursor(MySQLdb.cursors.DictCursor)
+		sql = """SELECT ayar_devam_mi 
+			FROM ayar 
+			LIMIT 1"""
+		crs.execute(sql)
+		rst =crs.fetchone()
+		cnn.close()
+
+		if rst:
+			return rst['ayar_devam_mi']
+		else: 
+			raise RuntimeError
+	except:
+		return False
+
+
+
+# --------------------------------------
+# hatta giren siradaki paketin bilgilerini alir
+def siradaki_paket():
+	try:
+		cnn = MySQLdb.connect(host=MYSQL_SUNUCU,user=MYSQL_KULLANICI,passwd=MYSQL_PAROLA,db=MYSQL_VERITABANI)
+		crs = cnn.cursor(MySQLdb.cursors.DictCursor)
+		sql = """SELECT hat01_id, hat01_barkod 
+			FROM hat01 
+			WHERE hat01_durum = 0
+			ORDER BY hat01_zaman 
+			LIMIT 1"""
+		crs.execute(sql)
+		rst =crs.fetchone()
+		cnn.close()
+
+		if rst:
+			return (rst['hat01_id'], rst['hat01_barkod'])
+		else: 
+			raise RuntimeError
+	except:
+		return (0, '')
+
+
+
+# --------------------------------------
+# paketin durumunu set et
+def set_paket_durum(id, durum):
+	try:
+		cnn = MySQLdb.connect(host=MYSQL_SUNUCU,user=MYSQL_KULLANICI,passwd=MYSQL_PAROLA,db=MYSQL_VERITABANI)
+		crs = cnn.cursor(MySQLdb.cursors.DictCursor)
+		# paketin durumunu isle
+		sql = """UPDATE hat01
+			SET hat01_durum = '%d'
+			WHERE hat01_id = '%d'
+			""" % (durum, id)
+		crs.execute(sql)
+		cnn.close()
+
+		return True
+	except:
+		return False
+
+
+
+# --------------------------------------
+# servoyu pozisyonlar
+#	s	-> servo nesnesi
+#	p	-> pozisyon
+def servo_pozisyon(s, p):
+	try:
+		# servoyu pozisyonla
+		s.iposYaz(130, p)
+		s.iposYaz(135, 1)
+		time.sleep(0.010)
+		s.iposYaz(135, 0)
+
+		return True
+	except:
+		return False
+
+
+
+# --------------------------------------
+# hattaki pakete gore servoyu pozisyonla
+#	s	-> servo nesnesi
+#	id	-> hattaki paketin id numarasi
+#	barkod	-> hattaki paketin barkodu
+def servo_pozisyonla(s, id, barkod):
+	try:
+		cnn = MySQLdb.connect(host=MYSQL_SUNUCU,user=MYSQL_KULLANICI,passwd=MYSQL_PAROLA,db=MYSQL_VERITABANI)
+		crs = cnn.cursor(MySQLdb.cursors.DictCursor)
+		# paketin bilgilerini al
+		sql = """SELECT paket_en
+			FROM paket
+			WHERE paket_barkod = '%s'
+			""" % barkod
+		crs.execute(sql)
+		rst =crs.fetchone()
+
+		# paketin kaydi bulunduysa
+		if rst:
+			# servoyu paket genisligine gore pozisyonla
+			pozisyon	= SERVO_ARALIK - int(rst['paket_en']) - SERVO_BOSLUK
+			pozisyon	= int(pozisyon * SERVO_STEP)
+			if pozisyon < 0: 
+				# paketin durumunu 'hatali genislik' yap
+				durum		= 14
+				cevap		= False
+				pozisyon	= 0
+			else:
+				# paketin durumunu 'islemi yapiliyor' yap
+				durum		= 1
+				cevap		= True
+
+		# paketin kaydi bulunamadiysa
+		else: 
+			# paketin durumunu 'tanimlanamadi' yap
+			durum		= 11
+			cevap		= False
+			# servoyu 0 noktasina pozisyonla
+			pozisyon	= 0
+
+		# paketin durumunu isle
+		sql = """UPDATE hat01
+			SET hat01_durum = '%d'
+			WHERE hat01_id = '%d'
+			""" % (durum, id)
+		crs.execute(sql)
+		cnn.close()
+
+		# servoyu pozisyonla
+		servo_pozisyon(s, pozisyon)
+
+		return cevap
+	except:
+		return False
+# --------------------------------------
+# barkodu verilen urunun lbx dosyasinin adini bulur
+def lbxBul(barkod):
+	try:
+		# bu pakete ait klasorden .lbx dosyasini bul
+		path = '%s/%s/' % (BASE, barkod)
+		liste = os.listdir(path)
+		for l in liste:
+			if l[-4:] == '.lbx':
+				return l[:-4]
+
+		# bulunamadiysa
+		return None
+	except:
+		return None
+
+
+
+# --------------------------------------
+# barkodu verilen urunun dosyalarini yukle
+def yazici_yukle(yazici, barkod, lbx, lbxlist):
+	cevap	= False
+	tur	= 0
+
+	# bu etiket zaten yazicida yuklu ise islem yapmadan cik
+	if lbxlist.count(lbx): return True
+
+	try:
+		# bu pakete ait klasorden .lbx dosyasini bul
+		path = '%s/%s' % (BASE, barkod)
+		node = '%s/%s.lbx' % (path, lbx)
+
+		# label dosyasini yukle (hata olursa bi daha dene)
+		while tur < 2:
+			tur += 1
+			# bu bi dosya ise dene
+			if os.path.isfile(node):
+				# dosya gonderilebildiyse True dondur
+				if yazici.dosyaGonder(node):
+					lbxlist.append(lbx)
+					return True
+			# dosya degilse hata var demektir
+			else: raise RuntimeError
+
+			# yuklemelerden biri basarisiz olduysa
+			# yazici hafizasini bosalt ve yeniden yukleme yapmayi dene
+			lbxlist = []
+			yazici.gonderC8()
+
+		# yukeleme yapamadan donguden cikmis, hata var demektir
+		raise RuntimeError
+	except:
+		return False
+
+
+
+# --------------------------------------
+# gecis suresi dolana kadar bekletir
+# t zamani, gecisin basladigi zaman
+def gecis_bekle(t):
+	try:
+		# su ana kadar gecen zamani ve kalan bekleme suresini bul
+		t1	= time.time()
+		dt	= t1 - t
+		kalan	= BEKLEME_PAKET_GECIS - dt
+		# kalan sure kadar bekle
+		if kalan > 0 : time.sleep(kalan)
+
+		return True
+	except:
+		return False
+
+
+
+# --------------------------------------
+# barkodu verilen urunu yazicida secili hale getirir
+def etiket_sec(mark, label):
+	try:
+		return mark.gonderC5(label)
+	except:
+		return False
+
+
+
+# --------------------------------------
+# yazicinin baski adet sayacinin degerini dondurur
+def toplamAdetiAl(mark):
+	tur = 0
+	try:
+		# deneme hakki bitene kadar sayaci okumaya calis
+		while not (mark.gonderAB() and  (mark.res.AC_total_count > 0)) and (tur < 10): tur += 1
+		# okunan degeri dondur
+		return mark.res.AC_total_count
+	except:
+		return 0
+
+
+
+# --------------------------------------
+# barkod okuma servisi calisiyorsa, kapat
+stop_barkod()
+# servo surucu nesnesi
+servo		= movidrive.MoviLink()
+servo.surucu	= SERVO_SURUCU
+servo.baudrate	= SERVO_BAUDRATE
+servo.port	= SERVO_PORT
+servo.bytesize	= SERVO_BYTESIZE
+servo.parity	= SERVO_PARITY
+servo.stopbit	= SERVO_STOPBIT
+servo.timeout 	= SERVO_TIMEOUT
+# markem yazici nesnesi
+mark		= markem.cimCommsEth()
+mark.host	= MARKEM_HOST
+mark.port	= MARKEM_PORT
+mark.node	= MARKEM_NODE
+# baslangicta yazici veritabanini temizle
+mark.gonderC8()
+lbxlist = []
+# baslangic ayarlarini set et
+initialize()
+# barkod okuma servisini baslat
+start_barkod()
+
+# ana dongu
+while devam_mi():
+	# bu paket icin islem baslama saati
+	t0 = time.time()
+	# siradaki paketin bilgilerini al
+	(paket_id, paket_barkod) = siradaki_paket()
+	# paket varsa
+	if paket_id:
+		# servoyu pozisyona gonder. eger paket tanimlanamadiysa
+		if not servo_pozisyonla(servo, paket_id, paket_barkod):
+			# paket gecene kadar bekleyip sonra dongunun basina don
+			gecis_bekle(t0)
+			continue
+
+		# tanimlanmis dosya ise .lbx dosyasinin adini bul
+		# dosya bulunamadiysa hata var demektir
+		label = lbxBul(paket_barkod)
+		if not label:
+			# paket durumunu 'label bulunamadi' yap
+			set_paket_durum(paket_id, 13)
+			# paket gecene kadar bekleyip sonra dongunun basina don
+			gecis_bekle(t0)
+			continue
+		# tanimlanmis paket ise dosyalarini yukle, yukleme basarisiz olursa
+		if not yazici_yukle(mark, paket_barkod, label, lbxlist):
+			# paket durumunu 'hata olustu' yap
+			set_paket_durum(paket_id, 11)
+			# paket gecene kadar bekleyip sonra dongunun basina don
+			gecis_bekle(t0)
+			continue
+
+		# basilacak etiketi sec
+		# etiket secildigi halde bazen A2 donduruyor. Bu nedenle cevabi dikkate alma
+		etiket_sec(mark, label)
+#		if not etiket_sec(mark, label):
+#			# label secilemezse hata var demektir
+#			set_paket_durum(paket_id, 13)
+#			# paket gecene kadar bekleyip sonra dongunun basina don
+#			gecis_bekle(t0)
+#			continue
+
+		# baski sayacini al
+		sayac0 = toplamAdetiAl(mark)
+
+		# yazici yazana veya paket gecis suresi dolana kadar bekle
+		while True:
+			# kontrol etmeden once kisa bir sure bekle
+			time.sleep(0.200)
+			# baski adeti artti ise yazmis demektir, donguden cik
+			sayac1 = toplamAdetiAl(mark)
+			if sayac1 > sayac0:
+				sayac0 = sayac1
+				break
+			# zaman asimi suresi dolduysa yazma icin daha bekleme
+			if (time.time() - t0) > BEKLEME_PAKET_GECIS: break
+
+		# etiket secimini iptal et
+		# olmayan bir etiket seciliyor
+		etiket_sec(mark, '00000000000000000000')
+
+		# paket durumunu 'isi bitti' yap
+		set_paket_durum(paket_id, 2)
+
+	# paket yoksa bi muddet bekle
+	else:
+		time.sleep(BEKLEME_DONGU)
+
+# barkod okuma servisini kapat
+stop_barkod()

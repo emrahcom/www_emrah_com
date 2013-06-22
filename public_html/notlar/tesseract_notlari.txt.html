@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>tesseract_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# TESSERACT NOTLARI
+# -----------------------------------------------------------------------------
+
+Debian Squeeze için Tesseract 3.x notları
+
+# Kurulum
+	aptitude install autogen autoconf automake libtool
+
+	- leptonica
+	http://www.leptonica.com/download.html
+		wget http://www.leptonica.com/source/leptonica-1.69.tar.gz
+		tar zxf leptonica-1.69.tar.gz
+		cd leptonica-1.69
+		./configure
+		make
+		su
+		make install
+		ldconfig
+		exit
+
+	- tesseract
+	http://code.google.com/p/tesseract-ocr/downloads/list
+		wget http://code.google.com/p/tesseract-ocr/downloads/detail?name=tesseract-3.01.tar.gz
+		tar zxf tesseract-3.01.tar.gz
+		cd tesseract-3.01
+		./autogen
+		./configure
+		make
+		su
+		make install
+		ldconfig
+		exit
+
+	- Dil dosyası
+		su
+		cd /usr/local/share/tessdata/
+		wget http://code.google.com/p/tesseract-ocr/downloads/detail?name=tur.traineddata.gz
+		wget http://code.google.com/p/tesseract-ocr/downloads/detail?name=eng.traineddata.gz
+		gunzip tur.traineddata.gz
+		gunzip eng.traineddata.gz
+
+
+# Kullanım
+	tesseract resim.jpg output.txt -l tur
+
+
+# Kaynaklar
+	training: http://code.google.com/p/tesseract-ocr/wiki/TrainingTesseract3
+
+
+
+# -----------------------------------------------------------------------------
+# HOCR NOTLARI
+# -----------------------------------------------------------------------------
+
+# Kurulum
+	aptitude install exactimage
+
+
+
+# Kullanım
+	tesseract resim.jpg output.txt -l tur hocr
+	hocr2pdf -i resim.tif -o output.pdf &lt; output.html
+</code></pre>
+</body>
+</html>

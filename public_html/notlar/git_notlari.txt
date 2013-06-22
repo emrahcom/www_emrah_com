@@ -1,0 +1,293 @@
+GIT NOTLARI
+-----------
+
+- kaynaklar
+
+	http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
+	https://we.riseup.net/debian/git-development-howto
+	http://sitaramc.github.com/gitolite/doc/1-INSTALL.html (gitolite kurulum)
+	http://sitaramc.github.com/gitolite/doc/2-admin.html  (gitolite yönetim)
+	http://marklodato.github.com/visual-git-guide/index-en.html
+
+
+
+- yükleme
+
+	aptitude install git-core gitk git-gui
+
+
+
+- kullanıcı bilgileri
+	
+	git config --global user.name "emrah"
+	git config --global user.email "emrah@mail.com"
+	git config --list
+	cat ~/.gitconfig
+
+
+- yerel depo
+
+	- komutlar
+		git init
+		vim .gitignore
+		git add file(s)
+		git add .		# butun degisen ve yeni dosyalari guncellenecekler listesine ekle
+		git add -u		# degisiklik olmus veya silinmis dosyalari guncellenecekler listesine ekle
+		git commit -m 'not'	# guncelle
+		git diff		# son guncelleme ve mevcut durum arasindaki farklar
+		git status		# degisen dosyalar
+		git log			# guncelleme gecmisi
+
+	- örnek
+
+		mkdir src
+		cd src
+		touch file1
+		touch file2
+		touch file3
+		git init
+		echo file3 > .gitignore
+
+		git status
+		git add .
+		git status
+		git commit -m 'ilk commit notu'
+		git status
+		git log
+
+		echo 'xxx' >> file1
+		git diff HEAD	(veya sadece git diff)
+		git add file1
+		git commit -m 'ikinci commit notu'
+		git log
+
+
+- uzak depo
+
+	- ana depoyu oluşturmak
+	  --bare ile oluşturulan depoda doğrudan değişiklik yapılamaz.
+		cd
+		mkdir depo
+		cd depo
+		git --bare init
+
+	- depoyu klonlamak
+		cd
+		mkdir yerel
+		cd yerel
+		git clone ~/depo proje1			# ayni dosya sisteminde
+		git ssh://adres:port/~/depo proje1	# ssh ile
+	
+	- son değişiklikleri ana depodan almak
+		cd ~/yerel/proje1
+		git pull
+
+	- değişiklik yapıp ana depoya yükleme
+		cd ~/yerel/proje1
+		(değişiklikleri yap)
+		git add .
+		git commit -m 'degisiklik yapildi'
+		git pull
+		# sorun yoksa
+		git push origin master
+
+
+- eski surumlere ulaşmak
+
+	git log file1
+	git show 0323e5918144ec29a069c7ab23cac40ed921d31d:file1
+	git show HEAD:file1
+	git show HEAD~2:file1
+
+
+	git tag v0.1 0323e5918144ec29a069c7ab23cac40ed921d31d
+	git show v0.1:file1
+	git show v0.1:file2
+
+
+	vim file1
+	git reset file1
+	rm file1
+	git checkout -f file1
+
+
+- Yapılan değişikliği geri almak
+	- Son değişiklikleri iptal edip HEAD'e dönmek.
+	git reset -- hard HEAD
+
+	- Sadece bir dosyayı, depodaki haline geri döndürmek
+	git checkout -- dosya
+	git checkout HEAD dosya
+
+	- Son yapılan commit'i geri alma.
+	git revert HEAD
+
+
+- branch ile çalışma
+	- branch oluşturma
+		git branch test
+
+	- branc listesi
+		git branch
+
+	- branch değiştirme
+		git checkout test
+		git checkout master
+
+	- branch merge
+		git checkout test
+		git commit -a
+		git checkout master
+		git commit -a
+		git merge test
+
+	- branch silme
+		git branch -d test
+
+
+- depoyu klonlamak (klasör henuz yok, emc2-dev adıyla oluşacak)
+	git clone git://git.linuxcnc.org/git/emc2.git emc2-dev
+
+- depodan son değişiklikleri almak
+	git pull --rebase
+
+- kendi değişikliklerimizi depoya yüklemek
+	(yaptıklarımız yerel depoya commit edilecek)
+	git pull --rebase
+	(çakışma varsa düzeltilecek)
+	git push
+
+- henüz yayınlanmaya hazır değişikliklerimiz varken depodan güncelleme
+	git stash save
+	git pull --rebase
+	git stash apply
+
+
+
+- Gitolite sunucu ayarları
+	- Kurulum
+	aptitude install gitolite
+
+	- Gitolite home klasörünü değiştirmek (normalde /var/lib/gitolite)
+	mkdir /home/gitolite
+	chown gitolite: /home/gitolite
+	vim /etc/passwd
+		gitolite home klasörü -> /home/gitolite
+
+	- Gitolite kullanıcısı için ssh erişim izni.
+	vim /etc/ssh/sshd_config
+		AllowUsers emrah gitolite
+
+	- Gitolite admin kullanıcısı ve admin deposu
+	cp emrah.pub /tmp/
+	chmod a+r /tmp/emrah.pub
+	su -l gitolite
+	gl-setup /tmp/emrah.pub
+
+
+
+- Gitolite admin ayarları (admin makinesi)
+	- Anahtarı yükleme
+	ssh-add .ssh/emrah
+
+	- Gitolite admin deposunu klonlama (SSH 22. port ile)
+	git clone ssh://gitolite@10.10.10.10:22/gitolite-admin
+	cd gitolite-admin
+	git pull
+
+	- Kullanıcı ve depo ekleme
+	Kullanıcının public anahtari alınır ve kullanıcının adı ile kaydedilir.
+	depo1 adlı depoda kullanici1'in yazma/okuma, kullanici2'nin sadece okuma hakkı
+	olacaksa:
+
+	cp kullanici1.pub gitolite-admin/keydir/
+	cp kullanici2.pub gitolite-admin/keydir/
+	vim gitolite-admin/conf/gitolite.conf
+		repo	depo1
+			RW+ = kullanici1
+			R = kullanici2
+
+	git status
+	git add .
+	git commit -m 'depo1, kullanici1 ve kullanici2 eklendi'
+	git push
+		
+
+
+- Kullanıcı
+	- Anahtarı yükleme
+	ssh-add .ssh/kullanici1
+
+	- Depo boşken ilk kullanıldığında
+	git clone ssh://gitolite@10.10.10.10:22/depo1
+	cd depo1
+	touch OKUBENI
+	git add .
+	git commit -m "depo1 olusturuldu"
+	git push origin master
+
+	- Depoyu klonlama
+	git clone ssh://gitolite@10.10.10.10:22/depo1
+	cd depo1
+	git pull
+
+	- Depodan son değişiklikleri alma
+	git pull
+
+	- Yapılan değişikliklerin depoya yüklenmesi
+	git status	# degisen dosyalar
+	git diff	# farkliliklari gormek icin
+	git add .	# commit listesine ekleme
+	git commit -m 'aciklama'   # yerel depoyu guncelleme
+	git push	# ana depoyu guncelleme
+
+	- Yapılan değişiklikleri yerel depomuzda saklayıp ana depodaki
+	son hale dönme
+	git stash save
+	git stash list
+	git stash drop stash@{0}  # Sakladığımız değişikliği silme
+	git stash clear		  # Sakladığımız bütün değişiklikleri silme
+	git stash apply stash@{0} # Sakladığımız değişikliği tekrardan uygulama
+	git stash pop		  # Sakladığımız son değişikliği uygulama
+
+
+
+- Gitweb
+Sadece parolayı bilen kullanıcılar gitweb arayüzünü kullanbilecek.
+
+	- Kurulum
+	aptitude install gitweb
+
+	- Ayarlar
+		. /etc/gitweb.conf
+			#$projectroot = "/var/cache/git";
+			$projectroot = "/home/gitolite/repositories";
+
+		. www-data kullanıcısı gitolite grubuna
+			adduser www-data gitolite
+
+		. Group için gitolite depolarını okuma hakkı
+			/home/gitolite/.gitolite.rc
+				$REPO_UMASK = 0027;
+
+		. Gitweb için .htaccess düzenleme izni
+			/etc/apache2/conf.d/gitweb
+				AllowOverride AuthConfig Options
+
+		. .htaccess dosyasının oluşturulması
+			/usr/share/gitweb/.htaccess
+				AuthUserFile    /home/gitolite/htaccess/htpasswd
+				AuthType        Basic
+				AuthName        "..."
+				Require		valid-user
+
+		. htpasswd dosyasının oluşturulması
+			su -l gitolite
+			mkdir /home/gitolite/htaccess
+			cd /home/gitolite/htaccess
+			htpasswd -sc htpasswd kullanici1	# ilk kullanici icin
+			htpasswd -s htpasswd kullanici2
+			chmod 750 /home/gitolite/htaccess
+			chmod 640 /home/gitolite/htaccess/htpasswd
+				
+				

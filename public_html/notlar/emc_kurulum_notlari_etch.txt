@@ -1,0 +1,162 @@
+Bu notlar, Debian Etch içindir. 
+	- Masaüstü uygulamalarının kurulduğu
+	- Çekirdeğin, RTAI yaması ile gerektiği gibi yamalandığı
+	- linux-headers, rtai-modules ve rtai-dev paketlerinin yüklenmiş olduğu 
+varsayılmıştır.
+
+
+
+* Paralel port modülünün bilgisayar açıldığında yüklenmesi için
+
+	echo install parport_pc /bin/true >/etc/modprobe.d/emc2
+	
+	
+
+* Gerekli paketlerin yüklenmesi
+
+	apt-get install	python
+				-> blt
+				-> tk8.4
+				
+			python-imaging
+			python-imaging-tk
+			python-numarray
+			python-dev
+				-> python2.4-dev
+				
+			tcl8.4-dev
+			tk8.4-dev
+				-> libice-dev
+				-> libsm-dev
+				-> libx11-dev
+				-> libxau-dev
+				-> libxdmcp-dev
+				-> libxext-dev
+				-> libxt-dev
+				-> x-dev
+				-> x11proto-core-dev
+				-> x11proto-input-dev
+				-> x11proto-kb-dev
+				-> x11proto-xext-dev
+				-> xtrans-dev
+
+			yapps2
+				-> yapps2-runtime
+
+			libgtk2.0-dev
+				-> libatk1.0-dev
+				-> libcairo2-dev
+				-> libexpat1-dev
+				-> libfontconfig1-dev
+				-> libfreetype6-dev
+				-> libglib2.0-dev
+				-> libpango1.0-dev
+				-> libpng12-dev
+				-> libxcursor-dev
+				-> libxfixes-dev
+				-> libxft-dev
+				-> libxi-dev
+				-> libxinerama-dev
+				-> libxrandr-dev
+				-> libxrender-dev
+				-> pkg-config
+				-> x11proto-fixes-dev
+				-> x11proto-randr-dev
+				-> x11proto-render-dev
+				-> x11proto-xinerama-dev
+				-> zliblg-dev
+
+			libpth-dev
+				-> libpth20
+				
+			libreadline5-dev
+			libxmu-dev
+				-> libxmu-headers
+
+			libxaw7-dev
+				-> libxaw-headers
+				-> libxpm-dev
+
+			xlibmesa-gl-dev
+				-> libgl1-mesa-dev
+				-> libgl1-mesa-dri
+				-> mesa-common-dev
+
+			xlibmesa-glu
+			libglu1-mesa-dev
+			pciutils-dev
+			bwidget
+			cvs
+			latex2html
+				-> libnetpbm10
+				-> libt1-5
+				-> netpbm
+				-> perl-doc
+				-> tetex-base
+				-> tetex-bin
+				-> tetex-extra
+				-> tex-common
+
+			preview-latex-style
+			latex-xft-fonts
+			libaiksaurus-1.2-0c2a
+				-> libaiksaurus-1.2-data
+
+			libgnomeprintui2.2-dev
+				-> libxml2-dev
+				-> libart-2.0-dev
+				-> libgnomecanvas2-dev
+				-> libgnomeprint2.2-dev
+
+			imagemagick
+				-> libmagick9
+				-> libjasper-1.701-1
+
+			lyx
+				-> groff
+				-> libqt3-mt
+				-> libtiff-tools
+				-> lyx-common
+				-> lyx-qt
+				-> xdg-utils
+
+
+
+* EMC2 için CVS klasörünün oluşturulması ve güncellenmesi
+
+	- CVS klasörünü oluşturma
+	  CVS klasörü daha önceden oluşturulduysa, bu işlemi yeniden yapmaya gerek yok
+	
+		mkdir proje
+		cd proje
+		mkdir emc2
+		cd emc2
+		cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs co -rHEAD -dhead emc2
+
+
+	- CVS klasörünün güncellenmesi
+	
+		cd ~/proje/emc2
+		cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs update -dP head
+
+
+
+* Kaynak kodunun derlenmesi
+
+	cd ~/proje/emc2
+	rm `date +%Y%m%d` -rf
+	cp head `date +%Y%m%d` -R
+	cd `date +%Y%m%d`/src
+	./configure --enable-run-in-place --enable-build-documentation
+	make
+	su -c "make setuid"
+
+	
+
+* EMC2'nin çalıştırılması
+
+	cd ~/proje/emc2/`date +%Y%m%d`
+	./scripts/emc
+
+
+

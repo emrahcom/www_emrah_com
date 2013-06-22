@@ -1,0 +1,484 @@
+<?
+
+function guvenliHtml ($metin) {
+	global $baslangic;
+	$konumK			= 0;			# < (Kucuktur) karakterinin goruldugu son konum
+	$konumB			= 0;			# > (Buyuktur) karakterinin goruldugu son konum
+	$tag_mi			= False;		# tag icerisinde miyiz? 
+	$ozellikSablon		= '';			# ozellik=deger formatindaki aramalar icin kullanilacak global
+	$tagTablosu		= array();		# tag bilgilerinin yer alacagi global
+	$ozellikTablosu		= array();		# ozellik (attribute) bilgilerinin yer alacagi global
+	$degerTablosu		= array();		# deger (value) bilgilerinin yer alacagi global
+
+	# global degiskenlerin degerlerini set et
+	guvenliGlobal();
+	
+	# metni islemeden once yapilan on duzeltme islemi
+	$metin = onDuzeltme($metin);
+	
+	$i	= 0;
+	$buffer	= '';
+	$konumK = strpos($metin, '<', $i);	# < karakterinin rastlandigi ilk konum
+	$konumB = strpos($metin, '>', $i);	# > karakterinin rastlandigi ilk konum
+
+	# metin icindeki tag'lari tara
+	while (True) {
+		# eger < karakterine daha once rastlandiysa
+		# veya < karakteri bulundu ama > karakteri bulunamadiysa
+		if (($konumK !== False && $konumK < $konumB) || ($konumK !== False && $konumB === False)) {
+			#tag icerisindeysek
+			if ($tag_mi) {
+				# tag icinde < olamayacagi icin tag sandigimiz kismin 
+				# basindaki < karakterini &lt; ifadesine cevir
+				$buffer .= '&lt;' . substr($metin, $i, $konumK - $i);
+				
+			# tag icerisinde degilsek
+			} else {
+				# 
+				$buffer .= substr($metin, $i, $konumK - $i);
+			}
+			
+			$i	= $konumK + 1;
+			$konumK = strpos($metin, '<', $i);
+			# tag baslat
+			$tag_mi	= True;
+				
+		# eger > karakterine daha once rastlandiysa
+		# veya > karakteri bulundu ama < karakteri bulunamadiysa
+		} elseif (($konumB !== false && $konumK > $konumB) || ($konumK === False && $konumB !== False)) {
+			# tag icerisindeysek
+			if ($tag_mi) {
+				# duzeltilmis tag'i ekle
+				$buffer .= guvenliTag(substr($metin, $i, $konumB - $i));
+
+				# tag'i kapat
+				$tag_mi		= False;
+				
+			# tag icerisinde degilsek
+			} else {
+				# buraya kodar olan kismi al
+				# ve > karakterini &gt; ifadesine cevir
+				$buffer .= substr($metin, $i, $konumB - $i) . '&gt;';
+			}
+
+			$i	= $konumB +1;
+			$konumB	= strpos($metin, '>', $i);
+		
+		# eger < veya > karakterine rastlanmadiysa
+		} else {
+			# tag icerisindeysek
+			if ($tag_mi) {
+				# son rastlanan < karakterini &lt; ifadesine cevir
+				# ve metnin devamini buffer'a ekle
+				$buffer .= '&lt;' . substr($metin, $i);
+			} else {
+				# son kalinan konumdan itibaren metnin devamini buffer'a ekle
+				$buffer .= substr($metin, $i);
+			}
+
+			# artik tag kalmadigina gore donguden cik
+			break;
+		}
+	}
+
+	return $buffer;
+}
+
+
+
+# --------------------------------------------------------------------------------------------------
+function onDuzeltme($metin) {
+	$degisiklikOncesi = '';
+
+	# degistirilmesi gereken bolum oldugu surece devam et
+	while ($degisiklikOncesi != $metin) {
+
+		$degisiklikOncesi = $metin;
+
+		# &#xx formatinda yazilmis bazi karakterler, ASCII karsiliklarina cevriliyor
+		# bazi tag'lar ve icerikleri atiliyor
+		$metin = preg_replace('/<!--.*?-->/si', '', $metin);
+		$metin = preg_replace('/<head[>\s]+.*?<\/head>/si', '', $metin);
+		$metin = preg_replace('/<script[>\s]+.*?<\/script>/si', '', $metin);
+		$metin = preg_replace('/<applet[>\s]+.*?<\/applet>/si', '', $metin);
+		$metin = preg_replace('/<object[>\s]+.*?<\/object>/si', '', $metin);
+		$metin = preg_replace('/<frameset[>\s]+.*?<\/frameset>/si', '', $metin);
+		$metin = preg_replace('/<iframe[>\s]+.*?<\/iframe>/si', '', $metin);
+		$metin = preg_replace('/<title[>\s]+.*?<\/title>/si', '', $metin);
+		$metin = preg_replace('/<style[>\s]+.*?<\/style>/si', '', $metin);
+		$metin = preg_replace('/(&#0*38;)|(&#0*38(?![0-9A-F]))|(&#x0*26;)|(&#x0*26(?![0-9A-F]))/i', '&', $metin);
+		$metin = preg_replace('/(&#0*35;)|(&#0*35(?![0-9A-F]))|(&#x0*23;)|(&#x0*23(?![0-9A-F]))/i', '#', $metin);
+		$metin = preg_replace('/(&#0*34;)|(&#0*34(?![0-9A-F]))|(&#x0*22;)|(&#x0*22(?![0-9A-F]))/i', '"', $metin);
+		$metin = preg_replace('/(&#0*39;)|(&#0*39(?![0-9A-F]))|(&#x0*27;)|(&#x0*27(?![0-9A-F]))/i', '\'', $metin);
+		$metin = preg_replace('/(&#0*60;)|(&#0*60(?![0-9A-F]))|(&#x0*3C;)|(&#x0*3C(?![0-9A-F]))/i', '<', $metin);
+		$metin = preg_replace('/(&#0*62;)|(&#0*62(?![0-9A-F]))|(&#x0*3E;)|(&#x0*3E(?![0-9A-F]))/i', '>', $metin);
+		$metin = preg_replace('/(&#0*58;)|(&#0*58(?![0-9A-F]))|(&#x0*3A;)|(&#x0*3A(?![0-9A-F]))/i', ':', $metin);
+		$metin = preg_replace('/(&#0*47;)|(&#0*47(?![0-9A-F]))|(&#x0*2F;)|(&#x0*2F(?![0-9A-F]))/i', '/', $metin);
+		$metin = preg_replace('/(&#0*61;)|(&#0*61(?![0-9A-F]))|(&#x0*3D;)|(&#x0*3D(?![0-9A-F]))/i', '=', $metin);
+		#$metin = preg_replace('/(&#0*63;)|(&#0*63(?![0-9A-F]))|(&#x0*3F;)|(&#x0*3F(?![0-9A-F]))/i', '?', $metin);
+		#$metin = preg_replace('/(&#0*37;)|(&#0*37(?![0-9A-F]))|(&#x0*25;)|(&#x0*25(?![0-9A-F]))/i', '%', $metin);
+		#$metin = preg_replace('/(&#0*46;)|(&#0*46(?![0-9A-F]))|(&#x0*2E;)|(&#x0*2E(?![0-9A-F]))/i', '.', $metin);
+	}
+
+	return $metin;
+}
+
+
+
+# --------------------------------------------------------------------------------------------------
+function guvenliTag ($metin) {
+	global $tagTablosu;
+	$slash = False;
+
+	# son karakter / ise
+	if (preg_match('/\s\/$/', $metin)) {
+		$metin = substr($metin, 0, strlen($metin)-1);
+		$slash = True;
+	}
+	
+	if (preg_match('/^(\/?)([^\s]*)\s*$/i', $metin, $grup) 			# <tag> veya </tag> veya <tag /> formatindaysa
+		&& !($grup[1] && $slash)					# ayni anda </ ve /> yoksa 
+		&& array_key_exists(strtolower($grup[2]), $tagTablosu)) {	# tag, $tagTablosu'nda varsa
+		# 1. benzerlik, varsa bastaki / karakterini
+		# 2. benzerlik, tag'i verir
+		
+		# <tag /> formatindaysa
+		if ($slash) {
+			$metin = '<' . $grup[2] . ' />';
+
+		# <tag> veya </tag> formatindaysa
+		} else {
+			$metin = '<' . $grup[1] . $grup[2] . '>';
+		}
+		
+		return $metin;
+
+	} elseif (preg_match('/([^\s]+)\s*(.*)$/si', $metin, $grup)		# <tag ozellik1="deger1" ... ozellikN="degerN"> formatindaysa
+		&& array_key_exists(strtolower($grup[1]), $tagTablosu)) {	# tag, $tagTablosu'nda varsa
+		# 1. benzerlik, tag'i
+		# 2. benzerlik, ozellikler listesini verir
+		$metin	= '<' . $grup[1];
+		$metin	.= guvenliOzellikler($grup[2], $tagTablosu[strtolower($grup[1])]);
+		
+		if ($slash) {
+			$metin .= ' />';
+		} else {
+			$metin .= '>';
+		}
+
+		return $metin;
+	}
+	
+	# tag gecersiz. tag yerine 1 bosluk dondur 
+	# '' dondurmeyin, yoksa guvenlik acigi olusur
+	return ' ';
+}
+
+
+
+# --------------------------------------------------------------------------------------------------
+function guvenliOzellikler ($ozellikler, $izin_verilenler) {
+	global $ozellikSablon, $ozellikTablosu, $degerTablosu;
+	
+	$temp_ozellikler = '';
+
+	# ozellik veya ozellik=deger formatina rastlandigi surece devam et
+	while (preg_match($ozellikSablon, $ozellikler,$grup)) {
+
+		# 1. benzerlik, ozelligi...
+		# 2. 3. veya 4. benzerlik, degeri...
+		# 5. benzerlik, geri kalan ozellikler listesini verir
+		$ozellikler = $grup[5];
+
+		# bu ozellik, bu tag icin izin verilen ozellikler listesindeyse...
+		# bu ozellik, HTML standartlarina uygun ozellikler listesindeyse...
+		if (in_array(strtolower($grup[1]), $izin_verilenler) && array_key_exists(strtolower($grup[1]), $ozellikTablosu)) {
+			# bu ozelligin deger almasi gerekiyorsa
+			if ($ozellikTablosu[strtolower($grup[1])]) {
+				# degerin sablona uyup uymadigini kontrol et
+				preg_match($degerTablosu[$ozellikTablosu[strtolower($grup[1])]][0], $grup[2]|$grup[3]|$grup[4], $grup2);
+
+				# sablona uygun deger bulunduysa...
+				# ve yasaklilar sablonuna uyulmuyorsa...
+				if ($grup2[1] && !preg_match($degerTablosu[$ozellikTablosu[strtolower($grup[1])]][1], $grup[2]|$grup[3]|$grup[4])) {
+					# deger icinde " karakteri olma ihtimali varsa
+					if ($grup[3]) {
+						# ozellik='deger' formatinda kaydet 
+						$temp_ozellikler .= ' ' . $grup[1] . '=\'' . $grup2[1] .'\'';
+				
+					# deger icinde " karakteri olma ihtimali yoksa
+					} else {
+						# ozellik="deger" formatinda kaydet 
+						$temp_ozellikler .= ' ' . $grup[1] . '="' . $grup2[1] .'"';
+					}
+				}
+			
+			# bu ozelligin, deger almamasi gerekiyorsa...
+			# ve deger verilmeye de kalkilmadiysa...
+			} elseif (!($grup[2] || $grup[3] || $grup[4])) {
+				# ozellik formatinda kaydet ( ornegin: disabled )
+				$temp_ozellikler .= ' ' . $grup[1];
+			}
+		}
+	}
+
+	return $temp_ozellikler;
+}
+
+
+
+# --------------------------------------------------------------------------------------------------
+function guvenliGlobal () {
+	global $tagTablosu;
+	global $ozellikSablon, $ozellikTablosu, $degerTablosu;
+	
+	# izin verilen tag'larin listesi
+	# her tag icin izin verilen ozellikler, array icinde belirtilmelidir
+	$tagTablosu	= array (
+		'a'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'shape', 'coords', 'target', 'tabindex', 'accesskey', 'name', 'href', 'hreflang', 'type', 'rel', 'rev', 'charset'),
+		'abbr'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'acronym'	=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'address'	=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'area'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'name', 'alt', 'href', 'target', 'tabindex', 'accesskey', 'shape', 'coords', 'usemap', 'nohref'),
+		'b'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'bdo'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'big'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'blockquote'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'cite'),
+		'br'		=> array('id', 'class', 'title', 'style', 'clear'),
+		'button'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'name', 'value', 'type', 'accesskey', 'tabindex'),
+		'caption'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'center'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'cite'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'code'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'col'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'span', 'width', 'char', 'charoff', 'valign'),
+		'colgroup'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'span', 'width', 'char', 'charoff', 'valign'),
+		'dd'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'del'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'cite', 'datetime'),
+		'dfn'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'div'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'dl'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'dt'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'em'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'fieldset'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align',  'accesskey'),
+		'font'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'size', 'color', 'face'),
+		'h1'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'h2'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'h3'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'h4'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'h5'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'h6'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'hr'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'size', 'width', 'noshade'),
+		'i'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'img'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'src', 'longdesc', 'name', 'ismap', 'usemap', 'width', 'height', 'border', 'hspace', 'vspace'),
+		'input'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'alt', 'accept', 'readonly', 'disabled', 'tabindex', 'accesskey', 'usemap', 'ismap', 'type', 'name', 'value', 'size', 'maxlength', 'checked', 'src'),
+		'ins'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'cite', 'datetime'),
+		'isindex'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'prompt'),
+		'kdb'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'label'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'accesskey', 'for'),
+		'legend'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'accesskey'),
+		'li'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'type', 'start', 'value', 'compact'),
+		'map'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'name', 'alt', 'href', 'target', 'tabindex', 'accesskey', 'shape', 'coords', 'usemap', 'nohref'),
+		'noframes'	=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'noscript'	=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'ol'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'type', 'start', 'value', 'compact'),
+		'optgroup'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'disabled', 'tabindex', 'name', 'size', 'multiple', 'label'),
+		'option'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'disabled', 'tabindex', 'name', 'size', 'multiple', 'label'),
+		'p'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'pre'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'width'),
+		'q'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'cite'),
+		's'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'samp'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'select'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'name', 'size', 'multiple', 'disabled', 'tabindex'),
+		'small'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'span'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align'),
+		'strike'	=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'strong'	=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'sub'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'sup'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'table'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'summary', 'width', 'bgcolor', 'frame', 'rules', 'border', 'cellspacing', 'cellpadding'),
+		'tbody'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'char', 'charoff', 'valign'),
+		'td'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'bgcolor', 'align', 'char', 'charoff', 'valign', 'headers', 'scope', 'abbr', 'axis', 'rowspan', 'colspan', 'nowrap', 'width', 'height'),
+		'textarea'	=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'name', 'rows', 'cols', 'readonly', 'disabled', 'tabindex', 'accesskey'),
+		'tfoot'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'char', 'charoff', 'valign'),
+		'th'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'bgcolor', 'align', 'char', 'charoff', 'valign', 'headers', 'scope', 'abbr', 'axis', 'rowspan', 'colspan', 'nowrap', 'width', 'height'),
+		'thead'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'align', 'char', 'charoff', 'valign'),
+		'tr'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'bgcolor', 'align', 'char', 'charoff', 'valign'),
+		'tt'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'u'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+		'ul'		=> array('id', 'class', 'title', 'style', 'dir', 'lan', 'type', 'start', 'value', 'compact'),
+		'var'		=> array('id', 'class', 'title', 'style', 'dir', 'lan'),
+	);
+
+
+	# ozelliklerin listesi ve degerlerinin sablon kodlari
+	# eger ozellik, deger almiyor, sadece set edilebiliyorsa, Null yazilacak
+	$ozellikTablosu = array (
+		'abbr'		=> 'TEXT',
+		'accept'	=> 'CONTENTTYPES',
+		'accesskey'	=> 'CHARACTER',
+		'align'		=> 'CUSTOM_ALIGN',
+		'alt'		=> 'TEXT',
+		'axis'		=> 'CDATA',
+		'bgcolor'	=> 'COLOR',
+		'border'	=> 'PIXELS',
+		'cellpadding'	=> 'LENGTH',
+		'cellspacing'	=> 'LENGTH',
+		'char'		=> 'CHARACTER',
+		'charoff'	=> 'LENGTH',
+		'charset'	=> 'CHARACTER',
+		'checked'	=> Null,
+		'cite'		=> 'URI',
+		'class'		=> 'CDATA',
+		'clear'		=> 'CUSTOM_CLEAR',
+		'color'		=> 'COLOR',
+		'cols'		=> 'NUMBER',
+		'colspan'	=> 'NUMBER',
+		'compact'	=> Null,
+		'coords'	=> 'COORDS',
+		'datetime'	=> 'DATETIME',
+		'dir'		=> 'CUSTOM_DIR',
+		'disabled'	=> Null,
+		'face'		=> 'CDATA',
+		'for'		=> 'IDREF',
+		'frame'		=> 'TFRAME',
+		'headers'	=> 'IDREFS',
+		'height'	=> 'LENGTH',
+		'href'		=> 'URI',
+		'hreflang'	=> 'LANGUAGECODE',
+		'hspace'	=> 'PIXELS',
+		'id'		=> 'ID',
+		'ismap'		=> Null,
+		'label'		=> 'TEXT',
+		'lan'		=> 'LANGUAGECODE',
+		'longdesc'	=> 'URI',
+		'maxlength'	=> 'NUMBER',
+		'multiple'	=> Null,
+		'name'		=> 'CDATA',
+		'nohref'	=> Null,
+		'nohshade'	=> Null,
+		'nowrap'	=> Null,
+		'prompt'	=> 'TEXT',
+		'readonly'	=> Null,
+		'rel'		=> 'LINKTYPES',
+		'rev'		=> 'LINKTYPES',
+		'rows'		=> 'NUMBER',
+		'rowspan'	=> 'NUMBER',
+		'rules'		=> 'TRULES',
+		'scope'		=> 'SCOPE',
+		'shape'		=> 'SHAPE',
+		'size'		=> 'NUMBER',
+		'span'		=> 'NUMBER',
+		'src'		=> 'URI',		# sunucu disindan resim gosterilmesi istenmiyorsa 'YEREL_URI' olacak
+		'start'		=> 'NUMBER',
+		'style'		=> 'STYLESHEET',
+		'summary'	=> 'TEXT',
+		'tabindex'	=> 'NUMBER',
+		'target'	=> 'CDATA',
+		'title'		=> 'TEXT',
+		'type'		=> 'CUSTOM_TYPE',
+		'usemap'	=> 'URI',
+		'valign'	=> 'CUSTOM_VALIGN',
+		'value'		=> 'CDATA',
+		'vspace'	=> 'PIXELS',
+		'width'		=> 'LENGTH',
+	);
+
+
+	# dizinin ilk degeri, uyulmasi gereken pattern'i
+	# dizinin ikinci degeri, uyulmamasi gereken pattern'i belirler
+	# uyulmamasi gereken pattern yoksa, 'veri yok' anlamina gelen '/^\s*$/' ifadesini yazin 
+	# degerin kabul edilmesi icin ilk pattern'a uyup, digerine uymamasi zorunludur
+	$degerTablosu = array (
+		'CDATA'		=> array('/^\s*(.*[^\s]+)\s*$/i',			# ilk ve son karakter \s olmamak kosuluyla herhangi bir metin
+					 '/^\s*$/'),
+		'CHARACTER'	=> array('/^\s*([\wðÐüÜþÞýÝöÖçÇ])\s*$/i',		# sadece tek bir karakter
+					 '/^\s*$/'),
+		'COLOR'		=> array('/^\s*((?:#[0-9abcdef]{6})|(?:[\w]+))\s*$/i',	# renk adi ya da #000000 formatinda renk kodu
+					 '/^\s*$/'),
+		'CONTENTTYPES'	=> array('/^\s*([^,]+.*[^\s,]+)\s*$/i',			# , karakteri ile ayrilmis liste
+					 '/^\s*$/'),
+		'COORDS'	=> array('/^\s*([0-9\.]+[0-9\.,\s]*[0-9\.]+)\s*$/i',	# , karakteri ile ayrilmis sayilar
+					 '/^\s*$/'),
+		'CUSTOM_ALIGN'	=> array('/^\s*((?:top)|(?:middle)|(?:bottom)|(?:left)|(?:center)|(?:right)|(?:justify))\s*$/i',
+					 '/^\s*$/'),
+		'CUSTOM_CLEAR'	=> array('/^\s*((?:none)|(?:all)|(?:left)|(?:right))\s*$/i',
+					 '/^\s*$/'),
+		'CUSTOM_DIR'	=> array('/^\s*((?:ltr)|(?:rtl))\s*$/i',
+					 '/^\s*$/'),
+		'CUSTOM_TYPE'	=> array('/^\s*(.*[^\s]+)\s*$/i',			# CDATA ile ayni
+					 '/^\s*$/'),
+		'CUSTOM_VALIGN'	=> array('/^\s*((?:top)|(?:middle)|(?:bottom)|(?:baseline))\s*$/i',
+					 '/^\s*$/'),
+		'DATETIME'	=> array('/^\s*(.*[^\s]+)\s*$/i',			# CDATA ile ayni
+					 '/^\s*$/'),
+		'ID'		=> array('/^\s*([a-zA-Z]+[\w\.\-:]*)\s*$/i',		# ilk karakteri harf olmak zorunda
+					 '/^\s*$/'),
+		'IDREF'		=> array('/^\s*([\w\.\-:]+)\s*$/i',				
+					 '/^\s*$/'),
+		'IDREFS'	=> array('/^\s*([\w\.\-:\s]+)\s*$/i',			# bosluk ile ayrilmis IDREF listesi
+					 '/^\s*$/'),
+		'LANGUAGECODE'	=> array('/^\s*([a-zA-Z]+[\w\.\-:]*)\s*$/i',		# ID
+					 '/^\s*$/'),
+		'LENGTH'	=> array('/^\s*(.*[^\s]+)\s*$/i',			# CDATA ile ayni
+					 '/^\s*$/'),
+		'LINKTYPES'	=> array('/^\s*(.*[^\s]+)\s*$/i',			# CDATA ile ayni
+					 '/^\s*$/'),
+		'NUMBER'	=> array('/^\s*([0-9]+)\s*$/i',				# en az bir rakkam olmak zorunda
+					 '/^\s*$/'),
+		'PIXELS'	=> array('/^\s*(.*[^\s]+)\s*$/i',			# CDATA ile ayni
+					 '/^\s*$/'),
+		'SCOPE'		=> array('/^\s*((?:col)|(?:row)|(?:colgroup)|(?:rowgroup))\s*$/i',
+					 '/^\s*$/'),
+		'SHAPE'		=> array('/^\s*((?:rect)|(?:circle)|(?:poly)|(?:default))\s*$/i',
+					 '/^\s*$/'),
+		'STYLESHEET'	=> array('/^\s*(.*[^\s]+)\s*$/i',
+		
+					 '/(' .						# STYLESHEET icinde yasak olan ifadeler
+					 'express[iI]on|' .				# expression
+					 'scr[iI]pt|' .					# script
+					 '&#|' .					# &#
+					 '\/\*|' .					# /*
+					 '\*\/' .					# */
+					 ')/'),
+
+		'TEXT'		=> array('/^\s*(.*[^\s]+)\s*$/i',			# CDATA ile ayni
+					 '/^\s*$/'),
+		'TFRAME'	=> array('/^\s*((?:void)|(?:above)|(?:below)|(?:hsides)|(?:lhs)|(?:rhs)|(?:vsides)|(?:box)|(?:border))\s*$/i',
+					 '/^\s*$/'),
+		'TRULES'	=> array('/^\s*((?:none)|(?:groups)|(?:rows)|(?:cols)|(?:all))\s*$/i',
+					 '/^\s*$/'),
+		'URI'		=> array('/^\s*([^\s]*)\s*$/i',
+		
+					 '/(' .						# URI icinde yasak olan ifadeler
+					 'express[iI]on|' .				# expression
+					 'scr[iI]pt|' .					# script
+					 '&#|' .					# &#
+					 '\/\*|' .					# /*
+					 '\*\/' .					# */
+					 ')/'),
+					 
+		'YEREL_URI'	=> array('/^\s*(' .					# bulundugu sunucu disindan link kabul etmeyen URI
+					 '((?:http:\/\/' . str_replace('.', '\\.', $_SERVER['SERVER_NAME']) . '[^\s]*)|' .
+					 '(?:[^:\s]*))' .
+					 ')\s*$/i',
+					 
+					 '/(' .						# URI icinde yasak olan ifadeler
+					 'express[iI]on|' .				# expression
+					 'scr[iI]pt|' .					# script
+					 '&#|' .					# &#
+					 '\/\*|' .					# /*
+					 '\*\/' .					# */
+					 ')/'),
+	);
+
+	# ozellik="deger" veya ozellik formatina bakan sablon
+	$ozellikSablon = '/^\s*([\w]+)(?:\s*=\s*(?:' .
+		'(?:"([^"]*)")|' .		# "deger" formatinda, bu durumda deger icinde " kullanilamaz
+		'(?:([^"\'\s,]*))|' .		#  deger  formatinda, bu durumda deger icinde ' " , ve bosluk kullanilamaz
+		'(?:\'([^\']*)\')' .		# 'deger' formatinda, bu durumda deger icinde ' kullanilamaz
+		'))?\s*(.*)/si';
+
+	return True;
+}
+
+?>

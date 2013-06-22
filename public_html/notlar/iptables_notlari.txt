@@ -1,0 +1,137 @@
+# -----------------------------------------------------------------------------
+# IPTABLES & IPSET NOTLARI
+# -----------------------------------------------------------------------------
+
+
+
+# Kurulum
+	aptitude install iptables
+
+
+
+# Iptables işlem sırası
+
+				   RAW
+				PREROUTING
+
+				    |
+
+				  MANGLE
+				PREROUTING
+
+				    |
+
+				   NAT
+				PREROUTING
+
+				    |
+
+				 ROUTING
+				 KARARI
+
+				    |
+		-----------------------------------------
+		|					|
+
+	      MANGLE				      MANGLE
+	      INPUT				      FORWARD
+
+		|					|
+
+	      FILTER				      FILTER
+	      INPUT				      FORWARD
+
+	        |					|
+							|
+	      LOCAL					|
+	      İŞLEM					|
+							|
+		|					|
+							|
+	     ROUTING					|
+	     KARARI					|
+							|
+		|					|
+							|
+	       RAW					|
+	      OUTPUT					|
+							|
+		|					|
+							|
+	      MANGLE					|
+	      OUTPUT					|
+							|
+		|					|
+							|
+	       NAT					|
+	      OUTPUT					|
+							|
+		|					|
+							|
+	      FILTER					|
+	      OUTPUT					|
+							|
+		|					|
+		|					|
+		-----------------------------------------
+				    |
+
+				 MANGLE
+			       POSTROUTING
+
+				    |
+
+			           NAT
+			       POSTROUTING
+
+
+# Kuralları listeleme
+	iptables -L
+
+# Kuralların tamamını silme
+	iptables -F
+
+# Liste sonuna kural ekleme (append)
+	iptables -A INPUT -p tcp --dport 80 -j REJECT
+
+# Liste başına kural ekleme (insert)
+	iptables -A INPUT -s 192.168.1.10 -p tcp --dport 80 -j ACCEPT
+
+
+
+# -----------------------------------------------------------------------------
+
+
+# Ipset kurulum
+	aptitude install ipset ipset-source
+	m-a a-i ipsey-source
+
+# Set oluşturma
+	ipset -N setx iphash
+	ipset -N setx nethash
+	ipset -N sety iptree --timeout 100
+
+# Set silme
+	ipset -X setx
+
+# Setleri listeleme
+	ipset -L
+
+# Sete ekleme
+	ipset -A ipsetx 192.168.1.10
+	ipset -A ipsety 192.168.1.0/24
+
+# Setten kayıt silme
+	ipset -D ipsetx 192.168.1.10
+
+# Setteki büyün kayıtları silme
+	ipset -F ipsetx
+
+# Set kayıtlarını listeleme
+	ipset -L ipsetx
+
+# Bir kayıt sette var mı diye test etme
+	ipset -T ipsetx 192.168.1.10
+
+# Seti iptables ile kullanma
+	iptables -A INPUT -m set --set ipsetx src -j ACCEPT

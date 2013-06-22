@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>mod_python_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+MOD_PYTHON NOTLARI
+
+*** Kurulum
+	aptitude install apache2 libapache2-mod-python 
+	
+	- python-mysqldb ve mysql-server paketleri de gerekiyorsa yüklenecek
+
+
+---------------------------------------------------
+
+
+*** Apache ayarları
+    Bu ayarlar klasordeki .htaccess dosyasına da girilebilir
+
+	mkdir /var/www/klasor
+
+	/etc/apache2/sites-available/default
+		&lt;Directory /var/www/klasor&gt;
+			Options -Indexes FollowSymLinks MultiViews
+			AllowOverride None
+			Order allow,deny
+			Allow from all
+			SetHandler mod_python
+			AddHandler mod_python .php .jpg		#bu uzantili dosyalari da mod_python isler
+			PythonHandler mod_python.publisher
+			PythonDebug On
+		&lt;/Directory&gt;
+
+
+---------------------------------------------------
+
+
+*** Web sayfasının hazırlanması
+	/var/www/klasor/index.py
+		from mod_python import psp
+		
+		def index(req):
+			return 'Bu default sayfa'
+
+		def sayfa1(req):
+			vars = {}
+			vars['cevap'] = 'Bu 1. sayfa'
+			tmpl = psp.PSP(req, filename='sunucu_cevap.html', vars=vars)
+			return tmpl
+
+		def sayfa2(req):
+			vars = {}
+			req.content_type = 'text/html'
+			vars['cevap'] = 'Bu 2. sayfa'
+			tmpl = psp.PSP(req, filename='sunucu_cevap.html')
+			tmpl.run(vars)
+			return
+
+		def sayfa3(req):
+			html = &quot;&quot;&quot;
+				&lt;html&gt;
+				&lt;body&gt;
+				Bu 3. sayfa
+				&lt;/body&gt;
+				&lt;/html&gt;
+
+			return html
+
+	
+	/var/www/klasor/sunucu_cevap.html
+		&lt;html&gt;
+		&lt;body&gt;
+		&lt;b&gt;&lt;%= cevap %&gt;&lt;/b&gt;
+		&lt;/body&gt;
+		&lt;/html&gt;
+
+
+---------------------------------------------------
+
+*** Bazı yöntemler
+	- baglanan makinenin IP adresi
+	  makine_ip = req.get_remote_host()
+
+	- &lt;FORM&gt;'dan prm adlı paramtre gelmiş mi
+	  req.form.has_key('prm')
+
+	- &lt;FORM&gt;'dan gelen prm adlı değişkenin değeri
+	  deger = req.form['prm']
+
+	
+</code></pre>
+</body>
+</html>

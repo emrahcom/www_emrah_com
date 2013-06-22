@@ -1,0 +1,53 @@
+GEDA NOTLARI
+------------
+
+- Kurulum
+
+	aptitude install geda gspiceui gnucap pcb geda-xgsch2pcb dbus-x11
+
+	geda		-> geda-doc geda-gnetlist geda-gschem geda-symbols
+			-> guile-1.8-libs libgeda-common libgeda33 libstroke0
+	gspiceui	-> gspiceui guile-1.6-libs gwave libglib1.2ldbl libgtk1.2
+			-> libgtk1.2-common libguile-ltdl-1 libguilegtk-1.2-0{a} libqthreads-12 
+	pcb		-> libgd2-xpm pcb-common pcb-gtk
+	geda-xgsch2pcb	-> geda-gattrib geda-utils libgd2-xpm pcb pcb-common pcb-gtk python-dbus
+
+
+- geda-xgsch2pcb (proje yöneticisi)
+  dbus-launch istiyor (dbux-x11 paketi içinde)
+  Menuden Debian -> Uygulamalar -> Bilim -> Elektronik -> geda-xgsch2pcb
+  Konsoldan çalıştırılacaksa sadece xgsch2pcb
+
+  	. proje oluşturma
+		yeni -> blank -> proje adı/yeri -> uygula
+		schematic pages -> ekle -> create new
+		schematic pages -> şema seç -> edit schematic
+
+	. proje dosyası formatı (.gsch2pcb)
+		schematics proje-page1.sch proje-page2.sch
+		output-name proje.pcb
+
+
+- gschem (devre şeması)
+
+	. şemaya eleman eklemek için (insert) i
+	. value özelliğine değeri, sadece değer görünsün
+	. footprint, örneğin 10K direnç için R025, görünmez olsun
+	. aynı tipteki elemanların pinlerini sıralı numaralandırmak için slot
+	. Attributes -> Autonumber text -> Autonumber text in 'current page'
+
+
+- pcb
+
+	. pcb kart1.pcb
+
+
+- symbol kütüphanesi ekleme
+
+	cd ~/.gEDA
+	vim gafrc
+		(component-library "${HOME}/.gEDA/gaf/")
+	mkdir gaf
+	cd gaf
+	wget http://www.luciani.org/geda/pcb/pcb-symbols-jcl_2008-4-25.tgz
+	tar zxf pcb-symbols-jcl_2008-4-25.tgz

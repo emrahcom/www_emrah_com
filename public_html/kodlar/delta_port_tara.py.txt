@@ -1,0 +1,47 @@
+#!/usr/bin/python
+
+import delta
+import time
+
+ADRES           = '0000'        # pozitif tam bir sayi dondurebilecek herhangi bir parametrenin adresi
+surucu_listesi  = []
+protokol_listesi= []
+
+# surucu nesnesini olustur
+x = delta.surucu()
+x.port          = 0
+x.timeout       = 0.1
+
+# denenecek surucu numaralari
+for i in (0, 1, 2):
+    surucu_listesi.append('%02d' % (i))
+
+# denenecek butun olasiliklar icin surucu ayarlarini belirle ve dene
+for surucu_no in surucu_listesi:
+    for baudrate in (4800, 9600, 19200, 38400, 57600, 115200):
+        for bytesize in (7, 8):
+            for parity in ('N', 'E', 'O'):
+                for stopbits in (1, 2):
+                    x.surucu_no     = surucu_no
+                    x.baudrate      = baudrate
+                    x.bytesize      = bytesize
+                    x.parity        = parity
+                    x.stopbits      = stopbits
+
+                    # veri okunabildiyse, bu desteklenen bir protokol demektir
+                    try:
+                        if not x.parametreOku(adres=ADRES): raise RuntimeError
+                        protokol = "surucu:%s baudrate:%s  bytesize:%s  parity:%s stopbits:%s" \
+                                % (surucu_no, baudrate, bytesize, parity, stopbits)
+                        protokol_listesi.append(protokol)
+                        print "%s <<<<<<<<<<" % (protokol)
+                    except:
+                        print "surucu:%s baudrate:%s  bytesize:%s  parity:%s  stopbits:%s" \
+                            % (surucu_no, baudrate, bytesize, parity, stopbits)
+
+print "\n\nDESTEKLENEN PROTOKOLLER"
+print "-----------------------"
+for protokol in protokol_listesi:
+    print protokol
+
+print "-----------------------\n"

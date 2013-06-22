@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>windows_masaustune_linuxtan_erisim_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+WINDOWS MASAÜSTÜNE LINUX MAKİNEDEN ERİŞİM
+-----------------------------------------
+
+- Remote Desktop
+  Bağlantı kurulunca karşı tarafın oturumu durdurulur
+  VNC'den hızlı
+  Shutdown veya reboot için task manager menüsü kullanılacak
+
+	- Windows makinede yapılacaklar
+		
+		. Bilgisayarım (mouse sağ tuş) -&gt; Özellikler -&gt; Uzak -&gt; 
+		  Kullanıcıların bu bilgisayara uzaktan bağlanmalarına izin ver
+
+	- Debian GNU/Linux makinede yapılacaklar
+
+		. aptitude install rdesktop
+
+		. TCP 3389 portuna erişim hakkı olacak
+	
+		. rdesktop [-k tr|en-us] [-u kullanici] [IP adresi][:port]
+
+
+
+- VNC
+  Bağlantı kurulunca karşı tarafın oturumu devam eder
+	- Windows makinede yapılacaklar
+
+		. Download
+		  http://www.tightvnc.com/download.html
+
+		. Kurulum
+			. Sadece sunucu
+			. HTTP sunucu iptal
+			. 8 karakter parola
+			. Servis olarak çalışsın
+
+		. Windows Firewall'dan TCP 5900. port için izin
+		  Birden fazla bağlantı olacaksa 5900:5909
+		  HTTP sunucu da devrede olacaksa TCP 5800. port için de izin
+
+
+	- Debian GNU/Linux makinede yapılacaklar
+
+		. aptitude install xvnc4viewer
+		
+		. TCP 5900:5909 portlarına erişim hakkı verilecek
+
+		. vncviewer [IP adresi][:port]
+</code></pre>
+</body>
+</html>

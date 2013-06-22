@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>btrieve.py.txt</title>
+</head>
+<body>
+<pre><code>
+from shutil	import copy
+from time       import sleep
+from os		import system, mkdir
+from struct	import pack, unpack
+from time	import localtime, strftime
+
+TABLOLAR_DIZINI	= ''
+
+# eski yedeklerin ustune yazmamasi icin program her calistirildiginda
+# yeni yedek klasoru olusturur. butun isler hatasiz sonuclandiktan sonra
+# yedek klasorler ve icerikleri silinebilir
+YEDEKLER_DIZINI	= TABLOLAR_DIZINI + 'D_' + strftime('%H%M%S', localtime()) + '\\'
+
+tablolar = [	('MUSTERI.BTR'	, '1001', 466,  [443,451]),
+		('MUSKIM.BTR'	, '1002', 718,  [310,322,330,338,378,386,394,450]),
+		('KALAMOZA.BTR'	, '1003', 91,   [53,61]),
+		('DEPO.BTR'	, '1004', 42,   []),
+		('FINANS.BTR'	, '1005', 246,  [150,158,166,174,182]),
+		('STKFIN.BTR'	, '1006', 17,   []),
+		('STOK.BTR'	, '1007', 624,  [94,102,110,118,126,134,142,166,174,190,198,230,238,246,254,262,270,278,286,294,302,310,318,326,334,342,350,358,366,374,382,390,398,406,414,422,430,438,446,454,462,470,478,486,494,502,510,518,526,534,542,550,558,566,574,582,590,598,606]),
+		('STKDEPO.BTR'	, '1008', 244,  [34,50,58,66,74,82,90,98,106,114,122,130,138,146,154,162,170,178,186,194,202,210,218,226,234]),
+		('KEFIL.BTR'	, '1009', 728,  []),
+		('STKBEL.BTR'	, '1010', 246,  [119,127,135,143,151,159,167,181,189]),
+		('STKHAR.BTR'	, '1011', 185,  [111,119,127,135,143,151,159,167,175]),
+		('STKSERI.BTR'	, '1012', 66,   []),
+		('TAKSIT.BTR'	, '1013', 96,   [32,40,48]),
+		('TAHSILAT.BTR'	, '1014', 53,   [7]),
+		('TAKIADE.BTR'	, '1015', 25,   [15]),
+		('FIRMA.BTR'	, '1016', 357,  [347]),
+		('FIRKAL.BTR'	, '1017', 84,   [53,61]),
+		('KASA.BTR'	, '1018', 89,   [40,48]),
+		('KASAICM.BTR'	, '1019', 780,  [10,18,26,34,42,50,58,66,74,82,90,98,106,114,122,130,138,146,154,162,170,178,186,194,202,210,218,226,234,242,250,258,266,274,282,290,298,306,314,322,330,338,346,354,362,370,378,386,394,402,410,418,426,434,442,450,458,466,474,482,490,498,506,514,522,530,538,546,554,562,570,578,586,594,602,610,618,626,634,642,650,658,666,674,682,690,698,706,714,722,730,738,746,754,762,770]),
+		('ICMAL.BTR'	, '1020', 588,  [10,18,26,34,42,50,58,66,74,82,90,98,106,114,122,130,138,146,154,162,170,178,186,194,202,210,218,226,234,242,250,258,266,274,282,290,298,306,314,322,330,338,346,354,362,370,378,386]),
+		('STKGRP.BTR'	, '1021', 59,   []),
+		('CEKANA.BTR'	, '1022', 127,  [117]),
+		('CEKHRK.BTR'	, '1023', 75,   [56]),
+		('BANKA.BTR'	, '1024', 52,   []),
+		('PARAMTR.BTR'	, '1025', 0,    []),
+		('SAYAC.BTR'	, '1026', 10,   []),
+		('BOLGE.BTR'	, '1027', 47,   []),
+		('DONEM.BTR'	, '1028', 47,   []),
+		('SATICI.BTR'	, '1029', 570,  [192,216,224,232,240,488,496,504,512,520,528,536,544,552,560]),
+		('STCKAL.BTR'	, '1030', 91,   [60,68]),
+		('STCSTK.BTR'	, '1031', 48,   []),
+		('STCPRM.BTR'	, '1032', 204,  [42,50,58,66,74,82,90,98,106,114,154,162,170,178,186,194]),
+		('STKPRM.BTR'	, '1033', 116,  [50,58,66,74,82,90,98,106]),
+		('THLCI.BTR'	, '1034', 574,  [184,196,220,228,236,244,492,500,508,516,524,532,540,548,556,564]),
+		('TAHKAL.BTR'	, '1035', 84,   [53,61]),
+		('TAHMAK.BTR'	, '1036', 66,   [44,52]),
+		('TAHPRM.BTR'	, '1037', 104,  [38,46,70,78,86,94]),
+		('KASANO.BTR'	, '1038', 61,   [51]),
+		('MESLEK.BTR'	, '1039', 47,   []),
+		('USERS.BTR'	, '1040', 129,  []),
+		('STBICRA.BTR'	, '1041', 67,   [45]),
+		('OZELORAN.BTR'	, '1042', 184,  [142,150,158,166,174]),
+		('MSJTNM.BTR'	, '1043', 58,   []),
+		('SEHIR.BTR'	, '1044', 23,   []),
+		('TATIL.BTR'	, '1045', 0,    []),
+		('ICMTIP.BTR'	, '1046', 40,   []),
+		('DEVIR.BTR'	, '1047', 450,  [32]),
+		('DEVDEPO.BTR'	, '1048', 0,    []),
+		('SAKINCA.BTR'	, '1049', 0,    []),
+		('KALIPT.BTR'	, '1050', 102,  [64,72]),
+		('FKALIPT.BTR'	, '1051', 95,   [64,72]),
+		('KASIPT.BTR'	, '1052', 100,  [51,59]),
+		('SIPARIS.BTR'	, '1053', 116,  [61,69,77,85,93]),
+		('SIPHAR.BTR'	, '1054', 127,  [77,85,93,101,109,117]),
+		('SIPSTB.BTR'	, '1055', 49,   []),
+		('ENVANTER.BTR'	, '1056', 69,   [59]),
+		('DVZKUR.BTR'	, '1057', 21,   [11]),
+		('MUSLCK.TXT'	, '1058', 16,   []),
+		('FIRLCK.TXT'	, '1059', 16,   []),
+		('CEKLCK.TXT'	, '1060', 8,    []),
+		('GNLLCK.TXT'	, '1061', 8,    [])
+		]
+
+SURE    = 1.0
+
+
+
+# -------------------------------------------------------------
+# bu fonksiyon, adi verilen tablonun duzeltilmesi icin
+# gereken butun islemleri tetikler
+def duzeltilmis_klon_olustur(tablo_adi, klon_adi, kayit_uzunlugu, para_alanlari_konum_listesi):
+	print tablo_adi
+
+	tablonun_yedegini_al(tablo_adi)
+	sleep(SURE)
+	tablonun_klonunu_olustur(tablo_adi, klon_adi)		# klon tablo, veri icermez. asil tablonun formatinda ama bos bir tablodur
+	sleep(SURE)    
+	tablo_verilerini_aradosyaya_al(tablo_adi, klon_adi)
+	sleep(SURE)
+	aradosyada_verileri_duzelt(tablo_adi, klon_adi, kayit_uzunlugu, para_alanlari_konum_listesi)
+	sleep(SURE)
+	verileri_aradosyadan_klona_aktar(tablo_adi, klon_adi)
+	sleep(SURE)
+
+
+# -------------------------------------------------------------
+def tablonun_yedegini_al(tablo_adi):
+	print '\t... yedekleniyor'
+
+	tablo	= TABLOLAR_DIZINI + tablo_adi
+	copy(tablo, YEDEKLER_DIZINI)
+		
+
+
+# -------------------------------------------------------------
+def tablonun_klonunu_olustur(tablo_adi, klon_adi):
+	print '\t... klonlaniyor'
+	
+	tablo	= TABLOLAR_DIZINI + tablo_adi
+	klon	= YEDEKLER_DIZINI + klon_adi + '.BTR'
+	system('BUTIL -CLONE ' + klon + ' ' + tablo)
+
+
+
+# -------------------------------------------------------------
+def tablo_verilerini_aradosyaya_al(tablo_adi, klon_adi):
+	print '\t... verileri aliniyor'
+
+	tablo	= TABLOLAR_DIZINI + tablo_adi
+	klon	= YEDEKLER_DIZINI + klon_adi + '.TMP'
+	system('BUTIL -RECOVER ' + tablo + ' ' + klon)
+
+
+
+# -------------------------------------------------------------
+def aradosya_satirini_duzelt(satir, para_alanlari_konum_listesi):
+	buffer	= ''
+	k	= 0
+	para	= 0
+	
+	for konum in para_alanlari_konum_listesi:
+		buffer	+= satir[k:konum]
+		para	=  unpack('d', satir[konum:konum+8])[0]
+		para	=  para / 1000000.0
+		para	=  round(para, 2)
+		buffer	+= pack('d', para)
+		k	=  konum + 8
+
+	buffer += satir[k:]
+	return buffer
+
+
+# -------------------------------------------------------------
+def aradosyada_verileri_duzelt(tablo_adi, klon_adi, kayit_uzunlugu, para_alanlari_konum_listesi):
+	print '\t... veriler duzeltiliyor'
+
+	aradosya1	= YEDEKLER_DIZINI + klon_adi + '.TMP'
+	aradosya2	= YEDEKLER_DIZINI + '0' + klon_adi + '.TMP'
+
+	hdl1 = open(aradosya1, 'rb')
+	hdl2 = open(aradosya2, 'wb')
+
+	while True:
+            satir = hdl1.read(kayit_uzunlugu)
+            if len(satir) == kayit_uzunlugu:
+                duzeltilmis_satir = aradosya_satirini_duzelt(satir, para_alanlari_konum_listesi)
+		hdl2.write(duzeltilmis_satir)
+	    else:
+                hdl2.write(satir)
+                hdl2.write(hdl1.read())
+                break
+
+	hdl1.close()
+	hdl2.close()
+
+
+
+# -------------------------------------------------------------
+def verileri_aradosyadan_klona_aktar(tablo_adi, klon_adi):
+	print '\t... veriler klona ekleniyor'
+
+	klon	= YEDEKLER_DIZINI + klon_adi + '.BTR'
+	aradosya= YEDEKLER_DIZINI + '0' + klon_adi + '.TMP'
+	system('BUTIL -LOAD ' + aradosya + ' ' + klon)
+
+
+
+# -------------------------------------------------------------
+def duzeltilmis_klonu_asil_tablo_yap(tablo_adi, klon_adi):
+	print '\t... ' + tablo_adi
+
+	tablo	= TABLOLAR_DIZINI + tablo_adi
+	klon	= YEDEKLER_DIZINI + klon_adi + '.BTR'
+	copy(klon, tablo)
+
+
+
+# -------------------------------------------------------------
+# ------------------------ ANA BOLUM --------------------------
+
+mkdir(YEDEKLER_DIZINI)
+
+for kayit in tablolar:
+	if kayit[2]&gt;0 and kayit[3]:
+                duzeltilmis_klon_olustur(kayit[0], kayit[1], kayit[2], kayit[3])
+                
+print '\n\nYeni tablolar etkin hale getiriliyor'
+
+for kayit in tablolar:
+	if kayit[2]&gt;0 and kayit[3]:
+                duzeltilmis_klonu_asil_tablo_yap(kayit[0], kayit[1])
+                sleep(SURE)
+
+</code></pre>
+</body>
+</html>

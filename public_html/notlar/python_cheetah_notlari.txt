@@ -1,0 +1,58 @@
+Python Cheetah Notları
+----------------------
+
+. Kurulacak paketler
+	python-cheetah
+
+
+
+. Basit bir Cheetah Template kullanımı.
+
+#!/usr/bin/python
+#-*- coding:utf-8 -*-
+
+from Cheetah.Template import Template
+
+# Web template dosyalarinin bulundugu klasor.
+WEB_TEMPLATES = '/home/emrah/web/templates'
+
+if __name__ == '__main__':
+	# Template icindeki degiskenlerin degerlerini belirle.
+	tmplist = { 'alan1'	: 5,
+		    'alan2'	: True,
+		    'alan3'	: ['mavi', 'kırmızı', 'yeşil'],
+		    'alan4'	: 'deger4'}
+	# Template dosyasina degerleri verip olusan ciktiyi al.
+	tmpl = Template(file="%s/test.tmpl" % (WEB_TEMPLATES),
+			searchList=tmplist)
+	print('%s' % (tmpl))
+
+
+
+. Template dosyası örneği.
+
+#encoding UTF-8
+<html>
+#include "header.html"
+<body>
+#if $alan2
+	<b>True</b>
+#else
+	<b>False</b>
+#end if
+
+#for $renk in $alan3:
+	<i>${renk}</i>
+#end for
+
+## satir atlamadan
+#for $renk in $alan3:
+	<i>${renk}</i>&nbsp;#slurp
+#end for
+
+#set veri4 = alan4
+<b>${veri4}</b>
+
+
+</body>
+</html>

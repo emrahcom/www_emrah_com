@@ -1,0 +1,73 @@
+package require mysqltcl
+
+namespace eval ::beyhouse {
+	variable bot_adi	"beyhouse bot"
+	variable host		"127.0.0.1"
+	variable port		"3306"
+	variable user		"beyhouse"
+	variable pass		"beyhouse"
+	variable db_adi		"beyhouse"
+	variable bag		""
+}
+
+# modul yuklendiginde bu bolum calisir
+proc ::beyhouse::Init { dir } {
+	global mysqlstatus
+	
+	variable host
+	variable port
+	variable user
+	variable pass
+	variable db_adi
+	variable bag
+	
+	catch {mysqlconnect -host $host -port $port -user $user -password $pass -db $db_adi} bag
+
+	if {$mysqlstatus(code) == 0} {
+		::plugins::RegisterPlugin "Bey House"
+		::beyhouse::RegisterEvents
+		puts "BeyHouse yüklendi"
+	} else {
+		puts "BeyHouse yüklenemedi"
+		puts $mysqlstatus(message)
+	}
+}
+
+
+# ----------------------------------------------------------------------
+# hangi olaylarda plugin'in devreye girecegini belirleyen bolum
+proc ::beyhouse::RegisterEvents {} {
+	::plugins::RegisterEvent "Bey House" chat_msg_received KelimeyiAl
+}
+
+
+# ----------------------------------------------------------------------
+# karsi taraftan kelime gelince calisacak bolum
+proc ::beyhouse::KelimeyiAl { olay parametreler } {
+	upvar 2 chatid	id
+	upvar 2 nick	lakap
+	upvar 2 msg	mesaj
+
+	::beyhouse::AnlaminiGonder $id $lakap $mesaj
+}
+
+
+# ----------------------------------------------------------------------
+# kelimenin anlamini gonderen bolum
+proc ::beyhouse::AnlaminiGonder { id lakap mesaj } {
+	variable bot_adi
+	variable bag
+	
+	if {![string equal $lakap $bot_adi]} {
+		if {[regexp {^\s*([\w]+)} $mesaj cumle kelime]} {
+			set sorgu [mysqlquery $bag "SELECT * FROM sozluk WHERE kelime='$kelime'"]
+	
+			while {[set kayit [mysqlnext $sorgu]] != ""} {
+				set anlam [lindex $kayit 2] 
+				::MSN::messageTo $id $anlam 0 $bot_adi
+			}
+	
+			mysqlendquery $sorgu
+		}
+	}
+}

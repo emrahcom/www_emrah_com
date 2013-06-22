@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>haskell_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+
+Haskel Nedir?
+------------
+
+	Tembel (lazy) ve saf işlevsel (pure functional) bir programlama dilidir.
+
+	Tembel (lazy): Tembel dillerde eşitlikler, gerekmedikleri sürece çözümlenmezler. 
+	Sadece gerektiğinde çözümlenirler. Bu bakımdan Haskell, kesin belirtimli (strict) 
+	dillerden farklıdır. 
+
+	Saf (pure): Haskell, yan etkiye (side effect) izin vermediğinden dolayı saftır.
+	Programlama terimi olarak 'yan etki', evrensel (global) bir değişkeni 
+	etkilemek veya evrensel bir değişkenin etkisinde kalmak anlamında kullanılır. 
+	Sorunlara neden olduğundan dolayı mümkün olduğunca kaçınılması gereken bir durumdur. 
+	Örneğin bir fonksiyon içinde global değişkenler kullanıldığında, fonksiyon parametreleri
+	aynı değere sahip olmasına rağmen, fonksiyon her seferinde farklı bir sonuç 
+	döndürebileceğinden dolayı, yan etkiye açık hale gelmiş olur.
+
+	Evrensel değişkenlere (örneğin ekrana, paralel porta v.b.) erişimi tamamen
+	engellemek, bir programlama dilini işlevsiz kılacağı için bu tip işlemler,
+	monads olarak adlandırılan ve programın saflığını bozmayacak korumalı alanlarda
+	güvenli bir şekilde yapılır.
+
+	İşlevsel (functional): Haskell, işlevsel bir programlama dilidir çünkü her bir Haskell 
+	programı, saf bir matematik fonksiyonunun karşılığıdır. Haskell, matematik bir modele 
+	dayanır. Yapılacak işleri komut listesi şeklinde alan C gibi komut dillerinden (imperative)
+	farklı olarak Haskell'de satır sırasının bir önemi yoktur.
+
+
+
+
+Haskell Yorumlayıcıları ve Derleyicileri
+---------------------------------------
+
+	* Hugs
+		Etkileşimli arayüzü olan, Haskell98 standartlarını destekleyen bir yorumlayıcı. 
+		Derleme yapmaz.
+	
+		apt-get install hugs
+
+
+	* GHC
+		Haskell98 standartlarına uyumlu derleyici ve yorumlayıcı. 
+		Yorumlayıcısı	Hugs'a göre daha yavaş ama daha yetenekli.
+
+		apt-get install ghc5	( sarge için	)
+		apt-get install ghc6	( etch için	)
+
+
+	* NHC
+		Az kullanılan ve etkileşimli arayüzü olmayan bir derleyici ama GHC'ye göre 
+		daha ufak ve hızlı çalışan kod üretiyor.
+	
+		apt-get instal nhc98
+
+
+	En uygun seçenek GHC olarak görünüyor.
+
+
+
+
+GHC kullanımı
+-------------
+
+	* main fonksiyonu olan Main.hs adlı programı derlemek için:
+	
+		ghc --make Main.hs -o main
+
+		--make: bu seçenek, derlenecek olan dosyanın kütüphane değil, program olduğunu
+		belirtiyor. Bu nedenle kod, gerekli olan bütün kütüphaneler ile birlikte derleniyor.
+
+		-o: bu seçenek ile, oluşacak olan çalışabilir dosyanın adı veriliyor.
+
+
+	* Etkileşimli modda çalıştırmak için:
+	
+		ghci
+
+		    veya
+
+		ghc -interactive
+
+
+	* Etkileşimli modda modül ve dosya yüklemek için:
+		
+		:load dosya
+		
+		
+	* Extension'ların açık olması için yorumlayıcıyı başlatırken
+		
+		-fglasgow-exts
+
+		Bu seçenek verilmezse yorumlayıcı Haskell98 modunda çalışır.
+		Bu durumda bütün extension'lar kapalıdır.
+
+
+
+
+Dilin Temelleri
+--------------
+
+	* Tembel (lazy)
+		Eşitlikler, ancak ihtiyaç duyulduğu anda, sadece gereken kadar çözümlenir. 
+		Fonksiyonlar, değerleriyle değil isimleriyle çağrılır.
+		'call by name' vs 'call by value'
+
+
+	* Büyük-küçük harfe duyarlı (case-sensitive)
+		Haskell, bir çok dil gibi büyük-küçük harf ayrımı yapmasının yanında, bir de fazladan,
+		ifadelere, büyük-küçük harfle başlamasına göre farklı davranır. Haskell'de 
+		değerler (values), küçük harf ile, tipler (types), büyük harf ile başlar. 
+		Fonksiyonların da bir değer olduğunu unutma!
+
+
+	* Pure (saf)
+		Bir fonksiyon, çalışması esnasında global bir değişkeni etkiliyor veya global bir
+		değişkenin etkisinde kalıyorsa yan etki (side-effect) oluşur. Ekrana birşey yazmak, 
+		bir dosyadan okuma yapmak yan etkisi olan işlem örnekleridir.
+
+		Haskell'de değerleri değişebilen değişkenler yoktur. Bir değer atandıktan sonra
+		bir daha değişmez. Bu nedenle f fonksiyonu, a argumanı ile her çağrıldığında hep
+		aynı sonucu üretir çünkü programın her yerinde a, aynı değere sahiptir ve
+		f fonksiyonunun üreteceği sonuç, sadece bu argumana bağlıdır; global bir değişken,
+		fonksiyonun işleyişini etkileyemeyecektir.
+
+
+	* Aritmatik
+		Etkileşimli modda yorumlayıcıyı açıp (örneğin ghci ile) basit maematik işlemleri
+		yapabiliriz.
+		
+		Prelude&gt; 2 * 4
+		8
+
+		Prelude&gt; 4 / (4-3)
+		4.0
+
+		Prelude&gt; sqrt 6
+		2.449489742783178
+
+		Prelude&gt; 4&circ;5
+		1024
+
+
+	* Tuple
+		Tuple'ların elaman sayısı sabittir. Her bir elamanı farklı tipte olabilir.
+		
+		Prelude&gt; (3,5,&quot;merhaba&quot;)
+		(3,5,&quot;merhaba&quot;)
+
+		Prelude&gt; fst (4,5)
+		4
+
+		Prelude&gt; snd (4,&quot;merhaba&quot;)
+		&quot;merhaba&quot;
+
+
+	* Listeler
+		* Listeler, tuple'lara benzer ama bütün elemanları aynı tiptedir.
+
+			Prelude&gt; [4,5]
+			[4,5]
+
+			Prelude&gt; [&quot;merhaba&quot;,&quot;dünya&quot;]
+			[&quot;merhaba&quot;,&quot;d\252nya&quot;]
+
+
+		* : işaretine 'cons' operatörü denir. Bu opeartörle yapılan işleme
+		'consing' denir. &quot;constructing&quot; (inşa etmek) kelimesinden gelir.
+		Bir list'e eleman ekleyerek yeni bir list meydana getirmek için
+		kullanılır.
+
+			Prelude&gt; 3:[2,5,7]
+			[3,2,5,7]
+		
+			Prelude&gt; [(3,&quot;merhaba&quot;),(7,&quot;dünya&quot;)]
+			[(3,&quot;merhaba&quot;),(7,&quot;d\252nya&quot;)]
+
+			Prelude&gt; [[4,5],[1,2]]
+			[[4,5],[1,2]]
+
+
+		* head, tail ve lenght fonksiyonları...
+
+			Prelude&gt; head [4,2,8]
+			4
+
+			Prelude&gt; tail [4,2,8]
+			[2,8]
+
+			Prelude&gt; length [4,2,8]
+			3
+
+			Prelude&gt; length (tail [4,2,8])
+			2
+
+
+
+	* String
+		* Haskell'de string, karakterlerden oluşan bir listedir
+
+			Prelude&gt; 'm':'e':'r':'h':'a':'b':'a':[]
+			&quot;merhaba&quot;
+
+			Prelude&gt; &quot;merhaba &quot; ++ &quot;dünya&quot;
+			&quot;merhaba d\252nya&quot;
+		
+
+		* Bir değeri, string'e çevirmek için show(),
+		string değeri, string olmayan değere çevirmek için read()
+		fonksiyonu kullanılır.
+
+			Prelude&gt; &quot;2 + 5 = &quot; ++ show(2+5)
+			&quot;2 + 5 = 7&quot;
+
+			Prelude&gt; read &quot;8&quot; - 2
+			6
+
+
+	* Basit liste fonksiyonları
+
+		* map : Bir fonksiyona, bir listenin elemanlarını sırası ile arguman 
+		olarak verip, yeni bir liste elde eder
+
+			Prelude&gt; map Char.toUpper &quot;merhaba&quot;
+			&quot;MERHABA&quot;
+
+		
+		* filter: listeyi filtrelemek için kullanılır
+
+			Prelude&gt; filter Char.isLower ['M','e','R','H','a','B','a']
+			&quot;eaa&quot;
+
+		* foldr: bu fonksiyon 3 arguman alır. Bir fonksiyon, ilk değer ve bir liste...
+		işleme sağ taraftan başlar.	
+
+			Prelude&gt; foldr (+) 1 [2,3,4]
+			10
+
+			Prelude&gt; foldr (-) 1 [2,3,4]
+			2
+
+			(2 - (3 - (4 - 1)))
+			(2 - (3 - 3))
+			(2 - 0)
+			2
+
+		* foldl: foldr'ye benzer. Ters sırada işlem yapar, soldan başlar.
+
+			Prelude&gt; foldl (-) 1 [2,3,4]
+			-8
+
+			(((1 - 2) - 3) - 4)
+			((-1 -3) - 4)
+			(-4 - 4)
+			-8
+
+
+		foldl daha verimli çalışmasına karşın, sonsuz listelerle işlem yapamaz.
+		İşleme son elemandan başladığı için daha ilk işlemde son elemanın ne olduğunun 
+		biliniyor olması gerekir. foldr ise sonsuz listelerle birlikte kullanılabilir.
+
+
+	* Kaynak kod dosyası
+
+		* Aşağıdaki kodu herhangi bir metin editörü ile yazıp kaydet.
+
+			module Test
+				where
+
+			x = 3
+			y = (5,&quot;merhaba&quot;)
+			z = x * fst y
+
+		
+			Bu bir modül olduğu için dosya adı da, modül adıyla aynı olmalı. 
+			Yani Test.hs olarak kaydedilmeli.
+
+
+		* Modulu yüklemek için yorumlayıcıyı başlatırken
+		
+			ghci Test.hs
+
+
+		* veya yorumlayıcı başlatıldıktan sonra
+
+			Prelude&gt;:load Test.hs
+
+				veya
+
+			Prelude&gt;:l Test.hs
+
+
+		* Yüklü olan bir modülü yeniden yüklemek için
+		
+			Test&gt;:reload
+
+				veya
+
+			Test&gt;:r
+
+
+		* Yukarıdaki modül yüklendikten sonra şu neticeler elde edilir:
+
+			Test&gt;x
+			3
+
+			Test&gt;y
+			(5,&quot;merhaba)
+
+			Test&gt;z
+			15
+
+
+		* Bir programı derlemek için programın modül adı Main olmalı ve içinde main
+		fonksiyonu bulunmalı
+		
+			module Main
+				where
+
+			main = putStrLn &quot;merhaba&quot;
+
+		
+		* Bu dosya Text.hs olarak kaydedildikten sonra
+			ghc --make Test.hs -o test
+			./test
+
+
+
+
+Fonksiyonlar
+------------
+	* Basit bir fonksiyon
+	
+		kare x = x * x
+
+	Bu fonksiyonun adı 'kare'dir.
+	Bir tane arguman olmaktadır, o da x...
+	kare x fonksiyonunun değeri x * x'tir.
+
+		Test&gt;kare 5
+		25
+
+		Test&gt;kare (-5)
+		25
+
+	Negatif sayıları parantez içinde ver yoksa - işareti nedeniyle çıkarma işlemi
+	yapılmaya çalışılıyor ki bu da hataya neden oluyor.
+		
+	
+	* if...then...else...
+		Her if/then için bir else olmak zorundadır.
+		
+			isaret x = if x&lt;0
+				then -1
+				else if x&gt;0
+					then 1
+					else 0
+
+
+		Test&gt;isaret 5
+		1
+
+		Test&gt;isaret (-5)
+		-1
+
+		Test&gt;isaret 0
+		0
+
+
+	* case
+		f x =
+			case x of
+				1	-&gt; 0
+				2	-&gt; 2
+				3	-&gt; 5
+				_	-&gt; x * 2
+		
+		Test&gt; f 1
+		0
+
+		Test&gt; f 3
+		5
+
+		Test&gt; f 7
+		14
+
+
+	* Aynı fonksiyon, birkaç farklı şekilde tanımlanabilir. Argumana göre
+	uygun olan hali kullanılır.
+
+		f 1 = 2
+		f 2 = 3
+		f 3 = 5
+		f _ = -1
+
+		Test&gt;f 1
+		2
+
+		Test&gt;f 3
+		5
+
+		Test&gt;f 6
+		-1
+
+
+	* İç içe fonksiyon kullanımı
+
+		 f1 (f2 5)
+
+		 veya Haskell'e daha uygun bir biçimle
+
+		 (f1.f2) 5
+
+
+	* Bazı built-in functionlar
+
+		Test&gt; sqrt 4
+		2.0
+		
+		Test&gt; null []
+		True
+		
+		Test&gt; null [3,4,5]
+		False
+		
+		Test&gt; id 5
+		5
+		
+		Test&gt; id &quot;merhaba&quot;
+		&quot;merhaba&quot;
+		
+		Test&gt; fst (5,4)
+		5
+		
+		Test&gt; snd (5,4)
+		4
+		
+		Test&gt; head [6,3,2,5]
+		6
+		
+		Test&gt; tail [6,3,2,5]
+		[3,2,5]
+		
+		Test&gt; [5,3,7] ++ [1,5,0]
+		[5,3,7,1,5,0]
+		
+		Test&gt; 4 == 4
+		True
+		
+		Test&gt; [4,5,6] /= [4,5,6]
+		True
+		
+		Test&gt; [4,5,6] == [4,6,5]
+		False
+		
+
+	* let...in...
+
+		f x = 
+			let
+				a = 1
+				b = 2
+			in (x*(a-b),x*(b-a))
+
+
+		Test&gt; f 3
+		(-3,3)
+
+
+	* infix
+		Sembol olarak değerlendirilen fonksiyonlara, infix fonksiyonlar denir.
+		Bunları infix modda değil de non-infix modda kullanmak icin () arasına alınır
+
+			infix mod:
+			Prelude&gt; 4 + 5
+			9
+
+			non-infix mod:
+			Prelude&gt; (+) 4 5
+			9
+
+
+		non-infix fonksiyonları infix modda kullanmak için ise `` arasına alınır.
+
+			non-infix mod:
+			Prelude&gt; map Char.toUpper &quot;merhaba&quot;
+			&quot;MERHABA&quot;
+
+
+			infix mod:
+			Prelude&gt;Char.toUpper `map` &quot;merhaba&quot;
+			&quot;MERHABA&quot;
+
+
+
+
+Notlar
+------
+	* Tek satırlık notlar için -- kullanılır
+		
+		f x = x * x	-- f fonksiyonu tanımlandı
+
+
+	* Bir kaç satırlık not için yazılanlar {- ve -} arasına alınır
+
+		{- bu kısımda
+		   bazı notlar
+		   yer almaktadır -}
+
+
+
+
+Recursion
+---------
+
+	* örnek 1:
+		fact 1 = 1
+		fact n = n * fact (n-1)
+
+
+	* örnek 2:	
+		uzunluk []	= 0
+		uzunluk (x:xs)	= 1 + uzunluk xs
+
+
+	* örnek 3:
+		filtre p []	= []
+		filtre p (x:xs)	= 
+			if p x:
+			then x : filtre p xs
+			else filtre p xs
+
+
+		Test&gt;filtre Char.isUpper &quot;meRhABa&quot;
+		&quot;RAB&quot;
+
+
+
+
+Types (tipler)
+-------------
+
+	* Haskell, static type cheking kullanır, yani bütün ifadeler için bir tip belirlenir.
+	Bir arguman için olması gerekenden farklı tipte bir değer kullanılırsa, derleme anında
+	hata oluşur.
+
+
+	* Bütün ifadeler için tip belirlenmesi zorunlu olmasına karşın, bunu programcı belirtmek
+	zorunda değildir. Tip belirtilmediğinde, en uygun olan tip otomatik olarak seçilir.
+
+
+	* Bir değerin tipini öğrenmek için etkileşimli modda :type veya :t kullanılır
+
+		Prelude&gt;:type 'a'
+		Char
+
+		Prelude&gt;:t &quot;merhaba&quot;
+		[Char]
+
+		Prelude&gt;:t 1 == 2
+		Bool
+
+		Prelude&gt;:t 4
+		forall t. (Num t) =&gt; t
+
+		Prelude&gt;:t 4.0
+		forall t. (Fractional t) =&gt; t
+	
+		Prelude&gt;:t fst
+		for all a b. (a,b) -&gt; a
+
+	
+	* Değerin tipi, programcı tarafından da :: kullanılarak belirtilebilir
+
+		Prelude&gt;:t 4 :: Int
+		Int
+
+		Prelude&gt;:t 4 :: Double
+		Double
+
+		Prelude&gt;:t &quot;merhaba&quot; :: String
+		String
+
+
+		
+</code></pre>
+</body>
+</html>

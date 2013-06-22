@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>vmware_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# VMWARE NOTLARI
+# -----------------------------------------------------------------------------
+
+# Vmware ESXI'de konsoldan makine klonlama
+Bu işlemler esnasında klonlanacak makine ve yeni makine kapalı olmalı.
+
+    - VSphere'de klonlanacak makine ile benzer özelliklere sahip bir
+      oluştur. Disk silineceği için işlem çabuk bitsin diye küçük bir disk
+      boyu seç.
+
+    - SSH ile Vmware hosta bağlan.
+
+    - Datastore klasörüne geç.
+        cd /vmfs/volumes/DatastoreX
+
+    - Yeni oluşturulan makinenin mevcut disk bilgilerini sil.
+        rm /vmfs/volumes/DatastoreX/yeni_makine/*.vmdk
+
+    - Eski makinedeki diskleri, yeni makineye kopyala. Dİski kopyalarken, yeni
+      makinedeki disk adı, bir önceki komutla siline disk adı ile aynı olmalı.
+        vmkfstools &ndash;i /vmfs/volumes/DatastoreX/eski_makine/eski_makine.vmdk \
+        /vmfs/volumes/DatastoreX/yeni_makine/yeni_makine.vmdk
+
+    - Yeni makineyi çalıştır.
+</code></pre>
+</body>
+</html>

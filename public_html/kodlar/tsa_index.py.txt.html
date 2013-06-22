@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>tsa_index.py.txt</title>
+</head>
+<body>
+<pre><code>
+import os
+import re
+import base64
+import subprocess
+from mod_python import psp
+
+PAROLA      = 'parola'              # tsa cevabi olusturulurken kullanilacak anahtar icin parola
+
+
+
+#--------------------------------------------
+# gelen istek icinde base64 icinde olamayacak
+# bir karakter var mi diye kontrol eden bolum
+def guvenli_mi(str):
+    try:
+       SABLON = re.compile('&circ;([a-zA-Z0-9/+=]*)$')
+       g = SABLON.search(str)
+       if not g: raise RuntimeError
+
+       return True
+    except:
+       return False
+
+
+
+#--------------------------------------------
+# base64 ile kodlanmis veriyi acar
+def decode(str):
+    try:
+        destr = base64.b64decode(str)
+
+        return destr
+    except:
+        return None
+
+
+
+#--------------------------------------------
+# request dosyasini /tmp altinda olusturur
+def reqfile(pid, destr):
+    try:
+        d = open('/tmp/%s.tsq' % pid, 'w')
+        d.write(destr)
+        d.close()
+
+        return True
+    except:
+        return False
+
+
+
+#--------------------------------------------
+# response dosyasini /tmp altinda olusturur
+def resfile(pid):
+    try:
+        komut  = '/usr/local/bin/ssl/openssl '
+        komut += 'ts -reply -queryfile /tmp/%s.tsq ' % pid
+        komut += '-out /tmp/%s.tsr ' % pid
+        komut += '-token_out -config /etc/ssl/openssl.cnf '
+        komut += '-passin pass:%s' % PAROLA
+        p = subprocess.Popen(komut, shell=True)
+        sts = os.waitpid(p.pid, 0)[1]
+
+        return True
+    except:
+        return False
+
+
+
+#--------------------------------------------
+# olusturulan dosyalari temizleyen bolum
+def tmp_temizle(pid):
+    try:
+        komut = 'rm -rf /tmp/%s.tsq /tmp/%s.tsr' % (pid, pid)
+        p = subprocess.Popen(komut, shell=True)
+        sts = os.waitpid(p.pid, 0)[1]
+
+        return True
+    except:
+        return False
+
+
+
+#--------------------------------------------
+# dondurulecek cevabi (response) hazirlayan bolum
+def response(pid):
+    try:
+        d = open('/tmp/%s.tsr' % pid, 'r')
+        res = d.read()
+        d.close()
+        enres = base64.b64encode(res)
+
+        return enres
+    except:
+        return None
+
+
+
+#--------------------------------------------
+# Ana bolum, istek geldiginde burasi calisir
+def index(req):
+    try:
+        # istek icin calistirilan process'in pid numarasi,
+        # olusacak tmp dosyalar icin de kullanilacak
+        pid     = os.getpid()
+
+        # request ile tsa istek paketinin base64 ile encode'lanmis hali gelir
+        # request degeri gelmediyse hata var demektir
+        if not req.form.has_key('request'): raise RuntimeError
+        request = req.form['request']
+
+        # gelen deger icinde base64 icin uygun olmayan
+        # karakter varsa hata var demektir
+        if not guvenli_mi(request): raise RuntimeError
+
+        # request degerini decode et
+        # ve bu deger ile request dosyasini /tmp altinda olustur
+        # decode edilemezse veya dosya olusturulamazsa hata var demektir
+        dereq = decode(request)
+        if not dereq: raise RuntimeError
+        if not reqfile(pid, dereq): raise RuntimeError
+
+        # response dosyasini /tmp klasorunde olustur
+        # dosya olusturulamazsa hata var demektir
+        if not resfile(pid): raise RuntimeError
+
+        # response dosyasinin icerigini base64 ile encode edip cevap olarak dondur
+        # encode edilemezse hata var demektir
+        res = response(pid)
+        if not res: raise RuntimeError
+
+    except:
+        res = 'error'
+    finally:
+        # gecici olarak olusturulmus dosyalari sil
+        try     : tmp_temizle(pid)
+        except  : pass
+
+    return res
+
+</code></pre>
+</body>
+</html>

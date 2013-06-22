@@ -1,0 +1,813 @@
+#!/usr/bin/python
+
+import socket
+import math
+import time
+import os
+
+DEBUG                           = 0                         # log ciktisi olacak mi
+ADRES                           = '192.168.100.201'         # yazici IP adresi
+PORT                            = 10001                     # yazici port numarasi
+SOCKET_TIMEOUT                  = 0.100                     # socket baglantilarinda zaman asimi suresi (saniye)
+BUFFER_SIZE                     = 1024                      # socket ile veri alirken buffer boyu
+BLOCK_SIZE                      = 500.0                     # blok paketi ile gonderilebilecek maksimum byte miktari
+WAIT_TIME                       = 0.200                     # paket gonderirken yazicinin tikanmamasi icin bekleme araligi (saniye)
+
+LABEL_DATA_FILE                 = 0x0001
+FORMAT_FILE                     = 0x0002
+LOGO_FILE                       = 0x0003
+FONT_FILE                       = 0x0004
+MENU_FILE                       = 0x0005
+SPEED_LOG_FILE                  = 0x0006
+BINARY_PARAMETER_FILE           = 0x0007
+ASCII_INI_FILE                  = 0x0008
+DIRECTORY_FILE                  = 0x0009
+JOB_PARAMETER_FILE              = 0x000F
+LANGUAGE_XML_FILE               = 0x0011
+VARIABLE_DATA_FILE              = 0x0012
+UNKNOWN_FILE                    = 0x00CF
+CONSTRAINTS_XML_FILE            = 0x00DF
+
+
+# ------------------------------------------------
+class Telegram:
+    """Iletisimde kullanilan paketin temel sinifi"""
+
+    sd              = 0x01              # baslangic karakteri... request icin 0x01, response icin 0x02
+    adr             = 0x81              # printer adresi... 
+                                        #    0x80        -> host
+                                        #    0x80 + n    -> printer adresi ( 1 <= n <= 32 )
+                                        #    0xC0        -> SmartTouch
+    typ             = 0x00              # generic mesajlar
+                                        #    0xA1       -> acknowledge message
+                                        #    0xA2       -> negative acknowledge message
+                                        #    0xA3       -> request file transfer
+                                        #    0xA4       -> file not found
+                                        #    0xA5       -> file transfer header block
+                                        #    0xA6       -> file transfer data block
+                                        #    0xA7       -> end of single file transfer
+                                        #    0xA8       -> end of multiple file transfer
+                                        #    0xA9       -> abort file transfer
+                                        #    0xB8       -> forced file download request
+                                        # host -> printer
+                                        #    0xA0       -> poll for request
+                                        #    0xAA       -> product select
+                                        #    0xAB       -> request counts
+                                        #    0xAD       -> counts and status request
+                                        #    0xAF       -> print
+                                        #    0xB3       -> RTC synchronisation
+                                        #    0xB4       -> full status request
+                                        #    0xBB       -> change printer mode
+                                        #    0xBE       -> insert key event
+                                        #    0xC2       -> extended product select
+                                        #    0xC3       -> delete file
+                                        #    0xC4       -> update variable fields
+                                        #    0xC5       -> quick select
+                                        #    0xC8       -> clear database
+                                        # printer -> host
+                                        #    0xAC       -> report counts
+                                        #    0xB0       -> report counts and status message
+                                        #    0xB1       -> stop host polling
+                                        #    0xB2       -> start host polling
+                                        #    0xB5       -> full status report
+                                        #    0xB7       -> log file record
+                                        #    0xC9       -> status for product select
+                                        #    0xDF       -> expandable status report
+    data_len_lsb    = 0x00              # data uzunlugu LSB
+    data_len_msb    = 0x00              # data uzunlugu MSB
+    data_len        = 0x00              # data uzunlugu
+    header_crc      = 0x00              # baslik checksum
+    data            = ''                # veri
+    data_crc_lsb    = 0x00              # veri checksum LSB
+    data_crc_msb    = 0x00              # veri checksum MSB
+    data_crc        = 0x00              # veri checksum
+    paket           = ''                # transfer paketi
+
+
+    # ------------------------------------------------
+    def reset(self):
+        """Sinif degiskenlerini resetler"""
+
+        self.typ            = 0x00
+        self.data_len_lsb   = 0x00
+        self.data_len_msb   = 0x00
+        self.data_len       = 0x00
+        self.header_crc     = 0x00
+        self.data           = ''
+        self.data_crc_lsb   = 0x00
+        self.data_crc_msb   = 0x00
+        self.data_crc       = 0x00
+        self.paket          = ''
+
+
+    # ------------------------------------------------
+    def toInt(self, hexStr):
+        """Metin formatindaki hex sayiyi tam sayiya cevirir. LSF kullaniliyor"""
+
+        byte1 = 0
+        byte2 = 0
+        byte3 = 0
+        byte4 = 0
+
+        try:
+            # uzunluk 2 veya 4 byte olabilir
+            uzunluk = len(hexStr)
+            if uzunluk not in (2,4): raise RuntimeError
+
+            # 1 word
+            byte1 = ord(hexStr[0])
+            byte2 = ord(hexStr[1])
+
+            # varsa 2. word
+            if uzunluk == 4:
+                byte3 = ord(hexStr[2])
+                byte4 = ord(hexStr[3])
+
+            # sayiya cevirip degeri dondur
+            hex = '%02x%02x%02x%02x' % (byte4, byte3, byte2, byte1)
+            return int(hex, 16)
+        except:
+            return None
+
+
+    # ------------------------------------------------
+    def veriUzunlugunuHesapla(self):
+        """data alanindaki verinin uzunlugunu ilgili degiskenlere set eder"""
+
+        try:
+            data_len            = '%04X' % (len(self.data))
+            self.data_len_lsb   = int(data_len[2:4], 16)
+            self.data_len_msb   = int(data_len[0:2], 16)
+            self.data_len       = int(data_len, 16)
+
+            return True
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def baslikCrcHesapla(self):
+        """baslik checksum degerini hesaplar"""
+
+        try:
+            crc = self.sd + self.adr + self.typ + self.data_len_lsb + self.data_len_msb
+            crc = crc & 0xFF
+            crc = 0xFF - crc
+            self.header_crc = crc
+
+            return True
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def veriCrcHesapla(self):
+        """veri checksum degerini hesaplar"""
+
+        try:
+            crc = 0xFFFF
+            for c in self.data:
+                crc = crc ^ ord(c)
+                for i in range(8):
+                    if (crc & 1) == 0:
+                        crc = crc >> 1
+                    else:
+                        crc = (crc >> 1) ^ 0xA001
+
+            crc                 = '%04X' % crc
+            self.data_crc_lsb   = int(crc[2:4], 16)
+            self.data_crc_msb   = int(crc[0:2], 16)
+            self.data_crc       = int(crc, 16)
+
+            return True
+        except:
+            return False
+
+
+
+# ------------------------------------------------
+class Request(Telegram):
+    """Iletisimde kullanilan istek paketi sinifi"""
+
+    # ------------------------------------------------
+    def __init__(self):
+        # request paketi icin baslangic karakteri
+        self.sd = 0x01
+
+
+    # ------------------------------------------------
+    def paketle(self):
+        """Yaziciya gonderilecek paketi olusturur"""
+
+        try:
+            if not (self.veriUzunlugunuHesapla() and self.baslikCrcHesapla() and self.veriCrcHesapla()):
+                raise RuntimeError
+
+            self.paket  = ''
+            self.paket += '%c' % self.sd
+            self.paket += '%c' % self.adr
+            self.paket += '%c' % self.typ
+            self.paket += '%c' % self.data_len_lsb
+            self.paket += '%c' % self.data_len_msb
+            self.paket += '%c' % self.header_crc
+
+            if len(self.data) > 0:
+                for c in self.data:
+                    self.paket += c
+
+                self.paket += '%c' % self.data_crc_lsb
+                self.paket += '%c' % self.data_crc_msb
+
+            return True
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def paketiAl(self):
+        """Yaziciya gonderilecek paketi cevap olarak dondurur"""
+
+        try:
+            # oncelikle paketi olustur
+            if not self.paketle(): raise RuntimeError
+
+            return self.paket
+        except:
+            raise RuntimeError
+
+
+
+# ------------------------------------------------
+class Response(Telegram):
+    """Iletisimde kullanilan cevap paketi sinifi"""
+
+    SD                  = 0x02              # Response telegrami icin baslangic karakteri
+    isError             = False             # paket alinirken hata olustu mu
+    AC_batch_count      = 0
+    AC_total_count      = 0
+    AC_batch_reject     = 0
+    AC_total_reject     = 0
+
+
+    # ------------------------------------------------
+    def resetAlarm(self):
+        """Alarm degiskenlerini resetler"""
+
+        self.isError    = False
+
+
+    # ------------------------------------------------
+    def resetData(self):
+        """Ozel data degiskenlerini resetler"""
+
+        self.AC_batch_count     = 0
+        self.AC_total_count     = 0
+        self.AC_batch_reject    = 0
+        self.AC_total_reject    = 0
+
+
+    # ------------------------------------------------
+    def parseData(self, typ, data):
+        """Gelen datayi istek tipine gore parse eder"""
+
+        try:
+            if typ == 0xAC:
+                self.AC_batch_count     = self.toInt(data[0:4])
+                self.AC_total_count     = self.toInt(data[4:8]) 
+                self.AC_batch_reject    = self.toInt(data[8:12]) 
+                self.AC_total_reject    = self.toInt(data[12:16]) 
+            return True
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def setPaket(self, paket):
+        """Response paketini alir ve parse eder"""
+
+        try:
+            # degiskenleri resetle
+            self.reset()
+            self.resetAlarm()
+            self.resetData()
+            self.paket = paket
+
+            # paket uygun boyutlarda degilse isleme sokma
+            if len(paket) < 6: raise RuntimeError
+
+            # baslangic karakterini kontrol et
+            self.sd = ord(paket[0])
+            if self.sd != self.SD: raise RuntimeError
+
+            # adres byte'ini kontrol et
+            # paket, host'a gonderildigi icin bu deger her zaman 0x80 olmali
+            self.adr = ord(paket[1])
+            if self.adr != 0x80: raise RuntimeError
+
+            # mesaj tipimi al
+            self.typ = ord(paket[2])
+
+            # veri uzunlugu byte'larini al
+            self.data_len_lsb   = ord(paket[3])
+            self.data_len_msb   = ord(paket[4])
+            data_len            = '%02x%02x' % (self.data_len_msb, self.data_len_lsb)
+            self.data_len       = int(data_len, 16)
+
+            # header crc kontrolu yap
+            crc = ord(paket[5])
+            if not self.baslikCrcHesapla() or self.header_crc != crc: raise RuntimeError
+
+            # paket icinde data bolumu de varsa
+            if self.data_len > 6:
+                # data bolumunu kontrol et
+                # header'dan sonra basliyor; sondaki 2 crc byte'ina kadar devam ediyor
+                self.data = paket[6:-2]
+                if len(self.data) != self.data_len: raise RuntimeError
+
+                # data crc kontrolu yap
+                data_crc = '%02x%02x' % (ord(paket[-1]), ord(paket[-2]))
+                data_crc = int(data_crc, 16)
+                if not self.veriCrcHesapla() or self.data_crc != data_crc: raise RuntimeError
+
+                # gelen cevaba gore data bolumunu parse et
+                self.parseData(self.typ, self.data)
+
+            return True
+        except:
+            self.isError = True
+            return False
+
+
+
+
+# ------------------------------------------------
+class cimCommsEth:
+    """Yazici ile ethernet uzerinden haberlesme modulu"""
+
+    host    = 'localhost'
+    port    = 10001
+    sunucu  = (host, port)
+    node    = 1
+
+    req     = Request()
+    res     = Response()
+
+
+    # ------------------------------------------------
+    def setSunucu(self):
+        """Sunucu degerini set eder"""
+
+        self.sunucu = (self.host, self.port)
+
+
+    # ------------------------------------------------
+    def setAdres(self):
+        """Request sinifi icin adres/node degerini set eder"""
+
+        self.req.adr = 0x80 + self.node
+
+
+    # ------------------------------------------------
+    def getDosyaAdi(self, dosya_adi):
+        """Dosya adini, paketlerde kullanilan bicime cevirir"""
+
+        try:
+            uzunluk = len(dosya_adi)
+            # dosya uzunlugu 21'den buyukse hata var demektir
+            if uzunluk > 21: 
+                raise RuntimeError
+            else:
+                # dosya adini 22 karaktere \x00 kullanarak tamamla
+                ad = dosya_adi
+                for i in range(22 - uzunluk): ad += '\x00'
+
+            return ad
+        except:
+            return None
+
+
+
+    # ------------------------------------------------
+    def paketGonder(self, cevap_bekle=True):
+        """Yaziciya Request paketini gonderir"""
+
+        try:
+            # cevap degiskenlerini resetle
+            self.res.reset()
+            self.res.resetAlarm()
+            # sunucu ve yazici node bilgilerini set et
+            self.setSunucu()
+            self.setAdres()
+            # socket baglantisi kur ve paketi gonder
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(SOCKET_TIMEOUT)
+            sock.connect(self.sunucu)
+            sock.send(self.req.paketiAl())
+
+            # cevap olarak donen veriyi al
+            paket = ''
+            while True:
+                try:
+                    # timeout suresince veri bekle
+                    # timeout hatasi verirse veri gelmeyecektir, donguden cik
+                    buffer    = sock.recv(BUFFER_SIZE)
+                    paket    += buffer
+                    # alinan veri bufferi doldurmadiysa, baska veri gelmeyecektir
+                    # bu durumda donguden cik
+                    if len(buffer) < BUFFER_SIZE: break
+                except:
+                    break
+            sock.close()
+
+            # eger cevap beklenen bir paket ise alinan cevabi parse et
+            if cevap_bekle and not self.res.setPaket(paket): raise RuntimeError
+
+            return True
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA0(self):
+        """Yaziciya 0xA0 (poll for request) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xA0
+
+            # paket basari ile gonderilirse, yazicidan istek paketi gelir. Dosya istegi 0xA3...
+            # eger 0xA1 paketi gelirse, yazicinin bir istegi yok demektir
+            return self.paketGonder()
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA1(self, cevap_bekle=False):
+        """Yaziciya 0xA1 (acknowledge) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xA1
+
+            if cevap_bekle:
+                # bu paket icin cevap beklenecekse
+                return self.paketGonder() & (self.res.typ == 0xA1)
+            else:
+                # bu paket icin cevap beklenmeyecekse
+                return self.paketGonder(cevap_bekle=False)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA2(self):
+        """Yaziciya 0xA2 (negative acknowledge) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xA2
+
+            # bu paket icin cevap beklenmeyecek
+            return self.paketGonder(cevap_bekle=False)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA4(self):
+        """Yaziciya 0xA4 (file not found) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xA4
+
+            # bu paket icin cevap beklenmeyecek
+            return self.paketGonder(cevap_bekle=False)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA5(self, dosya_uzunlugu, blok_sayisi, dosya_adi):
+        """Yaziciya 0xA5 (file transfer header block) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ    = 0xA5
+            file_len        = '%08x' % dosya_uzunlugu           # gonderilecek dosyanin uzunlugu
+            block_num       = '%04x' % blok_sayisi              # dosyanin kac blok halinde gonderilecegi
+            filename        = self.getDosyaAdi(dosya_adi)       # gonderilecek dosyanin adi
+            if not filename: raise RuntimeError
+
+            # data alanini hazirla
+            data             = ''
+            data            += '%c' % int(file_len[6:8], 16)
+            data            += '%c' % int(file_len[4:6], 16)
+            data            += '%c' % int(file_len[2:4], 16)
+            data            += '%c' % int(file_len[0:2], 16)
+            data            += '%c' % int(block_num[2:4], 16)
+            data            += '%c' % int(block_num[0:2], 16)
+            data            += filename
+            self.req.data    = data
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            return self.paketGonder() & (self.res.typ == 0xA1)
+
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA6(self, blok_no, blok):
+        """Yaziciya 0xA6 (file transfer data block) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ    = 0xA6
+            block_num    = '%04x' % blok_no        # gonderilen blogun sira numarasi
+            if len(blok) > 510: raise RuntimeError
+
+            # data alanini hazirla
+            data             = ''
+            data            += '%c' % int(block_num[2:4], 16)
+            data            += '%c' % int(block_num[0:2], 16)
+            data            += blok
+            self.req.data    = data
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            return self.paketGonder() & (self.res.typ == 0xA1)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA7(self):
+        """Yaziciya 0xA7 (end of single file transfer) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xA7
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            return self.paketGonder() & (self.res.typ == 0xA1)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderA8(self):
+        """Yaziciya 0xA8 (end of multiple files transfer) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xA8
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            return self.paketGonder() & (self.res.typ == 0xA1)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderAB(self):
+        """Yaziciya 0xAB (request count) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xAB
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xAC paketi gelecek
+            return self.paketGonder() & (self.res.typ == 0xAC)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderB8(self, dosya_adi, dosya_tipi):
+        """Yaziciya 0xB8 (forced file download request) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xB8
+
+            filetype    = '%04x' % dosya_tipi        # gonderilecek dosyanin tipi
+            filename    = self.getDosyaAdi(dosya_adi)    # gonderilecek dosyanin adi
+            if not filename: raise RuntimeError
+
+            # data alanini hazirla
+            data             = ''
+            data            += '%c' % int(filetype[2:4], 16)
+            data            += '%c' % int(filetype[0:2], 16)
+            data            += filename
+            self.req.data    = data
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            return  self.paketGonder() & (self.res.typ == 0xA1)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderC3(self, dosya_adi, dosya_tipi):
+        """Yaziciya 0xC3 (delete file) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xC3
+
+            filenum     = '%04x' % 1            # silinecek dosya adedi
+            filetype    = '%04x' % dosya_tipi        # silinecek dosyanin tipi
+            filename    = self.getDosyaAdi(dosya_adi)    # silinecek dosyanin adi
+            if not filename: raise RuntimeError
+
+            # data alanini hazirla
+            data             = ''
+            data            += '%c' % int(filenum[2:4], 16)
+            data            += '%c' % int(filenum[0:2], 16)
+            data            += '%c' % int(filetype[2:4], 16)
+            data            += '%c' % int(filetype[0:2], 16)
+            data            += filename
+            self.req.data    = data
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            return self.paketGonder() & (self.res.typ == 0xA1)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderC5(self, dosya_adi):
+        """Yaziciya 0xC5 (quick select) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xC5
+
+            filename = self.getDosyaAdi(dosya_adi)    # secilecek dosyanin adi
+            if not filename: raise RuntimeError
+
+            # data alanini hazirla
+            self.req.data = filename
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            return self.paketGonder() & (self.res.typ == 0xA1)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def gonderC8(self):
+        """Yaziciya 0xC8 (clear database) paketini gonderir"""
+
+        try:
+            self.req.reset()
+            self.req.typ = 0xC8
+
+            # paket basari ile gonderilirse, yazicidan cevap olarak 0xA1 paketi gelecek
+            if self.paketGonder() & (self.res.typ == 0xA1):
+                # silmeyi islemini onaylamak icin 0xA1 paketine, 0xA1 paketi ile cevap ver
+                # cevap olarak yine 0xA1 paketi gelecek
+                return self.gonderA1(cevap_bekle=True) & (self.res.typ == 0xA1)
+        except:
+            return False
+
+
+    # ------------------------------------------------
+    def parseDosyaAdi(self, dosya):
+        """Path seklinde verilen dosya adini parse eder. Dosya adi ve tipini dondurur"""
+
+        try:
+            # pathi ve dosya adini ayir
+            (path, dosya_adi) = os.path.split(dosya)
+            # dosya adindan, dosya adi kokunu ve uzantiyi ayir
+            (dosya_adi, uzanti) = os.path.splitext(dosya_adi)
+            uzanti = uzanti.upper()
+            # uzantidan dosya tipini belirle
+            if uzanti == '.LBX':    dosya_tipi = LABEL_DATA_FILE
+            elif uzanti == '.FMX':  dosya_tipi = FORMAT_FILE
+            elif uzanti == '.TIX':  dosya_tipi = LOGO_FILE
+            else: raise RuntimeError
+
+            return (dosya_adi, dosya_tipi)
+
+        except:
+            return (None, 0x0000)
+
+
+    # ------------------------------------------------
+    def getDosyaUzanti(self, dosya_tipi):
+        """Tipi verilen dosya icin kullanilacak uzantiyi dondurur"""
+
+        try:
+            # dosya tipinden uzantiyi belirle
+            if dosya_tipi == LABEL_DATA_FILE:   uzanti = '.LBX'
+            elif dosya_tipi == FORMAT_FILE:     uzanti = '.FMX'
+            elif dosya_tipi == LOGO_FILE:       uzanti = '.TIX'
+            else: raise RuntimeError
+
+            return uzanti
+        except:
+            return None
+
+
+    # ------------------------------------------------
+    def dosyaGonder(self, dosya, request=False):
+        """Yaziciya dosya gonderir"""
+
+        try:
+            if DEBUG: print('DOSYA', dosya)
+
+            # dosya var mi testi
+            # talep edilen dosyanin adinin uzunlugu ile
+            # mevcut dosyanin adinin uzunlugu ayni olmayabiliyor
+            test_var_mi             = False
+            test_uzanti             = dosya[-4:]
+            test_path               = dosya[:-4]
+            (test_path, test_ad)    = os.path.split(test_path)
+            while True:
+                test_dosya = '%s/%s%s' % (test_path, test_ad, test_uzanti)
+                # dosya bulunamadi
+                if not os.path.isfile(test_dosya):
+                    if DEBUG: print('TEST %s dosya yok' % test_dosya)
+                    test_ad = test_ad[:-1]
+                    if len(test_ad) < 8: break
+                    continue
+                # dosya bulundu
+                else:
+                    test_var_mi = True
+                    dosya = test_dosya
+                    break
+
+            # dosya bulunamadi ise
+            if not test_var_mi:
+                if DEBUG: print('ERROR dosya yok')
+                # eger bu yazicidan gelen bi istekse, A4 (dosya yok) dondur
+                if request: self.gonderA4()
+                raise RuntimeError
+
+            # dosyaya ait bilgileri topla
+            dosya_uzunluk           = os.path.getsize(dosya)
+            blok_sayisi             = int(math.ceil(dosya_uzunluk/BLOCK_SIZE))
+            (path, tmp)             = os.path.split(dosya)
+            (dosya_adi, dosya_tipi) = self.parseDosyaAdi(dosya)
+            if DEBUG: print('PATH', path)
+            if DEBUG: print('DOSYA ADI', dosya_adi)
+            if DEBUG: print('DOSYA UZANTI', dosya_tipi)
+
+            # bu dosya, yazicidan istenmediyse, B8 (transfere zorlama) paketi gonder
+            if not request:
+                # transfer paketi gonderilemediyse
+                time.sleep(WAIT_TIME)
+                if not self.gonderB8(dosya_adi, dosya_tipi): raise RuntimeError
+
+            # yazici dosyayi almaya hazir mi? Hazirsa 0xA3 gelecek
+            time.sleep(WAIT_TIME)
+            if not self.gonderA0() or self.res.typ != 0xA3: raise RuntimeError
+            # header blogunu gonder
+            time.sleep(WAIT_TIME)
+            if not self.gonderA5(dosya_uzunluk, blok_sayisi, dosya_adi): raise RuntimeError
+            if DEBUG: print('HEADER GONDERILDI')
+
+            # dosyayi acip bloklari gonder
+            time.sleep(WAIT_TIME)
+            d = open(dosya, 'r')
+            for i in range(blok_sayisi):
+                if not self.gonderA6(i, d.read(int(BLOCK_SIZE))): raise RuntimeError
+            d.close()
+            if DEBUG: print('BLOKLAR GONDERILDI')
+
+            # dosya transferini bitir
+            time.sleep(WAIT_TIME)
+            if not self.gonderA7(): raise RuntimeError
+            if DEBUG: print('TRANSFER BITIRILDI', dosya)
+
+            # yazici baska dosyalar bekliyorsa onlari da gonder
+            time.sleep(WAIT_TIME)
+            while self.gonderA0() and self.res.typ == 0xA3: 
+                # dosya ismini duzelt
+                uzanti  = self.getDosyaUzanti(ord(self.res.data[0]))
+                dosya   = self.res.data[2:].replace('\x00','')
+                dosya   = '%s/%s%s' % (path, dosya, uzanti)
+                if DEBUG: print('TALEP', dosya)
+
+                # dosya transferi gerceklesemediyse RuntimeError
+                if not self.dosyaGonder(dosya, True): raise RuntimeError
+            return True
+        except:
+            return False
+
+
+
+
+
+# ------------------------------------------------
+# programin ana bolumu
+if __name__ == '__main__':
+    p       = cimCommsEth()
+    p.host  = ADRES
+    p.port  = PORT
+    p.node  = 1
+    print p.dosyaGonder('/home/servis/mp/urunler/8690985101346/8690985101346.LBX')
+    #print p.dosyaGonder('/home/servis/mp/urunler/8690985101346/SABLON_TVIST_70.FMX')
+    #print p.gonderC5('8690985101346')

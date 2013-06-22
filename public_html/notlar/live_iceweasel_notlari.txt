@@ -1,0 +1,47 @@
+Live Iceweasel Notları
+----------------------
+
+- /etc/fstab
+
+  tmpfs   /var/cache/browser   tmpfs   noatime,size=64M,nr_inodes=10k,mode=777   0   0
+
+
+- mount
+
+  mkdir /var/cache/browser
+  mount /var/cache/browser
+
+
+- iceweasel about:config
+
+  browser.cache.disk.parent_directory -> /var/cache/browser
+
+
+
+- /var/cache/browser/mozilla için sembolik link
+
+  cd
+  mv .mozilla .mozilla.org
+  ln -s /var/cache/browser/mozilla .mozilla
+
+
+
+- toram.sh (~/proje/mozilla_live/)
+
+  rm -rf /var/cache/browser/mozilla
+  mkdir -p /var/cache/browser/mozilla
+  cp -arp ~/.mozilla.org/* /var/cache/browser/mozilla/
+
+
+
+- todisk.sh (~/proje/mozilla_live/)
+
+  rm -rf ~/.mozilla.org/*
+  mkdir ~/.mozilla.org/
+  cp -arp /var/cache/browser/mozilla/* ~/.mozilla.org/
+
+
+
+- ~/.config/openbox/autostart.sh
+
+  (sleep 2; ~/proje/mozilla_live/toram.sh) &

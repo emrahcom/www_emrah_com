@@ -1,0 +1,48 @@
+WINDOWS MASAÜSTÜNE LINUX MAKİNEDEN ERİŞİM
+-----------------------------------------
+
+- Remote Desktop
+  Bağlantı kurulunca karşı tarafın oturumu durdurulur
+  VNC'den hızlı
+  Shutdown veya reboot için task manager menüsü kullanılacak
+
+	- Windows makinede yapılacaklar
+		
+		. Bilgisayarım (mouse sağ tuş) -> Özellikler -> Uzak -> 
+		  Kullanıcıların bu bilgisayara uzaktan bağlanmalarına izin ver
+
+	- Debian GNU/Linux makinede yapılacaklar
+
+		. aptitude install rdesktop
+
+		. TCP 3389 portuna erişim hakkı olacak
+	
+		. rdesktop [-k tr|en-us] [-u kullanici] [IP adresi][:port]
+
+
+
+- VNC
+  Bağlantı kurulunca karşı tarafın oturumu devam eder
+	- Windows makinede yapılacaklar
+
+		. Download
+		  http://www.tightvnc.com/download.html
+
+		. Kurulum
+			. Sadece sunucu
+			. HTTP sunucu iptal
+			. 8 karakter parola
+			. Servis olarak çalışsın
+
+		. Windows Firewall'dan TCP 5900. port için izin
+		  Birden fazla bağlantı olacaksa 5900:5909
+		  HTTP sunucu da devrede olacaksa TCP 5800. port için de izin
+
+
+	- Debian GNU/Linux makinede yapılacaklar
+
+		. aptitude install xvnc4viewer
+		
+		. TCP 5900:5909 portlarına erişim hakkı verilecek
+
+		. vncviewer [IP adresi][:port]

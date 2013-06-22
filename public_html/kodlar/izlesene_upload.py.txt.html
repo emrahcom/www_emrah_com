@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>izlesene_upload.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+
+###############################################################################
+# dosya     : izlesene_upload.py
+# ilgili    : emrah_5@gmail.com
+#
+# Bu script, izlesene sitesine video yukleyip ID numarasini alir.
+#
+###############################################################################
+
+import sys
+import socket
+import urllib
+import urllib2
+import pycurl
+import cStringIO
+from os.path import exists
+
+# izlesene.com kullanici adi.
+IZLESENE_USERNAME = &quot;username&quot;
+# izlesene.com API key. Kendi API_KEY degerinizi yazin.
+API_KEY = &quot;api_key&quot;
+# izlesene.com private key. Kendi PRIVATE_KEY degerinizi yazin.
+PRIVATE_KEY = &quot;private_key&quot;
+# izlesene.com token veren web sayfasi.
+PAGE_GETTOKEN = &quot;http://www.izlesene.com/api/upload/gettoken&quot;
+# izlesene.com upload initialize sayfasi.
+PAGE_INIT = &quot;http://www.izlesene.com/api/upload/init_upload&quot;
+# izlesene.com bilgi guncelleme sayfasi.
+PAGE_UPDATE = &quot;http://www.izlesene.com/api/upload/update_info&quot;
+# izlesene.com upload sayfasi.
+PAGE_UPLOAD = &quot;http://up.izlesene.com/uploadv2.php&quot;
+# izlesene.com sitesine yuklenen video icin default video adi.
+IZLESENE_VIDEO_NAME = &quot;Default Video Adi&quot;
+# izlesene.com sitesine yuklenen video icin default video aciklamasi.
+IZLESENE_VIDEO_DESC = &quot;Default Video Aciklamasi&quot;
+# izlesene.com sitesine yuklenen video icin default video tags.
+IZLESENE_VIDEO_TAGS = &quot;default,tags,listesi&quot;
+# Videolarin gidecegi kategori kodu. Default 16: NEWS
+IZLESENE_VIDEO_CATEGORY = 16
+# Socket timeout suresi. Web sayfasi isterken bu timeout suresi gecerli olur.
+SOCKET_TIMEOUT = 20
+# Dosya yuklerken timeout suresi.
+UPLOAD_TIMEOUT = 900
+# Debug yapilacak mi? Test ortami icin 1, gercek calisma ortami icin 0
+# Default olarak bu deger, config.py dosyasindan geliyor.
+DEBUG = 1
+
+
+
+# -----------------------------------------------------------------------------
+# Video yuklemeden once token alan bolum.
+def get_token():
+    try:
+        socket.setdefaulttimeout(SOCKET_TIMEOUT)
+        param = urllib.urlencode({ 'apikey' : API_KEY,
+                                   'private_key' : PRIVATE_KEY })
+        req = urllib2.Request(PAGE_GETTOKEN, param)
+        res=urllib2.urlopen(req)
+        data=res.read()
+
+        result = data
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        result = None
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# Token ve kullanici adi ile video yukleme talebinde bulunup sira numarasi alan
+# bolum.
+def init_upload(token):
+    try:
+        socket.setdefaulttimeout(SOCKET_TIMEOUT)
+        param = urllib.urlencode({ 'username' : IZLESENE_USERNAME,
+                                   'token' : token })
+        req = urllib2.Request(PAGE_INIT, param)
+        res=urllib2.urlopen(req)
+        data=res.read()
+
+        result = data
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        result = None
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# Sira numarasi ile birlikte bazi ek veriler de geliyor. Bu verileri parse
+# eden bolum.
+def parse_initdata(initdata):
+    try:
+        return initdata.split(',')
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        result = [None, None, None, None]
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# Yuklenecek video icin bilgi formunu dolduran bolum.
+def update_info(vid, t0, key, token, vname, vdesc, vtags):
+    try:
+        socket.setdefaulttimeout(SOCKET_TIMEOUT)
+        param = urllib.urlencode({ 'videoid' : vid,
+                                   'video_name' : vname,
+                                   'video_desc' : vdesc,
+                                   'video_cat' : IZLESENE_VIDEO_CATEGORY,
+                                   'video_tags' : vtags,
+                                   'time' : t0,
+                                   'key' : key,
+                                   'username' : IZLESENE_USERNAME,
+                                   'token' : token })
+        req = urllib2.Request(PAGE_UPDATE, param)
+        res=urllib2.urlopen(req)
+        data=res.read()
+
+        # OK gelmediyse hata var demektir.
+        if data != &quot;ok&quot;:
+            raise NameError('Guncelleme yapilamadi')
+
+        result = True
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        result = False
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# Videoyu yukleyen bolum.
+def upload(vid, token, ucode, t0, key, fname):
+    try:
+        param = [ ('videoid', vid),
+                  ('token', token),
+                  ('uniquecode', ucode),
+                  ('time', t0),
+                  ('key', key),
+                  ('Filedata', (pycurl.FORM_FILE, fname)) ]
+
+        cnn = pycurl.Curl()
+        cnn.setopt(pycurl.URL, PAGE_UPLOAD)
+        cnn.setopt(pycurl.POST, 1)
+        cnn.setopt(pycurl.CONNECTTIMEOUT, 30)
+        cnn.setopt(pycurl.TIMEOUT, UPLOAD_TIMEOUT)
+        cnn.setopt(pycurl.NOSIGNAL, 1)
+        cnn.setopt(pycurl.HTTPPOST, param)
+        #cnn.setopt(pycurl.VERBOSE, 1)
+        cnn.setopt(pycurl.HTTPHEADER, [ &quot;Accept: */*&quot;,
+                                        &quot;Accept-Language: en-US,en&quot;,
+                                        &quot;Accept-Charset: UTF-8;q=0.7,*;q=0.7&quot;,
+                                        &quot;Connection: keep-alive&quot;,
+                                        &quot;Expect:&quot;,
+                                        &quot;Keep-Alive: 300&quot;])
+        res = cStringIO.StringIO()
+        cnn.setopt(pycurl.WRITEFUNCTION, res.write)
+        cnn.perform()
+        cnn.close()
+
+        # Cevap olarak 1 gelmediyse hata olusmus demektir.
+        if res.getvalue().strip() != &quot;1&quot;:
+            raise NameError('Video yuklenemedi')
+
+        result = True
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        result = False
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# Program ana bolumu
+if __name__ == '__main__':
+    try:
+        # Video dosyasinin pathini al.
+        if len(sys.argv) &lt; 2:
+            raise NameError(&quot;Dosya adi tesbit edilemedi&quot;)
+        fname = sys.argv[1]
+        # Dosya mevcut degilse hata var demektir.
+        if not exists(fname):
+            raise NameError(&quot;Dosya mevcut degil&quot;)
+        # Video name degeri varsa al.
+        if len(sys.argv) &gt; 2:
+            vname = sys.argv[2]
+        else:
+            vname = IZLESENE_VIDEO_NAME
+        # Video desc degeri varsa al.
+        if len(sys.argv) &gt; 3:
+            vdesc = sys.argv[3]
+        else:
+            vdesc = IZLESENE_VIDEO_DESC
+        # Video tags degeri varsa al. Sitede bu alanda Turkce karakter
+        # olamiyor.
+        if len(sys.argv) &gt; 4:
+            vtags = sys.argv[4]
+            vtags = vtags.replace(&quot;-&quot;, &quot;,&quot;)
+            vtags = &quot;%s,%s&quot; % (IZLESENE_VIDEO_TAGS, vtags)
+        else:
+            vtags = IZLESENE_VIDEO_TAGS
+        # Siteden token al.
+        token = get_token()
+        if token is None:
+            raise NameError(&quot;Token alinamadi&quot;)
+        # Token yardimi ile sira numarasi al.
+        initdata = init_upload(token)
+        if initdata is None:
+            raise NameError(&quot;Sira no alinamadi&quot;)
+        # Sira numarasini gelen veri icinden ayikla.
+        (vid, ucode, key, t0) = parse_initdata(initdata)
+        if vid is None:
+            raise NameError(&quot;Sira no parse edilemedi&quot;)
+        # Video bilgilerini guncelle.
+        if not update_info(vid, t0, key, token, vname, vdesc, vtags):
+            raise NameError('')
+        # Videoyu yukle.
+        if not upload(vid, token, ucode, t0, key, fname):
+            raise NameError('Video yuklenemedi')
+        # izlesene.com video ID numarasini standard ciktiya yaz ve cik.
+        vidstr = &quot;%s\n&quot; % (long(vid))
+        sys.stdout.write(vidstr)
+        sys.exit(0)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        sys.stdout.write(&quot;\n&quot;)
+        sys.exit(1)
+</code></pre>
+</body>
+</html>

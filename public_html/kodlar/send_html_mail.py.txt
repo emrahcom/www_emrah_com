@@ -1,0 +1,52 @@
+#!/usr/bin/python
+# -*- coding: iso-8859-9; -*-
+
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEImage import MIMEImage
+from email.MIMEText import MIMEText
+
+KIMDEN		= 'Gonderen <gonderen@domain.com>'
+RESIM		= 'resim.jpg'
+
+
+
+# ----------------------------------------------
+# bu fonksiyon maili gonderiyor
+def mail_gonder(kimden, kime, konu, metin, dosya, server="localhost"):
+	msg = MIMEMultipart('related')
+	msg['Subject']	= konu
+	msg['From']	= kimden
+	msg['To']	= kime
+	#msg.preamble	= 'mutlu'
+
+	msgAlt		= MIMEMultipart('alternative')
+	msg.attach(msgAlt)
+
+	msgTxt = MIMEText(metin)
+	msgTxt.add_header('Content-Type', 'text/html; charset="iso-8859-9"')
+	msgAlt.attach(msgTxt)
+
+	msgTxt = MIMEText('<a href="http://www.domain.com"><img src="cid:image1"></a>', 'html')
+	msgAlt.attach(msgTxt)
+
+	f = open(dosya, 'rb')
+	img = MIMEImage(f.read())
+	f.close()
+	img.add_header('Content-ID', '<image1>')
+	msg.attach(img)
+
+	ss = smtplib.SMTP(server)
+	ss.sendmail(kimden, kime, msg.as_string())
+	ss.close()
+
+
+
+# ----------------------------------------------
+# programin calismaya basladigi bolum
+
+kime		= 'alici@domain.com'
+konu		= 'resim gömülü HTML mail'
+metin		= 'HTML görüntüleyemeyenler için text formatýnda metin'
+
+mail_gonder(KIMDEN, kime, konu, metin, RESIM) 

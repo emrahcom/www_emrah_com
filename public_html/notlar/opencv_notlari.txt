@@ -1,0 +1,15 @@
+OPENCV NOTLARI
+--------------
+
+- Kurulum
+
+	aptitude install python-opencv
+
+		-> libavcodec51
+		-> libavformat52
+		-> libavutil49
+		-> libcv1
+		-> libfaad0
+		-> libgsm1
+		-> libhighgui1
+		-> libtheora0

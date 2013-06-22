@@ -1,0 +1,489 @@
+Apache Notları
+--------------
+
+- Kurulum
+        # PHP ile kullanilacaksa
+        aptitude install apache2-mpm-prefork libapache2-mod-php5 php5-cli \
+                php5-curl php5-gd php5-mcrypt php5-mysql
+
+        # Thread sorunu olmayan bir dil ile kullanılacaksa
+        aptitude install apache2-mpm-worker
+
+
+- Ayarlar
+        # Ayarların doğruluğunun testi
+        restart veya reload yapmadan önce ayarların doğruluğu test edilsin.
+                apachectl configtest
+                /etc/init.d/apache2 reload
+
+        # Yoğun sunucularda apache2-mpm-prefork için
+
+        curl site.com | grep "src=" | wc -l ile bir bağlantıda yaklaşık
+        kaç adet istek olabileceğini tahmin et. Buna göre MaxKeepAliveRequests
+        değerini belirle.
+
+        ps aux | grep apache2 ile RSS satırına bakıp her bağlantı için fiziksel
+        hafızadan yaklaşık kaç KB kullanıldığını kontrol et.
+        [Apacheye_ayrilan_RAM] / [RSS_degeri] formülü ile MaxClients değerinin
+        kaç olabileceğini tahmin et.
+
+        MaxClients 256'dan büyük olacaksa ServerLimit değerini ona eşitle.
+
+
+        /etc/apache2/apache2.conf
+                Timeout 45
+                KeepAlive On
+                MaxKeepAliveRequests 256
+
+                <IfModule mpm_prefork_module>
+                    StartServers            5
+                    MinSpareServers        10
+                    MaxSpareServers       100
+                    ServerLimit           512
+                    MaxClients            512
+                    MaxRequestsPerChild   500
+                </IfModule>
+
+        /etc/security/limits.conf
+                www-data         hard    nofile          65536
+                www-data         soft    nofile          65536
+
+
+        # Güvenlik
+        /etc/apache2/conf.d/security
+                ServerTokens Prod
+                ServerSignature Off
+                TraceEnable Off
+
+
+        # Dosya tipine göre cache süreleri
+        cd /etc/apache2/mods-enabled
+        ln -s ../mods-available/expires.load .
+
+        /etc/apache2/sites-enables/ilgili_dosya
+                <Directory ...>
+                        ...
+
+                        <IfModule mod_expires.c>
+                                ExpiresActive on
+                                ExpiresDefault "access plus 4 hours"
+                                ExpiresByType image/jpeg "access plus 30 days"
+                                ExpiresByType image/jpg "access plus 30 days"
+                                ExpiresByType image/gif "access plus 30 days"
+                                ExpiresByType image/png "access plus 30 days"
+                                ExpiresByType image/bmp "access plus 30 days"
+                                ExpiresByType text/css "access plus 30 days"
+                                ExpiresByType text/html "access plus 30 seconds"
+                                ExpiresByType text/xml "access plus 45 seconds"
+                                ExpiresByType text/plain "access plus 60 seconds"
+                                ExpiresByType text/javascript "modification plus 30 days"
+                                ExpiresByType application/javascript "access plus 30 days"
+                                ExpiresByType application/x-javascript "access plus 30 days"
+                                ExpiresByType application/x-shockwave-flash "access plus 30 days"
+                        </IfModule>
+                </Directory>
+
+        Expire zamanını ve sayfanın header bilgilerini görmek için:
+        curl --head http://www.emrah.com/resim.jpg
+
+        # Enable edilecek modüller
+        a2enmod rewrite
+
+        # Sitelerin kendi kurallarını yazabilmesi için
+        /etc/apache2/sites-enabled/xxx
+                AllowOverride All
+
+        # Apache'yi yeniden başlat.
+        /etc/init.d/apache2 restart
+
+
+- Self-signed sertifika
+        - SSL desteğini aktif hale getirme.
+            a2enmod ssl
+            a2ensite default-ssl
+            /etc/init.d/apache2 restart
+
+        - Custom sertifika
+            mkdir /etc/apache2/ssl
+            cd /etc/apache2/ssl
+            openssl req -x509 -days 365 -newkey rsa:1024 -keyout hostkey.key -nodes -out hostcert.pem
+            chmod 600 *
+
+        - /etc/apache2/sites-enabled/default-ssl
+            #SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
+            #SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+            SSLCertificateFile    /etc/apache2/ssl/hostcert.pem
+            SSLCertificateKeyFile /etc/apache2/ssl/hostkey.key
+
+        - restart
+            /etc/init.d/apache2 restart
+
+
+- Apache Server Status
+        - mod_status aktif hale getirilecek. Default aktif.
+            a2enmod status
+
+        - İzin veriler IP adresleri
+          /etc/apache2/mods-enabled/status.conf
+            Deny from all
+            Allow from 127.0.0.1 ::1
+            Allow from 10.20.30.0/24
+
+        - İzleme
+            http://ip_adresi/server-status
+
+
+- ApacheTop
+        aptitude install apachetop libgamin0
+
+
+- Nginx: reverse proxy
+  Yoğun sitelerde Apache önüne Nginx, reverse proxy olarak konulabilir.
+
+        # Kurulum
+        aptitude install nginx libapache2-mod-rpaf
+
+        libapache2-mod-rpaf, Nginx'ten gelen taleplerde Apache'nin gerçek IP adresini
+        yakalayabilmesi için kuruluyor.
+
+        Cookie'ye göre proxy_cache kullanilmayacaksa Nginx'İn yeni surumu gerekiyor.
+        Yeni sürüm squeeze-backports deposunda:
+        aptitude install -t squeeze-backports nginx-extras
+
+
+        # Değişecek Apache2 ayarları.
+                /etc/apache2/ports.conf
+                NameVirtualHost *:8080
+                Listen 8080
+
+                /etc/apache2/sites-available/*
+                <VirtualHost *:8080>
+
+        # Ayarları değiştirdikten sonra yeni ayarları kullanmadan önce doğruluğunu test et.
+                /etc/init.d/nginx configtest
+
+        /etc/nginx/nginx.conf
+                worker_processes                # CPU sayisi kadar olacak.
+                                                # Tek islemcili makinede latency'yi azaltmak icin 2 veya 4 denenebilir.
+                worker_rlimit_nofile 32768;     # limits.conf'daki nofile degerini asmasin.
+
+                events {
+                        worker_connections  8192;       # process basina maksimum baglanti sayisi.
+                                                        # reverse proxy oldugunda x/4 eszamanli kisi baglanabilir.
+                                                        # Genelde kisi basina 2 connection ve 2 de backend web sunucu icin.
+
+                http {
+                        keepalive_timeout 2;
+                        client_max_body_size 16M;       # maksimum upload boyu icin gerekli.
+
+                        server_tokens off;              # Sunucu hakkinda bilgi vermesin
+                        proxy_hide_header X-Powered-By;
+                        proxy_hide_header X-AspNet-Version;
+
+
+                        gzip on;
+                        gzip_disable "msie6";
+                        gzip_min_length 1400;
+                        gzip_vary on;
+                        gzip_proxied any;
+                        gzip_comp_level 6;
+                        gzip_buffers 16 8k;
+                        gzip_http_version 1.1;
+                        gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+
+        /etc/nginx/sites-enabled/default
+                # Yonlendirme: domain.com -> www.domain.com
+                server {
+                        listen          80;
+                        server_name     domain.com;
+                        rewrite ^/(.*) http://www.domain.com/$1 permanent;
+                }
+
+                server {
+                        listen          80;
+                        listen          [::]:80 default ipv6only=on;
+
+                        server_name     www.domain.com;
+                        root            /var/www;
+                        access_log      /var/log/nginx/access.log;
+
+                        proxy_cache_path  /var/cache/nginx levels=1:2 keys_zone=cache1:10m max_size=200m inactive=600m;
+                        proxy_temp_path /var/cache/nginx/tmp;
+
+                        # /istatistik icin alias
+                        location ~ ^/istatistik($|/.*) {
+                                proxy_pass              http://localhost:8080;
+                                alias                   /var/www/istatistik$1;
+                        }
+
+                        # Tasarimla ilgili statik dosyalarini dogrudan gonder, expire suresi kisa
+                        location ~* ^.+\.(css|js|xml|rss)$ {
+                                access_log off;
+                                expires 60s;
+                        }
+
+                        # Resim dosyalarini dogrudan gonder
+                        location ~* ^.+\.(jpg|jpeg|gif|png|ico|bmp)$ {
+                                gzip off;
+                                access_log off;
+                                expires 30d;
+                        }
+
+                        # Uygulama dosyalarini dogrudan gonder
+                                location ~* ^.+\.(zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|txt|tar|rtf)$ {
+                                access_log off;
+                                expires 30d;
+                        }
+
+                        # Video/ses dosyalarini dogrudan gonder
+                        location ~* ^.+\.(mp3|mp4|avi|flv|swf|mid|midi|wav|bmp)$ {
+                                gzip off;
+                                access_log off;
+                                expires 30d;
+                        }
+
+                        # Diger dosyalari backend sunucudan (Apache'den) al
+                        location / {
+                                proxy_pass              http://localhost:8080;
+                                proxy_set_header        X-Real-IP  $remote_addr;
+                                proxy_set_header        Host $host;
+                                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                                proxy_cache             cache1
+                                proxy_cache_valid       200 302  5m;
+                                proxy_cache_valid       301 900s;
+                                proxy_cache_valid       404 900s;
+                                proxy_cache_use_stale   error timeout updating;
+                                proxy_ignore_headers    Expires Cache-Control Set-Cookie;
+                        }
+
+                        # Backend sunucudan alinip cachede bir sure tutulacak dosyalar
+                        location  ~* ^\/haberler\/.+\.(htm|html|php)$ {
+                                proxy_pass              http://localhost:8080;
+                                proxy_set_header        X-Real-IP  $remote_addr;
+                                proxy_set_header        Host $host;
+                                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+                                proxy_ignore_headers    X-Accel-Expires Expires Cache-Control;
+                                proxy_cache             one;
+                                proxy_cache_valid       200 302  60s;
+                                proxy_cache_valid       301 900s;
+                                proxy_cache_valid       404 900s;
+                                proxy_cache_use_stale   error timeout updating;
+                                proxy_ignore_headers    Expires Cache-Control Set-Cookie;
+                                expires                 60s;
+                        }
+                }
+
+                server {
+                        listen          80;
+                        listen          [::]:80;
+
+                        server_name     static.domain.com;
+                        root            /var/www/static;
+                        access_log      /var/log/nginx/access.log;
+
+                        # Diger dosyalari backend sunucudan (Apache'den) al
+                        location / {
+                                access_log off;
+                                expires 30d;
+                        }
+                }
+
+        # Location direktifi
+                # Literal string match. Host adindan sonra gelen kismin
+                # bas tarafi ile eslestirir. En uygun locationi bulana
+                # kadar aramaya devam eder.
+                location / { }
+                location /media/ { }
+                location /media/video/ { }
+                location /media/voice/ { }
+
+                # Literal string match. Uyan location bulundugunda
+                # aramayi birakir.
+                location ^~ /media/ { }
+
+                # Exact string match. Location taniminin tam uymasi gerekir.
+                # Uygun location bulundugunda aramayi birakir.
+                location = / { }
+
+                # Case-sensitive regex
+                location ~ ^/Media(/|/index\.html)$ { }
+                location ~ ^/media(/|/index\.html)$ { }
+
+                # Case-insensitive regex
+                location ~* ^/media(/|/index\.html)$ { }
+
+
+                # location oncelikleri
+                        . Öncelikle "exact string match" var mi diye bakılır. Varsa
+                        arama bitirilir.
+
+                        . Literal string match için bakılır. ^~ kullanıldıysa eşleşen
+                        bir location bulundu ise arama bırakılır. Kullanılmadıysa
+                        locationlara bakılmaya devam edilir.
+
+                        . Regex araması yapılır. Uyan bir regex varsa arama bırakılır.
+
+                        . Uyan regex çıkmadıysa literal string match ile bulunan en uygun
+                        location kullanılır.
+
+
+        # Cookie'ye göre proxy_cache aktif hale getirilecekse:
+                server {
+                        ...
+                        set $is_authenticated 0;
+                        if ($http_cookie ~* "mycookie=([0123456789ABCDEF]+)") {
+                                set $is_authenticated 1;
+                        }
+
+                        location ... {
+                                proxy_pass              localhost:8080;
+                                proxy_no_cache          $is_authenticated;
+                                proxy_cache_bypass      $is_authenticated;
+                                proxy_cache             one;
+                                proxy_cache_valid       200 302  120s;
+                                proxy_cache_valid       301 10s;
+                                proxy_cache_valid       404 10s;
+                                proxy_cache_use_stale   error timeout updating;
+                                proxy_ignore_headers    Expires Cache-Control Set-Cookie;
+                                #access_log             off;
+                                expires                 120s;
+                        }
+
+        # Gönderilen headeri silme (nginx-extras gerekiyor)
+        Location bölümünde
+                more_clear_headers      Pragma;
+
+
+- awstats: web istatistikleri
+
+        # Kurulum
+        aptitude install awstats
+        aptitude install libgeo-ip-perl libgeoip1 geoip-database
+
+
+        # Ayarlar dosyası
+        /etc/awstats/awstats.conf
+                LogFile="/home/awstats/access_merged.log"
+                LogFormat=1
+                SiteDomain="Emrah"
+                HostAliases="www.emrah.com localhost 127.0.0.1"
+                DNSLookup=0
+                LoadPlugin="geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat"
+                Lang="en"
+
+
+        # Apache ayarları
+        vim /etc/apache2/sites-enabled/000-default
+                # awstats
+                Alias /awstats "/var/www/awstats"
+                ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+                <Directory "/usr/lib/cgi-bin">
+                        AllowOverride None
+                        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+
+                # awstats icin parola gerekiyor
+                <FilesMatch "awstats.pl">
+                        AuthName "Guvenli Giris"
+                        AuthType Basic
+                        AuthUserFile /home/www-data/htaccess
+                        require valid-user
+                </FilesMatch>
+
+                # awstats icon
+                Alias /awstats-icon/ /usr/share/awstats/icon/
+                <Directory /usr/share/awstats/icon>
+                    Options None
+                    AllowOverride None
+                    Order allow,deny
+                    Allow from all
+                </Directory>
+
+
+        # Nginx awstats ayarları (Apache yoksa)
+                aptitude install fcgiwrap spawn-fcgi apache2-utils
+
+                /etc/nginx/sites-available/default
+                # /awstats-icon/
+                location ^~ /awstats-icon {
+                        access_log              off;
+                        alias                   /usr/share/awstats/icon/;
+                        add_header              Cache-Control "must-revalidate, proxy-revalidate";
+                        expires                 30d;
+                }
+
+                # /awstats/
+                location ~* (^/awstats$|^/awstats/$|awstats.pl$) {
+                        auth_basic              "Restricted";
+                        auth_basic_user_file    /etc/nginx/htpasswd;
+                        access_log              off;
+                        alias                   /usr/lib/cgi-bin/awstats.pl;
+                        include                 /etc/nginx/fastcgi_params;
+                        fastcgi_pass            unix:/var/run/fcgiwrap.socket;
+                        fastcgi_param           SCRIPT_FILENAME  /usr/lib/cgi-bin/awstats.pl;
+                }
+
+                # Nginx-Awstats için authentication
+                cd /etc/nginx
+                htpasswd -c -m htpasswd kullanici
+                chmod 640 htpasswd
+                chown root:www-data htpasswd
+                /etc/init.d/nginx configtest
+                /etc/init.d/nginx restart
+
+
+        # Web sayfası
+        /var/www/awstats/index.html
+                <?xml version="1.0" encoding="UTF-8"?>
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                <meta HTTP-EQUIV="REFRESH" content="0; url=/cgi-bin/awstats.pl">
+                </head>
+                <body>
+                <a href="/cgi-bin/awstats.pl">awstats</a>
+                </html>
+
+
+        # Nginx ve Apache loglarını birleştirme
+        Bu klasor ve dosyalar root'a ait
+        /home/awstats/awstats_merge.sh
+                #!/bin/bash
+                MERGE="/usr/share/awstats/tools/logresolvemerge.pl"
+                DIR="/home/awstats"
+                LOG_APACHE="/var/log/apache2/access.log"
+                LOG_NGINX="/var/log/nginx/access.log"
+
+                cp $LOG_APACHE $DIR/access_apache.log
+                cp $LOG_NGINX $DIR/access_nginx.log
+                $MERGE $DIR/access_apache.log $DIR/access_nginx.log >$DIR/access_merged.log.tmp
+                mv $DIR/access_merged.log.tmp $DIR/access_merged.log
+
+        /etc/crontab
+                25 * * * * root /home/awstats/awstats_merge.sh >/dev/null 2>&
+
+
+        # Doğrudan Apache loguna erişilecekse izinleri düzenlemek gerekiyor.
+        Cron'dan çalışan awstats uygulaması www-data hakları ile çalışmakta.
+        /etc/logrotate.d/apache2
+                #create 640 root adm
+                create 644 root adm
+
+        chmod 755 /var/log/apache2
+        chmod 644 /var/log/apache2/*.log
+
+
+- Network ayarları
+        # /etc/sysctl.conf
+                # SYN cookie aktif
+                net.ipv4.tcp_syncookies=1
+                # SYN-ACK gondermek icin kac kere deneme yapilacagi (default 5)
+                net.ipv4.tcp_synack_retries=2
+                # TIME_WAIT durumundaki kaynaklar tekrar kullanilmaya calisilacak mi (default 0)
+                net.ipv4.tcp_tw_reuse=1
+                # TIME_WAIT durumunda ne kadar bekletilecegi (default 60)
+                net.ipv4.tcp_fin_timeout=15

@@ -1,0 +1,58 @@
+# /etc/X11/fluxbox/keys
+
+Mod1 Tab		:NextWindow 0
+Mod1 Shift Tab		:PrevWindow 0
+Mod1 Control Tab	:NextWorkspace
+Mod1 Control Shift Tab	:PrevWorkspace
+
+Mod1 Control A		:Deiconify All OriginQuiet
+Mod1 Control C		:Close
+Mod1 Control H		:MaximizeHorizontal
+Mod1 Control i		:Minimize
+Mod1 Control L		:Deiconify Last OriginQuiet
+Mod1 Control M		:Maximize
+Mod1 Control Q		:Quit
+Mod1 Control R		:RootMenu
+Mod1 Control S		:ShadeWindow
+Mod1 Control V		:MaximizeVertical
+Mod1 Control W		:WorkspaceMenu
+
+Mod1 Control Up		:Resize		 0	-1
+Mod1 Control Down	:Resize		 0	 1
+Mod1 Control Left	:Resize		-1	 0
+Mod1 Control Right	:Resize		 1	 0
+
+Mod4 Control Up		:Move		 0	-5
+Mod4 Control Down	:Move		 0	 5
+Mod4 Control Left	:Move		-5	 0
+Mod4 Control Right	:Move		 5	 0
+
+Mod4 F1			:Workspace 1
+Mod4 F2			:Workspace 2
+Mod4 F3			:Workspace 3
+Mod4 F4			:Workspace 4
+Mod4 F5			:Workspace 5
+Mod4 F6			:Workspace 6
+Mod4 F7			:Workspace 7
+Mod4 F8			:Workspace 8
+Mod4 F9			:Workspace 9
+Mod4 F10		:Workspace 10
+Mod4 F11		:Workspace 11
+Mod4 F12		:Workspace 12
+
+Mod4 B			:ExecCommand x-terminal-emulator -rv -fn "9x15" -sl 65000 -T "Bash" -e /bin/bash -i
+Mod4 D			:ExecCommand /usr/bin/designer-qt4
+Mod4 E			:ExecCommand /usr/bin/epiphany-browser
+Mod4 F			:ExecCommand /usr/bin/iceweasel
+#Mod4 G			:ExecCommand /usr/bin/gnumeric
+#Mod4 G			:ExecCommand /usr/bin/gedit
+Mod4 K			:ExecCommand /usr/bin/kicad
+Mod4 L			:ExecCommand /bin/sleep 1; /usr/bin/xtrlock
+Mod4 M			:ExecCommand x-terminal-emulator -rv -fn "9x15" -T "Mutt" -e sh -c "sleep 0.1 && /usr/bin/mutt -y"
+Mod4 P			:ExecCommand x-terminal-emulator -rv -fn "9x15" -T "Python" -e /usr/bin/python
+Mod4 Q			:ExecCommand /usr/bin/qucs
+Mod4 R			:ExecCommand /usr/bin/rox-filer
+Mod4 S			:ExecCommand ~/pysozluk/pysozluk.py
+Mod4 V			:ExecCommand x-terminal-emulator -rv -fn "9x15" -T "Vim" -e /usr/bin/vim
+Mod4 W			:ExecCommand x-terminal-emulator -rv -fn "9x15" -T "Weechat" -e /usr/bin/weechat-curses
+

@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/io.h>
+
+int main() {
+	if (ioperm(0x70, 8, 1) || ioperm(0x71, 8, 1)) {
+		perror("yetki alinamadi");
+		printf("\n");
+		exit(1);
+	}
+
+	outb(0x2e, 0x70);
+	usleep(100000);
+	outb(0xff, 0x71);
+	usleep(100000);
+
+	if (ioperm(0x70, 8, 0) && ioperm(0x71, 8, 0)) {
+		perror("serbest birakilamadi");
+                printf("\n");
+                exit(2);
+	}
+
+	exit(0);
+}
+

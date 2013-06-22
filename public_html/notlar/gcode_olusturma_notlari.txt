@@ -1,0 +1,91 @@
+GCode Oluşturma Notları
+-----------------------
+
+- DXF2GCODE
+
+	- linkler
+		http://www.christian-kohloeffel.homepage.t-online.de/dxf2gocde.html
+		http://translate.google.com/translate?hl=en&langpair=de%7Cen&u=http://www.christian-kohloeffel.homepage.t-online.de/dxf2gocde.html
+		http://code.google.com/p/dxf2gcode/
+		http://code.google.com/p/dxf2gcode/downloads/list
+	
+	- kurulum
+		wget http://dxf2gcode.googlecode.com/files/2008-07-27-dxf2gcode_v01_src.zip
+		unzip 2008-07-27-dxf2gcode_v01_src.zip
+		chmod u+x dxf2gcode_v01.py
+		./dxf2gcode_v01.py
+	
+	- ayarlar
+		~/.dxf2gcode_v01/dxf2gcode_v01_config.cfg
+
+			[Paths]
+			save_path = ~/CNC
+			load_path = ~/DXF
+			[Depth Coordinates]
+			...
+			[Axis letters]
+			...
+			[Plane Coordinates]
+			...
+			[Feed Rates]
+			...
+			[Route Optimisation]
+			...
+			[Import Parameters]
+			...
+			[Tool Parameters]
+			...
+			[Debug]
+			...
+
+
+		~/.dxf2gcode_v01/dxf2gcode_v01_postprocessor.cfg
+			
+			[Number format]
+			...
+			[Program]
+			...
+			[Line numbers]
+			...
+			[General]
+			code_end=...
+			code_begin=...
+
+
+
+- inkscape
+	. aptitude install inkscape python-lxml
+		djvulibre-desktop libcairomm-1.0-1 libdjvulibre21 libgc1c2 libglibmm-2.4-1c2a libgraphviz4
+		libgtkmm-2.4-1c2a libgtkspell0 libmagick++10 libmagick10 libwpg-0.1-1
+
+	. DXF Export Extension
+		http://www.bobcookdev.com/inkscape/inkscape-dxf.html
+
+		wget http://www.bobcookdev.com/inkscape/better_dxf_output.zip
+		unzip better_dxf_output.zip
+		cd better_dxf_output
+		su 
+	  	cp /usr/share/inkscape/extensions/simpletransform.py /usr/share/inkscape/extensions/simpletransform.py.old
+		cp *.py *.inx /usr/share/inkscape/extensions/
+
+	. Export
+		nesneler	- Yol -> Nesneden Yola (ctrl + shift + c)
+		resimler	- Yol -> Resmi Vektörize Et ( shift + alt + b)
+				      -> Edge seçilebilir
+		save as -> Better DXF Output
+
+	. fonts
+		aptitude search ttf-*
+		/usr/share/fonts/truetype/
+
+
+
+- qcad
+	. aptitude install qcad
+
+
+
+- autocad
+	. CONVERTPOLY
+	. HATCH, EXPLODE
+	. http://timeguy.com/cradek-files/autocad/realize.lsp

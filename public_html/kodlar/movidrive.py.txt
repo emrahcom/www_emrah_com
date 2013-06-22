@@ -1,0 +1,550 @@
+#!/usr/bin/python
+
+import serial
+import time
+
+
+NO_SERVICE	= int('0000', 2)	# no service
+READ		= int('0001', 2)	# read parameter
+WRITE		= int('0010', 2)	# write parameter
+WRITE_VOLATILE	= int('0011', 2)	# write parameter volatile
+READ_MINIMUM	= int('0100', 2)	# read minimum
+READ_MAXIMUM	= int('0101', 2)	# read maximum
+READ_DEFAULT	= int('0110', 2)	# read default
+READ_SCALE	= int('0111', 2)	# read scale
+READ_ATTRIBUTE	= int('1000', 2)	# read attribute
+
+
+# ------------------------------------------------
+class Telegram:
+	"""Iletisimde kullanilan paketin temel sinifi"""
+
+	sd		= 0x02			# baslangic karakteri... request icin 0x02, response icin 0x1D
+	adr		= 254			# surucu adresi...
+						# 	0-99		-> tekil
+						# 	100-199		-> grup
+						# 	254		-> peer-to-peer
+						# 	255		-> broadcast
+	typ		= 0x86			# PDU tipi... sadece acyclical transfer desteklenmektedir
+						# 	0x80		-> Param + 1 PD
+						#	0x81		-> 1 PD
+						#	0x82		-> Param + 2 PD
+						#	0x83		-> 2 PD
+						#	0x84		-> Param + 3 PD
+						#	0x85		-> 3 PD
+						#	0x86		-> Param
+	pd1		= 0x0000		# PD1
+	pd10		= 0x00			# PD1 byte0
+	pd11		= 0x00			# PD1 byte1
+	pd2		= 0x0000		# PD2
+	pd20		= 0x00			# PD2 byte0
+	pd21		= 0x00			# PD2 byte1
+	pd3		= 0x0000		# PD3
+	pd30		= 0x00			# PD3 byte0
+	pd31		= 0x00			# PD3 byte1
+	byte0		= 0x30			# Parametre byte0
+	byte1		= 0x00			# Parametre byte1
+	byte2		= 0x00			# Parametre byte2
+	byte3		= 0x00			# Parametre byte3
+	byte4		= 0x00			# Parametre byte4
+	byte5		= 0x00			# Parametre byte5
+	byte6		= 0x00			# Parametre byte6
+	byte7		= 0x00			# Parametre byte7
+	bcc		= 0x00			# block check caracter
+	paket		= ''			# transfer paketi
+
+
+	# ------------------------------------------------
+	def reset(self):
+		"""Sinif degiskenlerini resetler"""
+
+		pd1		= 0x0000
+		pd10		= 0x00
+		pd11		= 0x00
+		pd2		= 0x0000
+		pd20		= 0x00
+		pd21		= 0x00
+		pd3		= 0x0000
+		pd30		= 0x00
+		pd31		= 0x00
+		byte0		= 0x30
+		byte1		= 0x00
+		byte2		= 0x00
+		byte3		= 0x00
+		byte4		= 0x00
+		byte5		= 0x00
+		byte6		= 0x00
+		byte7		= 0x00
+		bcc		= 0x00
+		paket		= ''
+
+
+	# ------------------------------------------------
+	def bccHesapla(self):
+		"""block check karakterini hesaplar"""
+
+		try:
+			# Byte'larina bakip PD1 word uretir
+			pd		= '%04x' % self.pd1
+			self.pd10	= int(pd[-4:-2], 16)
+			self.pd11	= int(pd[-2:  ], 16)
+
+			# Byte'larina bakip PD2 word uretir
+			pd		= '%04x' % self.pd2
+			self.pd20	= int(pd[-4:-2], 16)
+			self.pd21	= int(pd[-2:  ], 16)
+
+			# Byte'larina bakip PD3 word uretir
+			pd		= '%04x' % self.pd3
+			self.pd30	= int(pd[-4:-2], 16)
+			self.pd31	= int(pd[-2:  ], 16)
+
+			# herbir byte'i XOR isleminden gecirip bcc degerini hesapalr
+			bcc		= 0
+			bcc		^= self.sd
+			bcc		^= self.adr
+			bcc		^= self.typ
+
+			# parametre iceren transfer tipleri icin parametre byte'larini XOR isleminden gecirir
+			if self.typ in (0x80, 0x82, 0x84, 0x86):
+				bcc ^= self.byte0
+				bcc ^= self.byte1
+				bcc ^= self.byte2
+				bcc ^= self.byte3
+				bcc ^= self.byte4
+				bcc ^= self.byte5
+				bcc ^= self.byte6
+				bcc ^= self.byte7
+
+			# PD1 iceren transfer tipleri icin PD1 byte'larini XOR isleminden gecirir
+			if self.typ in (0x80, 0x81, 0x82, 0x83, 0x84, 0x85):
+				bcc ^= self.pd10 ^ self.pd11
+
+			# PD2 iceren transfer tipleri icin PD2 byte'larini XOR isleminden gecirir
+			if self.typ in (0x82, 0x83, 0x84, 0x85):
+				bcc ^= self.pd20 ^ self.pd21
+
+			# PD3 iceren transfer tipleri icin PD3 byte'larini XOR isleminden gecirir
+			if self.typ in (0x84, 0x85):
+				bcc ^= self.pd30 ^ self.pd31
+
+			self.bcc = bcc
+
+			return True
+		except:
+			return False
+
+
+
+# ------------------------------------------------
+class Request(Telegram):
+	"""Iletisimde kullanilan istek paketi sinifi"""
+
+	# ------------------------------------------------
+	def __init__(self):
+		# request paketi icin baslangic karakteri
+		self.sd = 0x02
+
+
+	# ------------------------------------------------
+	def setServis(self, servis):
+		"""Parametre servis alanini set eder"""
+
+		try:
+			# oncelikle eski servis verisini sifirla
+			self.byte0 &= int('11110000', 2)
+
+			# yeni servis verisini set et
+			self.byte0 |= servis
+
+			return True
+		except:
+			return False
+
+
+	# ------------------------------------------------
+	def setIndex(self, index):
+		"""Parametre index alanini set eder"""
+
+		try:
+			# ilk index byte'i hep 0 olacak, reserved
+			self.byte1	= 0
+
+			# Index word'unu byte'larina ayir
+			tmpindex	= '%04x' % index
+			self.byte2	= int(tmpindex[-4:-2], 16)
+			self.byte3	= int(tmpindex[-2:  ], 16)
+
+			return True
+		except:
+			return False
+
+
+
+	# ------------------------------------------------
+	def setData(self, data):
+		"""Parametre data alanini set eder"""
+
+		try:
+			# Data degerini byte'larina ayir
+			tmpdata		= '%08x' % data
+			self.byte4	= int(tmpdata[-8:-6], 16)
+			self.byte5	= int(tmpdata[-6:-4], 16)
+			self.byte6	= int(tmpdata[-4:-2], 16)
+			self.byte7	= int(tmpdata[-2:  ], 16)
+
+			return True
+		except:
+			return False
+
+
+	# ------------------------------------------------
+	def paketle(self):
+		"""Surucuye gonderilecek paketi olusturur"""
+
+		try:
+			# oncelikle bcc degerini hesapla
+			# bu islem esnasinda PD degiskenleri de byte'larina ayrilacak
+			self.bccHesapla()
+
+			self.paket  = ''
+			self.paket += '%c' % self.sd
+			self.paket += '%c' % self.adr
+			self.paket += '%c' % self.typ
+
+			# Parametre iceren transfer paketi icin parametre byte'larini pakete ekle
+			if self.typ in (0x80, 0x82, 0x84, 0x86):
+				self.paket += '%c' % self.byte0
+				self.paket += '%c' % self.byte1
+				self.paket += '%c' % self.byte2
+				self.paket += '%c' % self.byte3
+				self.paket += '%c' % self.byte4
+				self.paket += '%c' % self.byte5
+				self.paket += '%c' % self.byte6
+				self.paket += '%c' % self.byte7
+
+			# PD1 iceren transfer paketi icin PD1 byte'larini pakete ekle
+			if self.typ in (0x80, 0x81, 0x82, 0x83, 0x84, 0x85):
+				self.paket += '%c%c' % (self.pd10, self.pd11)
+
+			# PD2 iceren transfer paketi icin PD2 byte'larini pakete ekle
+			if self.typ in (0x82, 0x83, 0x84, 0x85):
+				self.paket += '%c%c' % (self.pd20, self.pd21)
+
+			# PD3 iceren transfer paketi icin PD3 byte'larini pakete ekle
+			if self.typ in (0x84, 0x85):
+				self.paket += '%c%c' % (self.pd30, self.pd31)
+
+			# bcc degerini pakete ekle
+			self.paket += '%c' % self.bcc
+
+			return True
+		except:
+			return False
+
+
+	# ------------------------------------------------
+	def paketiAl(self):
+		"""Surucuye gonderilecek paketi cevap olarak dondurur"""
+
+		try:
+			# oncelikle paketi olustur
+			self.paketle()
+
+			return self.paket
+		except:
+			raise RuntimeError
+
+
+	# ------------------------------------------------
+	def paketUzunlugunuAl(self):
+		try:
+			# oncelikle paketi olustur
+			self.paketle()
+
+			return len(self.paket)
+		except:
+			raise RuntimeError
+
+
+
+
+# ------------------------------------------------
+class Response(Telegram):
+	"""Iletisimde kullanilan cevap paketi sinifi"""
+
+	SD2			= 0x1D			# Response telegrami icin baslangic karakteri
+	isError			= False			# paket alinirken hata olustu mu
+	errorClass		= 0			# hata sinifi
+	errorCode		= 0			# hata kodu
+	errorAddCodeHigh	= 0			# ilave hata kodu, high byte
+	errorAddCodeLow		= 0			# ilave hata kodu, low byte
+	data			= 0			# parametre icin data degeri
+
+
+	# ------------------------------------------------
+	def resetAlarm(self):
+		"""Alarm degiskenlerini resetler"""
+
+		self.isError		= False
+		self.errorClass		= 0
+		self.errorCode		= 0
+		self.errorAddCodeHigh	= 0
+		self.errorAddCodeLow	= 0
+		self.data		= 0
+
+
+	# ------------------------------------------------
+	def setAlarm(self, mang, byte4, byte5, byte6, byte7):
+		"""Alarm degiskenlerini set eder"""
+
+		if mang & int('10000000', 2): 
+			self.isError		= True
+			self.errorClass		= byte4
+			self.errorCode		= byte5
+			self.errorAddCodeHigh	= byte6
+			self.errorAddCodeLow	= byte7
+		else:
+			self.data		= int('%02x%02x%02x%02x' % (byte4, byte5, byte6, byte7), 16)
+			self.isError		= False
+
+
+	# ------------------------------------------------
+	def setPaket(self, paket):
+		"""Response paketini alir ve parse eder"""
+
+		try:
+			# param ve pd degiskenlerini sifirla
+			self.reset()
+			self.resetAlarm()
+
+			# paket uygun boyutlarda degilse isleme sokma
+			if len(paket) not in (6, 8, 10, 12, 14, 16, 18): raise RuntimeError
+
+			# baslangic karakterini kontrol et
+			self.sd = ord(paket[0])
+			if self.sd != self.SD2: raise RuntimeError
+
+			# surucu adres ve paket tiplerini kontrol et
+			self.adr = ord(paket[1])
+			self.typ = ord(paket[2])
+			if self.typ not in (0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86): raise RuntimeError
+
+			# Parametre iceren bir paketse, parametre byte'larini al
+			pos = 3
+			if self.typ in (0x80, 0x82, 0x84, 0x86):
+				self.byte0 = ord(paket[3])
+				self.byte1 = ord(paket[4])
+				self.byte2 = ord(paket[5])
+				self.byte3 = ord(paket[6])
+				self.byte4 = ord(paket[7])
+				self.byte5 = ord(paket[8])
+				self.byte6 = ord(paket[9])
+				self.byte7 = ord(paket[10])
+				pos = 11
+
+				# hata degiskenlerini set et
+				# hata yoksa data degerini set eder
+				self.setAlarm(self.byte0, self.byte4, self.byte5, self.byte6, self.byte7)
+					
+
+			# PD1 iceren bir paketse, PD1 byte'larini al
+			if self.typ in (0x80, 0x81, 0x82, 0x83, 0x84, 0x85):
+				self.pd10 = ord(paket[pos])
+				self.pd11 = ord(paket[pos + 1])
+				self.pd1 = int('%02x%02x' % (self.pd10, self.pd11), 16)
+				pos += 2
+
+			# PD2 iceren bir paketse, PD2 byte'larini al
+			if self.typ in (0x82, 0x83, 0x84, 0x85):
+				self.pd20 = ord(paket[pos])
+				self.pd21 = ord(paket[pos + 1])
+				self.pd2 = int('%02x%02x' % (self.pd20, self.pd21), 16)
+				pos += 2
+
+			# PD3 iceren bir paketse, PD3 byte'larini al
+			if self.typ in (0x84, 0x85):
+				self.pd30 = ord(paket[pos])
+				self.pd31 = ord(paket[pos + 1])
+				self.pd3 = int('%02x%02x' % (self.pd30, self.pd31), 16)
+				pos += 2
+
+			# bcc kontrolu yap
+			bcc = ord(paket[pos])
+			self.bccHesapla()
+			if self.bcc != bcc: raise RuntimeError
+
+			return True
+		except:
+			self.isError = True
+			return False
+
+
+
+# ------------------------------------------------
+class MoviLink:
+	"""MoviLink seri haberlesme sinifi"""
+
+	surucu		= 254
+	req		= Request()
+	res		= Response()
+	bag		= serial.Serial()
+	port		= 0
+	baudrate	= 9600
+	bytesize	= 8
+	parity		= 'E'
+	stopbits	= 1
+	timeout		= 2
+
+
+	# ------------------------------------------------
+	def baglan(self):
+		"""Surucuye baglanir"""
+
+		try:
+			self.req.adr		= self.surucu
+			self.res.adr		= self.surucu
+			self.bag.port		= self.port
+			self.bag.baudrate	= self.baudrate
+			self.bag.bytesize	= self.bytesize
+			self.bag.parity		= self.parity
+			self.bag.stopbits	= self.stopbits
+			self.bag.timeout	= self.timeout
+
+			self.bag.open()
+		except:
+			pass
+
+		return self.bag.isOpen()
+
+
+	# ------------------------------------------------
+	def kapan(self):
+		"""Surucuye baglantisini kapatir"""
+
+		try:
+			self.bag.close()
+		except:
+			pass
+
+		return not self.bag.isOpen()
+
+
+	# ------------------------------------------------
+	def parametreOku(self, param, mod=READ):
+		"""Parametre degerini surucuden okur.
+
+		Desteklenen okuma modlari:
+		READ, READ_MINIMUM, READ_MAXIMUM, READ_DEFAULT
+		"""
+
+		try:
+			# transfer paket tipini belirle
+			self.req.typ = 0x86
+			# servis alanini okumaya ayarla
+			self.req.setServis(mod)
+			# okunacak parametreyi set et
+			self.req.setIndex(param)
+
+			# surucuye baglanti kurulabilirse
+			if self.baglan():
+				# guvenli stop bit araligi
+				time.sleep(0.005)
+				# parametre okuma talebini gonder
+				self.bag.write(self.req.paketiAl())
+				# cevabi al ve parse et
+				cevap = self.bag.read(self.req.paketUzunlugunuAl())
+				self.res.setPaket(cevap)
+				# surucu baglantisini kapat
+				self.kapan()
+
+				# hata olusmadiysa parametre degerini dondur
+				if not self.res.isError:
+					return self.res.data
+		except:
+			pass
+
+		return None
+
+
+	# ------------------------------------------------
+	def parametreYaz(self, param, deger, mod=WRITE_VOLATILE):
+		"""Parametre degerini surucuye yazar
+		
+		Desteklenen yazma modlari:
+		WRITE, WRITE_VOLATILE
+		"""
+
+		try:
+			# transfer paket tipini belirle
+			self.req.typ = 0x86
+			# servis alanini yazmaya ayarla
+			self.req.setServis(mod)
+			# yazilacak parametreyi set et
+			self.req.setIndex(param)
+			# yazilacak parametre degerini set et
+			self.req.setData(deger)
+
+			# surucuye baglanti kurulabilirse
+			if self.baglan():
+				# guvenli stop bit araligi
+				time.sleep(0.005)
+				# parametre okuma talebini gonder
+				self.bag.write(self.req.paketiAl())
+				# cevabi al ve parse et
+				cevap = self.bag.read(self.req.paketUzunlugunuAl())
+				self.res.setPaket(cevap)
+				# surucu baglantisini kapat
+				self.kapan()
+
+				# hata olusmadiysa True dondur
+				if not self.res.isError:
+					return True
+		except:
+			pass
+
+		return False
+
+
+	# ------------------------------------------------
+	def iposOku(self, ipos):
+		"""IPOS degisken degerini surucuden okur.
+
+		parametreOku metodunun ozel halidir.
+		IPOS degiskenleri 11000. adresten H0 ile baslamaktadir"""
+
+		return self.parametreOku(11000 + ipos)
+
+
+	# ------------------------------------------------
+	def iposYaz(self, ipos, deger):
+		"""IPOS degisken degerini surucuye yazar
+
+		parametreYaz metodunun ozel halidir.
+		IPOS degiskenleri 11000. adresten H0 ile baslamaktadir"""
+
+		return self.parametreYaz(11000 + ipos, deger)
+
+
+
+
+# ------------------------------------------------
+# programin ana bolumu
+if __name__ == '__main__':
+	
+	# surucu nesnesini olustur
+	m = MoviLink()
+	# surucu numarasini set et
+	m.surucu	= 0
+	# seri haberlesme ayarlari COM1,57600,8,E,1 olsun
+	m.port		= 0
+	m.baudrate	= 57600
+	m.bytesize	= 8
+	m.parity	= 'E'
+	m.stopbit	= 1
+
+	print m.iposYaz(130, 300000)
+	print m.iposYaz(135, 1)
+	time.sleep(0.10)
+	print m.iposYaz(135, 0)
+

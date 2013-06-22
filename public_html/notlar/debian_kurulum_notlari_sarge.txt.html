@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>debian_kurulum_notlari_sarge.txt</title>
+</head>
+<body>
+<pre><code>
+DEBIAN KURULUM NOTLARI
+
+*** netinstall ile kur 
+	- linux26 çekirdek kur
+
+	- Kurulum esnasında alınamayan paket olursa
+		tasksel install	-s	( standart	)
+				-r	( required	)
+				-i	( important	)
+				-n	( no UI		)
+	
+	- DNS
+		212.57.1.12
+		212.57.1.13
+		193.192.100.100
+		193.192.100.101
+		193.140.83.251
+
+
+
+------------------------------------------------------------------
+
+*** geliştirici makinesi değilse, /home ve /tmp partition'larında program çalıştırmaya izin verilmeyecek
+    paket yükleme aşamasında /tmp partition'inin çalışma iznini kapatmamak gerekiyor.
+
+/etc/fstab
+/dev/hda8	/home	ext3	defaults,noexec	0	2
+/dev/hda9	/tmp	ext3	defaults,noexec	0	2
+
+
+
+------------------------------------------------------------------
+
+*** paketleri download etmeye baslamadan once apt-proxy'e yönlendir, melez sistem ayarlarını yap
+
+/etc/apt/sources.list
+deb		http://localhost:9999/debian		sarge			main contrib non-free
+deb-src		http://localhost:9999/debian		sarge			main contrib non-free
+deb		http://localhost:9999/security		sarge/updates		main contrib non-free
+deb-src		http://localhost:9999/security		sarge/updates		main contrib non-free
+deb		http://localhost:9999/debian-non-US	sarge/non-US		main contrib non-free
+deb-src		http://localhost:9999/debian-non-US	sarge/non-US		main contrib non-free
+deb		http://localhost:9999/backports		sarge-backports		main contrib non-free
+deb-src		http://localhost:9999/backports		sarge-backports		main contrib non-free
+deb		http://localhost:9999/emc		sarge			non-free extras 
+deb-src		http://localhost:9999/emc		sarge			non-free extras 
+
+
+/etc/apt/apt.conf
+APT::Default-Release &quot;stable&quot;;
+APT::Cache-Limit &quot;134217728&quot;;
+
+
+/etc/apt/preferences
+Package: python-wxgtk2.6
+Pin:release a=sarge-backports
+Pin-Priority: 999
+
+Package: *
+Pin:release a=sarge-backports
+Pin-Priority: 200
+
+
+
+*** apt-proxy backends sunucu bilgileri
+
+/etc/apt-proxy/apt-proxy-v2.conf
+[debian]
+backends =
+	http://ftp.de.debian.org/debian
+	http://ftp2.de.debian.org/debian
+	http://ftp.us.debian.org/debian
+	ftp://ftp.uk.debian.org/debian
+
+
+[debian-non-US]
+backends =
+	http://ftp.de.debian.org/debian-non-US
+	http://ftp.uk.debian.org/debian-non-US
+	ftp://ftp.uk.debian.org/debian
+
+[security]
+backends =
+	http://ftp.de.debian.org/debian-security
+	http://ftp2.de.debian.org/debian-security
+	http://security.debian.org/debian-security
+
+[backports]
+backends =
+        http://www.backports.org/debian
+	
+[emc]
+backends =
+	http://bdi4emc.ourproject.org/debian
+
+
+
+------------------------------------------------------------------
+
+*** X11 ayarları
+
+/etc/X11/XF86Config-4
+Section &quot;Device&quot;
+	Identifier	&quot;Generic Video Card&quot;
+	Driver		&quot;vesa&quot;
+EndSection
+
+Section &quot;Monitor&quot;
+	Identifier	&quot;PH107E/V/S/G6PHL&quot;
+	HorizSync	30-71
+	VertRefresh	50-160
+	Option		&quot;DPMS&quot;
+EndSection
+
+Section &quot;Screen&quot;
+	Identifier      &quot;Default Screen&quot;
+	Device          &quot;Generic Video Card&quot;
+	Monitor         &quot;PH107E/V/S/G6PHL&quot;
+	DefaultDepth    16
+	SubSection &quot;Display&quot;
+		Depth           1
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           4
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           8
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           15
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           16
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           24
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+EndSubSection
+
+
+
+------------------------------------------------------------------
+
+*** Grub ayarları /etc/grub/menu.lst
+
+	- Grub menüsü 1 sn gözüksün
+		timeout	1
+	
+	- konsol ekranı 8 bit 1024x768 kullansın ( vga=773 )
+		. kernel	/vmlinuz-2.6.8-2-686 root=/dev/hda6 ro vga=773
+
+		. grub için vga değerleri tablosu
+
+			renk		640x480		800x600		1024x768	1280x1024
+			-------------	---------	---------	---------	---------
+			256	(8b )	769		771		773		775
+			32000	(15b)	784		787		790		793
+			65000	(16b)	785		788		791		794
+			16.7 M	(24b)	786		789		792		795
+
+
+
+------------------------------------------------------------------
+
+*** Shorewall kurulumu
+	- Shorewall kurulum notlarında anlatıldığı gibi kurulum yapılır
+
+
+
+------------------------------------------------------------------
+
+*** apt-get install 
+	initrd-tools
+	rcconf				( hangi servislerin çalışacağını ayarlamak için )
+	openssh-server			( SSH sunucu					)
+	bind9				( DNS sunucu					)
+	pure-ftpd			( FTP sunucu					)
+	module-init-tools		( 2.6 kernel yüklenecekse...			)
+	module-assistant		( module derlenecekse...			)
+	dpkg-dev			( kaynak kodlarla çalışılacaksa...		)
+	build-essential			( kaynak kodlarla çalışılacaksa...		)
+	fakeroot			( kaynak kodlarla çalışılacaksa...		)
+	x-window-system
+	fluxbox
+	wmfire				( CPU kullanımını gösteren dockapp		)
+	wmmemload			( memory kullanımını gösteren dockapp		)
+	wmcpuload			( CPU kullanımını gösteren dockapp		)
+	wmdrawer			( Uygulamaları, ikondan başlatmak için dockapp	)
+	fetchmail			( exim4, procmail ve mutt ile birlikte		)
+	openoffice.org-l10n-tr
+	openoffice.org-help-tr
+	mozilla-locale-tr
+	mozilla-firefox
+	mozilla-firefox-locale-tr
+	mozilla-firefox-gnome-support
+	mozilla-thunderbird		( mutt kullanılacaksa, gerek kalmıyor		)
+	mozilla-thundebird-locale-tr	( mutt kullanılacaksa, gerek kalmıyor		)
+	epiphany-browser
+	vim
+	screen
+	numlockx
+	unzip
+	zip
+	unrar
+	ncftp
+	krusader
+	gpdf
+	gnome-terminal
+	gedit
+	gnumeric
+	xchat
+	gaim
+	gtypist				( 10 parmak klavye çalışma programı						)
+	beep-media-player
+	xfonts-100dpi-transcoded	( konsol uygulamalarındaki küçük font problemini düzeltmek için			)
+	xfonts-75dpi-transcoded		( konsol uygulamalarındaki küçük font problemini düzeltmek için 		)
+	deborphan			( bağımlı olunmayan paketleri tesbit edebilmek için... yüklenmese de olur 	)
+	python-tk			( Tkinter kullanan Python uygulamaları yazılacaksa...				)
+	ntop				( Anlık ağ trafiğini izlemek için...						)
+	webmin				( GNU/Linux ortamına alışık olmayan kullanıcılar için...			)
+	webmin-status			( GNU/Linux ortamına alışık olmayan kullanıcılar için...			)
+	webmin-bind			( GNU/Linux ortamına alışık olmayan kullanıcılar için...			)
+	webmin-sshd			( GNU/Linux ortamına alışık olmayan kullanıcılar için...			)
+	webmin-shorewall		( GNU/Linux ortamına alışık olmayan kullanıcılar için...			)
+
+
+*** apt-get -t sarge-backports
+	install python-wxgtk2.6		( wxPython kullanan Python uygulamaları yazılacaksa...				)
+
+
+* saat
+	date mmddhhmm
+
+
+* home yetkileri
+	chmod 700 /root
+	chmod 700 /home/kullanici
+
+
+* rcconf
+	- kullanılmayacak servisleri kapat
+
+
+* pure-ftpd
+	- echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/ChrootEveryone
+	- echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/NoAnonymous
+	- echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/DontResolve
+
+	* anonymous ftp olacaksa
+		adduser --system --group ftp
+		echo &quot;no&quot; &gt; /etc/pure-ftpd/conf/NoAnonymous
+
+
+* bind9
+	- /etc/resolv.conf
+		nameserver 127.0.0.1
+
+	- /etc/network/interfaces
+		dns-nameservers 127.0.0.1
+
+
+* ntop
+	- parola girilecek
+		ntop -A
+		/etc/init.d/ntop restart
+
+	- firewall'dan yerel ağa tcp/3000 açılabilir
+
+
+* webmin
+	- /etc/webmin/miniserv.conf
+		alwaysresolve=
+		allow=127.0.0.1 192.168.1.0/255.255.255.0	(güvenlik için sadece 127.0.0.1 bırakılabilir)
+		logouttime=15
+
+	- firewall'dan yerel ağa tcp/10000 açılabilir
+
+
+* exim4, procmail, fetchmail, mutt
+	- E-mail Notları'nda anlatıldığı gibi kurulacak
+
+
+* numlockx
+	- grafik ekrenda terminal açıp
+		numlockx on
+
+
+* mozilla, firefox, thunderbird
+	- mutt kullanılacaksa, thunderbird'e gerek yok
+	- ayarlar yapılacak
+	- ikonları araç çubuğuna konacak
+	- default değerleri set etmek için biraz surf yap
+	- mozilla-firefox about:config
+		browser.tabs.showSingleWindowModePrefs		true
+		network.http.pipelining				true
+		network.http.proxy.pipelining			true
+		network.http.pipelining.maxrequests		100
+		nglayout.initialpaint.delay			500		( eklenecek )
+		accessibility.typeaheadfind			true
+		accessibility.typeaheadfind.linksonly		true
+		accessibility.typeaheadfind.timeout		2500
+	- extension'lar
+		https://addons.mozilla.org/extensions/						( toplist	)
+		https://addons.mozilla.org/extensions/moreinfo.php?id=722&amp;application=firefox	( NoScript	)
+		https://addons.mozilla.org/extensions/moreinfo.php?id=158&amp;application=firefox	( tabbrowser	)
+	
+	- flash
+		wget http://fpdownload.macromedia.com/get/flashplayer/current/install_flash_player_9_linux.tar.gz
+		tar zxf install_flash_player_9_linux.tar.gz
+		cd install_flash_player_9_linux/
+		su
+		./flashplayer-installer
+
+		Sarge için /usr/lib/firefox
+		Etch için /usr/lib/iceweasel
+		
+		
+
+* openoffice.org
+	- araçlar -&gt; seçenekler -&gt; bellek -&gt; bellekten sonra kaldırma 01:00
+	- araçlar -&gt; seçenekler -&gt; tablo belgesi -&gt; yazdır -&gt; sadece seçili
+
+
+* vim
+	- root ve kullanıcı için .vimrc
+		:syntax on
+		:set is
+		:set ic
+		:set hidden
+		:set tabstop=8
+		:set shiftwidth=8
+
+* .bashrc
+	- root ve kullanıcı için .bashrc
+		alias rm='rm -i'
+		alias l='ls -al'
+
+
+* apt-proxy deposunda bütün paketlerin yer alması için
+	apt-get clean
+	COLUMNS=200 dpkg -l | awk '/&circ;ii/ {print $2}' | xargs apt-get install -d --reintall -y
+	apt-get install -d kde gnome
+
+
+* silinecek paketler
+	apt-get remove --purge nfs-common
+	apt-get remove --purge ppp		(dialup modem olmayacaksa...	)
+	apt-get remove --purge lpr		(printer olmayacaksa...		)
+	apt-get remove --purge portmap		(Gnome kullanılmayacaksa...	)
+
+
+* apt-get autoclean
+
+
+
+
+------------------------------------------------------------------
+
+*** sshd ayarları ve kullanici ayarları
+
+	- /etc/ssh/sshd_config
+		PermitRootLogin		No
+		AllowUsers		kullanici_adi
+	
+
+	- /home/kullanici/.ssh/rc
+		makine=`cat /etc/hostname`
+		kimlik=`whoami`
+		adres=$SSH_CONNECTION
+		tarih=`date`
+
+		echo -e &quot;makine\t: $makine\n\
+		kimlik\t: $kimlik\n\
+		adres\t: $adres\n\
+		tarih\t: $tarih&quot;\
+		| mail -s &quot;$makine ssh baglanti raporu&quot; mail@adres.com
+	
+		
+
+
+------------------------------------------------------------------
+
+*** arayüz ayarları
+
+	- GNOME için...
+		- hava durumu applet'i 
+		- yapışkan notlar applet'i
+		- sistem izleyici applet'i
+		- sözlükte ara applet'i
+		- screensaver
+			lockscreen after -&gt; iptal
+
+	- Fluxbox için...
+	
+		- /etc/X11/fluxbox/keys dosyası, &quot;Fluxbox Kısayolları&quot; notundaki gibi düzenlenecek
+		
+		- kullanıcı için...
+			. anti-alias
+			. full maximization -&gt; off
+			. styles -&gt; Spiff veya Twice veya Operation
+			. saat	-&gt; %d/%m/%Y %H:%M:%S
+
+		- &tilde;/.wmdrawerrc
+			. cp /usr/share/doc/wmdrawer/wmdrawerrc.example &tilde;/.wmdrawerrc
+			. ikonlar
+				dock_icons	panel-drawer.png
+				tooltips_font	fixed
+				show_on_hower	1
+				hide_on_out	1
+
+				[column]
+				(Firefox)	(mozilla-firefox.png)	(firefox)
+				
+				[column]
+				(Xcalc)		(gnome-calc3.png)	(xcalc)
+		
+		- &tilde;/.fluxbox/slitlist
+			wmdrawer
+			wmcpuload
+			wmmemload
+			wmfire
+			
+		- &tilde;/.fluxbox/apps
+			[startup] { wmdrawer	}
+			[startup] { wmcpuload	}
+			[startup] { wmmemload	}
+			[startup] { wmfire	}
+
+
+
+------------------------------------------------------------------
+
+*** Java ve Freemind
+	- apt-get install java-package fakeroot
+	- download jre ( http://java.sun.com/j2se/1.5.0/download.jsp )
+	- normal kullanici olarak
+		fakeroot make-jpkg jre-1_5_0_02-linux-i586.bin
+	- root olarak
+		dpkg -i sun-j2re1.5_1.5.0+update02_i386.deb
+		apt-get install freemind
+
+
+
+------------------------------------------------------------------
+
+*** Yedekleme
+	- Yedekleme Notları'ndaki talimatlara göre yedekleme yapılacak
+
+
+
+</code></pre>
+</body>
+</html>

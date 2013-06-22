@@ -1,0 +1,2529 @@
+# Turkish translation of EMC.
+# Copyright (C)  2010 THE EMC'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the EMC package.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: EMC tr_TR_axis.po 0.001\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-28 11:25+0200\n"
+"PO-Revision-Date: 2010-01-28 11:25+0200\n"
+"Last-Translator: emrah <emrah.com@gmail.com>\n"
+"Language-Team: Turkish <emc-developers@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: emc/usr_intf/axis/scripts/axis.py:148
+msgid "Emergency stop"
+msgstr "Acil stop"
+
+#: emc/usr_intf/axis/scripts/axis.py:149
+msgid "Turn machine on"
+msgstr "Makineyi Aç"
+
+#: emc/usr_intf/axis/scripts/axis.py:151
+msgid "Activate first axis"
+msgstr "Birinci ekseni etkinleştir"
+
+#: emc/usr_intf/axis/scripts/axis.py:152
+msgid "Activate second axis"
+msgstr "İkinci ekseni etkinleştir"
+
+#: emc/usr_intf/axis/scripts/axis.py:153
+msgid "Activate third axis"
+msgstr "Üçüncü ekseni etkinleştir"
+
+#: emc/usr_intf/axis/scripts/axis.py:154
+msgid "Activate fourth axis"
+msgstr "Dördüncü ekseni etkinleştir"
+
+#: emc/usr_intf/axis/scripts/axis.py:155
+msgid "Activate fifth through ninth axis"
+msgstr "Beşinci ve daha sonraki eksenleri etkinleştir"
+
+#: emc/usr_intf/axis/scripts/axis.py:156
+msgid "Set Feed Override from 0% to 100%"
+msgstr "İşleme hızı kısıtla"
+
+#: emc/usr_intf/axis/scripts/axis.py:157
+msgid ", and ."
+msgstr ", ve ."
+
+#: emc/usr_intf/axis/scripts/axis.py:157
+msgid "Select jog speed"
+msgstr "Doğrusal ilerleme hızı"
+
+#: emc/usr_intf/axis/scripts/axis.py:158
+msgid "< and >"
+msgstr "< ve >"
+
+#: emc/usr_intf/axis/scripts/axis.py:158
+msgid "Select angular jog speed"
+msgstr "Açısal ilerleme hızı"
+
+#: emc/usr_intf/axis/scripts/axis.py:159
+msgid "I, Shift-I"
+msgstr "I, Shift-I"
+
+#: emc/usr_intf/axis/scripts/axis.py:159 ../share/axis/tcl/axis.tcl:2323
+msgid "Select jog increment"
+msgstr "İlerleme miktarı"
+
+#: emc/usr_intf/axis/scripts/axis.py:160
+msgid "Continuous jog"
+msgstr "Sürekli ilerleme"
+
+#: emc/usr_intf/axis/scripts/axis.py:161
+msgid "Home"
+msgstr "Sıfırla"
+
+#: emc/usr_intf/axis/scripts/axis.py:161
+msgid "Send active axis home"
+msgstr "Seçili ekseni sıfır noktasına gönder"
+
+#: emc/usr_intf/axis/scripts/axis.py:162
+msgid "Ctrl-Home"
+msgstr "Ctrl+Home"
+
+#: emc/usr_intf/axis/scripts/axis.py:162
+msgid "Home all axes"
+msgstr "Bütün eksenleri sıfırla"
+
+#: emc/usr_intf/axis/scripts/axis.py:163
+msgid "Shift-Home"
+msgstr "Shift-Home"
+
+#: emc/usr_intf/axis/scripts/axis.py:163
+msgid "Zero G54 offset for active axis"
+msgstr "Seçili eksen için G54 sıfırı"
+
+#: emc/usr_intf/axis/scripts/axis.py:164
+msgid "End"
+msgstr "End"
+
+#: emc/usr_intf/axis/scripts/axis.py:164
+msgid "Set G54 offset for active axis"
+msgstr "Seçili eksen için G54 ofsetini belirle"
+
+#: emc/usr_intf/axis/scripts/axis.py:165
+msgid "Jog active axis"
+msgstr "Seçili ekseni ilerlet"
+
+#: emc/usr_intf/axis/scripts/axis.py:166
+msgid "Left, Right"
+msgstr "Sol, Sağ"
+
+#: emc/usr_intf/axis/scripts/axis.py:166
+msgid "Jog first axis"
+msgstr "Birinci eksende ilerle"
+
+#: emc/usr_intf/axis/scripts/axis.py:167
+msgid "Up, Down"
+msgstr "Yukarı, Aşağı"
+
+#: emc/usr_intf/axis/scripts/axis.py:167
+msgid "Jog second axis"
+msgstr "İkinci eksende ilerle"
+
+#: emc/usr_intf/axis/scripts/axis.py:168
+msgid "Pg Up, Pg Dn"
+msgstr "Pg Up, Pg Dn"
+
+#: emc/usr_intf/axis/scripts/axis.py:168
+msgid "Jog third axis"
+msgstr "Üçüncü eksende ilerle"
+
+#: emc/usr_intf/axis/scripts/axis.py:169
+msgid "Jog fourth axis"
+msgstr "Dördüncü eksende ilerle"
+
+#: emc/usr_intf/axis/scripts/axis.py:171
+msgid "Toggle between Drag and Rotate mode"
+msgstr "Kaydırma ve döndürme modlarına geçiş"
+
+#: emc/usr_intf/axis/scripts/axis.py:172
+msgid "Left Button"
+msgstr "Sol Düğme"
+
+#: emc/usr_intf/axis/scripts/axis.py:172
+msgid "Pan, rotate or select line"
+msgstr "Kaydır, döndür veya doğru seç"
+
+#: emc/usr_intf/axis/scripts/axis.py:173
+msgid "Shift+Left Button"
+msgstr "Shift+Sol Düğme"
+
+#: emc/usr_intf/axis/scripts/axis.py:173
+msgid "Rotate or pan"
+msgstr "Döndür veya kaydır"
+
+#: emc/usr_intf/axis/scripts/axis.py:174
+msgid "Right Button"
+msgstr "Sağ Düğme"
+
+#: emc/usr_intf/axis/scripts/axis.py:174 emc/usr_intf/axis/scripts/axis.py:176
+#: emc/usr_intf/axis/scripts/axis.py:177
+msgid "Zoom view"
+msgstr "Yakınlaş"
+
+#: emc/usr_intf/axis/scripts/axis.py:175
+msgid "Wheel Button"
+msgstr "Tekerlek"
+
+#: emc/usr_intf/axis/scripts/axis.py:175
+msgid "Rotate view"
+msgstr "Döndür"
+
+#: emc/usr_intf/axis/scripts/axis.py:176
+msgid "Rotate Wheel"
+msgstr "Tekerleği Döndür"
+
+#: emc/usr_intf/axis/scripts/axis.py:177
+msgid "Control+Left Button"
+msgstr "Ctrl+Sol Düğme"
+
+#: emc/usr_intf/axis/scripts/axis.py:179
+msgid "Ctrl-Space"
+msgstr "Ctrl+Boşluk"
+
+#: emc/usr_intf/axis/scripts/axis.py:179
+msgid "Clear notifications"
+msgstr "Uyarıları temizle"
+
+#: emc/usr_intf/axis/scripts/axis.py:182
+msgid "Manual control"
+msgstr "Manuel Kontrol"
+
+#: emc/usr_intf/axis/scripts/axis.py:183
+msgid "Code entry (MDI)"
+msgstr "Kod Girişi (MDI)"
+
+#: emc/usr_intf/axis/scripts/axis.py:184
+msgid "Control-M"
+msgstr "Ctrl+M"
+
+#: emc/usr_intf/axis/scripts/axis.py:184
+msgid "Clear MDI history"
+msgstr "MDI geçmişini temizle"
+
+#: emc/usr_intf/axis/scripts/axis.py:185
+msgid "Control-H"
+msgstr "Ctrl+H"
+
+#: emc/usr_intf/axis/scripts/axis.py:185
+msgid "Copy selected MDI history elements"
+msgstr "Seçili MDI komutlarını kopyala"
+
+#: emc/usr_intf/axis/scripts/axis.py:186
+msgid "to clipboard"
+msgstr " "
+
+#: emc/usr_intf/axis/scripts/axis.py:187
+msgid "Control-Shift-H"
+msgstr "Ctrl+Shift+H"
+
+#: emc/usr_intf/axis/scripts/axis.py:187
+msgid "Paste clipboard to MDI history"
+msgstr "MDI komutlarını yapıştır"
+
+#: emc/usr_intf/axis/scripts/axis.py:188 ../share/axis/tcl/axis.tcl:1088
+msgid "Override Limits"
+msgstr "Limit Geçiş İzni"
+
+#: emc/usr_intf/axis/scripts/axis.py:190
+msgid "Open program"
+msgstr "Program aç"
+
+#: emc/usr_intf/axis/scripts/axis.py:191
+msgid "Control-R"
+msgstr "Ctrl+R"
+
+#: emc/usr_intf/axis/scripts/axis.py:191
+msgid "Reload program"
+msgstr "Programı yeniden yükle"
+
+#: emc/usr_intf/axis/scripts/axis.py:192
+msgid "Control-S"
+msgstr "Ctrl+S"
+
+#: emc/usr_intf/axis/scripts/axis.py:192
+msgid "Save g-code as"
+msgstr "Farklı kaydet"
+
+#: emc/usr_intf/axis/scripts/axis.py:193
+msgid "Run program"
+msgstr "Programı başlat"
+
+#: emc/usr_intf/axis/scripts/axis.py:194
+msgid "Step program"
+msgstr "Adımla"
+
+#: emc/usr_intf/axis/scripts/axis.py:195
+msgid "Pause program"
+msgstr "Bekle"
+
+#: emc/usr_intf/axis/scripts/axis.py:196
+msgid "Resume program"
+msgstr "Devam"
+
+#: emc/usr_intf/axis/scripts/axis.py:197
+msgid "Stop running program, or"
+msgstr "Çalışan programı durdur veya"
+
+#: emc/usr_intf/axis/scripts/axis.py:198
+msgid "stop loading program preview"
+msgstr "Program önizlemeyi durdur"
+
+#: emc/usr_intf/axis/scripts/axis.py:200
+msgid "Toggle mist"
+msgstr "Hava soğutma aç/kapa"
+
+#: emc/usr_intf/axis/scripts/axis.py:201
+msgid "Toggle flood"
+msgstr "Su soğutma aç/kapa"
+
+#: emc/usr_intf/axis/scripts/axis.py:203
+msgid "Spindle brake off"
+msgstr "Spindle frenini serbest bırak"
+
+#: emc/usr_intf/axis/scripts/axis.py:204
+msgid "Shift-B"
+msgstr "Shift+B"
+
+#: emc/usr_intf/axis/scripts/axis.py:204
+msgid "Spindle brake on"
+msgstr "Spindle frenine bas"
+
+#: emc/usr_intf/axis/scripts/axis.py:205
+msgid "Turn spindle clockwise"
+msgstr "Spindle saat yönünde döndür"
+
+#: emc/usr_intf/axis/scripts/axis.py:206
+msgid "Turn spindle counterclockwise"
+msgstr "Spindle saat yönünün tersine döndür"
+
+#: emc/usr_intf/axis/scripts/axis.py:207
+msgid "Turn spindle more slowly"
+msgstr "Spindle yavaşlat"
+
+#: emc/usr_intf/axis/scripts/axis.py:208
+msgid "Turn spindle more quickly"
+msgstr "Spindle hızlandır"
+
+#: emc/usr_intf/axis/scripts/axis.py:210
+msgid "Control-K"
+msgstr "Ctrl+K"
+
+#: emc/usr_intf/axis/scripts/axis.py:210
+msgid "Clear live plot"
+msgstr "Önizlemeyi temizle"
+
+#: emc/usr_intf/axis/scripts/axis.py:211
+msgid "Cycle among preset views"
+msgstr "Tanımlı önizleme "
+
+#: emc/usr_intf/axis/scripts/axis.py:212
+msgid "Switch between preview and DRO"
+msgstr "Önizleme veya sayısal bilgi ekranı seçimi"
+
+#: emc/usr_intf/axis/scripts/axis.py:1616
+msgid "No tool"
+msgstr "Takım yok"
+
+#: emc/usr_intf/axis/scripts/axis.py:1618
+#, python-format
+msgid "Unknown tool %d"
+msgstr "Bilinmeyen takım %d"
+
+#: emc/usr_intf/axis/scripts/axis.py:1620
+#, python-format
+msgid "Tool %(tool)d, offset %(zo)g, diameter %(dia)g"
+msgstr "Takım %(tool)d, ofset %(zo)g, çap %(dia)g"
+
+#: emc/usr_intf/axis/scripts/axis.py:1622
+#, python-format
+msgid "Tool %(tool)d, zo %(zo)g, xo %(xo)g, dia %(dia)g"
+msgstr "Takım %(tool)d, zo %(zo)g,  çap %(dia)g"
+
+#: emc/usr_intf/axis/scripts/axis.py:1874
+msgid "Filtering..."
+msgstr "Filtreleme..."
+
+#: emc/usr_intf/axis/scripts/axis.py:1930
+msgid "Filter failed"
+msgstr "Filtreleme başarısızlıkla sonuçlandı"
+
+#: emc/usr_intf/axis/scripts/axis.py:1931
+#, python-format
+msgid ""
+"The program %(program)r exited with code %(code)d.  Any error messages it "
+"produced are shown below:"
+msgstr "%(program)r programı %(code)d koduyla sonuçlandı. Oluşan hatalarla "
+"ilgili bilgiler şunlardır:"
+
+#: emc/usr_intf/axis/scripts/axis.py:1934
+#: emc/usr_intf/axis/scripts/axis.py:1992
+#: emc/usr_intf/axis/scripts/axis.py:2247
+#: emc/usr_intf/axis/scripts/axis.py:3306
+#: emc/usr_intf/axis/scripts/axis.py:4052
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:709
+#: ../lib/python/propertywindow.py:34 ../share/axis/tcl/axis.tcl:1694
+#: ../share/axis/tcl/axis.tcl:1731
+msgid "OK"
+msgstr "Tamam"
+
+#: emc/usr_intf/axis/scripts/axis.py:1990
+#, python-format
+msgid "G-Code error in %s"
+msgstr "G Kod hatası (%s)"
+
+#: emc/usr_intf/axis/scripts/axis.py:1991
+#, python-format
+msgid ""
+"Near line %(seq)d of %(f)s:\n"
+"%(error_str)s"
+msgstr "%(f)s programının %(seq)d satırında hata:\n"
+"%(error_str)s"
+
+#: emc/usr_intf/axis/scripts/axis.py:2147
+#: emc/usr_intf/axis/scripts/axis.py:3532 ../share/axis/tcl/axis.tcl:1067
+#: ../share/axis/tcl/axis.tcl:1069 ../share/axis/tcl/axis.tcl:2115
+msgid "Continuous"
+msgstr "Sürekli"
+
+#: emc/usr_intf/axis/scripts/axis.py:2248
+#: emc/usr_intf/axis/scripts/axis.py:2432
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:711
+msgid "Cancel"
+msgstr "İptal"
+
+#: emc/usr_intf/axis/scripts/axis.py:2344
+msgid "T    Tool Table"
+msgstr "T    Takım Tablosu"
+
+#: emc/usr_intf/axis/scripts/axis.py:2360
+#: emc/usr_intf/axis/scripts/axis.py:2502
+#: emc/usr_intf/stepconf/stepconf.py:1495
+#: emc/usr_intf/stepconf/stepconf.py:2079
+#: emc/usr_intf/stepconf/stepconf.glade:4268
+msgid "mm"
+msgstr "mm"
+
+#: emc/usr_intf/axis/scripts/axis.py:2361
+#: emc/usr_intf/axis/scripts/axis.py:2506
+#: emc/usr_intf/stepconf/stepconf.py:1501
+#: emc/usr_intf/stepconf/stepconf.py:2093
+msgid "in"
+msgstr "inch"
+
+#: emc/usr_intf/axis/scripts/axis.py:2364
+msgid " radius"
+msgstr "yarıçap"
+
+#: emc/usr_intf/axis/scripts/axis.py:2366
+msgid " diameter"
+msgstr "çap"
+
+#: emc/usr_intf/axis/scripts/axis.py:2367
+msgid "°"
+msgstr "°"
+
+#: emc/usr_intf/axis/scripts/axis.py:2373
+msgid "Coordinate System:"
+msgstr "Koordinat Sistemi:"
+
+#: emc/usr_intf/axis/scripts/axis.py:2396
+msgid "Name:"
+msgstr "Ad"
+
+#: emc/usr_intf/axis/scripts/axis.py:2396
+msgid "Size:"
+msgstr "Boyut"
+
+#: emc/usr_intf/axis/scripts/axis.py:2397
+msgid "Tool order:"
+msgstr "Takım sırası:"
+
+#: emc/usr_intf/axis/scripts/axis.py:2397
+msgid "Rapid distance:"
+msgstr "İlerleme mesafesi"
+
+#: emc/usr_intf/axis/scripts/axis.py:2398
+msgid "Feed distance:"
+msgstr "Kesme mesafesi"
+
+#: emc/usr_intf/axis/scripts/axis.py:2398
+msgid "Total distance:"
+msgstr "Toplma mesafe"
+
+#: emc/usr_intf/axis/scripts/axis.py:2399
+msgid "Run time:"
+msgstr "Çalışma zamanı"
+
+#: emc/usr_intf/axis/scripts/axis.py:2399
+msgid "X bounds:"
+msgstr "X sınırlar:"
+
+#: emc/usr_intf/axis/scripts/axis.py:2400
+msgid "Y bounds:"
+msgstr "Y sınırlar:"
+
+#: emc/usr_intf/axis/scripts/axis.py:2400
+msgid "Z bounds:"
+msgstr "Z sınırlar"
+
+#: emc/usr_intf/axis/scripts/axis.py:2401
+msgid "A bounds:"
+msgstr "A sınırlar:"
+
+#: emc/usr_intf/axis/scripts/axis.py:2401
+msgid "B bounds:"
+msgstr "B sınırlar:"
+
+#: emc/usr_intf/axis/scripts/axis.py:2402
+msgid "C bounds:"
+msgstr "C sınırlar:"
+
+#: emc/usr_intf/axis/scripts/axis.py:2421
+#, python-format
+msgid "Program exceeds machine minimum on axis %s"
+msgstr "Program, %s ekseninde makine minimum limitini aşıyor"
+
+#: emc/usr_intf/axis/scripts/axis.py:2424
+#, python-format
+msgid "Program exceeds machine maximum on axis %s"
+msgstr "Program, %s ekseninde makine maksimum limitini aşıyor"
+
+#: emc/usr_intf/axis/scripts/axis.py:2429
+msgid "Program exceeds machine limits"
+msgstr "Program makine limitlerini aşıyor"
+
+#: emc/usr_intf/axis/scripts/axis.py:2432
+msgid "Run Anyway"
+msgstr "Çalışmaya Zorla"
+
+#: emc/usr_intf/axis/scripts/axis.py:2484
+msgid "No file loaded"
+msgstr "Yüklü dosya yok"
+
+#: emc/usr_intf/axis/scripts/axis.py:2492
+#, python-format
+msgid "generated from %s"
+msgstr "%s tarafından üretildi"
+
+#: emc/usr_intf/axis/scripts/axis.py:2498
+#, python-format
+msgid ""
+"%(size)s bytes\n"
+"%(lines)s gcode lines"
+msgstr ""
+"%(size)s byte\n"
+"%(lines)s satır kod"
+
+#: emc/usr_intf/axis/scripts/axis.py:2524
+#, python-format
+msgid "%.1f minutes"
+msgstr "%.1f dakika"
+
+#: emc/usr_intf/axis/scripts/axis.py:2526
+#, python-format
+msgid "%d seconds"
+msgstr "%d saniye"
+
+#: emc/usr_intf/axis/scripts/axis.py:2534
+#, python-format
+msgid "%(a)f to %(b)f = %(diff)f %(units)s"
+msgstr "%(a)f -> %(b)f = %(diff)f %(units)s"
+
+#: emc/usr_intf/axis/scripts/axis.py:2535
+msgid "G-Code Properties"
+msgstr "G Kod Özellikleri"
+
+#: emc/usr_intf/axis/scripts/axis.py:2733
+msgid "All machinable files"
+msgstr "Çalıştırılabilir bütün dosyalar"
+
+#: emc/usr_intf/axis/scripts/axis.py:2734
+#: emc/usr_intf/axis/scripts/axis.py:3293
+msgid "rs274ngc files"
+msgstr "rs274ngc dosyaları"
+
+#: emc/usr_intf/axis/scripts/axis.py:2735
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:745
+msgid "All files"
+msgstr "Bütün Dosyalar"
+
+#: emc/usr_intf/axis/scripts/axis.py:3117 ../share/axis/tcl/axis.tcl:1083
+msgid "Touch Off"
+msgstr "Dokun"
+
+#: emc/usr_intf/axis/scripts/axis.py:3118
+#, python-format
+msgid "Enter %s coordinate relative to workpiece:"
+msgstr "İş parçasına göre %s koordinatını girin"
+
+#: emc/usr_intf/axis/scripts/axis.py:3305
+msgid "Error saving file"
+msgstr "Dosya kaydederken hata"
+
+#: emc/usr_intf/axis/scripts/axis.py:3664
+msgid "Home All"
+msgstr "Hepsini Sıfırla"
+
+#: emc/usr_intf/axis/scripts/axis.py:3666
+msgid "Home all axes [Ctrl-Home]"
+msgstr "Bütün eksenleri sıfırla [Ctrl-Home]"
+
+#: emc/usr_intf/axis/scripts/axis.py:3669
+msgid "Home All Axes"
+msgstr "Bütün Eksenleri Sıfırla"
+
+#: emc/usr_intf/axis/scripts/axis.py:3674
+msgid "Unhome All Axes"
+msgstr "Bütün Eksenlerde Sıfırlama İptal"
+
+#: emc/usr_intf/axis/scripts/axis.py:3694
+#, python-format
+msgid "Home Axis _%s"
+msgstr "%s Eksenini Sıfırla"
+
+#: emc/usr_intf/axis/scripts/axis.py:3696
+#, python-format
+msgid "Unhome Axis _%s"
+msgstr "%s Ekseninde Sıfırlama İptal"
+
+#: emc/usr_intf/axis/scripts/axis.py:3833
+msgid "Run from here"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/axis.py:4051
+msgid "Error in ~/.axisrc"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/hal_manualtoolchange.py:11
+#, python-format
+msgid "Insert tool %d and click continue when ready"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/hal_manualtoolchange.py:13
+msgid "Remove the tool and click continue when ready"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/hal_manualtoolchange.py:17
+msgid "Tool change"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/hal_manualtoolchange.py:17
+msgid "Continue"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/hal_manualtoolchange.py:31
+msgid "AXIS Manual Toolchanger"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/hal_manualtoolchange.py:35
+msgid ""
+"This window is part of the AXIS manual toolchanger.  It is safe to close or "
+"iconify this window, or it will close automatically after a few seconds."
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:498
+#, python-format
+msgid "%s: Image to gcode"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:499
+msgid "Image to gcode"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:509
+#, python-format
+msgid ""
+"Image size: %(w)d x %(h)d pixels\n"
+"Minimum pixel value: %(min)d\n"
+"Maximum pixel value: %(max)d"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:554
+msgid "Yes"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:599
+msgid "G20 (in)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:599
+msgid "G21 (mm)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:602
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:615
+msgid "None"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:602
+msgid "White"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:602
+msgid "Black"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:608
+msgid "Rows"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:608
+msgid "Columns"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:608
+msgid "Rows then Columns"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:608
+msgid "Columns then Rows"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:609
+msgid "Positive"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:609
+msgid "Negative"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:609
+msgid "Alternating"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:609
+msgid "Up Milling"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:609
+msgid "Down Milling"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:614
+msgid "Ball End"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:614
+msgid "Flat End"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:614
+msgid "45 Degree"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:614
+msgid "60 Degree"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:615
+msgid "Secondary"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:615
+msgid "Full"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:645
+msgid "Invert Image"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:646
+msgid "Normalize Image"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:647
+msgid "Extend Image Border"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:648
+msgid "Pixel Size (Units)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:649
+msgid "Depth (units)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:650
+msgid "Tolerance (units)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:651
+msgid "Stepover (pixels)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:652
+msgid "Tool Diameter (units)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:653
+msgid "Tool Type"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:654
+msgid "Feed Rate (units per minute)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:655
+msgid "Plunge Feed Rate (units per minute)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:656
+msgid "Units"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:657
+msgid "Safety Height (units)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:658
+msgid "Scan Pattern"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:659
+msgid "Scan Direction"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:660
+msgid "Lace Bounding"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:661
+msgid "Contact Angle (degrees)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:662
+msgid "Spindle Speed (RPM)"
+msgstr "Spindle Devir (devir/dk)"
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:663
+msgid "Roughing offset (units, 0=no roughing)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:664
+msgid "Roughing depth per pass (units)"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:731
+msgid "image-to-gcode: User pressed cancel"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/image-to-gcode.py:744
+msgid "Depth images"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:21
+msgid "EMC2 Debug Level"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:22
+msgid "debuglevel"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:35
+msgid "Configuration *"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:36
+msgid "Version Numbers *"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:37
+msgid "NML *"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:38
+msgid "RCS *"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:39
+msgid "Task Issue"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:40
+msgid "Motion Time"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:41
+msgid "Interpreter"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:42
+msgid "Interpreter List"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:46
+#, python-format
+msgid ""
+"Inifile setting for this debug level:\n"
+"[EMC]DEBUG=0x%08x"
+msgstr ""
+
+#: emc/usr_intf/axis/scripts/debuglevel.py:80
+msgid "  * This option can only be enabled in the inifile"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:47
+msgid "_Open..."
+msgstr "Program Aç"
+
+#: ../share/axis/tcl/axis.tcl:51
+msgid "Recent _Files"
+msgstr "Son Kullanılanlar"
+
+#: ../share/axis/tcl/axis.tcl:55
+msgid "_Edit..."
+msgstr "Düzenle..."
+
+#: ../share/axis/tcl/axis.tcl:58
+msgid "Ctrl-R"
+msgstr "Ctrl-R"
+
+#: ../share/axis/tcl/axis.tcl:60
+msgid "_Reload"
+msgstr "Yeniden Yükle"
+
+#: ../share/axis/tcl/axis.tcl:63
+msgid "Ctrl-S"
+msgstr "Ctrl-S"
+
+#: ../share/axis/tcl/axis.tcl:65
+msgid "_Save gcode as..."
+msgstr "Farklı Kaydet..."
+
+#: ../share/axis/tcl/axis.tcl:69
+msgid "_Properties..."
+msgstr "Özellikler"
+
+#: ../share/axis/tcl/axis.tcl:75
+msgid "Edit _tool table..."
+msgstr "Takım tablosunu düzenle..."
+
+#: ../share/axis/tcl/axis.tcl:79
+msgid "Reload tool ta_ble"
+msgstr "Takım tablosunu yeniden yükle"
+
+#: ../share/axis/tcl/axis.tcl:85
+msgid "_Ladder Editor..."
+msgstr "Ladder Düzenle..."
+
+#: ../share/axis/tcl/axis.tcl:91
+msgid "_Quit"
+msgstr "Çıkış"
+
+#: ../share/axis/tcl/axis.tcl:97
+msgid "Toggle _Emergency Stop"
+msgstr "Acil Stop Bas/Bırak"
+
+#: ../share/axis/tcl/axis.tcl:102
+msgid "Toggle _Machine Power"
+msgstr "Makine Aç/Kapa"
+
+#: ../share/axis/tcl/axis.tcl:109
+msgid "_Run program"
+msgstr "Programı başlat"
+
+#: ../share/axis/tcl/axis.tcl:113
+msgid "Ru_n from selected line"
+msgstr "Programı seçili satırdan başlat"
+
+#: ../share/axis/tcl/axis.tcl:118
+msgid "S_tep"
+msgstr "Adımla"
+
+#: ../share/axis/tcl/axis.tcl:123
+msgid "_Pause"
+msgstr "Bekle"
+
+#: ../share/axis/tcl/axis.tcl:128
+msgid "Re_sume"
+msgstr "Devam"
+
+#: ../share/axis/tcl/axis.tcl:133 ../share/axis/tcl/axis.tcl:1174
+msgid "Stop"
+msgstr "Dur"
+
+#: ../share/axis/tcl/axis.tcl:138
+msgid "Stop at M_1"
+msgstr "M1 satırlarında dur"
+
+#: ../share/axis/tcl/axis.tcl:143
+msgid "Skip lines with '_/'"
+msgstr "'/' ile baslayan satırları atla"
+
+#: ../share/axis/tcl/axis.tcl:148
+msgid "Ctrl-M"
+msgstr "Ctrl-M"
+
+#: ../share/axis/tcl/axis.tcl:150
+msgid "Clear MDI h_istory"
+msgstr "MDI geçmişini temizle"
+
+#: ../share/axis/tcl/axis.tcl:152
+msgid "Ctrl-H"
+msgstr "Ctrl-H"
+
+#: ../share/axis/tcl/axis.tcl:154
+msgid "Copy from MDI hist_ory"
+msgstr "MDI geçmişinden kopyala"
+
+#: ../share/axis/tcl/axis.tcl:156
+msgid "Ctrl-Shift-H"
+msgstr "Ctrl-Shift-H"
+
+#: ../share/axis/tcl/axis.tcl:158
+msgid "Paste to MDI histor_y"
+msgstr "MDI geçmişine yapıştır"
+
+#: ../share/axis/tcl/axis.tcl:164
+msgid "_Calibration"
+msgstr "Kalibrasyon"
+
+#: ../share/axis/tcl/axis.tcl:168
+msgid "Show _Hal Configuration"
+msgstr "Hal Ayarlarını Göster"
+
+#: ../share/axis/tcl/axis.tcl:172
+msgid "H_al Meter"
+msgstr "Halmetre"
+
+#: ../share/axis/tcl/axis.tcl:176
+msgid "Ha_l Scope"
+msgstr "HAL İzleme"
+
+#: ../share/axis/tcl/axis.tcl:180
+msgid "Sho_w EMC Status"
+msgstr "Kontrolör Durumu"
+
+#: ../share/axis/tcl/axis.tcl:184
+msgid "Set _Debug Level"
+msgstr "Debug Seviyesi"
+
+#: ../share/axis/tcl/axis.tcl:190
+msgid "Homin_g"
+msgstr "Sıfırlama"
+
+#: ../share/axis/tcl/axis.tcl:194
+msgid "_Unhoming"
+msgstr "Sıfırlama İptali"
+
+#: ../share/axis/tcl/axis.tcl:198
+msgid "_Zero coordinate system"
+msgstr "Koordinat sistemi kaydırma"
+
+#: ../share/axis/tcl/axis.tcl:202
+msgid "P1  G5_4"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:206
+msgid "P2  G5_5"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:210
+msgid "P3  G5_6"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:214
+msgid "P4  G5_7"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:218
+msgid "P5  G5_8"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:222
+msgid "P6  G5_9"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:226
+msgid "P7  G59._1"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:230
+msgid "P8  G59._2"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:234
+msgid "P9  G59._3"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:238
+msgid "_G92"
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:248
+msgid "_Top view"
+msgstr "Yukarıdan"
+
+#: ../share/axis/tcl/axis.tcl:255
+msgid "_Rotated Top view"
+msgstr "Yukarıdan (dönük)"
+
+#: ../share/axis/tcl/axis.tcl:262
+msgid "_Side view"
+msgstr "Yandan"
+
+#: ../share/axis/tcl/axis.tcl:269
+msgid "_Front view"
+msgstr "Önden"
+
+#: ../share/axis/tcl/axis.tcl:276
+msgid "_Perspective view"
+msgstr "Persfektif"
+
+#: ../share/axis/tcl/axis.tcl:285
+msgid "Display _Inches"
+msgstr "Inch"
+
+#: ../share/axis/tcl/axis.tcl:292
+msgid "Display _MM"
+msgstr "Milimetre"
+
+#: ../share/axis/tcl/axis.tcl:299
+msgid "S_how program"
+msgstr "Program önizleme"
+
+#: ../share/axis/tcl/axis.tcl:304
+msgid "Show program r_apids"
+msgstr "Boşta ilerlemeler"
+
+#: ../share/axis/tcl/axis.tcl:309
+msgid "Sho_w live plot"
+msgstr "Çalışma anı"
+
+#: ../share/axis/tcl/axis.tcl:314
+msgid "Show too_l"
+msgstr "Takım"
+
+#: ../share/axis/tcl/axis.tcl:319
+msgid "Show e_xtents"
+msgstr "Ölçü"
+
+#: ../share/axis/tcl/axis.tcl:324
+msgid "Sh_ow machine limits"
+msgstr "Makine limitleri"
+
+#: ../share/axis/tcl/axis.tcl:329
+msgid "Show v_elocity"
+msgstr "Hız"
+
+#: ../share/axis/tcl/axis.tcl:334
+msgid "Show _distance to go"
+msgstr "Gidilecek mesafe"
+
+#: ../share/axis/tcl/axis.tcl:339
+msgid "La_rge coordinate font"
+msgstr "Büyük yazı tipi"
+
+#: ../share/axis/tcl/axis.tcl:342
+msgid "Ctrl-K"
+msgstr "Ctrl+K"
+
+#: ../share/axis/tcl/axis.tcl:344
+msgid "_Clear live plot"
+msgstr "Görünümü temizle"
+
+#: ../share/axis/tcl/axis.tcl:353
+msgid "Show commanded position"
+msgstr "İstenen konum"
+
+#: ../share/axis/tcl/axis.tcl:360
+msgid "Show actual position"
+msgstr "Gerçekleşen konum"
+
+#: ../share/axis/tcl/axis.tcl:369
+msgid "Show machine position"
+msgstr "Makine sıfırına göre konum"
+
+#: ../share/axis/tcl/axis.tcl:376
+msgid "Show relative position"
+msgstr "Parça sıfırına göre konum"
+
+#: ../share/axis/tcl/axis.tcl:385
+msgid "Joint mode"
+msgstr "J modu"
+
+#: ../share/axis/tcl/axis.tcl:392
+msgid "World mode"
+msgstr "W modu"
+
+#: ../share/axis/tcl/axis.tcl:401
+msgid "_About AXIS"
+msgstr "AXIS Hakkında"
+
+#: ../share/axis/tcl/axis.tcl:405
+msgid "Quick _Reference"
+msgstr "Kısayollar"
+
+#: ../share/axis/tcl/axis.tcl:411
+msgid "_File"
+msgstr "Dosya"
+
+#: ../share/axis/tcl/axis.tcl:415
+msgid "_Machine"
+msgstr "Makine"
+
+#: ../share/axis/tcl/axis.tcl:419
+msgid "_View"
+msgstr "Görünüm"
+
+#: ../share/axis/tcl/axis.tcl:423
+msgid "_Help"
+msgstr "Yardım"
+
+#: ../share/axis/tcl/axis.tcl:432
+msgid "Toggle Emergency Stop [F1]"
+msgstr "Acil Stop Bas/Bırak"
+
+#: ../share/axis/tcl/axis.tcl:441
+msgid "Toggle Machine power [F2]"
+msgstr "Makine Aç/Kapa"
+
+#: ../share/axis/tcl/axis.tcl:452
+msgid "Open G-Code file [O]"
+msgstr "G Kod programını aç [0]"
+
+#: ../share/axis/tcl/axis.tcl:460
+msgid "Reopen current file [Control-R]"
+msgstr "Programı yeniden yükle [Ctrl+R]"
+
+#: ../share/axis/tcl/axis.tcl:470
+msgid "Begin executing current file [R]"
+msgstr "Programı başlat [R]"
+
+#: ../share/axis/tcl/axis.tcl:478
+msgid "Execute next line [T]"
+msgstr "Sonraki satırı çalıştır [T]"
+
+#: ../share/axis/tcl/axis.tcl:486
+msgid "Pause [P] / resume [S] execution"
+msgstr "Bekle [P] / Devam [S]"
+
+#: ../share/axis/tcl/axis.tcl:494
+msgid "Stop program execution [ESC]"
+msgstr "Programı durdur [ESC]"
+
+#: ../share/axis/tcl/axis.tcl:504
+msgid "Toggle skip lines with '/' [Alt-M /]"
+msgstr "'/' ile başlayan satırları atla"
+
+#: ../share/axis/tcl/axis.tcl:511
+msgid "Toggle optional pause [Alt-M 1]"
+msgstr "M1 satırlarında dur/durma"
+
+#: ../share/axis/tcl/axis.tcl:520
+msgid "Zoom in"
+msgstr "Yakınlaş"
+
+#: ../share/axis/tcl/axis.tcl:528
+msgid "Zoom out"
+msgstr "Uzaklaş"
+
+#: ../share/axis/tcl/axis.tcl:536
+msgid "Top view"
+msgstr "Yukarıdan"
+
+#: ../share/axis/tcl/axis.tcl:544
+msgid "Rotated top view"
+msgstr "Yukarıdan (dönük)"
+
+#: ../share/axis/tcl/axis.tcl:552
+msgid "Side view"
+msgstr "Yandan"
+
+#: ../share/axis/tcl/axis.tcl:560
+msgid "Front view"
+msgstr "Önden"
+
+#: ../share/axis/tcl/axis.tcl:568
+msgid "Perspective view"
+msgstr "Persfektif"
+
+#: ../share/axis/tcl/axis.tcl:576
+msgid "Toggle between Drag and Rotate Mode [D]"
+msgstr "Kaydır/Döndür [D]"
+
+#: ../share/axis/tcl/axis.tcl:591
+msgid "Clear live plot [Ctrl-K]"
+msgstr "Görünümü temizle [Ctrl+K]"
+
+#: ../share/axis/tcl/axis.tcl:723
+msgid "Manual Control [F3]"
+msgstr "Manuel Kontrol [F3]"
+
+#: ../share/axis/tcl/axis.tcl:724
+msgid "MDI [F5]"
+msgstr "Komut [F5]"
+
+#: ../share/axis/tcl/axis.tcl:738 ../share/axis/tcl/axis.tcl:2011
+#: ../share/axis/tcl/axis.tcl:2174
+msgid "Axis:"
+msgstr "Eksen:"
+
+#: ../share/axis/tcl/axis.tcl:1077
+msgid "Home Axis"
+msgstr "Ekseni Sıfırla"
+
+#: ../share/axis/tcl/axis.tcl:1151
+msgid "Spindle:"
+msgstr "Spindle:"
+
+#: ../share/axis/tcl/axis.tcl:1198
+msgid "-"
+msgstr "-"
+
+#: ../share/axis/tcl/axis.tcl:1212
+msgid "+"
+msgstr "+"
+
+#: ../share/axis/tcl/axis.tcl:1217
+msgid "Brake"
+msgstr "Fren"
+
+#: ../share/axis/tcl/axis.tcl:1264
+msgid "Coolant:"
+msgstr "Soğutma"
+
+#: ../share/axis/tcl/axis.tcl:1269
+msgid "Mist"
+msgstr "Hava"
+
+#: ../share/axis/tcl/axis.tcl:1274
+msgid "Flood"
+msgstr "Su"
+
+#: ../share/axis/tcl/axis.tcl:1346
+msgid "History:"
+msgstr "Geçmiş"
+
+#: ../share/axis/tcl/axis.tcl:1369
+msgid "MDI Command:"
+msgstr "MDI komutu"
+
+#: ../share/axis/tcl/axis.tcl:1378
+msgid "Go"
+msgstr "Tamam"
+
+#: ../share/axis/tcl/axis.tcl:1384
+msgid "Active G-Codes:"
+msgstr "Aktif G Kodu:"
+
+#: ../share/axis/tcl/axis.tcl:1462
+msgid "Preview"
+msgstr "Görünüm"
+
+#: ../share/axis/tcl/axis.tcl:1463
+msgid "DRO"
+msgstr "Sayısal"
+
+#: ../share/axis/tcl/axis.tcl:1549 ../share/axis/tcl/axis.tcl:1562
+msgid "Jog Speed:"
+msgstr "İlerleme Hızı:"
+
+#: ../share/axis/tcl/axis.tcl:1574
+msgid "Max Velocity:"
+msgstr "Maksimum Hız:"
+
+#: ../share/axis/tcl/axis.tcl:1603
+msgid "Spindle Override:"
+msgstr "Spindle Devir:"
+
+#: ../share/axis/tcl/axis.tcl:1605 ../share/axis/tcl/axis.tcl:1645
+msgid "%"
+msgstr "%"
+
+#: ../share/axis/tcl/axis.tcl:1643
+msgid "Feed Override:"
+msgstr "İşleme Hızı"
+
+#: ../share/axis/tcl/axis.tcl:1685
+msgid ""
+"EMC2/AXIS version $version\n"
+"\n"
+"Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009 Jeff Epler and Chris "
+"Radek.\n"
+"\n"
+"This is free software, and you are welcome to redistribute it under certain "
+"conditions.  See the file COPYING, included with EMC2.\n"
+"\n"
+"Visit the EMC web site: "
+msgstr ""
+
+#: ../share/axis/tcl/axis.tcl:1713
+msgid "About AXIS"
+msgstr "AXIS Hakkında"
+
+#: ../share/axis/tcl/axis.tcl:1742
+msgid "AXIS Quick Reference"
+msgstr "AXIS Kısayollar"
+
+#: ../share/axis/tcl/axis.tcl:1878
+msgid "AXIS $::version on $::machine"
+msgstr "AXIS $::version $::machine"
+
+#: ../share/axis/tcl/axis.tcl:1880
+msgid "(no file)"
+msgstr "(program yok)"
+
+#: ../share/axis/tcl/axis.tcl:1891
+msgid "ESTOP"
+msgstr "ACİL STOP"
+
+#: ../share/axis/tcl/axis.tcl:1892
+msgid "OFF"
+msgstr "KAPALI"
+
+#: ../share/axis/tcl/axis.tcl:1893
+msgid "ON"
+msgstr "AÇIK"
+
+#: ../share/axis/tcl/axis.tcl:1951 ../share/axis/tcl/axis.tcl:1956
+msgid "Position:"
+msgstr "Konum:"
+
+#: ../share/axis/tcl/axis.tcl:1953
+msgid "Machine"
+msgstr "Makine"
+
+#: ../share/axis/tcl/axis.tcl:1953
+msgid "Relative"
+msgstr "Göreceli"
+
+#: ../share/axis/tcl/axis.tcl:1954
+msgid "Actual"
+msgstr "Gerçekleşen"
+
+#: ../share/axis/tcl/axis.tcl:1954
+msgid "Commanded"
+msgstr "İstenen"
+
+#: ../share/axis/tcl/axis.tcl:2007 ../share/axis/tcl/axis.tcl:2174
+msgid "Joint:"
+msgstr "Eksen:"
+
+#: ../share/axis/tcl/axis.tcl:2305
+msgid "Turn spindle counterclockwise [F10]"
+msgstr "Spindle saat yönünün tersine döndür [F10]"
+
+#: ../share/axis/tcl/axis.tcl:2306
+msgid "Turn spindle clockwise [F9]"
+msgstr "Spindle saat yönünde döndür [F9]"
+
+#: ../share/axis/tcl/axis.tcl:2307
+msgid "Stop spindle [F9/F10]"
+msgstr "Spindle Durdur [F9/F10]"
+
+#: ../share/axis/tcl/axis.tcl:2308
+msgid "Turn spindle Faster [F12]"
+msgstr "Spindle Hızlandır [F12]"
+
+#: ../share/axis/tcl/axis.tcl:2309
+msgid "Turn spindle Slower [F11]"
+msgstr "Spindle Yavaşlat [F11]"
+
+#: ../share/axis/tcl/axis.tcl:2310
+msgid "Turn spindle brake on [Shift-B] or off [B]"
+msgstr "Spindle frenine Bas [Shift+B] / Bırak [B]"
+
+#: ../share/axis/tcl/axis.tcl:2311
+msgid "Turn flood on or off [F8]"
+msgstr "Soğutma sıvısını aç/kapat [F8]"
+
+#: ../share/axis/tcl/axis.tcl:2312
+msgid "Turn mist on or off [F7]"
+msgstr "Havayı aç/kapat [F7]"
+
+#: ../share/axis/tcl/axis.tcl:2313
+msgid "Send active axis home [Home]"
+msgstr "Seçili ekseni sıfırla [Home]"
+
+#: ../share/axis/tcl/axis.tcl:2314
+msgid "Set G54 offset for active axis [End]"
+msgstr "Seçili eksen için G54 parça sıfırı [End]"
+
+#: ../share/axis/tcl/axis.tcl:2315
+msgid "Activate axis [X]"
+msgstr "Ekseni seç [X]"
+
+#: ../share/axis/tcl/axis.tcl:2316
+msgid "Activate axis [Y]"
+msgstr "Ekseni seç [Y]"
+
+#: ../share/axis/tcl/axis.tcl:2317
+msgid "Activate axis [Z]"
+msgstr "Ekseni seç [Z]"
+
+#: ../share/axis/tcl/axis.tcl:2318
+msgid "Activate axis [A]"
+msgstr "Ekseni seç [A]"
+
+#: ../share/axis/tcl/axis.tcl:2319
+msgid "Activate axis [4]"
+msgstr "Ekseni seç [4]"
+
+#: ../share/axis/tcl/axis.tcl:2320
+msgid "Activate axis [5]"
+msgstr "Ekseni seç [5]"
+
+#: ../share/axis/tcl/axis.tcl:2321 ../share/axis/tcl/axis.tcl:2322
+msgid "Jog selected axis"
+msgstr "Seçili eksende ilerle"
+
+#: ../share/axis/tcl/axis.tcl:2324
+msgid "Temporarily allow jogging outside machine limits [L]"
+msgstr "Geçici olarak limiti aşmaya izin ver [L]"
+
+#: emc/usr_intf/stepconf/stepconf.py:53
+msgid ""
+"Stepconf encountered an error.  The following information may be useful in "
+"troubleshooting:\n"
+"\n"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:71
+msgid "Gecko 201"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:72
+msgid "Gecko 202"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:73
+msgid "Gecko 203v"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:74
+msgid "Gecko 210"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:75
+msgid "Gecko 212"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:76
+msgid "Gecko 320"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:77
+msgid "Gecko 540"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:78
+msgid "L297"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:79
+msgid "PMDX-150"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:80
+msgid "Sherline"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:81
+msgid "Xylotex 8S-3"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:82
+msgid "Parker-Compumotor oem750"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:83
+msgid "JVL-SMD41 or 42"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:84
+msgid "Hobbycnc Pro Chopper"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:85
+msgid "Keling 4030"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:142
+msgid "X Step"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:142
+msgid "X Direction"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:142
+msgid "Y Step"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:142
+msgid "Y Direction"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:143
+msgid "Z Step"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:143
+msgid "Z Direction"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:143
+msgid "A Step"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:143
+msgid "A Direction"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:144
+msgid "Spindle ON"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:144
+msgid "Spindle CW"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:144
+msgid "Spindle CCW"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:144
+msgid "Spindle PWM"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:144
+msgid "Spindle Brake"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:145
+msgid "Coolant Mist"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:145
+msgid "Coolant Flood"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:145
+msgid "ESTOP Out"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:145
+msgid "Amplifier Enable"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:146
+msgid "Charge Pump"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:147
+msgid "Digital out 0"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:147
+msgid "Digital out 1"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:147
+msgid "Digital out 2"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:147
+msgid "Digital out 3"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:148 emc/usr_intf/stepconf/stepconf.py:167
+msgid "Unused"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:150
+msgid "ESTOP In"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:150
+msgid "Probe In"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:151
+msgid "Spindle Index"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:151
+msgid "Spindle Phase A"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:151
+msgid "Spindle Phase B"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:152
+msgid "Home X"
+msgstr "X sıfırla"
+
+#: emc/usr_intf/stepconf/stepconf.py:152
+msgid "Home Y"
+msgstr "Y Sıfırla"
+
+#: emc/usr_intf/stepconf/stepconf.py:152
+msgid "Home Z"
+msgstr "Z Sıfırla"
+
+#: emc/usr_intf/stepconf/stepconf.py:152
+msgid "Home A"
+msgstr "A Sıfırla"
+
+#: emc/usr_intf/stepconf/stepconf.py:153
+msgid "Minimum Limit + Home X"
+msgstr "Minimum Limit + X Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:153
+msgid "Minimum Limit + Home Y"
+msgstr "Minimum Limit + Y Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:154
+msgid "Minimum Limit + Home Z"
+msgstr "Minimum Limit + Z Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:154
+msgid "Minimum Limit + Home A"
+msgstr "Minimum Limit + A Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:155
+msgid "Maximum Limit + Home X"
+msgstr "Maksimum Limit + X Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:155
+msgid "Maximum Limit + Home Y"
+msgstr "Maksimum Limit + Y Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:156
+msgid "Maximum Limit + Home Z"
+msgstr "Maksimum Limit + Z Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:156
+msgid "Maximum Limit + Home A"
+msgstr "Maksimum Limit + A Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:157
+msgid "Both Limit + Home X"
+msgstr "Limitler + X Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:157
+msgid "Both Limit + Home Y"
+msgstr "Limitler + Y Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:158
+msgid "Both Limit + Home Z"
+msgstr "Limitler + Z Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:158
+msgid "Both Limit + Home A"
+msgstr "Limitler + A Sıfır"
+
+#: emc/usr_intf/stepconf/stepconf.py:159
+msgid "Minimum Limit X"
+msgstr "X Minimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:159
+msgid "Minimum Limit Y"
+msgstr "Y Minimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:160
+msgid "Minimum Limit Z"
+msgstr "Z Minimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:160
+msgid "Minimum Limit A"
+msgstr "A Minimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:161
+msgid "Maximum Limit X"
+msgstr "X Maksimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:161
+msgid "Maximum Limit Y"
+msgstr "Y Maksimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:162
+msgid "Maximum Limit Z"
+msgstr "Z Maksimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:162
+msgid "Maximum Limit A"
+msgstr "A Maksimum Limit"
+
+#: emc/usr_intf/stepconf/stepconf.py:163
+msgid "Both Limit X"
+msgstr "X Limitler"
+
+#: emc/usr_intf/stepconf/stepconf.py:163
+msgid "Both Limit Y"
+msgstr "Y Limitler"
+
+#: emc/usr_intf/stepconf/stepconf.py:164
+msgid "Both Limit Z"
+msgstr "Z Limitler"
+
+#: emc/usr_intf/stepconf/stepconf.py:164
+msgid "Both Limit A"
+msgstr "A Limitler"
+
+#: emc/usr_intf/stepconf/stepconf.py:165
+msgid "All limits"
+msgstr "Bütün Limitler"
+
+#: emc/usr_intf/stepconf/stepconf.py:165
+msgid "All home"
+msgstr "Bütün Sıfırlar"
+
+#: emc/usr_intf/stepconf/stepconf.py:166
+msgid "Digital in 0"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:166
+msgid "Digital in 1"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:166
+msgid "Digital in 2"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:166
+msgid "Digital in 3"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:192
+msgid "my-mill"
+msgstr "goo"
+
+#: emc/usr_intf/stepconf/stepconf.py:204 emc/usr_intf/stepconf/stepconf.py:206
+msgid "Enter Address"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:361
+#, python-format
+msgid "File %r was modified since it was written by stepconf"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:364
+msgid ""
+"Saving this configuration file will discard configuration changes made "
+"outside stepconf."
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:379
+msgid "Continue? "
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:380
+msgid "yY"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:432 emc/usr_intf/stepconf/stepconf.py:759
+#, python-format
+msgid "# Generated by stepconf at %s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:433 emc/usr_intf/stepconf/stepconf.py:760
+msgid "# If you make changes to this file, they will be"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:434 emc/usr_intf/stepconf/stepconf.py:761
+msgid "# overwritten when you run stepconf again"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:503
+msgid "# add halui MDI commands here (max 64) "
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:974
+msgid "Include your PyVCP panel here.\n"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:983
+#: emc/usr_intf/stepconf/stepconf.py:1009
+msgid "# Include your customized HAL commands here"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:984
+msgid ""
+"# The commands in this file are run after the AXIS GUI (including PyVCP "
+"panel) starts"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1010
+msgid "# This file will not be overwritten when you run stepconf again"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1017
+#, python-format
+msgid "Generated by stepconf at %s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1090
+#, python-format
+msgid "launch %s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1094
+msgid "Desktop Launcher for EMC config made by Stepconf"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1118
+#, python-format
+msgid "%s Axis Configuration"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1158
+#: emc/usr_intf/stepconf/stepconf.py:1244
+msgid "Other"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1169
+msgid "Quit Stepconf and discard changes?"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1205
+msgid "EMC2 'stepconf' configuration files"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1206
+msgid "Modify Existing Configuration"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1486
+msgid "degree / rev"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1487
+#: emc/usr_intf/stepconf/stepconf.py:2063
+msgid "deg / s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1488
+#: emc/usr_intf/stepconf/stepconf.py:2064
+msgid "deg / s²"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1489
+#: emc/usr_intf/stepconf/stepconf.py:2065
+msgid "deg"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1490
+msgid "Steps / deg"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1492
+#: emc/usr_intf/stepconf/stepconf.glade:2947
+msgid "mm / rev"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1493
+#: emc/usr_intf/stepconf/stepconf.py:2077
+#: emc/usr_intf/stepconf/stepconf.glade:2962
+msgid "mm / s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1494
+#: emc/usr_intf/stepconf/stepconf.py:2078
+#: emc/usr_intf/stepconf/stepconf.glade:2977
+msgid "mm / s²"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1496
+#: emc/usr_intf/stepconf/stepconf.glade:2433
+msgid "Steps / mm"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1498
+msgid "rev / in"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1499
+#: emc/usr_intf/stepconf/stepconf.py:2091
+msgid "in / s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1500
+#: emc/usr_intf/stepconf/stepconf.py:2092
+msgid "in / s²"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1502
+msgid "Steps / in"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1630
+msgid ""
+"You need to designate an E-stop input pin in the Parallel Port Setup page "
+"for this program."
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1643
+msgid ""
+"OK to replace existing custom ladder program?\n"
+"Existing Custom.clp will be renamed custom_backup.clp.\n"
+"Any existing file named -custom_backup.clp- will be lost. "
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1648
+msgid ""
+"You edited a ladder program and have selected a different program to copy to "
+"your configuration file.\n"
+"The edited program will be lost.\n"
+"\n"
+"Are you sure?  "
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:1662
+msgid ""
+"OK to replace existing custom pyvcp panel and custom_postgui.hal file ?\n"
+"Existing custompanel.xml and custom_postgui.hal will be renamed "
+"custompanel_backup.xml and postgui_backup.hal.\n"
+"Any existing file named custompanel_backup.xml and custom_postgui.hal will "
+"be lost. "
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.py:2060
+#, python-format
+msgid "%s Axis Test"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:8
+#: emc/usr_intf/stepconf/stepconf.glade:21
+msgid "EMC2 Stepper Mill Configuration"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:22
+msgid ""
+"This program creates configuration files (.ini and .hal) for \"step and "
+"direction\" milling machines and lathes connected to the PC parallel port."
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:47
+msgid "Create a _new configuration"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:65
+msgid "Modify a configuration already created with this program"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:83
+msgid "Do you wish to:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:95
+msgid ""
+"If you have made modifications to this configuration outside this program, "
+"they will be lost when you select \"Modify a configuration\""
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:112
+msgid "Create a desktop _shortcut (symlink) to configuration files."
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:129
+msgid "Create a desktop _launcher to start EMC with this configuration."
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:165
+msgid "Basic machine information"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:323
+msgid "Step _Time:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:352
+#: emc/usr_intf/stepconf/stepconf.glade:398
+#: emc/usr_intf/stepconf/stepconf.glade:445
+#: emc/usr_intf/stepconf/stepconf.glade:490
+#: emc/usr_intf/stepconf/stepconf.glade:905
+msgid "ns"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:365
+msgid "Step _Space:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:413
+msgid "Direction _Hold:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:460
+msgid "_Direction Setup:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:508
+msgid "Driver Timing Settings"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:534
+msgid "First Parport _Base Address:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:560
+msgid "     Out"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:571
+#: emc/usr_intf/stepconf/stepconf.glade:587
+msgid ""
+"In\n"
+"Out"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:629
+msgid "S_econd Parport Address:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:646
+msgid "T_hird Parport Address:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:663
+msgid " Parallel Port Settings"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:680
+msgid ""
+"_Test Base\n"
+"Period Jitter "
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:699
+msgid "Machine _Name:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:712
+msgid "_Axis configuration:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:726
+msgid "Machine _units:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:740
+msgid "Configuration directory:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:753
+msgid "D_river type:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:781
+msgid ""
+"Inch\n"
+"Millimeter"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:796
+msgid ""
+"XYZ\n"
+"XYZA\n"
+"XZ (Lathe)"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:843
+msgid ""
+"Driver characteristics: (Multiply by 1000 for times specified in µs or "
+"microseconds)\n"
+"         Additional signal conditioning or isolation such as optocouplers "
+"and RC filters\n"
+"         can impose timing constraints of their own, in addition to those of "
+"the driver."
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:871
+msgid "Base Period Maximum _Jitter:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:920
+msgid "Max step rate:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:936
+msgid "Min Base Period:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:952
+msgid ""
+"_Onscreen prompt for\n"
+"tool change"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1011
+msgid "Parallel Port Setup"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1118
+msgid "Pin _1:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1132
+msgid "Pin _2:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1146
+msgid "Pin _3:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1160
+msgid "Pin _4:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1174
+msgid "Pin _5:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1188
+msgid "Pin _6:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1202
+msgid "Pin _7:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1216
+msgid "Pin _8:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1230
+msgid "Pin _9:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1244
+msgid "_Pin 14:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1258
+msgid "P_in 16:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1272
+msgid "Pi_n 17:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1616
+msgid "Outputs (PC to Mill):"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1628
+msgid "Pin 1_0:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1644
+msgid "Pin 1_1:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1660
+msgid "Pin 1_2:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1676
+msgid "Pin 1_3:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1692
+msgid "Pin 1_5:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1757
+msgid "Inputs (Mill to PC):"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:1783
+#: emc/usr_intf/stepconf/stepconf.glade:1796
+msgid "Invert"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2245
+msgid "_Sherline Outputs"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2263
+msgid "_Xylotex Outputs"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2281
+msgid "Output pinout presets:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2380
+msgid "X Axis Configuration"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2448
+msgid "_Motor steps per revolution:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2461
+msgid "_Driver Microstepping:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2476
+msgid "_Pulley teeth (Motor:Leadscrew):"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2491
+msgid "_Leadscrew Pitch:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2506
+msgid "Maximum _Velocity:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2521
+msgid "Maximum _Acceleration:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2536
+msgid "Time to accelerate to max speed:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2551
+msgid "Distance to accelerate to max speed:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2650
+msgid "Pulse rate at max speed:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2720
+msgid "_Home location:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2735
+msgid "Home _Switch location:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2750
+msgid "Home Sear_ch velocity:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2765
+msgid "Home La_tch direction:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2778
+msgid "_:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2795
+msgid ""
+"Same\n"
+"Opposite"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2850
+msgid "Tab_le travel:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:2877
+msgid "t_o"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3007
+msgid "s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3022
+#: emc/usr_intf/stepconf/stepconf.glade:3328
+msgid "Hz"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3061
+msgid "T_est this axis"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3087
+msgid "Axis SCALE:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3123
+msgid "Spindle Configuration"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3158
+msgid "Calibration:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3171
+msgid "_Speed 1:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3186
+msgid "_PWM 1:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3204
+msgid "S_peed 2:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3219
+msgid "P_WM 2:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3237
+msgid "PWM _Rate:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3313
+msgid "_Cycles per revolution:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3367
+msgid "Enter 0 Hz for \"PDM\" mode"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3385
+msgid "Advanced Configuration Options"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3403
+msgid "Include Halui user interface component"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3444
+msgid "Blank program"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3459
+msgid "Spindle speed/tool position display  "
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3475
+#: emc/usr_intf/stepconf/stepconf.glade:3913
+msgid "Existing custom program"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3490
+#: emc/usr_intf/stepconf/stepconf.glade:3929
+msgid "Include connections to HAL"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3524
+msgid ""
+"_Display\n"
+"sample\n"
+"panel"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3558
+msgid "Include custom PyVCP GUI panel"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3691
+msgid " Number of analog (float) out pins:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3705
+msgid " Number of analog (float) in pins:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3719
+msgid " Number of analog (s32) out pins:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3733
+msgid " Number of analog (s32) in pins:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3748
+msgid "Number of digital  out pins:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3773
+msgid "Number of digital in pins:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3784
+msgid "setup number of external pins"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3799
+msgid "Include modbus master support"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3870
+msgid "Blank ladder program"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3883
+msgid "Estop ladder program"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3897
+msgid "Serial modbus program"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3962
+msgid ""
+"Edit ladder\n"
+"program"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:3998
+msgid "Include _Classicladder PLC"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4024
+msgid "Machine configuration complete"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4025
+msgid ""
+"All the necessary information has now been gathered.  Click \"Apply\" to "
+"write your configuration files to disk.\n"
+"If you experience lockups while running emc, you will need to decrease the "
+"maximum velocity which will have the effect of increasing BASE_PERIOD.\n"
+"\n"
+"If you experience lost steps while running emc, first verify that you "
+"entered the proper timings for your stepper drivers.  If that does not fix "
+"the problem, then run a more thorough latency test as described on the "
+"linuxcnc.org wiki:\n"
+" http;//wiki.linuxcnc.org/cgi-bin/emcinfo.pl?TroubleShooting\n"
+"\n"
+"If you experience the \"Unexpected Realtime Delay\" message, run a more "
+"thorough latency test as described on the linuxcnc.org wiki: \n"
+" http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?TroubleShooting"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4059
+msgid "Velocity:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4071
+msgid "Acceleration:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4085
+msgid "Jog:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4099
+msgid "Test Area:"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4128
+msgid "mm/s^2"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4164
+msgid "mm/s"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4240
+msgid ""
+"±\n"
+"+\n"
+"-\n"
+msgstr ""
+
+#: emc/usr_intf/stepconf/stepconf.glade:4314
+msgid "Run"
+msgstr ""

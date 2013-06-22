@@ -1,0 +1,103 @@
+#!/usr/bin/python
+
+import re
+import time
+import socket
+from twisted.internet.protocol import DatagramProtocol
+from twisted.internet import reactor
+
+DNS_IP          = '208.67.222.222'
+DNS_PORT        = 53
+DNS_SERVER      = (DNS_IP, DNS_PORT)
+PROXY_PORT      = 53
+BUFSIZE         = 1024
+DEBUG           = 0
+
+SABLON          = re.compile('^(..)(..)\x00\x01\x00\x00\x00\x00\x00\x00((.*?)\x00(..)(..))', re.DOTALL)
+BYTE1_RESET     = int('11111001', 2)
+BYTE1_SET       = int('10000000', 2)
+BYTE2           = int('10000101', 2)
+
+
+
+# -------------------------------------------------------------
+class ProxyRequestHandler(DatagramProtocol):
+    def datagramReceived(self, request, host):
+        request = request[0:BUFSIZE]
+
+        g = SABLON.search(request)
+        if g:
+            if DEBUG: print self.toQName(g.group(4)), self.toQType(g.group(5)), self.toQClass(g.group(6))
+            byte1       = ord(g.group(2)[0]) & BYTE1_RESET
+            byte1       = byte1 | BYTE1_SET
+            response    = '%s%c%c\x00\x01\x00\x00\x00\x00\x00\x00%s' % (g.group(1), byte1, BYTE2, g.group(3))
+            #self.transport.write(response, host)
+            #return False
+        else:
+            if DEBUG: print 'FORMAT ERROR'
+
+        dns_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        dns_client.settimeout(10)
+        dns_client.sendto(request, DNS_SERVER)
+        response = dns_client.recv(BUFSIZE)
+        if response: self.transport.write(response, host)
+        dns_client.close()
+
+
+    # ---------------------------------------------------------
+    def toQName(self, data):
+        qname = ''
+
+        while data:
+            end = ord(data[0])+1
+            qname += '.%s' % data[1:end]
+            data = data[end:]
+
+        return qname[1:]
+
+
+    # ---------------------------------------------------------
+    def toQType(self, data):
+        qtype = int('%02X%02X' % (ord(data[0]), ord(data[1])),16)
+
+        if   qtype == 1     : return 'A'
+        elif qtype == 2     : return 'NS'
+        elif qtype == 3     : return 'MD'
+        elif qtype == 4     : return 'MF'
+        elif qtype == 5     : return 'CNAME'
+        elif qtype == 6     : return 'SOA'
+        elif qtype == 7     : return 'MB'
+        elif qtype == 8     : return 'MG'
+        elif qtype == 9     : return 'MR'
+        elif qtype == 10    : return 'NULL'
+        elif qtype == 11    : return 'WKS'
+        elif qtype == 12    : return 'PTR'
+        elif qtype == 13    : return 'HINFO'
+        elif qtype == 14    : return 'MINFO'
+        elif qtype == 15    : return 'MX'
+        elif qtype == 16    : return 'TXT'
+        elif qtype == 28    : return 'IPv6'
+        elif qtype == 252   : return 'AXFR'
+        elif qtype == 253   : return 'MAILB'
+        elif qtype == 254   : return 'MAILA'
+        elif qtype == 255   : return '*'
+        else                : return ''
+
+
+    # ---------------------------------------------------------
+    def toQClass(self, data):
+        qclass = int('%02X%02X' % (ord(data[0]), ord(data[1])),16)
+
+        if   qclass == 1    : return 'IN'
+        elif qclass == 2    : return 'CS'
+        elif qclass == 3    : return 'CH'
+        elif qclass == 4    : return 'HS'
+        elif qclass == 255  : return '*'
+        else                : return ''
+
+
+
+# -------------------------------------------------------------
+if __name__ == '__main__':
+    reactor.listenUDP(PROXY_PORT, ProxyRequestHandler())
+    reactor.run()

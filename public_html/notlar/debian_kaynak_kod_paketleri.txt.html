@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>debian_kaynak_kod_paketleri.txt</title>
+</head>
+<body>
+<pre><code>
+DEBIAN KAYNAK KOD PAKETLERİ
+
+* Kaynak kod derlemek için gerekli paketlerin kurulması
+	su -
+	apt-get update
+	apt-get install dpkg-dev build-essential fakeroot
+
+
+* Kaynak kod paketinin indirilmesi
+	(normal kullanıcı olarak)
+	mkdir /home/kullanıcı_adı/source
+	cd /home/kullanıcı_adı/source
+	mkdir paket_adı
+	cd paket_adı
+	apt-get source paket_adı
+
+
+* Kodun değiştirilmesi
+	cd paket_surum/src
+	vim değiştirilecek_dosya
+
+
+* Bağımlılıkların kurulması
+	su -
+	apt-get build-dep paket_adı
+	exit
+
+
+* Kaynak kodunun derlenmesi
+	cd /home/kullanıcı_adı/source/paket_adı/paket_surum
+	dpkg-buildpackage -rfakeroot -uc -b
+		-uc		paketi imzalama
+		-b		binary çıktı oluştur
+		-rfakeroot	root olmadan derlemek için
+
+
+* Derlenmiş paketin kurulması
+	cd /home/kullanıcı_adı/source/paket_adı
+	dpkg -i paket_adı....deb
+</code></pre>
+</body>
+</html>

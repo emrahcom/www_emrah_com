@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>emc_paralel_port_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+EMC PARALEL PORT NOTLARI
+------------------------
+
+Bilgisayarda toplam 8 adet paralel port kullanılabiliyor. 
+Dolayısıyla ana kart üzerinde yer alan bir adet paralel port haricinde, 
+7 adet daha paralel port ekleme imkanı var, yalnız ana kartta yeterince 
+PCI yarık olmayabilir. Piyasada, PCI'dan bağlanan paralel port bulunabiliyor;
+yaklaşık fiyatı 15-25 YTL (Kasım 2006)
+
+
+
+* PCI aygıtların listelenmesi
+	- aygıt listesi
+		lspci
+	
+	- detaylı liste
+		lspci -v
+
+		00:0a.0 Communication controller: NetMos Technology PCI 1 port parallel adapter (rev 01)
+		Subsystem: LSI Logic / Symbios Logic Unknown device 0010
+		Flags: medium devsel, IRQ 5
+		I/O ports at a000 [size=8]
+		I/O ports at a400 [size=8]
+		I/O ports at a800 [size=8]
+		I/O ports at ac00 [size=8]
+		I/O ports at b000 [size=8]
+		I/O ports at b400 [size=16]
+
+		Eklenen kartın adresini bulmak için I/O ports satırındaki adresleri denemek gerekiyor.
+
+
+
+* Pinler
+	Paralel portun, giriş ya da çıkış olarak seçilmiş olmasına göre pinlerin 
+	fonksiyonları değişmektedir. Default olarak çıkış (output) olduğu kabul edilir.
+
+	- çıkış (output) modu
+
+		01 -&gt; output
+		02 -&gt; output
+		03 -&gt; output
+		04 -&gt; output
+		05 -&gt; output
+		06 -&gt; output
+		07 -&gt; output
+		08 -&gt; output
+		09 -&gt; output
+
+		10 &lt;- input
+		11 &lt;- input
+		12 &lt;- input
+		13 &lt;- input
+
+		14 -&gt; output
+
+		15 &lt;- input
+
+		16 -&gt; output
+		17 -&gt; output
+
+		18 -- toprak
+		19 -- toprak
+		20 -- toprak
+		21 -- toprak
+		22 -- toprak
+		23 -- toprak
+		24 -- toprak
+		25 -- toprak
+
+
+	- Giriş (input) modu
+
+		01 -&gt; output
+
+		02 &lt;- input
+		03 &lt;- input
+		04 &lt;- input
+		05 &lt;- input
+		06 &lt;- input
+		07 &lt;- input
+		08 &lt;- input
+		09 &lt;- input
+		10 &lt;- input
+		11 &lt;- input
+		12 &lt;- input
+		13 &lt;- input
+
+		14 -&gt; output
+
+		15 &lt;- input
+
+		16 -&gt; output
+		17 -&gt; output
+
+		18 -- toprak
+		19 -- toprak
+		20 -- toprak
+		21 -- toprak
+		22 -- toprak
+		23 -- toprak
+		24 -- toprak
+		25 -- toprak
+
+
+
+* Sinyal-Pin ilişkileri
+	02 -- X dir
+	03 -- X step
+
+	04 -- Y dir
+	05 -- Y step
+
+	06 -- Z dir
+	07 -- Z step
+
+	08 -- A dir
+	09 -- A step
+
+	01 -- B dir
+	14 -- B step
+
+	16 -- C dir
+	17 -- C step
+</code></pre>
+</body>
+</html>

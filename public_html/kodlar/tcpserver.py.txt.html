@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>tcpserver.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+
+###############################################################################
+# dosya     : tcpserver.py
+# ilgili    : 
+#
+# Bu servis (daemon), verilen TCP portunu dinler ve gelen veriyi isler.
+#
+###############################################################################
+
+import sys
+import time
+import socket
+import select
+import thread
+from   os.path      import exists
+from   daemon       import Daemon
+
+# Dinlenecek IP adresi. Bos birakilirsa hepsini dinler.
+ADDRESS = ''
+# Dinlenecek port.
+PORT = 10001
+# Sunucu bilgisi. Adres ve port verilerinden olusur.
+SERVER = (ADDRESS, PORT)
+# Select icin zaman asimi suresi.
+SELECT_TIMEOUT = 0.1
+# Daemon mesajlarinda kullanilacak olan daemon adi.
+DAEMON_NAME = 'TCP Server'
+# Daemon'a cleanstop icin ne kadar sure taninacagi. Bu sure icinde kendini
+# kapamazsa kill edilir.
+DAEMON_STOP_TIMEOUT = 3
+# Daemon'in Pid numarasini tutan dosya.
+PIDFILE = '/tmp/tcpserver.pid'
+# Dongulerin devam edip etmeyeceklerini belirleyen dosya.
+RUNFILE = '/tmp/tcpserver.run'
+# Debug yapilacak mi? Test ortami icin 1, gercek calisma ortami icin 0
+DEBUG = 0
+
+
+
+# -----------------------------------------------------------------------------
+# Gelen veriyi isleyen bolum. Bu fonksiyonu bir threade atarak cagirmak lazim
+# yoksa TCP sunucuyu bloklar.
+def parsedata(cnn, data):
+    try:
+        time.sleep(0.1)
+        cnn.send('it works %s' % time.time())
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            print(str(err))
+    finally:
+        # Soketi kapat.
+        try:
+            cnn.close()
+        except Exception, err:
+            pass
+
+
+
+# -----------------------------------------------------------------------------
+# Daemon sinifindan, kendi sinifimizi tureten bolum.
+# Calisacak ana kod (main), bu bolumde yer almaktadir.
+class TcpServer(Daemon):
+    def run(self):
+        # Daemona kapanma emri verilirse dongu sona erecek. Kapanma emri
+        # verilip verilmedigini RUNFILE'in varligindan anliyoruz. Dosya varsa
+        # calismaya devam et.
+        while exists(RUNFILE):
+            try:
+                # Server soketini olustur.
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                sock.bind(SERVER)
+
+                # Daemona kapanma emri gelmedigi surece devam et.
+                while exists(RUNFILE):
+                    # Baglanti talebi gelene kadar dinlemede kal.
+                    sock.listen(5)
+                    # Baglanti talebi geldiyse kabul et.
+                    (cnn, address) = sock.accept()
+                    # Veri akisi kesilene kadar gelen verileri al.
+                    data = ''
+                    while True:
+                        (inp, out, exp) = select.select([cnn,], [], [],
+                                          SELECT_TIMEOUT)
+                        # Gelen veri kalmadiysa donguden cik.
+                        if not inp: break
+                        # Gelen verileri data degiskeninde topla.
+                        buf = cnn.recv(1024)
+                        data += buf
+                        # Buffer bos geldiyse donguden cik.
+                        if len(buf) == 0: break
+
+                    # Gelen veriyi isle. Sunucuyu bloklamamak icin fonksiyon
+                    # bir threade atanip cagriliyor.
+                    params = (cnn, data)
+                    thread.start_new_thread(parsedata, params)
+            except Exception, err:
+                if DEBUG:
+                    raise
+                else:
+                    print(str(err))
+            finally:
+                # Soket acik kalmissa kapat.
+                try:
+                    sock.close()
+                except Exception, err:
+                    pass
+
+
+
+# -----------------------------------------------------------------------------
+# Program ana bolumu
+if __name__ == '__main__':
+    d = TcpServer(name=DAEMON_NAME, pidfile=PIDFILE,
+                    runfile=RUNFILE, stoptimeout=DAEMON_STOP_TIMEOUT,
+                    debug=DEBUG)
+
+    if len(sys.argv) == 2:
+        if   'start' == sys.argv[1]:
+            d.start()
+        elif 'stop' == sys.argv[1]:
+            d.stop()
+        elif 'restart' == sys.argv[1]:
+            d.restart()
+        else:
+            print(&quot;Bilinmeyen komut&quot;)
+            sys.exit(2)
+
+        sys.exit(0)
+    else:
+        print(&quot;Kullanimi: %s start|stop|restart&quot; % sys.argv[0])
+        sys.exit(2)
+</code></pre>
+</body>
+</html>

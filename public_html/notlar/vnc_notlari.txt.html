@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>vnc_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+-------------------------------------------------------------------------------
+HEADLESS VNC SERVER
+-------------------------------------------------------------------------------
+
+# Kurulum (server)
+
+	- Gerekli paketler
+	aptitude install tightvncserver xfonts-base x11-xserver-utils
+
+	- Gerekebilecek paketler
+	aptitude install openbox menu rxvt-unicode iceweasel
+
+	- Sunucuyu başlatma. İlk seferde parola tanımlanmasını gerekiyor.
+	su -l emrah
+	tightvncserver -geometry 800x600 :1
+
+	- Sunucuyu sonlandırma
+	su -l emrah
+	tightvncserver -kill :1
+
+
+# Kurulum (client)
+
+	aptitude install xvnc4viewer
+
+
+# VNC sunucuya bağlanma (client makinede)
+	- SSH ile tünel oluştur
+	ssh -p10022 -L5901:localhost:5901 emrah@xxx.yyy.www.zzz
+
+	Sunucu başlatılmamışsa SSH ile login olduktan sonra başlat.
+	tightvncserver -geometry 800x600 :1
+
+	- Oturumu başlatma
+	vncviewer localhost:5901
+
+
+
+</code></pre>
+</body>
+</html>

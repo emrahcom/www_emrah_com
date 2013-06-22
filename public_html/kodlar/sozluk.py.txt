@@ -1,0 +1,412 @@
+#!/usr/bin/python
+# -*- coding: windows-1254; -*-
+
+import re
+import urllib
+import urllib2
+import httplib
+
+# ALFABE listesini, size uygun olan sekilde degistiriniz. Asagida birkac ornek yer almaktadýr.
+# Sadece 'j' ile baþlayan kelimeleri içeren sozluk olusturmak icin 
+# ilk deneme icin bunu kullanýn cunku 'j' ile baslayan fazla kelime yok ve hemen sonucu gorebilirsiniz
+ALFABE		= ['j']
+
+# Bütün sozlugu olusturmak icin listeye butun harfleri ekleyin
+#ALFABE		= ['a', 'b', 'c','ç','d','e','f','g','h','ý','i','j','k','l','m','n','o','ö','p','r','s','þ','t','u','ü','v','y','z']
+# 'b', 'h' ve 'v' ile baslayan kelimelerden olusan bir sozluk olusturmak icin
+#ALFABE		= ['b', 'h','v']
+# Baslangicinda 'bilgi' ve 'bilim' gecen kelimelerden olusan bir sozluk olusturmak icin
+#ALFABE		= ['bilgi', 'bilim']
+
+
+DOSYA_KILAVUZ	= 'tdk_imla_kilavuzu'
+DOSYA_SOZLUK	= 'tdk_sozluk'
+SITE_KILAVUZ 	= 'http://tdk.org.tr/yazim/default.asp'
+SITE_SOZLUK	= 'http://tdk.org.tr/tdksozluk/sozbul.asp'
+
+
+
+# ---------------------------------------------------------------
+# bu fonksiyon, mevcut bir kilavuz dosyasi varsa icerigini bosaltir
+def kilavuz_dosyasini_hazirla(dosya_adi):
+	dosya = open(dosya_adi, 'w')
+	dosya.write('')
+	dosya.close()
+
+
+
+# ---------------------------------------------------------------
+# kelime listesini alan fonksiyon
+def kelime_listesini_al(site, harf):
+	AZAMI_HATA_SINIRI	= 5
+	sayac_sayfa		= 0
+	sayac_hata		= 0
+	sablon_kelimeler	= re.compile('(<center><table border=3 ><tr></tr><tr>)(.*)(</tr></table>)', re.IGNORECASE)
+	sablon_sonraki		= re.compile('Sonraki 48 söz >>')
+	devami_var		= True
+	ham_liste		= ""
+
+	print  '\n### ', harf, ' ### \n'
+	while devami_var:
+		parametre	= urllib.urlencode({'B1': 'Sonraki 48 söz >>', 'soz': harf, 'page': sayac_sayfa})
+		istek		= urllib2.Request(site, parametre)
+
+		try:
+			bag	= urllib2.urlopen(istek)
+		except IOError:
+			sayac_hata += 1
+		else:
+			ham_metin = bag.read()
+			bag.close
+
+			gruplar = sablon_kelimeler.search(ham_metin)
+			if gruplar:
+				print harf, ' ', sayac_sayfa + 1
+				ham_liste = ham_liste + gruplar.group(2)
+				
+				if sablon_sonraki.search(ham_metin):
+					sayac_sayfa +=  1
+				else:
+					devami_var = False
+			else:
+				sayac_hata +=  1
+
+		if sayac_hata == AZAMI_HATA_SINIRI:
+			devami_var = False
+			print '>>>>> hata (veriye eriþilemiyor) : ', harf, sayac_sayfa
+
+	return ham_liste
+
+
+
+# ---------------------------------------------------------------
+# kelime katarini, listeye ceviren fonksiyon
+def kelime_listesini_duzenle(kelime_listesi):
+	kelime_listesi = ' </b>  </td>' + kelime_listesi + '<td>  <b> '
+	kelime_listesi = re.sub('</tr><tr>','',kelime_listesi)
+	kelime_listesi = re.split(' </b>  </td><td>  <b> ', kelime_listesi)
+
+	return kelime_listesi
+
+
+
+# ---------------------------------------------------------------
+# kelime listesini, bir dosyaya kaydeden fonksiyon
+def kelime_listesini_kaydet(dosya_adi, kelime_listesi):
+	dosya = open(dosya_adi, 'a')
+
+	for kelime in kelime_listesi:
+		dosya.write(kelime.strip() + '\n')
+	
+	dosya.close()
+
+
+
+# ---------------------------------------------------------------
+# sozluk verisini siteden alan fonksiyon
+def sozluk_verisini_siteden_al(site, kelime):
+	AZAMI_HATA_SINIRI	= 5
+	sayac_hata		= 0
+	devam_mi		= True
+	ham_metin		= ""
+	sablon_veri_kontrol_1	= re.compile("Microsoft Visual Studio 6.0")
+	sablon_veri_kontrol_2	= re.compile("sözü bulunamadý.</font></p>")
+
+	parametre	= '?kelime=' + urllib.quote(kelime)
+	istek		= urllib2.Request(site + parametre)
+	
+	while devam_mi:
+		try:
+			bag	= urllib2.urlopen(istek)
+		except IOError:
+			sayac_hata += 1
+		else:
+			ham_metin = bag.read()
+			bag.close
+
+			if sablon_veri_kontrol_1.search(ham_metin):
+				devam_mi = False
+				
+				if sablon_veri_kontrol_2.search(ham_metin):
+					ham_metin = ""
+			else:
+				ham_metin = ""
+				sayac_hata += 1
+
+		if sayac_hata == AZAMI_HATA_SINIRI:
+			devam_mi = False
+			print '>>>>> hata (kelime verisine eriþilemiyor) : ', kelime
+
+	return ham_metin
+
+
+
+
+# --------------------------------------------------------------
+# kaydedilecek veri icindeki bazi karakterleri degistirir
+def bicimlendirme_karakter_donustur(veri):
+	veri = re.sub('>','&gt;',veri)
+	veri = re.sub('<','&lt;',veri)
+
+	return veri
+
+
+
+# ---------------------------------------------------------------
+# html sayfadan ilgili kismi koparir
+def bicimlendirme_001(veri, kelime):
+	sablon = re.compile("(<P ALIGN=center>.*<STRONG> <FONT color=crimson><STRONG><FONT color=DarkBlue></FONT></STRONG>.*)<HR>.*<P align=center><STRONG><FONT color=Red>", re.DOTALL | re.IGNORECASE)
+
+	gruplar = sablon.search(veri)
+	if gruplar:
+		return gruplar.group(1)
+	else:
+		return ""
+
+
+
+# ---------------------------------------------------------------
+# ilgili kisimdan, gereksiz bosluklari atar
+def bicimlendirme_002(veri, kelime):
+	ham_metin	= ""
+
+	veri		= re.sub('(?<=<FONT)\s*\n\s*',' ',veri)
+	veri		= re.split('\n', veri)
+	
+	for satir in veri:
+		satir = re.sub('(?:<TR>)|(?:</TR>)|(?:&nbsp;)|(?:<P>)|(?:</P>)','',satir)
+		satir = re.sub('(?:\s*$)|(?:^\s*)','',satir)
+
+		if len(satir):
+			ham_metin += satir + '\n'
+		
+	return ham_metin
+
+
+
+# ---------------------------------------------------------------
+# ilgili kismi, bolumlere ayirir
+def bicimlendirme_003(veri, kelime, imla_eki):
+	ham_metin		= '\t\t<kelime>' + kelime + '</kelime>\n'
+	veri			= re.split('\n', veri)
+	tag_grup		= False
+	tag_atasozu		= False
+	tag_birlesik		= False
+	sablon_grup_ID		= re.compile('^<STRONG> <FONT color=crimson><STRONG><FONT color=DarkBlue></FONT></STRONG> (.*)$', re.IGNORECASE)
+	sablon_grup_bilgi	= re.compile('^<I><STRONG><FONT color=mediumblue><I>(.*)</I>', re.IGNORECASE)
+	sablon_grup_anlam	= re.compile('^<TD><B><FONT color=orangered>.*</FONT></B>(.*)</TD>', re.IGNORECASE)
+	sablon_imla_eki		= re.compile('<STRONG><FONT color=DarkBlue>(.*)</FONT></STRONG>', re.IGNORECASE)
+	sablon_bilgi		= re.compile('^<I>(.*)</I>', re.IGNORECASE)
+	sablon_ornek		= re.compile('^(.*):<BR>', re.IGNORECASE)
+	sablon_ornek_metin	= re.compile('<BR><I>"(.*?)"- </I>', re.IGNORECASE)
+	sablon_ornek_kaynak	= re.compile('<FONT COLOR=#3399ff SIZE=2>(.*?)</FONT>', re.IGNORECASE)
+	sablon_atasozu		= re.compile('^<STRONG><FONT color=Red.*Atasözü, deyim ve birleþik fiiller', re.IGNORECASE)
+	sablon_birlesik		= re.compile('^<P align=center><FONT color=Red.*Birleþik Sözler', re.IGNORECASE)
+	sablon_soz_1		= re.compile('^<TD ><A HREF="sozbul\.ASP\?Kelime=(.*)(?: ><FONT)', re.IGNORECASE)
+	sablon_soz_2		= re.compile('^(.*)&EskiSoz=', re.IGNORECASE)
+	sablon_soz_3		= re.compile('sözünü bulmak istediyseniz üzerini týklayýnýz.', re.IGNORECASE)
+	sablon_soz_4		= re.compile('(.*)"$', re.IGNORECASE)
+	
+	for satir in veri:
+		if sablon_grup_ID.search(satir):
+			if tag_atasozu:
+				tag_atasozu = False
+				ham_metin += '\t\t\t</grup_atasozu_deyim_birlesikfiil>\n'
+				
+			if tag_birlesik:
+				tag_birlesik = False
+				ham_metin += '\t\t\t</grup_birlesiksoz>\n'
+				
+			if tag_grup:
+				ham_metin += '\t\t</grup>\n'
+			tag_grup = True
+			ham_metin += '\t\t<grup>\n'
+			if sablon_imla_eki.search(sablon_grup_ID.search(satir).group(1)):
+				ham_metin += '\t\t\t<grup_ID>' 
+				ham_metin += re.search('(.*)<STRONG>', sablon_grup_ID.search(satir).group(1)).group(1).strip()
+				ham_metin += '</grup_ID>\n'
+				ham_metin += '\t\t\t<grup_imla>'
+				ham_metin += sablon_imla_eki.search(sablon_grup_ID.search(satir).group(1)).group(1).strip()
+				ham_metin += '</grup_imla>\n'
+			else:
+				ham_metin += '\t\t\t<grup_ID>' 
+				ham_metin += sablon_grup_ID.search(satir).group(1).strip()
+				ham_metin += '</grup_ID>\n'
+		elif sablon_grup_bilgi.search(satir):
+			ham_metin += '\t\t\t<grup_bilgi>' + sablon_grup_bilgi.search(satir).group(1).strip() + '</grup_bilgi>\n'
+		elif sablon_grup_anlam.search(satir):
+			if sablon_ornek.search(sablon_grup_anlam.search(satir).group(1)):
+				anlam = sablon_ornek.search(sablon_grup_anlam.search(satir).group(1)).group(1)
+			else:
+				anlam = sablon_grup_anlam.search(satir).group(1)
+			
+			if sablon_bilgi.search(anlam):
+				bilgi = sablon_bilgi.search(anlam).group(1)
+				ham_metin += '\t\t\t<grup_anlam>\n'
+				ham_metin += '\t\t\t\t<bilgi>'
+				ham_metin += bilgi.strip()
+				ham_metin += '</bilgi>\n'
+				bilgi = re.sub('[\(\)]','.',bilgi)
+				ham_metin += '\t\t\t\t<anlam>'
+				ham_metin += bicimlendirme_karakter_donustur(re.search(bilgi + '</I>(.*)',anlam).group(1)).strip()
+				ham_metin += '</anlam>\n'
+			else:
+				ham_metin += '\t\t\t<grup_anlam>\n'
+				ham_metin += '\t\t\t\t<anlam>'
+				ham_metin += bicimlendirme_karakter_donustur(anlam).strip()
+				ham_metin += '</anlam>\n'
+				
+			if sablon_ornek_metin.search(satir):
+				ham_metin += '\t\t\t\t<ornek>\n'
+				ham_metin += '\t\t\t\t\t<ornek_metin>' 
+				ham_metin += sablon_ornek_metin.search(satir).group(1).strip()
+				ham_metin += '</ornek_metin>\n'
+
+				if sablon_ornek_kaynak.search(satir):
+					ham_metin += '\t\t\t\t\t<ornek_kaynak>'
+					ham_metin += sablon_ornek_kaynak.search(satir).group(1).strip()
+					ham_metin += '</ornek_kaynak>\n'
+				
+				ham_metin += '\t\t\t\t</ornek>\n'
+			
+			ham_metin += '\t\t\t</grup_anlam>\n'
+		elif sablon_atasozu.search(satir):
+			tag_atasozu = True
+			ham_metin += '\t\t\t<grup_atasozu_deyim_birlesikfiil>\n'
+		elif sablon_birlesik.search(satir):
+			if tag_atasozu:
+				tag_atasozu = False
+				ham_metin += '\t\t\t</grup_atasozu_deyim_birlesikfiil>\n'
+
+			tag_birlesik = True
+			ham_metin += '\t\t\t<grup_birlesiksoz>\n'
+		elif sablon_soz_1.search(satir) and not sablon_soz_3.search(satir):
+			soz = sablon_soz_1.search(satir).group(1)
+
+			if sablon_soz_4.search(soz):
+				soz = sablon_soz_4.search(soz).group(1)
+
+			if sablon_soz_2.search(soz):
+				ham_metin += '\t\t\t\t<soz>' + sablon_soz_2.search(soz).group(1).strip() + '</soz>\n'
+			else:
+				ham_metin += '\t\t\t\t<soz>' + soz.strip() + '</soz>\n'
+
+	if tag_atasozu:
+		ham_metin += '\t\t\t</grup_atasozu_deyim_birlesikfiil>\n'
+	elif tag_birlesik:
+		ham_metin += '\t\t\t</grup_birlesiksoz>\n'
+		
+	if tag_grup:
+		ham_metin += '\t\t</grup>\n'
+		
+	return ham_metin
+
+
+
+# ---------------------------------------------------------------
+# sozluk verisini, uygun bicime cevirir
+def sozluk_verisini_duzenle(veri, kelime, imla_eki):
+	sozluk_kaydi		= ""
+	
+	if len(veri):
+		veri = bicimlendirme_001(veri, kelime)
+		veri = bicimlendirme_002(veri, kelime)
+		veri = bicimlendirme_003(veri, kelime, imla_eki)
+		
+		sozluk_kaydi += '\t<kayit>\n'
+		sozluk_kaydi += veri
+		sozluk_kaydi += '\t</kayit>\n'
+	
+	return sozluk_kaydi
+	
+
+
+# ---------------------------------------------------------------
+# verilen kelime icin sozluge kaydedilecek veriyi hazirlar
+def sozluk_kaydini_hazirla(site, kelime, imla_eki):
+	sozluk_kaydi = sozluk_verisini_siteden_al(site, kelime)
+	sozluk_kaydi = sozluk_verisini_duzenle(sozluk_kaydi, kelime, imla_eki)
+	
+	return sozluk_kaydi
+
+
+
+# ---------------------------------------------------------------
+# hazirlanan sozluk kaydini dosyaya kaydeder
+def sozluk_kaydini_dosyaya_kaydet(dosya_adi, kayit):
+	if len(kayit):
+		dosya = open(dosya_adi, 'a')
+		dosya.write(kayit)
+		dosya.close()
+
+
+
+# ---------------------------------------------------------------
+# sozluk dosyasinin baslangic bolumunu olusturan fonksiyon 
+def sozluk_baslangic_kaydini_olustur(dosya_adi):
+	veri = '<?xml version="1.0" encoding="windows-1254"?>\n'
+	veri += '<sozluk>\n'
+	
+	dosya = open(dosya_adi, 'w')
+	dosya.write(veri)
+	dosya.close()
+
+
+
+# ---------------------------------------------------------------
+# sozluk dosyasinin bitis bolumunu olusturan fonksiyon 
+def sozluk_bitis_kaydini_olustur(dosya_adi):
+	veri = '</sozluk>'
+
+	dosya = open(dosya_adi, 'a')
+	dosya.write(veri)
+	dosya.close()
+
+
+
+# ---------------------------------------------------------------
+# sozlugu olusturan fonksiyon
+def sozlugu_olustur(site, dosya_sozluk, dosya_kilavuz):
+	sablon_kelime		= re.compile("([^,(\n]*)(.*)")
+	bir_onceki_kelime	= ""
+	dosya			= open(dosya_kilavuz, 'r')
+	sozluk_baslangic_kaydini_olustur(dosya_sozluk)
+	
+	for satir in dosya:
+		if len(satir) > 1:
+			gruplar = sablon_kelime.search(satir)
+			if gruplar:
+				if bir_onceki_kelime.lower() != gruplar.group(1).strip().lower():
+					bir_onceki_kelime = gruplar.group(1).strip()
+					sozluk_kaydi = sozluk_kaydini_hazirla(site, gruplar.group(1).strip(), gruplar.group(2).strip())
+					sozluk_kaydini_dosyaya_kaydet(dosya_sozluk, sozluk_kaydi)
+					print bir_onceki_kelime
+				else:
+					print '>>>>> bilgi (kelime tekrarý) : ', satir.strip()
+			else:
+				print '>>>>> hata (kelime tesbit edilemedi) : ', satir.strip()
+	
+	sozluk_bitis_kaydini_olustur(dosya_sozluk)
+	dosya.close()
+
+	
+
+
+
+# ---------------------------------------------------------------
+# ana bolum
+
+for harf in ALFABE:
+	#dosya isimleri
+	dosya_kilavuz	= DOSYA_KILAVUZ + '_' + harf + '.txt'
+	dosya_sozluk	= DOSYA_SOZLUK + '_' + harf + '.xml'
+
+	# imla kilavuzu bolumu
+	kilavuz_dosyasini_hazirla(dosya_kilavuz)
+	kelime_listesi = kelime_listesini_al(SITE_KILAVUZ, harf)
+	kelime_listesi = kelime_listesini_duzenle(kelime_listesi)
+	kelime_listesini_kaydet(dosya_kilavuz, kelime_listesi)
+
+	# sozluk bolumu
+	sozlugu_olustur(SITE_SOZLUK, dosya_sozluk, dosya_kilavuz)
+

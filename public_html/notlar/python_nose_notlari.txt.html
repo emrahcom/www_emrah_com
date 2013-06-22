@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>python_nose_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+Python Nose Notları
+-------------------
+
+- kurulum
+
+	aptitude install python-nose python-pkg-resources
+
+
+- test edilecek programdaki yapı
+
+	program_01
+	----------
+
+	def function_01():
+		...
+	
+	def function_02():
+		...
+
+	class Sinif_01():
+		...
+
+	if _name_ == '_main_':
+		# program ana govde
+		...
+
+
+- unit test (programların olduğu klasörde)
+
+	test.py
+	-------
+
+	import program_01
+	import program_02
+	import nose
+
+	nose.tools.assert_raises(OverflowError, program_01.fonksiyon_01, 0)
+	nose.tools.assert_true(program_01.fonksiyon_02(5) == 12, msg='fonksiyon_02 hata')
+
+
+- Farklı bir kullanımı, program içine test() fonksiyonu koymak
+
+	program_01
+	----------
+
+	def test():
+		assert function_01(2) == 5
+
+		for i in range(20):
+			assert function_01(i) &gt; i
+	
+	def function_01(n):
+		...
+
+
+	. aynı klasörde
+
+	nosetest program_01.py
+
+
+- Bazı nose komutları
+
+	nose.tools.ok_(expr, msg=None)
+	nose.tools.eq_(a, b, msg=None)
+	nose.tools.timed(limit)
+	nose.tools.assert_almost_equal(a, b)	# rounded 7 digits
+	nose.tools.assert_not_almost_equal
+	nose.tools.assert_equal(a, b)
+	nose.tools.assert_not_equal
+	nose.tools.assert_false
+	nose.tools.assert_true
+	nose.tools.assert_raises(exception, func, values)
+
+</code></pre>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>barkod.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+
+import serial
+import MySQLdb
+import time
+import re
+
+SERI_PORT		= 1			# kullanilacak seri port
+SERI_BAUDRATE		= 9600			# seri port hizi
+SERI_BYTESIZE		= 8			# veri bit adedi
+SERI_PARITY		= 'N'			# parity
+SERI_STOPBITS		= 1			# stop bit adedi
+SERI_TIMEOUT		= 0.1			# seri porttan okumada zaman asimi suresi (saniye)
+BARKOD_STX		= '\x02'		# barkod paketi icin baslangic karakteri
+BARKOD_ETX		= '\x03'		# barkod paketi icin bitis karakteri
+BARKOD_NOREAD		= 'NOREAD'		# barkod okuyucunun barkodu okuyamazsa gonderdigi mesaj
+BARKOD_FORMATERROR	= 'FORMATERROR'		# bozuk formatli barkodlar icin kullanilacak hata kodu
+BARKOD_ARALIK		= 1.0			# okunan iki barkod arasinda olmasi gereken minimum sure (saniye)
+MYSQL_SUNUCU		= 'localhost'		# MySQL sunucu adresi
+MYSQL_KULLANICI		= 'root'		# MySQL kullanici adi
+MYSQL_PAROLA		= ''			# MySQL kullanici parolasi
+MYSQL_VERITABANI	= 'mp'			# MySQL veritabani adi
+
+
+
+# --------------------------------------
+def portOku():
+	&quot;&quot;&quot;Barkod okuyucudan gelen verileri seri porttan okur. 
+	Zaman asimi (timeout)  suresince birsey gelmezse bos string dondurur&quot;&quot;&quot;
+
+	try:
+		bag		= serial.Serial()
+		bag.port	= SERI_PORT
+		bag.baudrate	= SERI_BAUDRATE
+		bag.bytesize	= SERI_BYTESIZE
+		bag.parity	= SERI_PARITY
+		bag.stopbits	= SERI_STOPBITS
+		bag.timeout	= SERI_TIMEOUT
+
+		bag.open()
+		paket = bag.readline()
+		bag.close()
+
+		# paket None degilse alinan paketi dondur
+		if paket: return paket
+	except:
+		pass
+	
+	return ''
+
+
+
+# --------------------------------------
+def barkodOku(buffer):
+	&quot;&quot;&quot;Varsa buffer icindeki ilk barkodu okur
+	Bufferin kalan kismini ve okunan barkodu dondurur&quot;&quot;&quot;
+
+	try:
+		sablon = re.compile('%s([&circ;%s%s]+?)%s(.*)' % (BARKOD_STX, BARKOD_STX, BARKOD_ETX, BARKOD_ETX))
+		g = sablon.search(buffer)
+
+		# buffer icinde barkod bulunduysa
+		# barkodu ve bufferin geri kalanini dondur
+		if g:
+			return (g.group(1), g.group(2))
+	except:
+		pass
+
+	return ('', buffer)
+
+
+
+# --------------------------------------
+def barkodIsle(barkod):
+	&quot;&quot;&quot;Barkodu okunan kayitla ilgili bilgileri veritabanina kaydeder&quot;&quot;&quot;
+
+	# barkod degiskeninde birsey yoksa islem yapma
+	if not barkod: return False
+
+	# okunan barkodun formatinda bir sorun var mi
+	sablon	= re.compile('&circ;[0-9a-zA-Z ]+$')
+	g	= sablon.search(barkod)
+	if not g: barkod = BARKOD_FORMATERROR
+
+	cnn = MySQLdb.connect(host=MYSQL_SUNUCU,user=MYSQL_KULLANICI,passwd=MYSQL_PAROLA,db=MYSQL_VERITABANI)
+	crs = cnn.cursor(MySQLdb.cursors.DictCursor)
+	sql = &quot;INSERT INTO hat01 VALUES (NULL, '%s', now(), 0)&quot; % (barkod)
+	crs.execute(sql)
+	cnn.close()
+
+	return True
+
+
+
+# --------------------------------------
+# programin ana bolumu
+buffer	= ''
+t0	= time.time()
+barkod0	= ''
+while True:
+	# barkodun bagli oldugu seri porttan gelen verileri al, buffera at
+	buffer += portOku()
+
+	# bufferdaki butun barkodlari tek tek oku
+	while True:
+		# bufferdaki ilk barkodu al
+		t1 = time.time()
+		(barkod, buffer) = barkodOku(buffer)
+
+		# bufferdan barkod alinamadiysa, buffer icinde barkod kalmamis demektir
+		# bu durumda bufferi incelemeye devam etme, donguden cik
+		if not barkod: break
+
+		# barkod alinabildiyse ve cift okuma gerceklesmediyse
+		if (t1 - t0 &gt; BARKOD_ARALIK) or (barkod != barkod0):
+			# barkod icin gerekli islemleri yap
+			barkodIsle(barkod)
+			print 'BARKOD -&gt;', barkod
+
+		# bir sonraki okumada, cift okuma var mi diye kontrol edebilmek icin
+		# degiskenleri son okumaya gore set et
+		t0	= t1
+		barkod0	= barkod
+</code></pre>
+</body>
+</html>

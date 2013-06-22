@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>mitsubishi_mr-c40a_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+MITSUBISHI MR-C40A SERVO NOTLARI
+--------------------------------
+
+- CN1 Pinler
+
+	. SON	17	in	Servo ON (bkz. parametre 06)
+	. LSP	15	in	Pozitif limit switch (bkz. parametre 06)
+	. LSN	14	in	Negatif limit switch (bkz. parametre 06)
+
+	. ALM	02	out	Alarm (Alarm yokken ALM-SG bağlı)
+	. SG	05	in	Common ground
+	. SD	11	in	Shield ground
+
+	. V24	20	in	V24 ve V5 aynı anda kullanılmaz, sadece biri kullanılır.
+	. V5	16	in	Output pinleri için besleme
+
+	. PP	09	in	Step ground (bkz. parametre 07)
+	. PG	10	in	Step (bkz. parametre 07)
+	. NP	07	in	Dir ground (bkz. parametre 07)
+	. NG	08	in	Dir (bkz. parametre 07)
+				Step/dir sinyalleri dökümanda belirtilenin tersi şekilde
+				çalışıyor.
+	
+	. OP	04	out	Zero-point signal of the encoder (INDEX)
+
+
+
+- Parametreler
+	. P01	ATU	Auto tuning
+			ABC	C -&gt; response setting
+				     1 -&gt; slow
+				     2 -&gt;
+				     3 -&gt; medium
+				     4 -&gt;
+				     5 -&gt; fast
+
+				B -&gt; machine selection (friction-position setting characteristic)
+				     0 -&gt; small-ordinary
+				     1 -&gt; large-ordinary
+				     2 -&gt; small- better
+				     3 -&gt; large-better
+
+				A -&gt; auto tuning selection
+				     0 -&gt; execute for both position and speed loops
+				     1 -&gt; interpolation axis control
+				     2 -&gt; Not executed
+
+	. P02	CMX	Electronic gear (multiplier)
+	  (5mm hatveli mil için 4 değeri uygun)
+	. P03	CDV	Electronic gear (denominator)
+	  (5mm hatveli mil için 1 değeri uygun)
+
+	. P04	PST	Acceleration/deceleration time (ms)
+
+	. P06	IP1
+	  (10 değeri uygun; limit switch yok, 
+			ABC	C -&gt; SON
+				     0 -&gt; servo on when SON-SG conected
+				     1 -&gt; servo on when SON-SG not connected
+
+				B -&gt; LSP / LSN
+				     0 -&gt; Pin-SG off ise o yöne gitmez
+				     1 -&gt; Limit switch yok
+
+	. P07	OP1	
+	  (001 değeri uygun)
+			011 -&gt; negative logic, step/dir
+			001 -&gt; positive logic, step/dir
+
+	. P12	BLK	Parameter write disable
+			00C olunca 0-22 arası yazılabilir.
+			Normalde (000 olunca) 0-12 arası yazılabiliyor.
+	
+	. P20	DIF	Input signal selection
+	  (default değer uygun)
+			ABC	C -&gt; pin 15
+				B -&gt; pin 14
+				A -&gt; pin 13
+
+	. P21	DOF	Output signal selection
+	  (02 değeri uygun; pin4 -&gt; RD  pin3 -&gt; OP)
+			0 -&gt; OP
+			1 -&gt; PF
+			2 -&gt; RD
+			3 -&gt; ZSP
+			4 -&gt; TLC
+			5 -&gt; BRK
+
+			ABC	C -&gt; Pin 4
+				B -&gt; Pin 3
+
+
+- Panel
+	. Menu
+	  Mode tuşu ile menu değiştiriliyor.
+
+	  Status &lt;&gt; Diagnosis &lt;&gt; Alarm &lt;&gt; Basic Param. &lt;&gt; Expansion Param. &lt;&gt; Application Param.
+
+	. Status (görüntülenecek olan)
+		CL  -&gt; low position
+		CH  -&gt; high position
+		r   -&gt; r/min (10 katı alınacak)
+	
+	. Diagnosis
+		roF -&gt; off
+		ron -&gt; on
+
+		external I/O
+		1. satır (soldan sağa) -, -, LSN, LSP, CR, SON
+		2. satır (soldan sağa) OP,-,-,-,ALM,PF
+	
+	. don (forced output)
+
+ 	. rsr (test sürüşü)
+
+
+
+- Bazı panel işlemleri
+	. Jog	
+	  Diagnosis -&gt; rsr -&gt; set (2s) -&gt; d01 -&gt; up/down -&gt; set (2s)
+
+	. alarm silme
+	  Alarma sebep olan şey düzeltilir -&gt; Alarm -&gt; A.. -&gt; set
+
+	. parametre değiştirme
+	  parametre -&gt; up/down -&gt; set (2 kere) -&gt; up/down -&gt; set
+
+	. output force
+	  diagnosis -&gt; don -&gt; set (2s) -&gt; mode (kolon seçme) -&gt; up/down -&gt; set (2s)
+</code></pre>
+</body>
+</html>

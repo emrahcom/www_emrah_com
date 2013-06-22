@@ -1,0 +1,344 @@
+#!/usr/bin/python
+
+import serial
+import math
+
+class surucu:
+
+    bag             = serial.Serial()
+    surucu_no       = '01'          # surucu numarasi           -> 00-FF arasi bir hex deger
+    port            = 0             # positif bir tam sayi      -> COM1=0, COM2=1, COM3=2 ...
+    baudrate        = 9600          # baudrate                  -> 4800, 9600, 19200, 38400, 57600, 115200
+    bytesize        = 7             # data bit sayisi           -> 7 veya 8
+    parity          = 'N'           # parity                    -> O (odd), E (even) veya N (None)
+    stopbits        = 2             # stop bit sayisi           -> 1 veya 2
+    timeout         = 2             # timeout surusu            -> limitsiz icin 0 veya pozitif bir tam sayi (saniye)
+    error           = ''            # islemler sirasinda olusan son hatanin mesaji
+    paket           = ''
+    paket_stx       = ':'           # paket baslangic karakter
+    paket_adres     = ''            # parametre adresini belirten 4 haneli hex bir sayi
+    paket_komut     = ''            # 01=bobin okuma, 02=I/O pin okuma, 03=word okuma, 05=bobin set/reset, 06=word yazma
+    paket_veri      = 0             # parametre degeri (ondalik olarak)
+    paket_veri_hex  = ''            # parametre degeri (4 haneli hex formatinda string)
+    paket_rc        = ''            # check sum
+    paket_end       = '\r\n'        # paket bitis karakteri
+
+
+
+
+# ------------------------------------------------------------------------------
+# nesne olusturulurken calisir
+    def __init__(self):
+        pass
+
+
+
+# ------------------------------------------------------------------------------
+# portu acar
+# port acildiysa True, acilamadiysa False dondurur
+    def ac(self):
+        self.bag.port       = self.port
+        self.bag.baudrate   = self.baudrate
+        self.bag.bytesize   = self.bytesize
+        self.bag.parity     = self.parity
+        self.bag.stopbits   = self.stopbits
+        self.bag.timeout    = self.timeout
+
+        try:
+            self.bag.open()
+        except:
+            pass
+
+        return self.bag.isOpen()
+
+
+
+# ------------------------------------------------------------------------------
+# portu kapatir
+# port kapatildiysa True, kapatilamadiysa False dondurur
+    def kapat(self):
+        try:
+            self.bag.close()
+        except:
+            pass
+
+        return not self.bag.isOpen()
+
+
+
+# ------------------------------------------------------------------------------
+# veri seti icin RC hesaplar
+# RC degerini 2 haneli hex formatinda string olarak donduru
+    def rcHesapla(self):
+        self.paket_rc = ''
+
+        # veri paketinin 2'nin kati seklinde olmasi gerekiyor
+        if math.fmod(len(self.paket_veri_hex), 2) == 0:
+            # surucu numarasini toplama ekle; numara hex oldugu icin once ondaliga cevir
+            rc = int(self.surucu_no, 16)
+
+            # komut kodunu toplama ekle; kod hex oldugu icin once ondaliga cevir
+            rc += int(self.paket_komut, 16)
+
+            # veriyi 2'serli gruplar halinde alip toplama ekle
+            i = 0
+            while i < len(self.paket_veri_hex):
+                # veri hex formatinda oldugu icin parcalari ondaliga cevirip ekle
+                rc += int(self.paket_veri_hex[i:i+2],16)
+                i += 2
+
+            # fazla kismi atmak icin mod(0xFF) yap
+            rc = math.fmod(rc, 256)
+
+            # tumleyenini bul
+            rc = 256 - rc
+
+            # hex'e cevirip cevap olarak dondur
+            self.paket_rc = "%02X" % rc
+
+        return self.paket_rc
+
+
+
+# ------------------------------------------------------------------------------
+# surucuye gonderilecek olan veri paketini hazirlar
+    def paketiOlustur(self):
+        paket =  self.paket_stx
+        paket += self.surucu_no
+        paket += self.paket_komut
+        paket += self.paket_veri_hex
+        paket += self.rcHesapla()
+        paket += self.paket_end
+
+        self.paket = paket
+
+
+
+# ------------------------------------------------------------------------------
+# parametreyi okur
+# adres, hex formatinda ve 4 karakterden olusan string bir deger olmali
+    def parametreOku(self, adres):
+        cevap = None
+
+        # adres parametresini al
+        self.paket_adres = adres
+
+        # okuma komudu (0x03) kullanilacak
+        self.paket_komut    = '03'
+
+        # verilen adresten 1 word (2 ASCII karakter) okunacak
+        self.paket_veri_hex = self.paket_adres
+        self.paket_veri_hex += '0001'
+
+        # portu acabilirse
+        if self.ac():
+            # okuma komutunu hazirlayip gonder
+            self.paketiOlustur()
+            self.bag.write(self.paket)
+
+            # cevabi oku
+            cevap = self.bag.readline()
+            self.kapat()
+
+            # cevap geldiyse
+            if len(cevap)>0:
+                # okuma gerceklestiyse parametre degerini ondalik sisteme cevirip cevap olarak dondur
+                # gerceklesmediyse, gelen cevabi hata kodu olarak kaydet
+                if cevap[3:5] == '03':
+                    cevap = int(cevap[7:11],16)
+                else:
+                    self.error = cevap[:-2]
+                    raise RuntimeError
+
+        return cevap
+
+
+
+# ------------------------------------------------------------------------------
+# bobin oku
+# adres, hex formatinda ve 4 karakterden olusan string bir deger olmali
+    def bobinOku(self, adres):
+        cevap = None
+
+        # adres parametresini al
+        self.paket_adres = adres
+
+        # okuma komudu (0x01) kullanilacak
+        self.paket_komut    = '01'
+
+        # verilen adresten 1 bit okunacak
+        self.paket_veri_hex = self.paket_adres
+        self.paket_veri_hex += '0001'
+
+        # portu acabilirse
+        if self.ac():
+            # okuma komutunu hazirlayip gonder
+            self.paketiOlustur()
+            self.bag.write(self.paket)
+
+            # cevabi oku
+            cevap = self.bag.readline()
+            self.kapat()
+
+            # cevap geldiyse
+            if len(cevap)>0:
+                # okuma gerceklestiyse parametre degerini ondalik sisteme cevirip cevap olarak dondur
+                # gerceklesmediyse, gelen cevabi hata kodu olarak kaydet
+                if cevap[3:5] == '01':
+                    # sadece parametre degerini al ve desimale cevir
+                    cevap = int(cevap[7:9],16)
+                    # sadece 1. bitin degerini al
+                    cevap = cevap & 1
+                else:
+                    self.error = cevap[:-2]
+                    raise RuntimeError
+
+        return cevap
+
+
+
+# ------------------------------------------------------------------------------
+# I/O portunu okuma
+# adres, hex formatinda ve 4 karakterden olusan string bir deger olmali
+    def ioOku(self, adres):
+        cevap = None
+
+        # adres parametresini al
+        self.paket_adres = adres
+
+        # okuma komudu (0x02) kullanilacak
+        self.paket_komut    = '02'
+
+        # verilen adresten 1 bit okunacak
+        self.paket_veri_hex = self.paket_adres
+        self.paket_veri_hex += '0001'
+
+        # portu acabilirse
+        if self.ac():
+            # okuma komutunu hazirlayip gonder
+            self.paketiOlustur()
+            self.bag.write(self.paket)
+
+            # cevabi oku
+            cevap = self.bag.readline()
+            self.kapat()
+
+            # cevap geldiyse
+            if len(cevap)>0:
+                # okuma gerceklestiyse parametre degerini ondalik sisteme cevirip cevap olarak dondur
+                # gerceklesmediyse, gelen cevabi hata kodu olarak kaydet
+                if cevap[3:5] == '01':
+                    # sadece parametre degerini al ve desimale cevir
+                    cevap = int(cevap[7:9],16)
+                    # sadece 1. bitin degerini al
+                    cevap = cevap & 1
+                else:
+                    self.error = cevap[:-2]
+                    raise RuntimeError
+
+        return cevap
+
+
+
+# ------------------------------------------------------------------------------
+# parametre yazar
+# adres, hex formatinda ve 4 karakterden olusan string bir deger olmali
+# deger, pozitif bir tam sayi olmali
+    def parametreYaz(self, adres, deger):
+        # adres ve veri degeri parametrelerini al
+        self.paket_adres = adres
+        self.paket_veri = deger
+
+        # parametre yazma (0x06) komutunu kullan
+        self.paket_komut    = '06'
+
+        # verilen adrese 1 byte (2 ASCII karakter) yazilacak
+        self.paket_veri_hex = self.paket_adres
+        self.paket_veri_hex += "%04X" % self.paket_veri
+
+        # portu acabilirse
+        if self.ac():
+            # yazma komutunu hazirlayip gonder
+            self.paketiOlustur()
+            self.bag.write(self.paket)
+
+            # cevabi bekle
+            cevap = self.bag.readline()
+            self.kapat()
+
+            # gonderilen paket ile okunan veri ayni ise yazma islemi basari ile tamamlanmistir
+            # aksi halde, gelen veriyi hata kodu olarak kaydet
+            if cevap == self.paket:
+                return True
+            else:
+                self.error = cevap[:-2]
+
+        return False
+
+
+
+# ------------------------------------------------------------------------------
+# bobin set
+# adres, hex formatinda ve 4 karakterden olusan string bir deger olmali
+# deger, pozitif bir tam sayi olmali
+# deger 0 ise resetler, 0'dan farkli ise set eder
+    def bobinSet(self, adres, deger=65280):
+        # adres parametresini al
+        self.paket_adres = adres
+
+        # deger parametresi 0 ise resetler, 0'dan farkli ise set eder
+        if deger == 0: self.paket_veri = 0
+        else: self.paket_veri = 65280
+
+        # parametre yazma (0x05) komutunu kullan
+        self.paket_komut    = '05'
+
+        # verilen adrese 1 word (2 ASCII karakter) yazilacak
+        self.paket_veri_hex = self.paket_adres
+        self.paket_veri_hex += "%04X" % self.paket_veri
+
+        # portu acabilirse
+        if self.ac():
+            # yazma komutunu hazirlayip gonder
+            self.paketiOlustur()
+            self.bag.write(self.paket)
+
+            # cevabi bekle
+            cevap = self.bag.readline()
+            self.kapat()
+
+            # gonderilen paket ile okunan veri ayni ise yazma islemi basari ile tamamlanmistir
+            # aksi halde, gelen veriyi hata kodu olarak kaydet
+            if cevap == self.paket:
+                return True
+            else:
+                self.error = cevap[:-2]
+
+        return False
+
+
+
+# ------------------------------------------------------------------------------
+# bobin reset
+# adres, hex formatinda ve 4 karakterden olusan string bir deger olmali
+    def bobinReset(self, adres):
+        # adres parametresini al
+        self.paket_adres = adres
+
+        return self.bobinSet(self.paket_adres, deger=0)
+
+
+
+
+# ------------------------------------------------------------------------------
+# module olarak yuklenmezse, buradaki kod calisir
+# default seri port ayarlari ile P0-00 parametresini okuyor
+if __name__ == '__main__':
+    x               = surucu()
+    x.port          = 0
+    x.surucu_no     = '01'
+    x.baudrate      = 38400
+    x.bytesize      = 7
+    x.parity        = 'N'
+    x.stopbits      = 2
+    print x.parametreOku(adres='0000')

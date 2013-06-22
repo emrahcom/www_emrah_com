@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>memcached_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+Memcached Notları
+-----------------
+
+- Yükleme
+
+	aptitude install memcached
+	aptitude install python-memcache
+
+
+- Python örnek kod
+
+	#!/usr/bin/python
+
+	import memcache
+
+	servers = ['127.0.0.1:11211', '127.0.0.1:11212'] 
+	memc = memcache.Client(servers, debug=1)
+
+	key = memc.get('key1001')
+	if not key:
+		print(&quot;memcache'de yok&quot;)
+		value = 'value1001'
+		memc.set('key1001', value, 20)
+	else:
+		print(&quot;memcache'de var&quot;)
+		value = memc.get('key1001')
+
+	print(value)
+
+
+- Python memcache komutları
+  Memcache'e kaydedilirken değerler otomatik olarak serileştirilir.
+
+	Client(sunucu_listesi)
+	get(key)			-&gt; Değer yoksa None gelir.
+	set(key, value, [expire])	-&gt; expire süresi boyunca değer saklanır.
+					   0 olursa expire olmaz.
+					   expire süresi 30 günden (30*24*60*60) fazla ise
+					   epoch değeri olarak kabul edilir.
+	delete(key, [time])		-&gt; time süresince değer saklanır ve sonra silinir.
+					   Bu süre boyunca değer değiştirilemez.
+	incr(key, [value])		-&gt; Değeri value değeri kadar arttırır.
+	decr(key, [value])		-&gt; Value verirmezse 1 artar.
+
+
+- Memcached istatistikleri
+
+	aptitude install telnet
+
+	telnet 127.0.0.1 11211
+
+		stats
+
+		STAT pid 17110			-&gt; pid
+		STAT uptime 190			-&gt; Oturum süresi
+		STAT time 1321789537		-&gt; Epoch time
+		STAT version 1.4.5		-&gt; Sürüm
+		STAT pointer_size 32
+		STAT rusage_user 0.008000	-&gt; Oturum için toplam user süresi
+		STAT rusage_system 0.056003	-&gt; Oturum için toplam sistem süresi
+		STAT curr_connections 5		-&gt; Açık bağlantı sayısı
+		STAT total_connections 13	-&gt; Oturum için yapılan toplam bağlantı sayısı
+		STAT connection_structures 7
+		STAT cmd_get 12			-&gt; Oturum için toplam get komutu sayısı
+		STAT cmd_set 2			-&gt; Oturum için toplam set komutu sayısı
+		STAT cmd_flush 0		-&gt; Oturum için toplam flush komutu sayısı
+		STAT get_hits 10		-&gt; Oturum için depodan cevaplanan get sayısı
+		STAT get_misses 2		-&gt; Oturum için cevaplanamayan get sayısı
+		STAT delete_misses 0		-&gt; Oturum için gerçekleştirilen delete sayısı
+		STAT delete_hits 0		-&gt; Oturum için key'i olmayan delete sayısı
+		STAT incr_misses 0		-&gt; Oturum için key'i olmayan incr sayısı
+		STAT incr_hits 5		-&gt; Oturum için gerçekleştirilen incr sayısı
+		STAT decr_misses 0		-&gt; Oturum için key'i olmayan decr sayısı
+		STAT decr_hits 0		-&gt; Oturum için gerçekleştirilen decr sayısı
+		STAT cas_misses 0
+		STAT cas_hits 0
+		STAT cas_badval 0
+		STAT auth_cmds 0
+		STAT auth_errors 0
+		STAT bytes_read 335		-&gt; Memcached'in ağdan okuduğu veri miktarı
+		STAT bytes_written 4305		-&gt; Memcached'in ağa yazdığı veri miktarı
+		STAT limit_maxbytes 67108864	-&gt; Memcached'in kaydedebileceği maksimum veri miktarı
+		STAT accepting_conns 1
+		STAT listen_disabled_num 0
+		STAT threads 4
+		STAT conn_yields 0
+		STAT bytes 60			-&gt; Kayıtlı değerleri saklamak için kullanılan alan boyutu
+		STAT curr_items 1		-&gt; Kayıtlı değer sayısı
+		STAT total_items 2		-&gt; Oturum için toplam kaydedilen değer sayısı
+		STAT evictions 0		-&gt; Oturum için hafızayı boşaltmak için kaç geçerli değerin silindiği
+		STAT reclaimed 0
+		END
+
+		stats slabs
+
+		STAT 1:chunk_size 80		-&gt; Her chunk için ayrılan alan miktarı
+		STAT 1:chunks_per_page 13107	-&gt; Her sayfadaki chunk sayısı
+		STAT 1:total_pages 1		-&gt; Toplam sayfa sayısı
+		STAT 1:total_chunks 13107	-&gt; Toplam chunk sayısı
+		STAT 1:used_chunks 1		-&gt; Kullanılan chunk sayısı
+		STAT 1:free_chunks 0		-&gt; Boş chunk sayısı
+		STAT 1:free_chunks_end 13106	-&gt; Son sayfanın sonundaki toplan boş chunk miktarı
+		STAT 1:mem_requested 60		-&gt; İhtiyaç duyulan gerçek RAM alanı
+		STAT 1:get_hits 10		-&gt; Toplam get sayısı
+		STAT 1:cmd_set 2		-&gt; Toplam set sayısı
+		STAT 1:delete_hits 0		-&gt; Toplam delete sayısı
+		STAT 1:incr_hits 5		-&gt; Toplam incr sayısı
+		STAT 1:decr_hits 0		-&gt; Toplam decr sayısı
+		STAT 1:cas_hits 0
+		STAT 1:cas_badval 0
+		STAT active_slabs 1		-&gt; Aktif slabs sayısı
+		STAT total_malloced 1048560	-&gt; Slab sayfaları için ayrılan toplam hafıza alanı
+		END
+
+		stats items
+
+		STAT items:1:number 1		-&gt; Kayıtlı olan değer sayısı
+		STAT items:1:age 1958		-&gt; En eski değerin saniye olarak yaşı
+		STAT items:1:evicted 0		-&gt; Alan yaratmak için silinen değer sayısı
+		STAT items:1:evicted_nonzero 0	-&gt; Son geçerli değer silme zamanı (nonzero)
+		STAT items:1:evicted_time 0	-&gt; Son geçerli değer silme zamanı
+		STAT items:1:outofmemory 0	-&gt; Hafıza yetersiz sonucu alan değer sayısı
+		STAT items:1:tailrepairs 0
+		STAT items:1:reclaimed 0
+		END
+
+		stats sizes
+
+		STAT 64 1			-&gt; (Boyut, adet) çifti
+		END
+
+		quit
+</code></pre>
+</body>
+</html>

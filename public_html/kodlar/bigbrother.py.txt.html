@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>bigbrother.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import re
+import string
+import weechat
+
+PLUGIN_NAME             = 'BigBrother'
+PLUGIN_VERSION          = '0.1'
+PLUGIN_END_FUNC         = ''
+PLUGIN_DESC             = 'BigBrother Weechat plugin'
+PLUGIN_CHARSET          = 'UTF-8'
+
+HIGHLIGHT               = ['emrah', 'debian', 'python']
+
+COLOR                   = { 'beyaz'         : '\x0301',
+                            'beyazb'        : '\x0300',
+                            'lacivert'      : '\x0302',
+                            'lacivertb'     : '\x0312',
+                            'yesil'         : '\x0303',
+                            'yesilb'        : '\x0309',
+                            'kirmizi'       : '\x0305',
+                            'kirmizib'      : '\x0304',
+                            'sari'          : '\x0307',
+                            'sarib'         : '\x0308',
+                            'mavi'          : '\x0310',
+                            'mavib'         : '\x0311',
+                            'lila'          : '\x0306',
+                            'lilab'         : '\x0313',
+                            ''              : '\x0F',
+                          }
+
+CHANNEL_COLOR           = { 'emrah'         : COLOR['sarib'],
+                            '#debian'       : COLOR['kirmizi'],
+                            '#debian.tr'    : COLOR['mavi'],
+                            '#ubuntu-tr'    : COLOR['lila'],
+                            '#archlinux.tr' : COLOR['lacivert'],
+                            '#pardus'       : COLOR['yesil'],
+                          }
+
+HIGHLIGHT_COLOR         = COLOR['sarib']
+CHANNEL_DEFAULT_COLOR   = COLOR['sarib']
+AT_COLOR                = COLOR['beyazb']
+COLOR_RESET             = COLOR['']
+SEPARATOR               = '%s|%s' % (COLOR['lila'], COLOR[''])
+PATTERN_PRIVMSG         = re.compile('&circ;:(.+?)!.*PRIVMSG (.+?) :(.+)$')
+PATTERN_HIGHLIGHT       = ''
+
+
+
+# ---------------------------------------------------
+def highlight_pattern(words):
+    global PATTERN_HIGHLIGHT
+
+    word_pattern = ''
+    for w in words:
+        word_pattern += '%s|' % w
+    word_pattern = word_pattern[:-1]
+
+    PATTERN_HIGHLIGHT = re.compile('(%s)' % word_pattern, re.IGNORECASE)
+
+    return True
+
+
+
+# ---------------------------------------------------
+def to_highlighted_message(message):
+    g = PATTERN_HIGHLIGHT.findall(message)
+    for h in set(g):
+        message = message.replace(h, '%s%s%s' % (HIGHLIGHT_COLOR, h, COLOR_RESET))
+
+    return message
+
+
+
+# ---------------------------------------------------
+def to_nick_at_channel(nick, channel):
+    try     : color = CHANNEL_COLOR[channel]
+    except  : color = CHANNEL_DEFAULT_COLOR
+
+    return '%s%s%s@%s%s%s' % (color, nick, AT_COLOR, color, channel, COLOR_RESET)
+
+
+# ---------------------------------------------------
+def func(server, args):
+    g = PATTERN_PRIVMSG.search(args)
+    if g:
+        nick            = g.group(1)
+        channel         = g.group(2)
+        message         = g.group(3)
+        nick_at_channel = to_nick_at_channel(nick, channel)
+        message         = to_highlighted_message(message)
+
+        weechat.print_server('%36s %s %s' % (nick_at_channel, SEPARATOR, message))
+    else:
+        weechat.print_server('PARSE ERROR: %s' % args)
+
+    return weechat.PLUGIN_RC_OK
+
+
+
+# ---------------------------------------------------
+def main():
+    if weechat.register(PLUGIN_NAME, PLUGIN_VERSION, PLUGIN_END_FUNC, PLUGIN_DESC, PLUGIN_CHARSET):
+        highlight_pattern(HIGHLIGHT)
+        weechat.add_message_handler('privmsg', 'func')
+
+
+
+# ---------------------------------------------------
+main()
+</code></pre>
+</body>
+</html>

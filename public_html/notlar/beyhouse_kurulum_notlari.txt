@@ -1,0 +1,247 @@
+BEYHOUSE KURULUM NOTLARI
+
+
+* disk bilgileri
+	- partitionlar
+		- sda1	/boot	ext4	250 MB
+		- sda5	/	ext4	 10 GB
+		- sda6	/home	ext4	100 GB
+		- sda7	/var	ext4	100 GB
+		- sda8	/tmp	ext4	 10 GB
+		- sda9	swap	swap	 10 GB
+
+-----------------------------------------------------------------------------------
+
+* kurulum
+	- Debian Squeeze kurulum notlarına göre kurulur (AMD64)
+	- makine adi	: msn
+	- IP		: 192.168.100.104/255.255.255.0
+	- Gateway	: 192.168.100.251
+	- DNS		: 8.8.8.8 8.8.4.4
+	- standart kurulum, agdan guncelleme yok
+	- reboot
+
+-----------------------------------------------------------------------------------
+
+* paketler
+
+	. openssh-server
+	. vim
+	. screen
+	. bzip2
+	. zip
+	. unzip
+	. sysv-rc-conf
+	. python-httplib2
+	. python-mysqldb
+	. ipython
+	. mysql-server
+	. mysqltcl
+	. ntpdate
+	. xorg
+	. openbox
+	. menu
+	. xtrlock
+	. unclutter
+	. rxvt-unicode
+	. x11vnc
+	. iceweasel
+	. amsn 
+
+-----------------------------------------------------------------------------------
+
+* kullanıcı ayarları
+	. adduser beyhouse
+	. chmod 702 /home/kullanici
+	beyhouse için chmod yapmaya gerek yok
+
+	-------------------------------------------------------------------
+
+	* /home/beyhouse/.config/openbox/autostart.sh
+		(sleep 3; xtrlock) &
+		(sleep 5; x11vnc -noncache -nolookup -forever -rfbauth ~/.vnc/passwd -autoport 5900) &
+		(sleep 7; pkill -f reklam_donusum.py; ~/beyhouse/reklam_donusum.py) &
+		(sleep 9; pkill -f beyhouse_baslat.py; ~/beyhouse/beyhouse_baslat.py) &
+				
+
+
+	* /home/beyhouse/.bashrc
+		# otomatik olarak X'in baslatmasi icin
+		if [ -z "$DISPLAY" ] && [ $(tty) == /dev/tty1 ]; then
+			export XAUTHORITY=/tmp/.Xauthority-$USER
+			xvfb-run -s "-screen 0 1024x768x16" openbox-session
+			exit
+		fi
+
+
+-----------------------------------------------------------------------------------
+
+* root ayarları
+
+	* autologin
+		touch /usr/local/sbin/autologin
+		chmod u+x /usr/local/sbin/autologin
+		vim /usr/local/sbin/autologin
+			#!/usr/bin/python                          
+			import os                                  
+			os.execlp('login', 'login', '-f', 'beyhouse', '0')
+
+	* /etc/inittab
+		1:2345:respawn:/sbin/getty -n -l /usr/local/sbin/autologin 38400 tty1
+	
+
+	* /etc/fstab
+		tmpfs /home/beyhouse/reklam/tmpfs  tmpfs  noatime,size=1M,mode=1777 0 0
+
+
+	* crontab
+		/root/scripts/cron_aptitude.sh
+		/root/scripts/cron_ntpdate.sh
+		/root/scripts/cron_sendip.sh
+		/root/scripts/sendip.py
+
+		/etc/crontab
+			01 *    * * *   root    /root/scripts/cron_sendip.sh >/dev/null 2>&1
+			01 *    * * *   root    /root/scripts/cron_ntpdate.sh >/dev/null 2>&1
+			05 5    * * *   root    /root/scripts/cron_aptitude.sh >/dev/null 2>&1
+
+		# bu bölüm için betiklerde düzenleme gerekiyor
+		cd /etc/init.d
+		ln -s /root/scripts/cron_ntpdate.sh ntpdate
+		ln -s /root/scripts/cron_sendip.sh sendip
+		update-rc.d ntpdate start 99 2 .
+		update-rc.d sendip start 99 2 .
+	
+
+-----------------------------------------------------------------------------------
+
+* Beyhouse kurulumu
+	- MySQL ayarları
+		- root kullanıcısı için parola belirle
+			SET PASSWORD = PASSWORD('parola');
+			SET PASSWORD FOR 'root'@'msn' = PASSWORD('parola');
+			SET PASSWORD FOR 'root'@'127.0.0.1' = PASSWORD('parola');
+		
+		- veritabani betiklerini çalıştır
+			. mysql -uroot -p < create_tables.sql
+			. mysql -uroot -p < insert_bot.sql
+			. mysql -uroot -p < beyhouse_sozluk_al2tr.sql
+			. mysql -uroot -p < beyhouse_sozluk_ar2tr.sql
+			. mysql -uroot -p < beyhouse_sozluk_fr2tr.sql
+			. mysql -uroot -p < beyhouse_sozluk_in2tr.sql
+			. mysql -uroot -p < beyhouse_sozluk_is2tr.sql
+			. mysql -uroot -p < beyhouse_sozluk_it2tr.sql
+			. mysql -uroot -p < beyhouse_sozluk_ru2tr.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2al.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2ar.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2fr.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2in.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2is.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2it.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2ru.sql
+			. mysql -uroot -p < beyhouse_sozluk_tr2yu.sql
+			. mysql -uroot -p < beyhouse_sozluk_yu2tr.sql
+
+		- beyhouse kulllanıcısı için parola belirle
+			. SET PASSWORD FOR beyhouse@localhost = PASSWORD('parola');
+			. GRANT ALL ON beyhouse.* TO 'beyhouse'@'localhost';
+
+	- AMSN ayarları
+		
+		- değiştirilen dosyaları /usr/share/amsn klasörüne kopyala
+			. abook.tcl
+			. amsn
+			. config.tcl
+			. gui.tcl
+			. protocol.tcl
+		
+		- yeni sürümlerin otomatik yüklenmemesi için 
+			aptitude hold kullan veya kontrollu aptitude
+
+
+-------------------------------------------------------------------------------------
+
+	- beyhouse
+		-  AMSN ayarları
+			- eklentiler
+				. ~/.amsn/plugins/beyhouse altına
+					. beyhouse.tcl
+					. plugininfo.xml
+				. /home/beyhouse/.amsn/resimler/ klasörü ve ilgili dosyalar oluşturulacak
+				  	Bu klasörde muhtemel resimler var
+					Aktif olan active.png ve active.dat olarak linkli
+				. /home/beyhouse/reklam/ klasörü ve ilgili dosyalar oluşturulacak
+					mkdir ~/reklam
+					mkdir ~/reklam/tmpfs
+
+			- 1 kullanıcı için bütün ayarlar yapılıp MSN ağına bağlanılacak
+				. wingeometry
+				. her chat için ayrı pencere
+				. close button minimizes
+				. resim için /home/beyhouse/.amsn/resimler/active.png
+
+			- diğer kullanıcılar için ayarları yapılmış kullanıcının klasörü, kopyalanarak kullanılacak
+				. cp -arp kullanici_domain_com sablon
+				  rm sablon/abook.xml
+				  for i in {1230..1355}; do cp -arp sablon kullanici${i}_domain_com; done
+				  cp -arp sablon kullanici_hotmail_com
+
+				. ~/.amsn/kullanici_domain_com/config.xml
+					<attribute>start_ns_server</attribute>
+					<value>messenger.hotmail.com:1863</value>
+
+					<attribute>login</attribute>
+					<value>...</value>
+
+				  	for i in {1230..1355}; 
+				  		do sed 's/kullanici@domain.com/kullanici'${i}'@domain.com/' kullanici${i}_domain_com/config.xml -i;
+					done
+					sed 's/kullanici@domain.com/kullanici@hotmail.com/' kullanici_hotmail_com/config.xml -i
+
+				. tek tek yapılacak ayarlar
+					. bütün herkes bana mesaj atabilsin
+					. görünen nick
+					. ozel kullanıcıyı AL listesine ekle
+
+				. ~/.amsn/profiles dosyasına yeni kullanıcılar eklenecek
+			
+
+			- utils
+				. config ayarlarını kopyala
+					mkdir -p ~/beyhouse/config
+					chmod 700 ~/beyhouse
+					cd ~/beyhouse/config
+					cp ~/.amsn/sablon/plugins.xml .
+					cp ~/.amsn/profiles .
+					for i in {1230..1355}; do cp ~/.amsn/kullanici${i}_domain_com/config.xml kullanici${i}_domain_com_config.xml; done
+					cp ~/.amsn/kullanici_domain_com/config.xml kullanici_domain_com_config.xml
+					cp ~/.amsn/kullanici_hotmail_com/config.xml kullanici_hotmail_com_config.xml
+
+				. IP adresi dosyası
+					touch ~/beyhouse/beyhouse_sunucu_ip
+	
+				. botları başlatacak betik
+					. cp beyhouse_baslat.py /home/beyhouse/beyhouse/
+					. chmod 700 /home/beyhouse/beyhouse/beyhouse_baslat.py
+					. betiğin sabitlerini kontrol et
+				
+			- /home/beyhouse/.xsession
+				~/beyhouse/beyhouse_baslat.py
+				exec fluxbox
+				logout
+
+-------------------------------------------------------------------------------------
+
+* bakım ve yedekleme
+	-cron
+
+		- /root/betikler/cron_gunluk_beyhouse_restart.sh
+			#!/bin/bash
+			su beyhouse -c killall -q /usr/bin/python
+			su beyhouse -c killall -q wish
+			reboot
+			
+		- /etc/crontab
+			33 5    * * *   root    /root/betikler/cron_gunluk_beyhouse_restart.sh >/dev/null 2>&1
+
+		- /etc/init.d/cron restart

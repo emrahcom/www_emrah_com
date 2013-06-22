@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<plugin>
+	<name>Bey House</name>
+	<author>emrah.com</author>
+	<description>Bey House sozluk</description>
+	<amsn_version>0.94</amsn_version>
+	<plugin_version>0.01</plugin_version>
+	<plugin_file>beyhouse.tcl</plugin_file>
+	<plugin_namespace>beyhouse</plugin_namespace>
+	<init_procedure>Init</init_procedure>
+</plugin>

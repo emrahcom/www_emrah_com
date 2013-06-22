@@ -1,0 +1,145 @@
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+
+# zenity paketini yuklenmesi gerekiyor.
+
+import getpass
+import poplib
+import time
+import os
+from email.header import decode_header
+
+
+INITIAL_WAIT    = 10
+PERIOD          = 300
+HOST            = 'pop.gmail.com'
+DEBUG           = 0
+
+
+
+# -----------------------------------------------------------------------------
+def getLoginInfo():
+    username = raw_input('Username : ')
+    password = getpass.getpass('Pasword  : ')
+    return (username, password)
+
+
+
+# -----------------------------------------------------------------------------
+def getMailInfo(username, password, pid):
+    maillist = []
+
+    try:
+        pop = poplib.POP3_SSL(HOST)
+        pop.user(username)
+        pop.pass_(password)
+
+        num = len(pop.list()[1])
+        for n in range(num):
+            mTo = mDate = mFrom = mSubject = ''
+
+            for satir in pop.retr(n+1)[1]:
+                satir = decode_header(satir)
+                if satir[0][0][0:6].upper() == "FROM: ":
+                    mFrom = satir[0][0][6:]
+                elif satir[0][0][0:4].upper() == "TO: ":
+                    mTo = satir[0][0][4:]
+                elif satir[0][0][0:6].upper() == "DATE: ":
+                    mDate = satir[0][0][6:]
+                elif satir[0][0][0:8].upper() == "SUBJECT:":
+                    mSubject = satir[-1:][0][0]
+
+            if mSubject[0:6] == 'rapor:': continue
+            maillist.append([n+1, mFrom, mTo, mDate, mSubject])
+
+        pop.quit()
+    except poplib.error_proto:
+        if DEBUG:
+            raise
+        else:
+            command = "zenity --error --text '"
+            command += "Connection failed for <b>%s</b>\n" % (username)
+            command += "Pid... [%s]" % (pid)
+            command += "' &"
+            os.system(command)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            command = "zenity --error --text '"
+            command += "Error for <b>%s</b>\n" % (username)
+            command += "Pid... [%s]\n" % (pid)
+            command += "%s" % (str(err))
+            command += "' &"
+            os.system(command)
+
+    return maillist
+
+
+
+# -----------------------------------------------------------------------------
+def secureMessage(message):
+    message = message.replace('"','&quot;')
+    message = message.replace('<','&lt;')
+    message = message.replace('>','&gt;')
+
+    return message
+
+
+
+# -----------------------------------------------------------------------------
+def showDialog(username, maillist, pid):
+    try:
+        if not maillist: return None
+
+        msg = ''
+        for mail in maillist:
+            msg += '<b>From   :</b> %s\n' % \
+                secureMessage(mail[1])
+            msg += '<b>To     :</b> %s\n' % \
+                secureMessage(mail[2])
+            msg += '<b>Date   :</b> %s\n' % \
+                secureMessage(mail[3])
+            msg += '<b>Subject:</b> %s\n' % \
+                secureMessage(mail[4])
+            msg += '-------------------------------\n'
+        msg += '%s... [%s]' % (username, pid)
+
+        os.system('zenity --info --text "%s" &' % msg)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            command = "zenity --error --text '"
+            command += "Error for <b>%s</b>\n" % (username)
+            command += "Pid... [%s]\n" % (pid)
+            command += "%s" % (str(err))
+            command += "' &"
+            os.system(command)
+
+
+
+# -----------------------------------------------------------------------------
+def startChecking():
+    while True:
+        (username, password) = getLoginInfo()
+
+        try                 : pid = os.fork()
+        except OSError, e   : pass
+
+        if not username: os._exit(0)
+        if pid == 0: break
+        print('%s... [%d]\n' % (username, pid))
+
+    time.sleep(INITIAL_WAIT)
+    pid = os.getpid()
+    while True:
+        maillist = getMailInfo(username, password, pid)
+        showDialog(username, maillist, pid)
+        time.sleep(PERIOD)
+
+
+
+# -----------------------------------------------------------------------------
+if __name__ == '__main__':
+    startChecking()

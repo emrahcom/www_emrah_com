@@ -1,0 +1,33 @@
+# -----------------------------------------------------------------------------
+# SNMP NOTLARI
+# -----------------------------------------------------------------------------
+
+
+# Yükleme
+
+	aptitude install snmp snmp-mibs-downloader snmpd
+
+
+
+# Ayarlar
+
+	- /etc/default/snmpd
+		#export MIBS=
+
+	- /etc/snmp/snmp.conf
+		#mibs :
+
+	- /etc/snmp/snmpd.conf
+		#agentAddress  udp:127.0.0.1:16
+		agentAddress udp:161,udp6:[::1]:161
+
+		rocommunity mycommunity  10.2.2.0/24
+
+	- Servisi yeniden başlatma
+		/etc/init.d/snmpd restart
+
+
+
+# Test
+
+	snmpwalk -c mycommunity  -v 2c 10.2.2.24

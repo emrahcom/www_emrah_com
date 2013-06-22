@@ -1,0 +1,54 @@
+EMC ARAYÜZ NOTLARI
+------------------
+
+Sürüm 2.3.4 için geçerli
+
+
+- Dil dosyalarının alınması
+
+	mkdir emctr
+	cd emctr
+	cp ~/emc2/src/po/{README,axis.pot,rs274_err.pot,tcl.pot} .
+
+
+- Dil dosyalarının klonlanması
+
+	cp axis.pot tr_TR_axis.po
+	cp rs274_err.pot tr_TR_rs274_err.po
+	cp tcl.pot tr_TR.po
+
+
+- Dil dosyalarının güncellenmesi
+
+	msgmerge -U tr_TR_axis.po ~/emc2/src/po/axis.pot
+	msgmerge -U tr_TR_rs274_err.po ~/emc2/src/po/rs274_err.pot
+	msgmerge -U tr_TR.po ~/emc2/src/po/tcl.pot
+
+
+- Dil dosyalarının düzenlenmesi
+
+	vim tr_TR_axis.po
+	vim tr_TR_rs274_err.po
+	vim tr_TR.po
+
+
+- Dil dosyalarının sisteme eklenmesi
+
+	cp tr_TR* ~/emc2/src/po/
+	cd ~/emc2/src/po/
+	make
+
+
+- Axis'in özelleştirilmesi
+	cp ~/emc2/bin/axis myaxis
+	cp ~/emc2/share/axis/tcl/axis.tcl myaxis.tcl
+	vim myaxis
+		117: # nf.source_lib_tcl(root_window,"axis.tcl")
+		118: nf.source_lib_tcl(root_window,"myaxis.tcl")
+	vim myaxis.tcl
+		...
+		...
+	cp myaxis ~/emc2/bin/
+	cp myaxis.tcl ~/emc2/share/axis/tcl/
+	vim myconfig.ini
+		DISPLAY = myaxis

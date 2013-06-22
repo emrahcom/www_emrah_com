@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>emc_python_istemci_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+* istemcinin başlatılması
+
+	İstemci başlatılırken config dosyası verilirse, grafik arayüze ihtiyaç
+	kalmayacak. Dolayısı ile ssh ile X sunucu olmadan çalıştırılabilir.
+	
+		./scripts/emc configs/custom/custom.ini
+
+
+
+* moduller
+
+	- modul dosyaları
+		emc2/lib/python/emc.so
+		emc2/lib/python/hal.so
+		emc2/lib/python/gcode.so
+
+	- modul path'inin verilmesi
+		import sys
+		sys.path.insert(0, '/home/kullanici/emc2/lib/python/')
+
+	- import edilecek moduller
+		import emc
+		import hal
+
+
+
+* komutlar
+
+	- stat
+		s = emc.stat()
+		s.poll()
+		print s.position
+		print s.task_state
+		print s.interp_state
+
+	- command
+		. c = emc.command()
+
+		. c.state(...)
+			- emc.STAT_ESTOP
+			- emc.STAT_OFF
+			- emc.STAT_ESTOP_RESET
+			- emc.STAT_ON
+
+		. c.mode(...)
+			- emc.MODE_MANUAL
+			- emc.MODE_MDI
+			- emc.MODE_AUTO
+
+		. c.home([0|1|2|3|4|5])
+
+		. c.mdi(komut)
+
+		. c.reset_interpreter()
+		  c.program_open(f)
+
+		. c.auto(...)
+
+			- emc.AUTO_STEP
+			- emc.AUTO_PAUSE
+			- emc.AUTO_RESUME
+			- emc.AUTO_RUN, start_line
+</code></pre>
+</body>
+</html>

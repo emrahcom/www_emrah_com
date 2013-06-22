@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>zargan.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+#-*- coding:utf-8 -*-
+
+import re
+import sys
+import httplib
+import urllib
+import socket
+
+SERVER = &quot;www.zargan.com&quot;
+PAGE = &quot;/sozluk.asp&quot;
+PATTERN = '&lt;span class=&quot;dblClickSpan&quot;.*?&gt;(.+?)&lt;/span&gt;.*?'
+PATTERN += '&lt;span class=&quot;dblClickSpan&quot;.*?&gt;(.+?)&lt;/span&gt;(.*)'
+PATTERN = re.compile(PATTERN, re.DOTALL)
+COLORED = True
+DEBUG = 0
+
+
+
+# -----------------------------------------------------------------------------
+def get_response_from_zargan(word):
+    try:
+        header = { 'Content-type': 'application/x-www-form-urlencoded',
+                   'Accept': 'text:plain' }
+        param = urllib.urlencode({'Sozcuk': word})
+        cnn = httplib.HTTPConnection(SERVER)
+        socket.setdefaulttimeout(5)
+        cnn.request('GET', PAGE, param, header)
+        res = cnn.getresponse()
+        res = res.read().decode('iso-8859-9')
+        cnn.close()
+
+        result = res
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            print(str(err))
+
+        result = None
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+def parse_response(raw):
+    try:
+        if not raw:
+            raise NameError('No response')
+
+        parsed = []
+        while True:
+            g = PATTERN.search(raw)
+            if not g:
+                break
+            parsed.append((g.group(1), g.group(2)))
+            raw = g.group(3)
+
+        result = parsed
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            print(str(err))
+
+        result = None
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+def print_response(parsed):
+    try:
+        for key, value in parsed:
+            if COLORED:
+                out =  &quot;\033[35m%s\033[0m : &quot; % (key.strip().encode('utf-8'))
+                out += &quot;%s&quot; % (value.strip().encode('utf-8'))
+            else:
+                out =  &quot;%s : &quot; % (key.strip().encode('utf-8'))
+                out += &quot;%s&quot;    % (value.strip().encode('utf-8'))
+            print(out)
+
+        result = True
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            print(str(err))
+
+        result = False
+
+    return result
+
+
+
+
+# -----------------------------------------------------------------------------
+if __name__ == '__main__':
+    if len(sys.argv) &lt; 2:
+        print('Usage: %s word [word...]' % sys.argv[0])
+        sys.exit(1)
+
+    word = ' '.join(sys.argv[1:])
+    raw = get_response_from_zargan(word)
+    parsed = parse_response(raw)
+    if parsed:
+        print_response(parsed)
+    else:
+        print(&quot;:(&quot;)
+
+    sys.exit(0)
+</code></pre>
+</body>
+</html>

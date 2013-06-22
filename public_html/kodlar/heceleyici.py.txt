@@ -1,0 +1,386 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import time
+import sys
+import re
+
+RE_TURKCE		= u'aâbcçdefgğhıiîjklmnoöprsştuüûvyz'
+RE_UNLU			= u'aâeıiîuüûoö'
+RE_UNSUZ		= u'bcçdfgğhjklmnprsştvyz'
+RE_SERT_UNSUZ		= u'çkpt'
+BASTA_UNSUZ_IKILI	= ['bl','br','dl','dr','dv','fl','fr','gl','gn','gr','hr','kl','kn','kr','pl','pn',
+			'pr','ps','sf','sk','sl','sm','sn','sp','st','sv',u'şn','tr','ts','tv','vl','vr','zv']
+BASTA_UNSUZ_UCLU	= ['skl', 'spl', 'spr', 'str']
+SONDA_UNSUZ_IKILI	= ['bl','bz','ft','hm','ht','kl','ks','kt',u'lç','lf','lg','lh','lk','lm','lp','ls',
+			'lt','mb', 'mk','mp','mt',u'nç','nf','ng','nj','nk','ns','nt','nz','ps','pt',u'rç','rd','rf',
+			'rg','rh','rj','rk','rm','rn','rp','rs','rt','rv','rz','sh','sk','sp','ss','st', u'şt',
+			'tr','vk','vr','vt','yf','yh','yk','yl','yn','yp','ys','yt','yz','zk','zm']
+SONDA_UNSUZ_UCLU	= ['lds','lms','lst','mps','nds','ngs','nks','nkt','nsk','nst','ntr',
+			'nts','pst','rds','rld','rps','rst','rtz','rzt','str']
+SONDA_UNSUZ_DORTLU	= ['ngst', 'rnst']
+
+class Konusmaci():
+	def __init__(self):
+		self.liste 	= []
+		self.tanimsiz 	= []
+		self.alfabetik	= re.compile(u'^([%s]+)$' % RE_TURKCE)
+		self.numerik	= re.compile(u'^([0-9]+)$')
+		self.hece_sayisi= 0
+	
+
+	# --------------------------------------------
+	def parser(self, metin=''):
+		try:
+			# metod cagrilirken bir metin verildi ise bunu, metin degerine ata
+			if metin: self.metin = metin
+			# metin yoksa hata var demektir
+			if not self.metin: raise RuntimeError
+			# metindeki herbir blok icin
+			for blok in re.split(u'\s', self.metin.strip()):
+				# blogun islem gormis halini sakla
+				ham = blok
+				# harfleri, kucuk harfe cevir
+				blok = self.kucult(blok)
+				# gereksiz bosluklari at
+				blok = blok.strip()
+				if not blok: continue
+				# blok icindeki verinin tipine gore blogu isleyecek fonksiyonu belirle
+				f = self.parserFonksiyonSec(blok)
+
+				# test icin
+				cevap = '%s -> %s' % (blok, f(blok, ham))
+				print cevap.encode('utf-8')
+
+			return True
+		except:
+			return False
+
+
+	# --------------------------------------------
+	def kucult(self, blok):
+		try:
+			if not blok: raise RuntimeError
+			blok = blok.replace(u'İ', u'i')
+			blok = blok.replace(u'I', u'ı')
+			blok = blok.replace(u'Ğ', u'ğ')
+			blok = blok.replace(u'Ü', u'ü')
+			blok = blok.replace(u'Ş', u'ş')
+			blok = blok.replace(u'Ö', u'ö')
+			blok = blok.replace(u'Ç', u'ç')
+			blok = blok.replace(u'Â', u'â')
+			blok = blok.replace(u'Î', u'î')
+			blok = blok.replace(u'Û', u'û')
+			blok = blok.lower()
+			return blok
+		except:
+			return ''
+
+
+	# --------------------------------------------
+	def parserFonksiyonSec(self, blok):
+		try:
+			# alfabetik dizi ise
+			if self.alfabetik.search(blok): return self. parserFonksiyonAlfabetik
+			# numerik dizi ise
+			if self.numerik.search(blok): return self. parserFonksiyonNumerik
+			# hicbir tipe uymadiysa hata var demektir
+			raise RuntimeError
+		except:
+			return self. parserFonksiyonError
+
+
+	# --------------------------------------------
+	def parserFonksiyonError(self, blok, ham):
+		self.tanimsiz.append(blok)
+		return 'error'
+
+
+	# --------------------------------------------
+	def parserFonksiyonAlfabetik(self, blok, ham):
+		try:
+			# blok uzunlugu
+			uzunluk = len(blok)
+			if not uzunluk: raise RuntimeError
+
+			heceler = []
+			b = blok
+			while True:
+				# blok icinde karakter kalmadiysa donguden cik
+				if not b: break
+				self.hece_sayisi += 1
+
+				# ilk karakter b[0] unlu ise, unlu ile baslayan hece cozme algoritmasini kullan
+				if self.unluMu(b[0]):
+						(hece, b) = self.unluHece(b, b, ham)
+						heceler.append(hece)
+						continue
+				# ilk karakter b[0] unsuz ise
+				elif self.unsuzMu(b[0]):
+					# blok, 1 harflikse istisna olustu
+					# muhtemelen kisaltma
+					if uzunluk == 1: raise Exception('kisaltma')
+					# blok, 1 harften uzunsa sonraki karaktere b[1] bak
+					# sonraki karakter b[1] unlu ise ilk harfi sakla
+					# hecenin devami icin unlu ile baslayan hece cozme algoritmasini kullan
+					if self.unluMu(b[1]):
+						ilk = b[0]
+						(hece, b) = self.unluHece(b[1:], b, ham)
+						# saklanan ilk unsuz harfle, heceyi birlestir
+						hece = '%s%s' % (ilk, hece)
+						heceler.append(hece)
+						continue
+					# sonraki karakter b[1] unsuz ise
+					if self.unsuzMu(b[1]): 
+						# blok, 2 harfli ise istisna olustu
+						# muhtemelen kisaltma
+						if uzunluk == 2: raise Exception('kisaltma')
+						# blok, 2 harften uzunsa sonraki karaktere b[2] bak
+						# sonraki karakter b[2] unlu ise
+						if self.unluMu(b[2]):
+							# ilk 2 unsuz karakter b[0:2] mumkun ise hece bulundu
+							if b[0:2] in BASTA_UNSUZ_IKILI:
+								# b[2] deki unlu harfe gore ilk unsuz ile birlikte
+								# kullanilacak gizli unluyu tesbit et
+								if b[2] in ['u',u'û']		: gizli = 'u'
+								elif b[2] in [u'ü']		: gizli = u'ü'
+								elif b[2] in ['i',u'ö']		:
+									if b[0:3] == u'brö'	: gizli = u'ü'
+									elif b[0:3] == u'blö'	: gizli = u'ü'
+									else			: gizli = 'i'
+								elif b[2] in ['a',u'â','e','o',u'ı',u'î']:
+									if b[0:3] == 'pre'	: gizli = 'i'
+									elif b[0:3] == 'pro'	: gizli = 'u'
+									elif b[0:3] == 'bro'	: gizli = 'u'
+									elif b[0:3] == 'blo'	: gizli = 'u'
+									else			: gizli = u'ı'
+								heceler.append(u'%s%s' % (b[0], gizli))
+								b = b[1:]
+								continue
+							# ilk 2 unsuz karakter b[0:2] mumkun degilse, istisna olustu
+							# muhtemelen kisaltma
+							else: raise Exception('kisaltma')
+						# sonraki karakter b[2] unsuz ise
+						if self.unsuzMu(b[2]):
+							# blok, 3 harfli ise istisna olustu
+							# muhtemelen kisaltma
+							if uzunluk == 3: raise Exception('kisaltma')
+							# blok, 3 harften uzunsa sonraki karaktere b[3] bak
+							# sonraki karakter b[3] unlu ise
+							if self.unluMu(b[3]):
+								# ilk 3 unsuz karakter b[0:3] mumkun ise hece bulundu
+								if b[0:3] in BASTA_UNSUZ_UCLU:
+									# b[3] deki unlu harfe gore ilk 2 unsuz ile birlikte
+									# kullanilacak gizli unluyu tesbit et
+									if b[3] in ['u', u'û']		: gizli = 'u'
+									elif b[3] in [u'ü']		: gizli = u'ü'
+									elif b[3] in ['i', u'ö']	: gizli = 'i'
+									elif b[3] in ['a',u'â','e','o',u'ı',u'î']: 
+										gizli = u'ı'
+
+									heceler.append(u'%s%s%s' % (b[0], gizli, b[1]))
+									b = b[2:]
+									continue
+								# ilk 3 unsuz karakter b[0:3] mumkun degilse, istisna olustu
+								# muhtemelen kisaltma
+								else: raise Exception('kisaltma')
+							# sonraki karakter b[3] unsuz ise istisna olustu
+							# muhtemelen kisaltma
+							if self.unsuzMu(b[3]): raise Exception('kisaltma')
+
+				# blogun ilk harfi unlu veya unsuz degilse, hata var demektir
+				else: raise RuntimeError
+
+			self.liste += heceler
+
+			# test icin
+			cevap = ''
+			for hece in heceler:
+				cevap += '%s . ' % hece
+
+			return cevap[:-2]
+
+		except:
+			self.tanimsiz.append(blok)
+			return sys.exc_info()[1]
+		
+
+
+	# --------------------------------------------
+	def parserFonksiyonNumerik(self, blok, ham):
+		self.liste.append(blok)
+		return blok
+
+
+	# --------------------------------------------
+	def unluHece(self, b, blok, ham):
+		try:
+			# blok uzunlugu
+			uzunluk = len(b)
+			if not uzunluk: raise RuntimeError
+			
+			# blok, 1 harflikse hece bulundu
+			if uzunluk == 1: return (b[0], '')
+			# blok, 1 harften uzunsa sonraki karaktere b[1] bak
+			# sonraki karakter b[1], unlu ise hece bulundu
+			if self.unluMu(b[1]): return (b[0], b[1:])
+			# sonraki karakter b[1], unsuz ise devam et
+			if self.unsuzMu(b[1]): 
+				# blok, 2 harfli ise hece bulundu
+				if uzunluk == 2: return (b[0:2], '')
+				# blok, 2 harften uzunsa sonraki karaktere b[2] bak
+				# sonraki karakter b[2] unlu ise hece bulundu
+				if self.unluMu(b[2]): return (b[0], b[1:])
+				# sonraki karakter b[2] unsuz ise devam et
+				if self.unsuzMu(b[2]):
+					# blok, 3 harfli ise hece bulundu
+					if uzunluk == 3: return (b[0:3], '')
+					# blok, 3 harften uzun ise sonraki karaktere b[3] bak
+					# sonraki karakter b[3] unlu ise hece bulundu
+					if self.unluMu(b[3]): return (b[0:2], b[2:])
+					# sonraki karakter b[3] unsuz ise devam et
+					if self.unsuzMu(b[3]):
+						# blok, 4 harfli ise hece bulundu
+						if uzunluk == 4: return (b[0:4], '')
+						# blok, 4 harften uzun ise sonraki karaktere b[4] bak
+						# sonraki karakter b[4] unlu ise cakismali durum
+						if self.unluMu(b[4]): return self.cakismaUclu(b, blok, ham)
+						# sonraki karakter b[4] unsuz ise devam et
+						if self.unsuzMu(b[4]):
+							# blok, 5 harfli ise hata var demektir
+							if uzunluk == 5: raise RuntimeError
+							# blok, 5 harften uzun ise sonraki karaktere b[5] bak
+							# sonraki karakter b[5] unlu ise cakismali durum
+							if self.unluMu(b[5]): return self.cakismaDortlu(b, blok, ham)
+							# sonraki karakter b[5] unsuz ise devam et
+							if self.unsuzMu(b[5]):
+								# blok, 6 harfli ise hata var demektir
+								if uzunluk == 6: raise RuntimeError
+								# blok, 6 harften uzun ise sonraki karaktere b[6] bak
+								# sonraki karakter b[6] unlu ise cakismali durum
+								if self.unluMu(b[6]): return self.cakismaBesli(b, blok, ham)
+								# sonraki karakter b[6] unsuz ise devam et
+								if self.unsuzMu(b[6]):
+									# blok, 7 harfli ise hata var demektir
+									if uzunluk == 7: raise RuntimeError
+									# blok, 7 harften uzun ise sonraki karaktere b[7] bak
+									# sonraki karakter b[7] unlu ise hece bulundu
+									if self.unluMu(b[7]): return (b[0:4], b[4:])
+									# sonraki karakter b[7] unsuz ise hata var demektir
+									if self.unsuzMu(b[7]): raise RuntimeError
+
+			# bu kisma geldigine gore mevcut ihtimallerden hicbiri tutmamis demektir
+			# dolayisi ile hata var demektir
+			raise RuntimeError
+		except:
+			raise RuntimeError
+
+
+	# --------------------------------------------
+	def unluMu(self, harf):
+		if harf in RE_UNLU: return True
+		else: return False
+
+
+	# --------------------------------------------
+	def unsuzMu(self, harf):
+		if harf in RE_UNSUZ: return True
+		else: return False
+
+
+	# --------------------------------------------
+	def sertUnsuzMu(self, harf):
+		if harf in RE_SERT_UNSUZ: return True
+		else: return False
+
+
+	# --------------------------------------------
+	def cakismaUclu(self, b, blok, ham):
+		try:
+			# blok boyu 5 karakterden kisa ise hata var demektir
+			if len(b) <5: raise RuntimeError
+			# istisnalar
+			if b[1:4] == 'ktr': return (b[0:2], b[2:])
+			if b[1:4] == 'mbr': return (b[0:2], b[2:])
+			if b[1:4] == 'ntr':
+				if blok[0:5] == 'antre': pass
+				elif blok[0:6] == 'mantra': pass
+				else: return (b[0:2], b[2:])
+			# [azz] [za] durumu
+			if b[1:3] in SONDA_UNSUZ_IKILI: return (b[0:3], b[3:])
+			# [az] [zza] durumu
+			if b[2:4] in BASTA_UNSUZ_IKILI: return (b[0:2], b[2:])
+			# [azzz] [a] durumu
+			# istisna
+			# [a] [zzza] durumu
+			# istisna
+
+			# ihtimallerden biri uymadiysa tanimlanamayan durum var demektir
+			raise RuntimeError
+		except:
+			raise RuntimeError
+
+
+	# --------------------------------------------
+	def cakismaDortlu(self, b, blok, ham):
+		try:
+			# blok boyu 6 karakterden kisa ise hata var demektir
+			if len(b) <6: raise RuntimeError
+			# istisnalar
+			if b[1:4] == 'ntr': return (b[0:2], u'tır%s' % b[4:])
+			# [azzz] [za] durumu
+			if b[1:4] in SONDA_UNSUZ_UCLU: return (b[0:4], b[4:])
+			# [azz] [zza] durumu
+			if b[1:3] in SONDA_UNSUZ_IKILI and b[3:5] in BASTA_UNSUZ_IKILI: return (b[0:3], b[3:])
+			# [az] [zzza] durumu
+			if b[2:5] in BASTA_UNSUZ_UCLU: return (b[0:2], b[2:])
+			# [azzzz] [a] durumu
+			# istisna
+			# [a] [zzzza] durumu
+			# mumkun degil
+
+			# ihtimallerden biri uymadiysa tanimlanamayan durum var demektir
+			raise RuntimeError
+		except:
+			raise RuntimeError
+
+
+	# --------------------------------------------
+	def cakismaBesli(self, b, blok, ham):
+		try:
+			# blok boyu 7 karakterden kisa ise hata var demektir
+			if len(b) <7: raise RuntimeError
+			# istisnalar
+			if blok[0:7] == 'kontrpl': return ('on', u'tırpıl%s' % b[6:])
+			# [azzzz] [za] durumu
+			if b[1:5] in SONDA_UNSUZ_DORTLU: return (b[0:5], b[5:])
+			# [azzz] [zza] durumu
+			if b[1:4] in SONDA_UNSUZ_UCLU and b[4:6] in BASTA_UNSUZ_IKILI: return (b[0:4], b[4:])
+			# [azz] [zzza] durumu
+			if b[1:3] in SONDA_UNSUZ_IKILI and b[3:6] in BASTA_UNSUZ_UCLU: return (b[0:3], b[3:])
+			# [az] [zzzza] durumu
+			# mumkun degil
+			# [a] [zzzzza] durumu
+			# mumkun degil
+			# [azzzzz] [a] durumu
+			# mumkun degil
+
+			# ihtimallerden biri uymadiysa tanimlanamayan durum var demektir
+			raise RuntimeError
+		except:
+			raise RuntimeError
+
+		
+
+
+# -----------------------
+d = open('metin.txt')
+metin = d.read()
+metin = metin.decode('utf-8')
+d.close()
+
+k = Konusmaci()
+k.parser(metin)
+
+# tanimlanamayanlari listele
+for l in k.tanimsiz: print '[', l.encode('utf-8'), ']'

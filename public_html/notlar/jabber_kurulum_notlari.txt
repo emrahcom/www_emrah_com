@@ -1,0 +1,47 @@
+JABBER KURULUM NOTLARI
+
+* sunucu: ejabberd
+
+	- yükleme
+		apt-get install ejabberd
+			-> erlang-base
+			-> erlang-nox
+			-> odbcinst1
+			-> unixodbc
+
+		dpkg-reconfigure ejabberd
+		
+			hostname	: localhost
+			kullanıcı	: admin
+			parola		: xxxxx
+		
+		/etc/init.d/ejabberd restart
+	
+	
+	- portlar
+		tcp/4369	epmd
+		tcp/5222	jabber
+		tcp/5223	jabber (SSL)
+		tcp/5280	web interface
+		tcp/5269	server-to-server
+
+
+	- shorewall/firewall
+		tcp/5222	<- yerel ağ
+		tcp/5223	<- yerel ağ
+		tcp/5280	<- yerel ağ
+
+		/etc/init.d/shorewall restart
+
+	- web interface
+		http://192.168.1.1:5280/admin/
+		kullanıcı	: admin@localhost
+		parola		: xxxxx
+
+
+
+* istemci: psi
+
+	apt-get install psi
+
+	

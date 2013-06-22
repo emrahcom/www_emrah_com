@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>servis_init.txt</title>
+</head>
+<body>
+<pre><code>
+#! /bin/sh
+set -e
+
+# bu dosya, '/sbin/dosya_adi' adli programi servis olarak baslatacak kodlari icerir
+# servisin kendini arkaplana atamadigi varsayilmistir ve bu nedenle --background parametresi ile arkaplana atilir
+# servisin pid dosyasini olusturmadigi varsayilmistir ve bu nedenle --make-pidfile ile pid dosyasi olusturulur
+# bu dosyayi Debian icin /etc/init.d/ klasorune koymak ve
+# update-rc.d servis_adi start 90 2 .   komutu ile otomatik baslatilacak sekilde ayarlamak gerekir
+
+kullanici=emrah
+grup=emrah
+run_klasoru=/var/run/servis_adi
+pid_dosyasi=/var/run/servis_adi/servis_adi.pid
+servis_dosya=dosya_adi
+servis_dosya_uzun=/sbin/dosya_adi
+mesaj_baslama=&quot;Starting servis...: Servis_Adi&quot;
+mesaj_durdurma=&quot;Stopping servis...: Servis_Adi&quot;
+mesaj_calisiyor=&quot;[already running]&quot;
+
+# dosya yoksa veya calistirilabilir degilse cik
+test -x $servis_dosya_uzun || exit 0
+
+# servise ait klasoru olustur
+mkdir -p $run_klasoru
+
+# parametreye gore islemi yap
+case &quot;$1&quot; in
+	start)
+		 echo -n $mesaj_baslama
+		 # bu servis zaten calisiyorsa, yeniden baslatma
+		 if ps aux | grep $servis_dosya | grep grep -v &gt; /dev/null
+		 then
+		 	echo &quot; $mesaj_calisiyor&quot;
+		 else
+		 	start-stop-daemon --start --quiet --chuid $kullanici --group $grup \
+				--exec $servis_dosya_uzun --background \
+				--pidfile $pid_dosyasi --make-pidfile
+			echo &quot;.&quot;
+		 fi
+		 ;;
+	stop)
+		echo -n $mesaj_durdurma
+		start-stop-daemon --stop --quiet --pidfile $pid_dosyasi
+		echo &quot;.&quot;
+		;;
+esac
+
+exit 0
+</code></pre>
+</body>
+</html>

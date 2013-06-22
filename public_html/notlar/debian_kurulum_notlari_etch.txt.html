@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>debian_kurulum_notlari_etch.txt</title>
+</head>
+<body>
+<pre><code>
+DEBIAN KURULUM NOTLARI (ETCH)
+
+*** netinstall ile kur 
+	- Kurulum esnasında alınamayan paket olursa
+		tasksel install	-s	( standart	)
+				-r	( required	)
+				-i	( important	)
+				-n	( no UI		)
+	
+	- DNS
+		212.57.1.12
+		212.57.1.13
+		193.192.100.100
+		193.192.100.101
+		193.140.83.251
+
+
+
+------------------------------------------------------------------
+
+*** geliştirici makinesi değilse, /home ve /tmp partition'larında program çalıştırmaya izin verilmeyecek
+    paket yükleme aşamasında /tmp partition'inin çalışma iznini kapatmamak gerekiyor.
+
+/etc/fstab
+/dev/hda8	/home	ext3	defaults,noexec	0	2
+/dev/hda9	/tmp	ext3	defaults,noexec	0	2
+
+
+
+------------------------------------------------------------------
+
+*** paketleri download etmeye baslamadan once apt-proxy'e yönlendir, melez sistem ayarlarını yap
+
+/etc/apt/sources.list
+deb		http://localhost:9999/debian		etch			main contrib non-free
+deb-src		http://localhost:9999/debian		etch			main contrib non-free
+deb		http://localhost:9999/security		etch/updates		main contrib non-free
+deb-src		http://localhost:9999/security		etch/updates		main contrib non-free
+
+
+*** apt-proxy backends sunucu bilgileri
+
+/etc/apt-proxy/apt-proxy-v2.conf
+[debian]
+backends =
+	http://ftp.de.debian.org/debian
+	http://ftp2.de.debian.org/debian
+	http://ftp.us.debian.org/debian
+	ftp://ftp.uk.debian.org/debian
+
+
+[security]
+backends =
+	http://ftp.de.debian.org/debian-security
+	http://ftp2.de.debian.org/debian-security
+	http://security.debian.org/debian-security
+
+
+
+------------------------------------------------------------------
+
+*** X11 ayarları
+
+/etc/X11/XF86Config-4
+Section &quot;Device&quot;
+	Identifier	&quot;Generic Video Card&quot;
+	Driver		&quot;vesa&quot;
+EndSection
+
+Section &quot;Monitor&quot;
+	Identifier	&quot;PH107E/V/S/G6PHL&quot;
+	HorizSync	30-71
+	VertRefresh	50-160
+	Option		&quot;DPMS&quot;
+EndSection
+
+Section &quot;Screen&quot;
+	Identifier      &quot;Default Screen&quot;
+	Device          &quot;Generic Video Card&quot;
+	Monitor         &quot;PH107E/V/S/G6PHL&quot;
+	DefaultDepth    16
+	SubSection &quot;Display&quot;
+		Depth           1
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           4
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           8
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           15
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           16
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+	SubSection &quot;Display&quot;
+		Depth           24
+		Modes           &quot;1024x768&quot; &quot;800x600&quot; &quot;640x480&quot;
+	EndSubSection
+EndSubSection
+
+
+
+------------------------------------------------------------------
+
+*** Grub ayarları /etc/grub/menu.lst
+
+	- Grub menüsü 1 sn gözüksün
+		timeout	1
+	
+	- konsol ekranı 8 bit 1024x768 kullansın ( vga=773 )
+		. kernel	/vmlinuz-2.6.8-2-686 root=/dev/hda6 ro vga=773
+
+		. grub için vga değerleri tablosu
+
+			renk		640x480		800x600		1024x768	1280x1024
+			-------------	---------	---------	---------	---------
+			256	(8b )	769		771		773		775
+			32000	(15b)	784		787		790		793
+			65000	(16b)	785		788		791		794
+			16.7 M	(24b)	786		789		792		795
+
+
+
+------------------------------------------------------------------
+
+*** Shorewall kurulumu
+	- Shorewall kurulum notlarında anlatıldığı gibi kurulum yapılır
+
+
+
+------------------------------------------------------------------
+
+*** aptitude install 
+	rcconf				( hangi servislerin çalışacağını ayarlamak için )
+	openssh-server			( SSH sunucu					)
+	bind9				( DNS sunucu					)
+	pure-ftpd			( FTP sunucu					)
+	fluxbox
+	epiphany-browser
+	vim
+	vim-python
+	screen
+	numlockx
+	unzip
+	zip
+	unrar
+	wget
+	curl
+	ncftp
+	rox-filer
+	krusader
+	gnome-terminal
+	xchat/irssi
+	beep-media-player
+	xscreensaver
+
+
+*** Duruma göre yüklenebilecek paketler
+	python-serial			( Seri portu kullanan Python uygulamaları yazılacaksa...	)
+	python-parallel			( Parallel portu kullanan Python uygulamaları yazılacaksa...	)
+	
+	sqlite3				( sqlite kullanılacaksa... 					)
+	python-sqlite			( sqlite kullanılacaksa... 					)
+
+	qt4-designer			( qt4 kullanılacaksa...						)
+	qt4-dev-tools			( qt4 kullanılacaksa...						)
+	qt4-doc				( qt4 kullanılacaksa...						)
+	pyqt4-dev-tools			( qt4 kullanılacaksa...						)
+	python-qt4			( qt4 kullanılacaksa...						)
+	python-qt4-sql			( qt4 kullanılacaksa...						)
+	python-qt4-doc			( qt4 kullanılacaksa...						)
+	
+	lshw				( donanım hakkında ayrıntılı bilgi almak için			)
+
+
+* saat
+	date mmddhhmm
+
+
+* home yetkileri
+	chmod 700 /root
+	chmod 700 /home/kullanici
+
+
+* rcconf
+	- kullanılmayacak servisleri kapat
+
+
+* pure-ftpd
+	- echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/ChrootEveryone
+	- echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/NoAnonymous
+	- echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/DontResolve
+
+	* anonymous ftp olacaksa
+		adduser --system --group ftp
+		echo &quot;no&quot; &gt; /etc/pure-ftpd/conf/NoAnonymous
+
+
+* bind9
+	- /etc/resolv.conf
+		nameserver 127.0.0.1
+
+	- /etc/network/interfaces
+		dns-nameservers 127.0.0.1
+
+
+* exim4, procmail, fetchmail, mutt
+	- E-mail Notları'nda anlatıldığı gibi kurulacak
+
+
+* numlockx
+	- grafik ekranda terminal açıp
+		numlockx on
+
+
+* mozilla, firefox, epiphany
+	- default değerleri set etmek için biraz surf yap
+	- mozilla-firefox about:config
+		network.http.pipelining				true
+		network.http.proxy.pipelining			true
+		network.http.pipelining.maxrequests		100
+		accessibility.typeaheadfind			true
+		accessibility.typeaheadfind.linksonly		true
+		accessibility.typeaheadfind.timeout		2500
+		general.useragent.override			Googlebot/2.1 (+http://www.googlebot.com/bot.html) 
+			(üyelik gerektiren bazı sitelere, login olmadan girmeyi sağlıyor)
+	- extension'lar
+		https://addons.mozilla.org/extensions/					( toplist	)
+		https://addons.mozilla.org/en-US/firefox/addon/4891			( vimperator	)
+		https://addons.mozilla.org/en-US/firefox/addon/722			( NoScript	)
+	
+	- flash
+		wget http://fpdownload.macromedia.com/get/flashplayer/current/install_flash_player_9_linux.tar.gz
+		tar zxf install_flash_player_9_linux.tar.gz
+		cd install_flash_player_9_linux/
+		su
+		./flashplayer-installer
+
+		Sarge için /usr/lib/firefox
+		Etch için /usr/lib/iceweasel
+		
+		
+
+* vim
+	- root ve kullanıcı için .vimrc
+		:syntax on
+		:set is
+		:set ic
+		:set hidden
+		:set tabstop=8
+		:set shiftwidth=8
+
+* .bashrc
+	- root ve kullanıcı için .bashrc
+		alias rm='rm -i'
+		alias ll='ls -alh'
+		alias df='df -h'
+
+
+* apt-proxy deposunda bütün paketlerin yer alması için
+	aptitude clean
+	COLUMNS=200 dpkg -l | awk '/&circ;ii/ {print $2}' | xargs aptitude install -d --reinstall -y
+	aptitude install -d kde gnome
+
+
+* silinecek paketler
+	aptitude purge nfs-common
+	aptitude purge ppp		(dialup modem olmayacaksa...	)
+	aptitude purge lpr		(printer olmayacaksa...		)
+	aptitude purge portmap		(Gnome kullanılmayacaksa...	)
+
+
+* aptitude autoclean
+
+
+
+
+------------------------------------------------------------------
+
+*** sshd ayarları ve kullanici ayarları
+
+	- /etc/ssh/sshd_config
+		PermitRootLogin		No
+		AllowUsers		kullanici_adi
+	
+
+	- /home/kullanici/.ssh/rc
+		makine=`cat /etc/hostname`
+		kimlik=`whoami`
+		adres=$SSH_CONNECTION
+		tarih=`date`
+
+		echo -e &quot;makine\t: $makine\n\
+		kimlik\t: $kimlik\n\
+		adres\t: $adres\n\
+		tarih\t: $tarih&quot;\
+		| mail -s &quot;$makine ssh baglanti raporu&quot; mail@adres.com
+	
+		
+
+
+------------------------------------------------------------------
+
+*** arayüz ayarları
+
+	- Fluxbox için...
+	
+		- &tilde;/.fluxbox/keys dosyası, &quot;Fluxbox Kısayolları&quot; notundaki gibi düzenlenecek
+
+		- &tilde;/.fluxbox/apps dosyasina
+			[startup]	{xscreensaver}
+		
+		- kullanıcı için...
+			. anti-alias
+			. full maximization -&gt; off
+			. styles -&gt; Spiff veya Twice veya Operation
+			. saat	-&gt; %d/%m/%Y %H:%M:%S
+
+
+------------------------------------------------------------------
+
+*** Yedekleme
+	- Yedekleme Notları'ndaki talimatlara göre yedekleme yapılacak
+
+
+
+</code></pre>
+</body>
+</html>

@@ -1,0 +1,68 @@
+#!/usr/bin/python
+
+import sys
+import delta
+import time
+
+x = delta.surucu()
+x.port      = 0
+x.surucu_no = "01"
+x.baudrate  = 38400
+x.bytesize  = 7
+x.parity    = 'N'
+x.stopbits  = 2
+x.timeout   = 2
+
+
+# komut satirinda arguman verilmis mi
+for arg in sys.argv:
+    # resetleme argumani varsa
+    if arg == '--reset': 
+        x.parametreYaz(adres='0208', deger=10)
+        print 'Servo surucu parametreleri resetlendi'
+        sys.exit(0)
+
+
+# degistirilecek parametrelerin listesi
+parametre_listesi = {   '0100': 2,      # external pulse input type                     default = 2
+                        '0101': 0,      # control mode and output direction             default = 0
+                        '0102': 0,      # speed and torque limit                        default = 0
+                        '0108': 0,      # smooth constant of position command (low pass filter) default = 0 ms
+                        '0132': 0,      # motor stop mode selection                     default = 0
+                        '0137': 10,     # ratio of load inertia to servo motor inertia  default = 10 J_load/J_motor
+                        '0138': 10,     # Zero Speed Range Setting                      default = 10 rpm
+                        '0144': 1,      # Electronic Gear Ratio (1st Numerator)         default = 1 pulse
+                        '0145': 1,      # Electronic Gear Ratio (Denominator)           default = 1 pulse
+                        '0154': 100,    # Positioning Completed Width                   default = 100 pulse
+                        '0155': 3000,   # Maximum Speed Limit                           default = 3000 rpm
+                        '0200': 50,     # proportional position loop gain               default = 50 rad/s
+                        '0201': 100,    # position loop gain switching rate             default = 100 %
+                        '0202': 0,      # position feed forward gain                    default = 0 %
+                        '0203': 5,      # smooth constant of position feed forward gain default = 5 ms
+                        '0209': 2,      # bounce filter                                 default = 2 ms
+                        '0210': 101,    # Digital input terminal 1                      default = 101 (SON  normally open)
+                        '0211': 102,    # Digital input terminal 2                      default = 102 (ARST normally open)
+                        '0212': 104,    # Digital input terminal 3                      default = 104 (CCLR normally open)
+                        '0213': 0,      # Digital input terminal 4                      default = 22  (CWL  normally closed)
+                        '0214': 0,      # Digital input terminal 5                      default = 23  (CCWL normally closed)
+                        '0215': 0,      # Digital input terminal 6                      default = 21  (EMGS normally closed)
+                        '0218': 101,    # Digital Output Terminal 1 (DO1)               default = 101 (SRDY normally open)
+                        '0219': 103,    # Digital Output Terminal 2 (DO2)               default = 103 (ZSPD normally open)
+                        '0220': 7,      # Digital Output Terminal 3 (DO3)               default = 7   (ALRM normally closed)
+                        '0223': 1000,   # Notch Filter (Resonance Suppression)          default = 1000 Hz
+                        '0224': 0,      # Notch Filter Attenuation Rate                 default = 0 dB
+                        '0225': 20,     # Low-pass Filter Time Constant                 default = 20 ms
+                        '0230': 0,      # Auxiliary function                            default = 0 
+                        '0231': 6,      # Auto Stiffness and Responsiveness Level       default = 6
+                        '0232': 0,      # Tuning Mode Selection                         default = 0   (Manual mode)
+                        '0249': 110,    # Speed Detection Filter and Jitter Suppression default = 110
+        }
+
+
+# listedeki butun parametreler icin yeni degerleri servo surucuye yaz
+for adres, deger in sorted(parametre_listesi.iteritems()):
+    adresHex = "%s%02X" % (adres[:2], int(adres[-2:]))
+    try:
+        print 'parametre %s: %d -> %d %s' % (adres, x.parametreOku(adresHex), deger, x.parametreYaz(adresHex, deger))
+    except:
+        print 'parametre %s: HATA (%s)' % (adres, x.error)

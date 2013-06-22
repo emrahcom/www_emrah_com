@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>beyhouse.tcl.txt</title>
+</head>
+<body>
+<pre><code>
+package require mysqltcl
+
+namespace eval ::beyhouse {
+	variable bot_adi	&quot;beyhouse bot&quot;
+	variable host		&quot;127.0.0.1&quot;
+	variable port		&quot;3306&quot;
+	variable user		&quot;beyhouse&quot;
+	variable pass		&quot;beyhouse&quot;
+	variable db_adi		&quot;beyhouse&quot;
+	variable bag		&quot;&quot;
+}
+
+# modul yuklendiginde bu bolum calisir
+proc ::beyhouse::Init { dir } {
+	global mysqlstatus
+	
+	variable host
+	variable port
+	variable user
+	variable pass
+	variable db_adi
+	variable bag
+	
+	catch {mysqlconnect -host $host -port $port -user $user -password $pass -db $db_adi} bag
+
+	if {$mysqlstatus(code) == 0} {
+		::plugins::RegisterPlugin &quot;Bey House&quot;
+		::beyhouse::RegisterEvents
+		puts &quot;BeyHouse yüklendi&quot;
+	} else {
+		puts &quot;BeyHouse yüklenemedi&quot;
+		puts $mysqlstatus(message)
+	}
+}
+
+
+# ----------------------------------------------------------------------
+# hangi olaylarda plugin'in devreye girecegini belirleyen bolum
+proc ::beyhouse::RegisterEvents {} {
+	::plugins::RegisterEvent &quot;Bey House&quot; chat_msg_received KelimeyiAl
+}
+
+
+# ----------------------------------------------------------------------
+# karsi taraftan kelime gelince calisacak bolum
+proc ::beyhouse::KelimeyiAl { olay parametreler } {
+	upvar 2 chatid	id
+	upvar 2 nick	lakap
+	upvar 2 msg	mesaj
+
+	::beyhouse::AnlaminiGonder $id $lakap $mesaj
+}
+
+
+# ----------------------------------------------------------------------
+# kelimenin anlamini gonderen bolum
+proc ::beyhouse::AnlaminiGonder { id lakap mesaj } {
+	variable bot_adi
+	variable bag
+	
+	if {![string equal $lakap $bot_adi]} {
+		if {[regexp {&circ;\s*([\w]+)} $mesaj cumle kelime]} {
+			set sorgu [mysqlquery $bag &quot;SELECT * FROM sozluk WHERE kelime='$kelime'&quot;]
+	
+			while {[set kayit [mysqlnext $sorgu]] != &quot;&quot;} {
+				set anlam [lindex $kayit 2] 
+				::MSN::messageTo $id $anlam 0 $bot_adi
+			}
+	
+			mysqlendquery $sorgu
+		}
+	}
+}
+</code></pre>
+</body>
+</html>

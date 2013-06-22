@@ -1,0 +1,68 @@
+Grub2 Notları
+-------------
+
+. Debian Netinstall ISO'su ile Grub'dan boot etme
+  ISO dosyasının ext2 partitionda olması gerekiyor
+  ISO'nun /boot altında olması, işleri kolaylaştırıyor. Link de olur
+
+	mkdir -p /boot/iso
+	cd /boot/iso
+	wget http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/i386/iso-cd/debian-testing-i386-netinst.iso
+	wget ftp://ftp.debian.org/debian/dists/squeeze/main/installer-i386/current/images/hd-media/vmlinuz
+	wget ftp://ftp.debian.org/debian/dists/squeeze/main/installer-i386/current/images/hd-media/initrd.gz
+	cd ../
+	ln -s iso/debian-testing-i386-netinst.iso .
+
+	/etc/grub.d/50_iso
+		#!/bin/sh
+		cat <<EOF
+		menuentry 'Debian GNU/Linux NetInstall' --class debian --class gnu-linux --class gnu --class os {
+			insmod part_msdos
+			insmod ext2
+			set root='(hd0,msdos1)'
+			echo    'Loading Linux ...'
+			linux	/boot/iso/vmlinuz noeject noprompt
+			echo    'Loading initial ramdisk ...'
+			initrd	/boot/iso/initrd.gz
+		}
+		EOF
+
+
+	update-grub
+
+
+. Grub2 ile USB'den boot eden Debian Netinstall
+  USB /dev/sdb olsun
+
+	fdisk /dev/sdb
+		Bootable yeni partition oluştur
+
+	mkfs.ext2 /dev/sdb1
+	mkdir -p /media/usb
+	mount /dev/sdb1 /media/usb
+	grub-install --root-directory=/media/usb /dev/sdb1
+	grub-mkconfig >/media/usb/boot/grub/grub.cfg
+
+	/media/usb/boot/grub/grub.cfg uygun şekilde düzenlenir.
+	'Debian Netinstall ISO'su ile Grub'dan boot etme' bölümünde 
+	anlatılanlar bu bölüme uygun şekilde uygulanır.	
+		
+
+. Grub2 parola
+  Boot esnasında menu seçenekleri değiştirilmek istendiğinde parola sorar
+
+	. parola için hash alınır
+		grub-mkpasswd-pbkdf2
+
+	. /etc/grub.d/01_password
+		#!/bin/sh
+		cat <<EOF
+		set superusers="emrah"
+		password_pbkdf2 emrah grub.pbkdf2.sha512.10000.596F22EFFB36830CAF9C22B.....
+		EOF
+
+	. chmod 755 /etc/grub.d/01_password
+
+	. update-grub
+
+

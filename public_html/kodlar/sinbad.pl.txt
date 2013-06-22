@@ -1,0 +1,1011 @@
+#!/usr/bin/perl -w
+
+# Proje				: Sinbad
+# Dosya				: sinbad.pl
+# Surum				: 0.01.0027
+# Son degisiklik tarihi		: 01/01/2006 22:00
+# Son degisikligi yapan		: emrah (emrah_5 at yahoo.com)
+
+
+# ----------------------------------------------------------------------------
+#                     K U R U L U M    N O T L A R I
+# ----------------------------------------------------------------------------
+#
+# Bu programin calisabilmesi icin Perl'un yuklu olmasi ve bazi modullerin yuklenmesi gerekmektedir.
+# Perl modullerinin nasil yuklenecegi ile ilgili detayli bilgiye
+# http://www.perldoc.com/perl5.8.0/po...modinstall.html adresinden ulasabilirsiniz.
+# Program, Windows'da test edilmemistir.
+#
+#
+# ----------------------------------------------------------------------------
+#             L I N U X   S I S T E M L E R D E   K U R U L U M
+# ----------------------------------------------------------------------------
+#
+# Linux makineye kurulum icin asagidaki islemleri SIRASIYLA yapiniz (Bazi asamalarda sira onemli...)
+# Aksi belirtilmedigi surece asagidaki islemleri normal bir kullanici hesabi ile yapiniz.
+# "make install" komutunun kullanildigi asamada "root" olmaniz gerekmektedir. Eger "root" olmadan
+# bu islemi yapmak istiyorsaniz http://www.perldoc.com/perl5.8.0/po...modinstall.html sayfasini inceleyin.
+#
+# Modulleri download etmek icin http://www.cpan.org/modules/01modules.index.html adresine gidiniz
+# Su dosyalari download ediniz (versiyon numaralari degismis olabilir):
+# 	-> POE-0.29.tar.gz				( POE grubu, RCAPUTO	)
+#	-> POE-Component-IRC-2.9.tar.gz			( POE grubu, FIMM	)
+#	-> ParallelUserAgent-2.57.tar.gz		( LWP grubu, MARCLANG	)
+#	-> POE-Component-Client-UserAgent-0.06.tar.gz	( POE grubu, RCAPUTO	)
+#
+# Bu dosyalari aciniz (versiyon numaralari/dosya adi sizde farkli ise, komutu ona gore degistiriniz)
+#		tar -xzvf POE-0.29.tar.gz
+#		tar -xzvf POE-Component-IRC-2.9.tar.gz
+#		tar -xzvf ParallelUserAgent-2.57.tar.gz
+#		tar -xzvf POE-Component-Client-UserAgent-0.06.tar.gz
+#
+# Modulleri yukleyiniz (versiyon numaralarina dikkat)
+#	-> POE-0.29 icin
+#		cd POE-0.29
+#		perl Makefile.PL	( butun sorulari, ENTER'a tiklayarak geciniz				)
+#		make
+#		make test
+#		su			( bu asamada root olmamiz lazim, sorulunca root parolasini girin	)
+#		make install
+#		exit
+#		cd ..
+#
+#	-> POE-Component-IRC-2.9 icin
+#		cd POE-Component-IRC-2.9
+#		perl Makefile.PL
+#		make
+#		make test
+#		su			( bu asamada root olmamiz lazim, sorulunca root parolasini girin	)
+#		make install
+#		exit
+#		cd ..
+#
+#	-> ParallelUserAgent-2.57 icin
+#		cd ParallelUserAgent-2.57
+#		perl Makefile.PL
+#		make
+#		make test
+#		su			( bu asamada root olmamiz lazim, sorulunca root parolasini girin	)
+#		make install
+#		exit
+#		cd ..
+#
+#	-> POE-Component-Client-UserAgent-0.06 icin
+#		cd POE-Component-Client-UserAgent-0.06
+#		perl Makefile.PL
+#		make
+#		make test
+#		su			( bu asamada root olmamiz lazim, sorulunca root parolasini girin	)
+#		make install
+#		exit
+#		cd ..
+#
+# sinbad.pl dosyasinin calistirilabilmesi icin gerekli haklari veriniz
+# bunun icin sinbad.pl dosyasinin oldugu klasore gectikten sonra su komutu yaziniz
+#		chmod 700 sinbad.pl
+#
+# Eger bu asamalarda bir sorun yasamadiysaniz artik bot'umuzu calistirabiliriz.
+# sinbad.pl dosyasinin oldugu klasore gectikten sonra su komutu yaziniz
+#		./sinbad.pl &
+
+
+use strict;
+use POE;
+use POE::Component::IRC;
+use POE::Component::Client::UserAgent;
+
+
+
+my $DEBUG_MODE			= 0;						# test modu icin 1, normal calisma modu icin 0
+
+my $USERAGENT_ALIAS		= "useragent_alias";				# UserAgent (HTTP istemci) icin kullanilacak kod
+my $USERAGENT_NAME		= "Sinbad HTTP Client 0.01.0027";		# UserAgent (HTTP istemci) icin kullanilacak istemci adi
+my $USERAGENT_TIMEOUT		= 60;						# UserAgent (HTTP istemci) icin zaman asimi suresi (saniye)
+
+my $BOTS_WEB_ADDRESS		= "http://www.site.net";			# bot listesinin bulundugu web sayfasinin adresi
+my $BOTS_WEB_PASSWORD		= "parola";					# bot listesinin bulundugu web sayfasinin parolasi
+my $BOTS_WEB_FORMAT		= "";						# bot listesinin hangi formatta istendigi
+
+my $USERLIST_WEB_ADDRESS	= "http://www.site.net/sinbad/liste_al.php";	# Nickname listesinin gonderilecegi site
+my $USERLIST_WEB_PASSWORD	= "parola";					# Web sitesine veri gonderirken kullanilacak kod/parola
+
+
+
+
+# -------------------------- m a i n ------------------------------
+# programin ana govdesi
+# program calismaya bu bolumden baslar
+
+# bot listesini al
+my @bot_collection = get_bot_collection(
+						$USERAGENT_NAME,
+						$USERAGENT_TIMEOUT,
+						$BOTS_WEB_ADDRESS,
+						$BOTS_WEB_PASSWORD,
+						$BOTS_WEB_FORMAT
+					);
+
+# bot nesnelerini ve bot oturumlarini (session) olustur
+create_sessions(
+			$USERAGENT_ALIAS,
+			$USERAGENT_NAME,
+			$USERAGENT_TIMEOUT,
+			$USERLIST_WEB_ADDRESS,
+			$USERLIST_WEB_PASSWORD,
+			@bot_collection
+		);
+
+# kernel (cekirdek) calistirilmaya baslaniyor
+$poe_kernel->run();
+
+exit 0;
+
+# program bu bolumde son bulur
+# -------------------------- e n d ---------------------------------
+
+
+
+
+# --------------------- f o n k s i y o n l a r -------------------
+# bot listesi, web sunucudan alan bolum
+sub get_bot_collection {
+	my $web_address			= shift;		# Bot bilgilerinin istenecegi web sayfasinin adresi
+	my $web_password		= shift;		# Bot bilgilerinin istenecegi web sayfasinin parolasi
+	my $web_format			= shift;		# Bot bilgilerinin hangi formatta istenecegi
+	my $useragent_name		= shift;		# UserAgent (HTTP istemci) icin kullanilacak istemci adi
+	my $useragent_timeout		= shift;		# UserAgent (HTTP istemci) icin zaman asimi suresi (saniye)
+
+	# UserAgent nesnesi olusturuluyor
+	my $useragent = LWP::UserAgent->new(	agent		=> $useragent_name,
+						timeout		=> $useragent_timeout
+					);
+	# HTTP istegi icin istek nesnesi olusturuluyor
+	my $request = HTTP::Request->new(POST => $web_address);
+	$request->content_type("application/x-www-form-urlencoded");
+	$request->content(	"kod="		. $web_password .
+				"&format="	. $web_format
+			);
+
+	# Web sayfasindan gelecek cevabi tutacak olan cevap nesnesi olusturuluyor
+	my $response = $useragent->request($request);
+
+	if ($response->is_success) {
+		print($response->content);
+	}
+	else
+	{
+		print("hata\n");
+	}
+
+	# @bot_collection dizisinde, kontrol edilecek bot'larin bilgileri yer alir.
+	# istenildigi kadar bot tanimlanabilir, yalniz ayni IRC sunucuya baglanacak
+	# her bir bot icin farkli bir irc_nickname vermek gerekir.
+	# code			=> her bot icin farkli olan bir kod isim			(or: "sinbad_bot_01"		)
+	# irc_server 		=> baglanilacak IRC sunucu 					(or: "irc.freenode.net"		)
+	# irc_port		=> baglanti kurulacak TCP portu					(or: 6667			)
+	# irc_channels		=> baglanilacak IRC kanallari					(or: ("#kanal1", "#kanal2")	)
+	# irc_nickname		=> bot nickname							(or: "sinbad"			)
+	# irc_password		=> bot parola							(or: "sinbad2424"		)
+	# irc_username		=> bot kullanici adi						(or: "sinbad"			)
+	# irc_ircname		=> bot IRC adi							(or: "sinbad"			)
+	# irc_ctcp_version	=> CTCP VERSION isteklerine verilecek cevap			(or: "Sinbad IRC Bot 0.01.0027"	)
+	# irc_ctcp_clientinfo	=> CTCP USERINFO isteklerine verilecek cevap			(or: "Sinbad IRC Bot"		)
+	# irc_ctcp_userinfo	=> CTCP CLIENTINFO isteklerine verilecek cevap			(or: "Sinbad IRC Bot"		)
+	# irc_txt_join		=> kanala girildiginde gonderilecek mesaj			(or: "selam"			)
+	# irc_txt_quit		=> IRC sunucudan ayrilirken gonderilecek mesaj			(or: "bye"			)
+	# irc_txt_msg		=> /msg ile ozel mesaj gonderenlere gonderilecek mesaj		(or: "ben bir botum"		)
+	# irc_timer_keep_alive	=> keep_alive fonksiyonunun kac saniyede bir calistirilacagi	(or: 300			)
+	# irc_timer_rejoin	=> bot kanaldan atilirsa, kac saniye sonra kanala donecegi	(or: 30				)
+
+	my @bot_collection = (
+				{
+				code			=> "sinbad_bot_01",
+				irc_server 		=> "irc.freenode.net",
+				irc_port		=> 6667,
+				irc_channels		=> ["#kanal1", "#kanal2"],
+				irc_nickname		=> "bot_snd_01",
+				irc_password		=> "",
+				irc_username		=> "bot_snd_01",
+				irc_ircname		=> "bot_snd_01",
+				irc_ctcp_version	=> "Sinbad IRC Bot 0.01.0027",
+				irc_ctcp_clientinfo	=> "Sinbad IRC Bot",
+				irc_ctcp_userinfo	=> "Sinbad IRC Bot",
+				irc_txt_join		=> "selam",
+				irc_txt_quit		=> "bye",
+				irc_txt_msg		=> "ben bir botum",
+				irc_timer_keep_alive	=> 300,
+				irc_timer_rejoin	=> 30
+				},
+
+				{
+				code			=> "sinbad_bot_02",
+				irc_server 		=> "irc.freenode.net",
+				irc_port		=> 6667,
+				irc_channels		=> ["#kanal2", "#kanal3"],
+				irc_nickname		=> "bot_snd_02",
+				irc_password		=> "",
+				irc_username		=> "bot_snd_02",
+				irc_ircname		=> "bot_snd_02",
+				irc_ctcp_version	=> "Sinbad IRC Bot 0.01.0027",
+				irc_ctcp_clientinfo	=> "Sinbad IRC Bot",
+				irc_ctcp_userinfo	=> "Sinbad IRC Bot",
+				irc_txt_join		=> "selam",
+				irc_txt_quit		=> "bye",
+				irc_txt_msg		=> "ben bir botum",
+				irc_timer_keep_alive	=> 300,
+				irc_timer_rejoin	=> 30
+				}
+	);
+
+	return @bot_collection;
+
+}
+
+
+
+# bot nesnelerini ve bot oturumlarini (session) olusturan bolum
+sub create_sessions {
+	my $useragent_alias		= shift;
+	my $useragent_name		= shift;
+	my $useragent_timeout		= shift;
+	my $userlist_web_address	= shift;
+	my $userlist_web_password	= shift;
+	my @bot_collection = @_;
+
+	# UserAgent (HTTP istemci) nesnesi olusturuluyor
+	# bu nesne, web sunucu ile baglanti saglayacak
+	POE::Component::Client::UserAgent->new(
+						{
+						alias 		=> $useragent_alias,
+						agent 		=> $useragent_name,
+						timeout		=> $useragent_timeout
+						}
+					) or die("error\n");
+
+	# bot koleksiyonumuzda (@bot_collection) yer alan her bir bot icin
+	# ayri bir IRC nesnesi ve oturum (session) olustur
+	foreach my $bot (@bot_collection) {
+		# her bot icin bir IRC nesnesi olusturuluyor
+		# bu nesne, IRC sunucu ile baglanti saglayacak
+		POE::Component::IRC->new($bot->{code}) or die("error\n");;
+
+		# her bot icin bir oturum (session) aciliyor
+		# oturum (session) esnasinda kullanilacak secenekler (options) belirleniyor
+		# oturum (session) esnasinda olusacak olaylar icin hangi fonksiyonlarin calistirilacagi belirtiliyor
+		create POE::Session (
+			options				=> {
+				code			=> $bot->{code},			# botun kod adi
+				irc_server 		=> $bot->{irc_server},			# baglanilacak IRC sunucu
+				irc_port		=> $bot->{irc_port},			# baglanti kurulacak TCP portu
+				irc_channels		=> $bot->{irc_channels},		# baglanilacak IRC kanal(lar)i
+				irc_nickname		=> $bot->{irc_nickname},		# bot nickname
+				irc_password		=> $bot->{irc_password},		# bot parola
+				irc_username		=> $bot->{irc_username},		# bot kullanici adi
+				irc_ircname		=> $bot->{irc_ircname},			# bot IRC adi
+				irc_ctcp_version	=> $bot->{irc_ctcp_version},		# CTCP VERSION isteklerine verilecek cevap
+				irc_ctcp_clientinfo	=> $bot->{irc_ctcp_clientinfo},		# CTCP USERINFO isteklerine verilecek cevap
+				irc_ctcp_userinfo	=> $bot->{irc_ctcp_userinfo},		# CTCP CLIENTINFO isteklerine verilecek cevap
+				irc_txt_join		=> $bot->{irc_txt_join},		# kanala girildiginde gonderilecek mesaj
+				irc_txt_quit		=> $bot->{irc_txt_quit},		# IRC sunucudan ayrilirken gonderilecek mesaj
+				irc_txt_msg		=> $bot->{irc_txt_msg},			# /msg ile ozel mesaj gonderenlere gonderilecek mesaj
+				irc_timer_keep_alive	=> $bot->{irc_timer_keep_alive},	# keep_alive fonksiyonunun kac saniyede bir calistirilacagi
+				irc_timer_rejoin	=> $bot->{irc_timer_rejoin},		# bot kanaldan atilirsa, kac saniye sonra kanala donecegi
+			},
+
+			inline_states			=> {
+				_start 			=> \&_start,				# session basladiginda
+				_stop 			=> \&_stop,				# session sonlandirilirken
+				keep_alive 		=> \&keep_alive,			# bot'u canli tutmak icin
+				irc_error 		=> \&irc_error,				# hata olustugunda
+				irc_sockerr 		=> \&irc_sockerr,			# socket hatasi olustugunda
+				irc_disconnected	=> \&irc_disconnected,			# IRC baglantisi koptugunda
+				connect 		=> \&connect,				# IRC sunucuya baglanmak icin
+				join 			=> \&join,				# IRC kanalina girmek icin
+				irc_001			=> \&irc_001,				# IRC sunucuya baglanildiginda
+				irc_302			=> \&irc_302,				# USERHOST komutuna sunucudan cevap geldiginde
+				irc_353			=> \&irc_353,				# IRC kanalindakilerin listesi geldiginde
+				irc_366			=> \&irc_366,				# IRC kanalindakilerin listesi bittiginde
+				irc_ctcp_ping		=> \&irc_ctcp_ping,			# CTCP PING istegi geldiginde
+				irc_ctcp_version	=> \&irc_ctcp_version,			# CTCP VERSION istegi geldiginde
+				irc_ctcp_userinfo	=> \&irc_ctcp_userinfo,			# CTCP USERINFO istegi geldiginde
+				irc_ctcp_clientinfo	=> \&irc_ctcp_clientinfo,		# CTCP CLIENTINFO istegi geldiginde
+				irc_join		=> \&irc_join,				# Birisi, IRC kanalina girdiginde
+				irc_part		=> \&irc_part,				# Birisi, IRC kanalindan ayrildiginda
+				irc_quit		=> \&irc_quit,				# Birisi, IRC sunucudan ayrildiginda
+				irc_kick		=> \&irc_kick,				# Birisi, IRC kanalindan atildiginda
+				irc_nick		=> \&irc_nick,				# Birisi, nickname'ini degistirdiginde
+				irc_msg			=> \&irc_msg,				# /msg ile ozel mesaj geldiginde
+				irc_public		=> \&irc_public,			# kanala mesaj geldiginde
+				useragent_request	=> \&useragent_request,			# HTTP istemcinin veri gondermesi icin
+				useragent_response	=> \&useragent_response,		# HTTP istemciye siteden veri geldiginde
+			} # inline_states sonu
+		); # session sonu
+	} # foreach sonu
+}
+# ---------------------- s e s s i o n  ---------------------------
+# kernel (cekirdek) calistirilmaya baslandiginda calisacak bolum
+# $poe_kernel->run();  bolumu kernel'i (cekirdegi) baslatiyor
+sub _start {
+	my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
+
+	# IRC sunucuya baglanildi mi?
+	#(0 => baglanilmadi, 1 => baglanildi)
+	$heap->{is_connected} = 0;
+
+	# IRC sunucudan herhangi bir veri geldi mi?
+	# (0 => gelmedi, 1 => geldi)
+	$heap->{seen_traffic} = 0;
+
+	# IRC sunucudan kac zamandir veri alınmadigi
+	# sunucuya yeni baglanildigi icin ilk deger 0
+	$heap->{idle_period_counter} = 0;
+
+	# IRC nesnesine, olusan her olaydan
+	# kernel'i haberdar etmesi soyleniyor
+	$kernel->post($session->option('code'), "register", "all");
+
+	# bot'u canli tutmak icin belli araliklarla calisacak olan
+	# keep_alive fonksiyonu, bir sure sonra calisacak sekilde ayarlaniyor.
+	# $bot->{irc_timer_keep_alive} degeri kadar saniye sonra keep_alive bolumu calisir
+	$kernel->delay("keep_alive", $session->option('irc_timer_keep_alive'));
+
+	# IRC sunucuya baglanti kuracak bolum calistiriliyor
+	$kernel->yield("connect");
+}
+
+
+
+# -----------------------------------------------------------------
+# Kernel'in (cekirdek) calismasi sonlanirken calisacak bolum
+sub _stop {
+	my ($kernel, $session) = @_[KERNEL, SESSION];
+
+	# IRC nesnesine, IRC sunucudan ayrilmasi soyleniyor
+	$kernel->post($session->option('code'), "quit", $session->option('irc_txt_quit'));
+}
+
+
+
+# -----------------------------------------------------------------
+# botu canli tutmak icin belli araliklarla IRC server'a 
+# USERHOST komutu gonderecek bolum
+sub keep_alive {
+	my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
+
+	# bos gecen period limiti henuz asilmadan
+	# eger veri alisverisi olduysa
+	if ($heap->{seen_traffic}) {
+		# veri alisverisi olmus, bos gecen period sayisi sifirlaniyor
+		$heap->{idle_period_counter} = 0;
+	}
+	else {
+		# veri alisverisi olmadigina gore
+		# bos gecen period sayisi bir arttiriliyor
+		$heap->{idle_period_counter}++;
+
+		# eger bos gecen period sayisi 1'i gectiyse, baglantida bir sorun olabilir. 
+		# IRC sunucunun en azindan, gonderilen USERHOST komutlarina cevap vermis olmasi gerekirdi.
+		# baglanti yeniden kurulacak
+		if ($heap->{idle_period_counter} > 1) {
+			$heap->{is_connected} = 0;
+			$kernel->yield("connect");
+		}
+		else {
+			# bos gecen period limiti henuz asilmadigina gore gore
+			# IRC nesnesine, IRC sunucuya USERHOST komutunu gondermesi soyleniyor.
+			# su an IRC sunucu baglantisi yoksa, bu islem yapilmayacak
+			$kernel->post($session->option('code'), "userhost", $session->option('irc_nickname'))
+					unless !$heap->{is_connected};
+		}
+	}
+
+	# veri alisverisi olup olmadigini tutan oturum degiskeni,
+	# bundan sonraki bekleme suresi boyunca veri alisverisi
+	# olup olmadiginin anlasilabilmesi icin resetleniyor
+	$heap->{seen_traffic} = 0;
+
+	# $bot->{irc_timer_keep_alive} degeri kadar saniye sonra
+	# tekrar keep_alive fonksiyonu calistirilacak
+	$kernel->delay("keep_alive", $session->option('irc_timer_keep_alive'));
+}
+
+
+
+# -----------------------------------------------------------------
+# hata olustugunda calisacak bolum
+sub irc_error {
+	my ($kernel, $heap) = @_[KERNEL, HEAP];
+
+	# baglanti koptu
+	$heap->{is_connected} = 0;
+
+	# 60 saniye sonra IRC sunucuya
+	# baglanti kuracak bolumu calistir
+	$kernel->delay("connect", 60);
+}
+
+
+
+# -----------------------------------------------------------------
+# socket hatasi olustugunda calisacak bolum
+sub irc_sockerr {
+	my ($kernel, $heap) = @_[KERNEL, HEAP];
+
+	# baglanti koptu
+	$heap->{is_connected} = 0;
+
+	# 60 saniye sonra IRC sunucuya
+	# baglanti kuracak bolumu calistir
+	$kernel->delay("connect", 60);
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC sunucu baglantisi koptuktan sonra calisacak bolum
+sub irc_disconnected {
+	my ($kernel, $heap) = @_[KERNEL, HEAP];
+
+	# baglanti koptu
+	$heap->{is_connected} = 0;
+
+	# 60 saniye sonra IRC sunucuya
+	# baglanti kuracak bolumu calistir
+	$kernel->delay("connect", 60);
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC sunucuya baglanmak icin bu bolum kullanilacak
+sub connect {
+	my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
+
+	# henuz IRC sunucu baglantisi saglanamadiysa, baglanmaya calis
+	if (!$heap->{is_connected}) {
+		# IRC nesnesine, IRC sunucusuya baglanmasi soyleniyor
+		$kernel->post($session->option('code'), "connect", {	Debug	 => $DEBUG_MODE,
+									Server	 => $session->option('irc_server'),
+									Port	 => $session->option('irc_port'),
+									Nick	 => $session->option('irc_nickname'),
+									Password => $session->option('irc_password'),
+									Username => $session->option('irc_username'),
+									Ircname	 => $session->option('irc_ircname')
+								}
+		);
+
+		# 60 saniye sonra tekrar baglanti kurmaya calis
+		# once $heap->{is_connected} degiskeni kontrol edilecegi icin
+		# eger baglanti kurulmussa, bu istek goz ardi edilir
+		$kernel->delay("connect", 60);
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC kanalina baglanmak icin bu bolum kullanilacak
+sub join {
+	my ($kernel, $session, $channel) = @_[KERNEL, SESSION, ARG0];
+
+	# IRC kanalinin adini duzenle
+	($channel) = ($channel =~ /(#\S*)/);
+
+	# IRC nesnesine, IRC kanalina baglanmasi soyleniyor
+	$kernel->post($session->option('code'), "join", $channel);
+	
+	# IRC bilesenine, IRC kanalina ilk mesaji gondermesi soyleniyor
+	$kernel->post($session->option('code'), "privmsg", $channel, $session->option('irc_txt_join'));
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC sunucuya baglandiktan sonra calisacak bolum
+sub irc_001 {
+	my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
+
+	# baglanti kuruldu
+	$heap->{is_connected} = 1;
+
+	# bot'un listesinde yer alan her IRC kanali icin
+	foreach my $channel (@{$session->option('irc_channels')}) {
+		# nickname'leri tutmak icin $heap'de yer ac
+		# array'in referansi $heap icinde tutulacak, degerler degil
+		$heap->{"nickname_list_of_" . lc($channel)} = [];
+					
+		# IRC kanalina baglan
+		$kernel->yield("join", $channel);
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC sunucudan USERHOST komutuna cevap geldiginde calisacak bolum
+# USERHOST komutu, baglantiyi canli tutumak icin belli araliklarla 
+# keep_alive fonksiyonu tarafindan gonderiliyor.
+# bu komuta cevap, 302 numarali IRC satiri ile geliyor.
+sub irc_302 {
+	my ($heap) = $_[HEAP];
+
+	# veri alisverisi oldu
+	$heap->{seen_traffic} = 1;
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC sunucudan kanaldakilerin listesi (NAMES) geldiginde calisacak bolum
+# kanalda cok fazla kisi varsa, birden fazla 353 satiri gelebilir
+sub irc_353 {
+	my ($kernel, $heap, $session, $arg1) = @_[KERNEL, HEAP, SESSION, ARG1];
+
+	# IRC sunucunun gonderdigi 353 satirindan 
+	# hangi kanal icin cevap verildigi ve kanaldakilerin listesi aliniyor
+	# (#\S*) bolumu, '#' ile baslayan ve bir bosluk karakterine rastlanilincaya kadar olan bolumu aliyor ($channel)
+	# \s*: bolumu, listenin baslayacagi bolume kadar atlatiyor. liste ':' karakterinden sonra basliyor
+	# (.*\S) bolumu, son bosluk karakterine kadar olan bolumu aliyor. yani isim listesi ($nicknames)
+	my ($channel, $nicknames) = ($arg1 =~ /(#\S*)\s*:(.*\S)\s*/);
+
+	# aralarinda bosluk karakteri olan isim listesi,
+	# bosluk karakterine gore parcalanarak isim dizisine donusturuluyor
+	my @nicknames = split /\s+/, $nicknames;
+
+	# eger gelen cevaplar, botun ilgilendigi kanallardan birisi icinse, nickname listesini duzenle
+	if ( array_lookup($session->option('irc_channels'), $channel) ) {
+		# kanaldakiler listesi tamamlanmis gozuktugu halde hala nickname'ler geliyorsa,
+		# bu yeni liste demektir, eski listeyi bosalt
+		# listenin henuz tamamlanmamis oldugunu gostermek icin
+		# $heap->{"is_nicklist_completed_for_" . lc($channel)} degerini sifirla
+		if ($heap->{"is_nickname_list_completed_for_" . lc($channel)}) {
+			@{$heap->{"nickname_list_of_" . lc($channel)}} = ();
+			$heap->{"is_nickname_list_completed_for_" . lc($channel)} = 0;
+		}
+
+		# kanaldakilerin nickname'lerini, $heap->{"nickname_list_of_" . lc($channel)} 
+		# degiskeninin isaret ettigi array'in icine koy
+		foreach my $element (@nicknames) {
+			# nickname'lerin onunde eger op (@) ve voice (+) isareti varsa
+			# bunlar goz ardi edilip, sadece nickname aliniyor
+			$element =~ /(@|\+|)(\S*)/;
+			
+			# bir onceki islemde ikinci parantez (\S*) arasinda kalan bolumu al
+			$element = $2;
+
+			# nickname, listeye ekleniyor
+			array_add($heap->{"nickname_list_of_" . lc($channel)}, $element);
+		}
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC sunucudan kanaldakilerin listesin bittigini gosteren 366 satiri gelince calisacak bolum
+sub irc_366 {
+	my ($kernel, $heap, $session, $arg1) = @_[KERNEL, HEAP, SESSION, ARG1];
+
+	# nickname listesinin bittigini bildiren 366 satirindan, kanal adi aliniyor
+	# (#\S*) bolumu, '#' ile baslayan ve bir bosluk karakterine rastlanmadikca (\S) tekrar eden (*)
+	# karakterler grubunu aliyor. yani kanal adi ($channel)
+	my ($channel) = ($arg1 =~ /(#\S*)/);
+
+	# eger sonlanan nickname listesi, botun ilgilendigi kanallardan birisi icinse
+	if ( array_lookup($session->option('irc_channels'), $channel) ) {
+		# listenin bittigini gosteren degiskene, 1 degerini ata
+		$heap->{"is_nickname_list_completed_for_" . lc($channel)} = 1;
+		
+		# web sunucuya, kanaldakiler listesini gonder
+		$kernel->yield("useragent_request");
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# CTCP PING isteklerine cevap verecek olan bolum
+sub irc_ctcp_ping {
+	# $who		: CTCP PING isteginde bulunan kisi
+	# $msg		: CTCP PING ile gelen mesaj
+	my ($kernel, $session, $who, $msg) = @_[KERNEL, SESSION, ARG0, ARG2];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# CTCP PING istegine cevap gonder
+	$kernel->post($session->option('code'), "ctcpreply", $who, "PING $msg");
+}
+
+
+
+# -----------------------------------------------------------------
+# CTCP VERSION isteklerine cevap verecek olan bolum
+sub irc_ctcp_version {
+	# $who		: CTCP VERSION isteginde bulunan kisi
+	my ($kernel, $session, $who) = @_[KERNEL, SESSION, ARG0];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# CTCP VERSION istegine cevap gonder
+	$kernel->post($session->option('code'), "ctcpreply", $who, "VERSION " . $session->option('irc_ctcp_version'));
+}
+
+
+
+# -----------------------------------------------------------------
+# CTCP USERINFO isteklerine cevap verecek olan bolum
+sub irc_ctcp_userinfo {
+	# $who		: CTCP USERINFO isteginde bulunan kisi
+	my ($kernel, $session, $who) = @_[KERNEL, SESSION, ARG0];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# CTCP USERINFO istegine cevap gonder
+	$kernel->post($session->option('code'), "ctcpreply", $who, "USERINFO " . $session->option('irc_ctcp_userinfo'));
+}
+
+
+
+# -----------------------------------------------------------------
+# CTCP CLIENTINFO isteklerine cevap verecek olan bolum
+sub irc_ctcp_clientinfo {
+	# $who		: CTCP CLIENTINFO isteginde bulunan kisi
+	my ($kernel, $session, $who) = @_[KERNEL, SESSION, ARG0];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# CTCP CLIENTINFO istegine cevap gonder
+	$kernel->post($session->option('code'), "ctcpreply", $who, "CLIENTINFO " . $session->option('irc_ctcp_clientinfo'));
+}
+
+
+
+# -----------------------------------------------------------------
+# Birisi, bulundugumuz IRC kanalina girdiginde calisacak olan bolum
+sub irc_join {
+	# $who		: kanala giren kisi
+	# #channel	: girilen IRC kanali
+	my ($kernel, $heap, $session, $who, $channel) = @_[KERNEL, HEAP, SESSION, ARG0, ARG1];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# IRC kanalinin adini duzenle
+	($channel) = ($channel =~ /(#\S*)/);
+
+	# eger olay, ilgilendigimiz kanalda gerceklestiyse
+	if ( array_lookup($session->option('irc_channels'), $channel) ) {
+		# nickname'i listeye ekle
+		array_add($heap->{"nickname_list_of_" . lc($channel)}, $who);
+
+		# web sunucuya, kanaldakiler listesini gonder
+		$kernel->yield("useragent_request");
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# Bulundugumuz kanaldan birisi, IRC kanalindan ayrildiginda calisacak olan bolum
+sub irc_part {
+	# $who		: kanaldan ayrilan kisi
+	# $channel	: ayrililan IRC kanal
+	my ($kernel, $heap, $session, $who, $channel) = @_[KERNEL, HEAP, SESSION, ARG0, ARG1];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# IRC kanalinin adini duzenle
+	($channel) = ($channel =~ /(#\S*)/);
+
+	# eger olay, ilgilendigimiz kanalda gerceklestiyse
+	if ( array_lookup($session->option('irc_channels'), $channel) ) {
+		# nickname'i listeden sil
+		array_delete($heap->{"nickname_list_of_" . lc($channel)}, $who);
+
+		# web sunucuya, kanaldakiler listesini gonder
+		$kernel->yield("useragent_request");
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# Bulundugumuz kanaldan birisi, IRC sunucudan ayrildiginda calisacak olan bolum
+sub irc_quit {
+	# $who		:IRC sunucudan ayrilan kisi
+	my ($kernel, $heap, $session, $who) = @_[KERNEL, HEAP, SESSION, ARG0];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# bot'un listesinde yer alan her kanal icin
+	foreach my $channel (@{$session->option('irc_channels')}) {
+		# nickname'i listeden sil
+		array_delete($heap->{"nickname_list_of_" . lc($channel)}, $who);
+	}
+
+	# web sunucuya, kanaldakiler listesini gonder
+	$kernel->yield("useragent_request");
+}
+
+
+
+# -----------------------------------------------------------------
+# Bulundugumuz kanaldan birisi, IRC kanalindan atildiginda (kick) calisacak bolum
+sub irc_kick {
+	# $who		: kanaldan atan kisi
+	# $channel	: atilma olayinin gerceklestigi IRC kanali
+	# $kickee	: kanaldan atilan kisi
+	my ($kernel, $heap, $session, $who, $channel, $kickee) = @_[KERNEL, HEAP, SESSION, ARG0 .. ARG2];
+
+	# IRC kanalinin adini duzenle
+	($channel) = ($channel =~ /(#\S*)/);
+
+	# eger olay, ilgilendigimiz bir kanalda gerceklestiyse
+	if ( array_lookup($session->option('irc_channels'), $channel) ) {
+		# nickname'i listeden sil
+		array_delete($heap->{"nickname_list_of_" . lc($channel)}, $kickee);
+		
+		# web sunucuya, kanaldakiler listesini gonder
+		$kernel->yield("useragent_request");
+	}
+	
+	# eger kanaldan atilan kisi bot ise
+	# $bot->{irc_timer_rejoin} degeri kadar saniye gectikten sonra
+	# IRC kanalina tekrar gir
+	$kernel->delay("join", $session->option('irc_timer_rejoin'), $channel)
+			if ($kickee eq $session->option('irc_nickname'));
+}
+
+
+
+# -----------------------------------------------------------------
+# Bulundugumuz kanaldan birisi, nickname'ini degistirdiginde calisacak olan bolum
+sub irc_nick {
+	# $who		: nickname'ini degistiren kisi
+	# $new_nick	: yeni nickname
+	my ($kernel, $heap, $session, $who, $new_nick) = @_[KERNEL, HEAP, SESSION, ARG0, ARG1];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# bot'un listesinde yer alan her kanal icin
+	foreach my $channel (@{$session->option('irc_channels')}) {
+		# nickname'i listeden sil
+		array_replace($heap->{"nickname_list_of_" . lc($channel)}, $who, $new_nick);
+	}
+
+	# web sunucuya, kanaldakiler listesini gonder
+	$kernel->yield("useragent_request");
+}
+
+
+
+# -----------------------------------------------------------------
+# /msg ile birinden ozel mesaj gelirse calisacak bolum
+sub irc_msg {
+	# $who		: mesaji gonderen kisi
+	# $msg		: gonderilen mesaj
+	my ($kernel, $heap, $session, $who, $msg) = @_[KERNEL, HEAP, SESSION, ARG0, ARG2];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# bot'un listesinde yer alan her kanal icin
+	foreach my $channel (@{$session->option('irc_channels')}) {
+		# /msg ile ozel mesaj gonderene cevap olarak 
+		# kanaldakilerin listesini gonder
+		# TEST amacli kullaniliyor
+		$kernel->post($session->option('code'), "privmsg", $who, "BOT TEST MODUNDA: $channel -> "
+			. array_to_ordered_list($heap->{"nickname_list_of_" . lc($channel)}, ", "));
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# IRC kanalindan/kanallarindan mesaj geldiginde calisacak bolum
+sub irc_public {
+	# $who		: mesaji gonderen kisi
+	# $channel	: mesajin gonderildigi kanal
+	# $msg		: gonderilen mesaj
+	my ($kernel, $heap, $who, $channel, $msg) = @_[KERNEL, HEAP, ARG0 .. ARG2];
+
+	# nickname'i host bilgisinden ayir
+	$who = (split /!/, $who)[0];
+
+	# IRC kanalinin adini duzenle
+	($channel) = ($channel =~ /(#\S*)/);
+
+	# veri alisverisi oldu
+	$heap->{seen_traffic} = 1;
+}
+
+
+
+# -----------------------------------------------------------------
+# HTTP istemcinin, web sitesine nickname listelerini gonderdigi bolum
+# her kanal icin ayri liste gonderilir
+sub useragent_request {
+	my ($kernel, $session, $heap) = @_[KERNEL, SESSION, HEAP];
+	my $nickname_list;
+
+	foreach my $channel (@{$session->option('irc_channels')}) {
+
+		# eger nickname listesi tamamlandiysa
+		if ($heap->{"is_nickname_list_completed_for_" . lc($channel)}) {
+
+			# nickname listesini alfabetik siraya sok
+			$nickname_list = array_to_ordered_list($heap->{"nickname_list_of_" . lc($channel)}, ",%20");
+
+			# HTTP istemci icin istek (request) nesnesi hazirlaniyor
+			# Bir <FORM>'dan POST metoduyla veri gonderiliyormus gibi
+			# kanaldakilerin listesi gonderilecek
+			my $request = HTTP::Request->new(POST => $USERLIST_WEB_ADDRESS);
+			$request->content_type("application/x-www-form-urlencoded");
+			$request->content(	"kod="		. $USERLIST_WEB_PASSWORD .
+						"&sunucu="	. $session->option('irc_server') .
+						"&kanal="	. $channel .
+						"&isimler="	. $nickname_list);
+	
+			# HTTP istemci icin cevap (response) nesnesi hazirlaniyor
+			# istek nesnesi ile cevabin hangi fonksiyon tarafindan islenecegi soyleniyor
+			my $response = $session->postback("useragent_response");
+
+			# HTTP sunucuya, istek gonderiliyor
+			# cevap, useragent_response fonksiyonuna gelecek
+			$kernel->post($USERAGENT_ALIAS, "request", {request => $request, response => $response});
+		}
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# HTTP istemciye web sitesinden cevap geldiginden calisacak bolum
+sub useragent_response {
+	my ($request, $response, $entry) = @{$_[ARG1]};
+
+	# simdilik web sitesinden gelen veriyle, herhangi bir islem yapilmiyor
+	# print("***************n", $response->content, "\n***************\n");
+}
+
+
+
+
+# ---------------------- y a r d i m c i l a r ---------------------------
+# array'e eleman eklemek icin
+# dikkat: array'in kendisi ile degil, array referansi ile calisiliyor
+sub array_add {
+	my ($arrayref, $value) = @_;
+	my $is_found = 0;
+
+	# eklenmek istenen deger, array'in icinde var mi diye bak
+	# eger ayni degerden bulunursa veya array'in sonuna gelinirse
+	# donguden cik
+	foreach my $element (@{$arrayref}) {
+		if (lc($element) eq lc($value)) {
+			$is_found = 1;
+			last;
+		}
+	}
+	if ($is_found) {
+		# eger ayni degerden array icinde bulunmussa
+		# veri eklenmedigini gostermek icin 0 dondur
+		return 0;
+	}
+	else {
+		# eger ayni degerden array icinde bulunmadiysa
+		# bu degeri, array'e ekle ve 1 dondur
+		push(@{$arrayref}, $value);
+		return 1;
+	}
+}
+
+
+
+# -----------------------------------------------------------------
+# array'den eleman silmek icin
+# dikkat: array'in kendisi ile degil, array referansi ile calisiliyor
+sub array_delete {
+	my ($arrayref, $value) = @_;
+	my $is_found = 0;
+	my $i = 0;
+
+	# silinmek istenen deger, array'in icinde var mi diye bak
+	# eger varsa, bu degeri sil
+	foreach my $element (@{$arrayref}) {
+		if (lc($element) eq lc($value)) {
+			# aranan deger, array icinde bulundu
+			# bu degeri sil
+			splice(@{$arrayref}, $i, 1);
+			$is_found = 1;
+		}
+		$i++;
+	}
+	
+	# silme gerceklestiyse 1, gerceklesmediyse 0 dondur
+	return $is_found;
+}
+
+
+
+# -----------------------------------------------------------------
+# array'deki elemanin degerini degistirmek icin
+# dikkat: array'in kendisi ile degil, array referansi ile calisiliyor
+sub array_replace {
+	my ($arrayref, $old_value, $new_value) = @_;
+	my $is_found = 0;
+	my $i = 0;
+
+	# degistirilmek istenen deger, array'in icinde var mi diye bak
+	# eger varsa, bu elemanin degerini degistir
+	foreach my $element (@{$arrayref}) {
+		if (lc($element) eq lc($old_value)) {
+			# aranan deger, array icinde bulundu
+			# bu degeri degistir
+			${$arrayref}[$i] = $new_value;
+			$is_found = 1;
+		}
+		$i++;
+	}
+	
+	# degistirme gerceklestiyse 1, gerceklesmediyse 0 dondur
+	return $is_found;
+}
+
+
+
+# -----------------------------------------------------------------
+# array'de bir elemanin olup olmadigina bakmak icin
+# dikkat: array'in kendisi ile degil, array referansi ile calisiliyor
+sub array_lookup {
+	my ($arrayref, $value) = @_;
+	my $is_found = 0;
+
+	# aranan deger, array'in icinde var mi diye bak
+	# eger aranan degerden bulunursa veya array'in sonuna gelinirse
+	# donguden cik
+	foreach my $element (@{$arrayref}) {
+		if (lc($element) eq lc($value)) {
+			$is_found = 1;
+			last;
+		}
+	}
+
+	return $is_found;
+}
+
+
+
+# -----------------------------------------------------------------
+# array'in elemanlarindan olusan, alfabetik sirali bir liste hazirlamak icin...
+# elemanlar arasinda $separator ile verilen karakter(ler) olacak
+# dikkat: array'in kendisi ile degil, array referansi ile calisiliyor
+sub array_to_ordered_list {
+	my ($arrayref, $separator) = @_;
+	my $ordered_list = "";
+	my $i = 0;
+
+	# dizi, alfabetik siraya dizildikten sonra, aralarinda $separator karakter(ler)i 
+	# olacak sekilde bir liste hazirlaniyor
+	foreach my $element (sort {lc($a) cmp lc($b)} @{$arrayref}) {
+		# eger ilk eleman gecildiyse, artik araya virgul ve bosluk koy
+		if ($i > 0) {
+			$ordered_list = $ordered_list . $separator . $element;
+		}
+		else {
+			$ordered_list = $element;
+		}
+
+		$i++;
+	}
+
+	# siralanmis listeyi, fonksiyon degeri olarak dondur
+	return $ordered_list;
+}

@@ -1,0 +1,1276 @@
+# Turkish translation of EMC.
+# Copyright (C) 2010 THE EMC'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the EMC package.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: EMC tr_TR_rs274_err.po 0.001\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-28 11:25+0200\n"
+"PO-Revision-Date: 2010-01-28 11:25+0200\n"
+"Last-Translator: emrah <emrah.com@gmail.com>\n"
+"Language-Team: Turkish <emc-developers@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: emc/task/emctaskmain.cc:418 emc/task/emctaskmain.cc:451
+#, c-format
+msgid "%s exceeds +X limit"
+msgstr "%s +X limitini aştı"
+
+#: emc/task/emctaskmain.cc:423 emc/task/emctaskmain.cc:456
+#, c-format
+msgid "%s exceeds +Y limit"
+msgstr "%s +Y limitini aştı"
+
+#: emc/task/emctaskmain.cc:428 emc/task/emctaskmain.cc:461
+#, c-format
+msgid "%s exceeds +Z limit"
+msgstr ""
+
+#: emc/task/emctaskmain.cc:433 emc/task/emctaskmain.cc:466
+#, c-format
+msgid "%s exceeds -X limit"
+msgstr "%s -X limitini aştı"
+
+#: emc/task/emctaskmain.cc:438 emc/task/emctaskmain.cc:471
+#, c-format
+msgid "%s exceeds -Y limit"
+msgstr "%s -Y limitini aştı"
+
+#: emc/task/emctaskmain.cc:443 emc/task/emctaskmain.cc:476
+#, c-format
+msgid "%s exceeds -Z limit"
+msgstr "%s -Z limitini aştı"
+
+#: emc/task/emctaskmain.cc:601
+#, c-format
+msgid ""
+"command (%s) cannot be executed until the machine is out of E-stop and "
+"turned on"
+msgstr ""
+"%s komutu, acil stop düğmesi serbest bırakılmadan ve "
+"makine açık hale getirilmeden çalıştırılamaz"
+
+#: emc/task/emctaskmain.cc:721
+#, c-format
+msgid "can't do that (%s) in manual mode"
+msgstr "Manuel modda izin verilmeyen işlem\n"
+"%s"
+
+#: emc/task/emctaskmain.cc:823
+#, c-format
+msgid "can't do that (%s) in auto mode with the interpreter idle"
+msgstr "Program modunda boşta iken izin verilmeyen işlem\n"
+"%s"
+
+#: emc/task/emctaskmain.cc:885
+#, c-format
+msgid "can't do that (%s) in auto mode with the interpreter reading"
+msgstr "Program modunda yükleme esnasında izin verilmeyen işlem\n"
+"%s"
+
+#: emc/task/emctaskmain.cc:1111
+#, c-format
+msgid "can't do that (%s) in auto mode with the interpreter paused"
+msgstr "Program modunda beklemede iken izin verilmeyen işlem\n"
+"%s"
+
+#: emc/task/emctaskmain.cc:1175
+#, c-format
+msgid "can't do that (%s) in auto mode with the interpreter waiting"
+msgstr "Program modunda beklemede iken izin verilmeyen işlem\n"
+"%s"
+
+#: emc/task/emctaskmain.cc:1291
+#, c-format
+msgid "can't do that (%s) in MDI mode"
+msgstr "Komut (MDI) modunda izin verilmeyen işlem\n"
+"%s"
+
+#: emc/task/emctaskmain.cc:1897
+msgid "Can't switch mode while mode is AUTO and interpreter is not IDLE"
+msgstr "Program modunda iş yapılırken mod değiştiremezsiniz"
+
+#: emc/task/emctaskmain.cc:1958
+#, c-format
+msgid "can't open %s"
+msgstr "%s açılamıyor"
+
+#: emc/task/emctaskmain.cc:1970
+msgid "Can't issue MDI command when not homed"
+msgstr "Sıfırlama yapmadan komut (MDI) modunu kullanamazsınız"
+
+#: emc/task/emctaskmain.cc:1975
+msgid "Must be in MDI mode to issue MDI command"
+msgstr "MDI komutu çalıştırabilmek için komut (MDI) modunda olmanız lazım"
+
+#: emc/task/emctaskmain.cc:2011
+msgid "Can't run a program when not homed"
+msgstr "Sıfırlama yapmadan program çalıştıramazsınız"
+
+#: emc/task/emctaskmain.cc:3105
+#, c-format
+msgid "Minimum Software Limit on axis %d exceeded."
+msgstr "%d ekseninde minimum limit aşılıyor"
+
+#: emc/task/emctaskmain.cc:3114
+#, c-format
+msgid "Maximum Software Limit on axis %d exceeded."
+msgstr "%d ekseninde maksimum limit aşılıyor"
+
+#: emc/rs274ngc/interp_arc.cc:109 emc/rs274ngc/interp_arc.cc:273
+#, c-format
+msgid ""
+"Radius to end of arc differs from radius to start: start=(%c%.4f,%c%.4f) "
+"center=(%c%.4f,%c%.4f) end=(%c%.4f,%c%.4f) r1=%.4f r2=%.4f"
+msgstr ""
+"Yayın başlangıç ve bitiş yarıçapları farklı:\n"
+"başlangıç=(%c%.4f,%c%.4f) merkez=(%c%.4f,%c%.4f) bitiş=(%c%.4f,%c%.4f) r1=%.4f r2=%.4f"
+
+#: emc/rs274ngc/interp_convert.cc:205
+msgid ""
+"The move just after exiting cutter compensation mode must be straight, not "
+"an arc"
+msgstr ""
+"Kompenzasyon kullanılan kesme işleminden hemen sonra düz hareket etmelisiniz, "
+"yay hareketi yapamazsınız"
+
+#: emc/rs274ngc/interp_convert.cc:711 emc/rs274ngc/interp_convert.cc:721
+#: emc/rs274ngc/interp_queue.cc:515
+msgid ""
+"Arc move in concave corner cannot be reached by the tool without gouging"
+msgstr ""
+"İç bükey köşede hareketini yaparken takım parçaya giriyor"
+
+#: emc/rs274ngc/interp_convert.cc:747
+msgid "Arc to arc motion is invalid because the arcs have the same center"
+msgstr "Yayların merkezi aynı olduğundan dolayı yaydan yaya doğru yapılan hareket geçersiz"
+
+#: emc/rs274ngc/interp_convert.cc:750
+msgid ""
+"Arc to arc motion makes a corner the compensated tool can't fit in without "
+"gouging"
+msgstr ""
+"Yaydan yaya doğru yapılan harekette kompenzasyon yapılan takım parçaya giriyor"
+
+#: emc/rs274ngc/interp_convert.cc:1310
+msgid "Cannot change control mode with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken çalışma modunu değiştiremezsiniz"
+
+#: emc/rs274ngc/interp_convert.cc:1415
+msgid "Cannot change coordinate systems with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken koordinat sistemini kaydıramazsınız"
+
+#: emc/rs274ngc/interp_convert.cc:1670
+#, c-format
+msgid "G%d.1 with no D word"
+msgstr "G%d.1 komutunda D parametresi eksik"
+
+#: emc/rs274ngc/interp_convert.cc:1673
+#, c-format
+msgid "G%d.1 with L word, but plane is not G18"
+msgstr "G%d.1 komutunda L parametresi kullanılmış ama G18 düzlemi seçili değil"
+
+#: emc/rs274ngc/interp_convert.cc:1684
+#, c-format
+msgid "G%d requires D word to be a whole number"
+msgstr "G%d komutunda D parametresi için hatalı sayı"
+
+#: emc/rs274ngc/interp_convert.cc:1692
+#, c-format
+msgid "G%d with lathe tool, but plane is not G18"
+msgstr "G%d komutu ile torna takımı kullanılmış ama G18 düzlemi seçili değil"
+
+#: emc/rs274ngc/interp_convert.cc:2421 emc/rs274ngc/interp_convert.cc:2425
+msgid "Cannot set motion output with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken hareket çıktısı belirtilemez"
+
+#: emc/rs274ngc/interp_convert.cc:2429 emc/rs274ngc/interp_convert.cc:2433
+msgid "Cannot set auxiliary output with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken yardımcı çıktı belirtilemez"
+
+#: emc/rs274ngc/interp_convert.cc:2477
+msgid "Cannot wait for digital input with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken dijital girişi okuyamazsınız"
+
+#: emc/rs274ngc/interp_convert.cc:2489
+msgid "Cannot wait for analog input with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken analog girişi okuyamazsınız"
+
+#: emc/rs274ngc/interp_convert.cc:2508
+msgid "Need positive Q-word to specify tool number with M61"
+msgstr "M61 ile takım numarası belirtirken Q parametresi ile pozitif bir sayı kullanınız"
+
+#: emc/rs274ngc/interp_convert.cc:2581 emc/rs274ngc/interp_convert.cc:2598
+#: emc/rs274ngc/interp_convert.cc:2612 emc/rs274ngc/interp_convert.cc:2626
+#: emc/rs274ngc/interp_convert.cc:2640
+msgid "Cannot enable overrides with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken hız oranını değiştiremezsiniz"
+
+#: emc/rs274ngc/interp_convert.cc:2588 emc/rs274ngc/interp_convert.cc:2603
+#: emc/rs274ngc/interp_convert.cc:2617 emc/rs274ngc/interp_convert.cc:2631
+#: emc/rs274ngc/interp_convert.cc:2645
+msgid "Cannot disable overrides with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken hız oranını değiştiremezsiniz"
+
+#: emc/rs274ngc/interp_convert.cc:2655
+msgid "Cannot call user-defined M code with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken kullanıcı tanımlı M kodu kullanamazsınız"
+
+#: emc/rs274ngc/interp_convert.cc:2885
+msgid "Cannot change retract mode with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken mod değiştiremezsiniz"
+
+#: emc/rs274ngc/interp_convert.cc:3617
+msgid "Cannot use G76 threading cycle with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken G76 ile diş açamazsınız"
+
+#: emc/rs274ngc/interp_convert.cc:3620
+msgid "In G76, I must not be 0"
+msgstr "G76 komutunda I parametresi 0 olamaz"
+
+#: emc/rs274ngc/interp_convert.cc:3622
+msgid "In G76, J must be greater than 0"
+msgstr "G76 komutunda J parametresi 0'dan büyük olmalı"
+
+#: emc/rs274ngc/interp_convert.cc:3624
+msgid "In G76, K must be greater than J"
+msgstr "G76 komutunda K parametresi, J parametresinden büyük olmalı"
+
+#: emc/rs274ngc/interp_convert.cc:3989
+msgid "Zero degree inside corner is invalid for cutter compensation"
+msgstr "Konpenzasyon etkinken iç köşe 0 derece olamaz"
+
+#: emc/rs274ngc/interp_convert.cc:4027 emc/rs274ngc/interp_convert.cc:4035
+msgid ""
+"Arc to straight motion makes a corner the compensated tool can't fit in "
+"without gouging"
+msgstr ""
+"Yaydan doğruya geçişte kompenzasyondan dolayı takım parçaya giriyor"
+
+#: emc/rs274ngc/interp_convert.cc:4120
+msgid "Cannot change tools with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken takım değiştiremezsiniz"
+
+#: emc/rs274ngc/interp_convert.cc:4230
+msgid "Cannot change tool offset with cutter radius compensation on"
+msgstr "Kompenzasyon etkinken takım ofsetini değiştiremezsiniz"
+
+#: emc/rs274ngc/interp_queue.cc:513
+#, c-format
+msgid ""
+"BUG: cutter compensation has generated an invalid arc with mismatched radii "
+"r1 %f r2 %f\n"
+msgstr ""
+"HATA: Kompenzasyondan dolayı bozuk bir yay oluşuyor\n"
+"r1 %f r2 %f\n"
+
+#: emc/rs274ngc/interp_queue.cc:535 emc/rs274ngc/interp_queue.cc:573
+msgid "BUG: Unsupported plane in cutter compensation"
+msgstr "HATA: Kompnzasyonda desteklenmeyen düzlem"
+
+#: emc/rs274ngc/interp_queue.cc:545
+msgid ""
+"Straight traverse in concave corner cannot be reached by the tool without "
+"gouging"
+msgstr ""
+"Kösenin iç tarafındaki harekette takım parçaya giriyor"
+
+#: emc/rs274ngc/interp_queue.cc:583
+msgid ""
+"Straight feed in concave corner cannot be reached by the tool without gouging"
+msgstr ""
+"Kösenin iç tarafındaki harekette takım parçaya giriyor"
+
+#: emc/rs274ngc/interp_read.cc:3310
+msgid "Multiple U words on one line"
+msgstr "Bir satırda, birden fazla U parametresi kullanılmış"
+
+#: emc/rs274ngc/interp_read.cc:3328
+msgid "Multiple V words on one line"
+msgstr "Bir satırda, birden fazla V parametresi kullanılmış"
+
+#: emc/rs274ngc/interp_read.cc:3346
+msgid "Multiple W words on one line"
+msgstr "Bir satırda, birden fazla W parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:23 emc/rs274ngc/rs274ngc_errors.cc:24
+#: emc/rs274ngc/rs274ngc_errors.cc:25 emc/rs274ngc/rs274ngc_errors.cc:26
+msgid "No error"
+msgstr "Hata yok"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:27 emc/rs274ngc/rs274ngc_errors.cc:238
+msgid "File not open"
+msgstr "Dosya açılamadı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:28
+msgid "A file is already open"
+msgstr "Dosya kullanımda"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:29
+msgid "All axes missing with g92"
+msgstr "G92 komutunda eksenler eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:30
+msgid "All axes missing with motion code"
+msgstr "Hareket komutunda eksenler eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:31
+msgid "Arc radius too small to reach end point"
+msgstr "Bitiş noktasına varabilmek için yayın yarıçapı yeterli değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:32
+msgid "Argument to acos out of range"
+msgstr "acos için verilen değer hatalı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:33
+msgid "Argument to asin out of range"
+msgstr "acos için verilen değer hatalı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:34
+msgid "Attempt to divide by zero"
+msgstr "Sıfıra bölme hatası"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:35
+msgid "Attempt to raise negative to non integer power"
+msgstr "Negatif sayı için tam sayı olmayan üst"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:36
+msgid "Bad character used"
+msgstr "Hatalı karakter kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:37
+msgid "Bad format unsigned integer"
+msgstr "Pozitif tamsayının yazımında hata"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:38
+msgid "Bad number format"
+msgstr "Sayının yazımında hata"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:39
+msgid "Bug bad g code modal group 0"
+msgstr "Hatalı G kod\n"
+"0 grubundan modal kod"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:40
+msgid "Bug code not g0 or g1"
+msgstr "G0 veya G1 eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:41
+msgid "Bug code not g17 g18 or g19"
+msgstr "G17 G18 veya g19 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:42
+msgid "Bug code not g20 or g21"
+msgstr "G20 veya G21 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:43
+msgid "Bug code not g28 or g30"
+msgstr "G28 veya G30 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:44
+msgid "Bug code not g2 or g3"
+msgstr "G2 veya G3 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:45
+msgid "Bug code not g40 g41 or g42"
+msgstr "G40 G41 veya G42 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:46
+msgid "Bug code not g43 or g49"
+msgstr "G43 veya G49 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:47
+msgid "Bug code not g4 g10 g28 g30 g53 or g92 series"
+msgstr "G4 G10 G28 G30 G53 veya G92 serisinden bir kod seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:48
+msgid "Bug code not g61 g61.1 or g64"
+msgstr "G61 G61.1 veya G64 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:49
+msgid "Bug code not g90 or g91"
+msgstr "G90 veya G91 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:50
+msgid "Bug code not g93 or g94"
+msgstr "G93 veya G94 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:51
+msgid "Bug code not g98 or g99"
+msgstr "G98 veya G99 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:52
+msgid "Bug code not in g92 series"
+msgstr "G92 serisinden bir kod seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:53
+msgid "Bug code not in range g54 to g593"
+msgstr "G53..G59.3 serinden bir kod seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:54
+msgid "Bug code not m0 m1 m2 m30 m60"
+msgstr "M0 M1 M2 M30 veya M60 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:55
+msgid "Bug distance mode not g90 or g91"
+msgstr "Mesafe modu için G90 veya G91 seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:56
+msgid "Bug function should not have been called"
+msgstr "Fonksiyon hatası"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:57
+msgid "Bug in tool radius comp"
+msgstr "Talım yarıçap kompenzasyon hatası"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:58
+msgid "Bug plane not xy yz or xz"
+msgstr "XY YZ veya XZ düzlemi seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:59
+msgid "Bug side not right or left"
+msgstr "Sağ veya sol taraf seçili değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:60
+msgid "Bug unknown motion code"
+msgstr "Bilinmeyen hareket komutu"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:61
+msgid "Bug unknown operation"
+msgstr "Bilinmeyen işlem"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:62
+msgid "Cannot change axis offsets with cutter radius comp"
+msgstr "Kompenzasyon etkin iken eksen ofseti değiştirilemez"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:63
+msgid "Cannot change units with cutter radius comp"
+msgstr "Kompenzasyon etkin iken ölçü birimi değiştirilemez"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:64
+msgid "Cannot create backup file"
+msgstr "Yedek dosyası oluşturulamıyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:65
+msgid "Cannot do g1 with zero feed rate"
+msgstr "Sıfır kesme hızı ile G1 kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:66
+msgid "Cannot do zero repeats of cycle"
+msgstr "Döngü adedi sıfır olamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:67
+msgid "Cannot make arc with zero feed rate"
+msgstr "Sıfır kesme hızı ile yay komutu kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:68
+msgid "Cannot move rotary axes during probing"
+msgstr "Probe kullanımı esnasında açısal eksenler döndürülemez"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:69
+msgid "Cannot open backup file"
+msgstr "Yedek dosyası açılamıyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:70
+msgid "Cannot open variable file"
+msgstr "Değişken dosyası açılamıyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:71
+msgid "Cannot probe in inverse time feed mode"
+msgstr "Bu kesme hızı modunda probe kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:72
+msgid "Cannot probe with cutter radius comp on"
+msgstr "Kompenzasyon etkin iken probe kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:73
+msgid "Cannot probe with zero feed rate"
+msgstr "Sıfır kesme hızı ile probe kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:74
+msgid "Cannot put a b in canned cycle"
+msgstr "Döngü içinde a b kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:75
+msgid "Cannot put a c in canned cycle"
+msgstr "Döngü içinde a c kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:76
+msgid "Cannot put an a in canned cycle"
+msgstr "Döngü içinde a kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:77
+msgid "Cannot turn cutter radius comp on out of xy plane"
+msgstr "XY düzleminin dışında kompenzasyon durumu değiştirilemez"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:78
+msgid "Cannot turn cutter radius comp on when on"
+msgstr "Kompenzasyon durumu hatalı yerde değiştiriliyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:79
+msgid "Cannot use a word"
+msgstr "Hatalı parametre kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:80
+msgid "Cannot use axis values with g80"
+msgstr "G80 ile eksen değeri verilemez"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:81
+msgid "Cannot use axis values without a g code that uses them"
+msgstr "Eksen değeri kabul etmeyen G kodu için değer verilmiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:82
+msgid "Cannot use b word"
+msgstr "B parametresi kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:83
+msgid "Cannot use c word"
+msgstr "C parametresi kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:84
+msgid "Cannot use g28 or g30 with cutter radius comp"
+msgstr "Kompenzasyon etkin iken G28 veya G30 kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:85
+msgid "Cannot use g53 incremental"
+msgstr "G53 ile göreceli konumlandırma kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:86
+msgid "Cannot use g53 with cutter radius comp"
+msgstr "Kompenzasyon etkin iken G53 kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:87
+msgid "Cannot use two g codes that both use axis values"
+msgstr "Eksen değerlerini kullanan iki G kodunu aynı anda kullanamazsınız"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:88
+msgid "Cannot use xz plane with cutter radius comp"
+msgstr "XZ düzleminde kompenzasyon kullanamazsınız"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:89
+msgid "Cannot use yz plane with cutter radius comp"
+msgstr "YZ düzleminde kompenzasyon kullanamazsınız"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:90
+msgid "Command too long"
+msgstr "Çok uzun komut"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:91
+msgid "Concave corner with cutter radius comp"
+msgstr "Kompenzasyon ile hatalı iç bükey köşe"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:92
+msgid "Coordinate system index parameter 5220 out of range"
+msgstr "Koordinat sistemi indeks değeri (5220) izin verilen değerlerin dışında"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:93
+msgid "Current point same as end point of arc"
+msgstr "Yayın bitiş konumu, bulunulan konum ile aynı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:94
+msgid "Cutter gouging with cutter radius comp"
+msgstr "Konpenzasyon nedeniyle parçaya giriliyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:95
+msgid "D word with no g41 or g42"
+msgstr "G41 veya G42 olmadan D parametresi kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:96
+msgid "Dwell time missing with g4"
+msgstr "G4 komutunda bekleme zamanı verilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:97
+msgid "Dwell time p word missing with g82"
+msgstr "G82 komutunda P bekleme zamanı verilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:98
+msgid "Dwell time p word missing with g86"
+msgstr "G86 komutunda P bekleme zamanı verilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:99
+msgid "Dwell time p word missing with g88"
+msgstr "G88 komutunda P bekleme zamanı verilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:100
+msgid "Dwell time p word missing with g89"
+msgstr "G89 komutunda P bekleme zamanı verilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:101
+msgid "Equal sign missing in parameter setting"
+msgstr "Parametre ayarlarında eşittir sembolü eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:102
+msgid "F word missing with inverse time arc move"
+msgstr "Yay hareketinde F parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:103
+msgid "F word missing with inverse time g1 move"
+msgstr "G1 komutunda F parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:104
+msgid "File ended with no percent sign"
+msgstr "Program, % sembolü ile bitmiyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:105
+msgid "File ended with no percent sign or program end"
+msgstr "Program, % sembolü veya program sonu komutu ile bitmiyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:106
+msgid "File name too long"
+msgstr "Dosya adı çok uzun"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:107
+msgid "G code out of range"
+msgstr "İzin verilenlerden farklı bir G kodu"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:108
+msgid "H word with no g43"
+msgstr "G43 olmadan H parametresi kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:109
+msgid "I word given for arc in yz plane"
+msgstr "YZ düzlemimindeki yay için I parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:110
+msgid "I word missing with g87"
+msgstr "G87 komutunda I parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:111
+msgid "I word with no g2, g3, g87, or g43 to use it"
+msgstr "G2, G3, G87 veya G43 olmadan I parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:112
+msgid "J word given for arc in xz plane"
+msgstr "XZ düzlemimindeki yay için J parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:113
+msgid "J word missing with g87"
+msgstr "G87 komutunda J parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:114
+msgid "J word with no g2, g3 or g87 to use it"
+msgstr "G2, G3 veya G87 olmadan J parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:115
+msgid "K word given for arc in xy plane"
+msgstr "XY düzlemimindeki yay için K parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:116
+msgid "K word missing with g87"
+msgstr "G87 komutunda K parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:117
+msgid "K word with no g2, g3, g33, g33.1, g76, g87, or g43.1 to use it"
+msgstr "G2, G3, G33, G33.1, G76, G87 veya G43.1 olmadan K parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:118
+msgid "L word with no canned cycle, g10, or g76 to use it"
+msgstr "Döngü, G10 veya G76 olmadan L parametresi kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:119
+msgid "Left bracket missing after slash with atan"
+msgstr "atan sonrasında [ eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:120
+msgid "Left bracket missing after unary operation name"
+msgstr "Operasyon adından sonra [ eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:121
+msgid "Line number greater than 99999"
+msgstr "Satır numarası 99999'dan büyük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:122
+msgid "Line with g10 does not have l2"
+msgstr "G10 komutunda L2 eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:123
+msgid "M code greater than 199"
+msgstr "M199'dan büyük bir M komutu"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:124
+msgid "Mixed radius ijk format for arc"
+msgstr "Yay için aynı anda ijk yarıçapı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:125
+msgid "Multiple a words on one line"
+msgstr "Bir satırda birden fazla A parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:126
+msgid "Multiple b words on one line"
+msgstr "Bir satırda birden fazla B parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:127
+msgid "Multiple c words on one line"
+msgstr "Bir satırda birden fazla C parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:128
+msgid "Multiple d words on one line"
+msgstr "Bir satırda birden fazla D parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:129
+msgid "Multiple f words on one line"
+msgstr "Bir satırda birden fazla F parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:130
+msgid "Multiple h words on one line"
+msgstr "Bir satırda birden fazla H parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:131
+msgid "Multiple i words on one line"
+msgstr "Bir satırda birden fazla I parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:132
+msgid "Multiple j words on one line"
+msgstr "Bir satırda birden fazla J parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:133
+msgid "Multiple k words on one line"
+msgstr "Bir satırda birden fazla K parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:134
+msgid "Multiple l words on one line"
+msgstr "Bir satırda birden fazla L parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:135
+msgid "Multiple p words on one line"
+msgstr "Bir satırda birden fazla P parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:136
+msgid "Multiple q words on one line"
+msgstr "Bir satırda birden fazla Q parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:137
+msgid "Multiple r words on one line"
+msgstr "Bir satırda birden fazla R parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:138
+msgid "Multiple s words on one line"
+msgstr "Bir satırda birden fazla S parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:139
+msgid "Multiple t words on one line"
+msgstr "Bir satırda birden fazla T parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:140
+msgid "Multiple x words on one line"
+msgstr "Bir satırda birden fazla X parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:141
+msgid "Multiple y words on one line"
+msgstr "Bir satırda birden fazla Y parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:142
+msgid "Multiple z words on one line"
+msgstr "Bir satırda birden fazla Z parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:143
+msgid "Must use g0 or g1 with g53"
+msgstr "G53 ile birlikte G0 veya G1 kullanmalısınız"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:144
+msgid "Negative argument to sqrt"
+msgstr "SQRT için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:145
+msgid "Negative d word tool radius index used"
+msgstr "Takım yarıçap indeksi için negatif D değeri kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:146
+msgid "Negative f word used"
+msgstr "F parametresi için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:147
+msgid "Negative g code used"
+msgstr "G parametresi için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:148
+msgid "Negative h word used"
+msgstr "H parametresi için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:149
+msgid "Negative l word used"
+msgstr "L parametresi için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:150
+msgid "Negative m code used"
+msgstr "M parametresi için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:151
+msgid "Negative or zero q value used"
+msgstr "Q parametresi için negatif veya 0 değeri kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:152
+msgid "Negative p word used"
+msgstr "P parametresi için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:153
+msgid "Negative spindle speed used"
+msgstr "Spindle hızı için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:154
+msgid "Negative tool id used"
+msgstr "Takım numarası için negatif değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:155
+msgid "Nested comment found"
+msgstr "İç içe girmiş açıklama"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:156
+msgid "No characters found in reading real value"
+msgstr "Reel sayı değeri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:157
+msgid "No digits found where real number should be"
+msgstr "Reel sayı değeri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:158
+msgid "Non integer value for integer"
+msgstr "Tam sayı değeri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:159
+msgid "Null missing after newline"
+msgstr "Yeni satırdan sonra NULL karakteri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:160
+msgid "Offset index missing"
+msgstr "Ofset değeri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:161
+msgid "P value not an integer with g10 l2"
+msgstr "G10 L2 ile kullanılan P değeri, tam sayı değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:162
+msgid "P value out of range with g10 l2"
+msgstr "G10 L2 ile kullanılan P değeri, izin verilen değerlerin dışında"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:163
+msgid "P word with no g4 g10 g64 g76 g82 g86 g88 g89"
+msgstr "G4, G10, G64, G76, G82, G86, G88 veya G89 olmadan P parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:164
+msgid "Parameter file out of order"
+msgstr "Parametre dosyasında bozukluk"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:165
+msgid "Parameter number out of range"
+msgstr "Hatalı parametre değeri"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:166
+msgid "Q word missing with g83"
+msgstr "G83 komutunda Q parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:167
+msgid "Q word with no g83 or m66"
+msgstr "G83 veya M66 olmadan Q parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:168
+msgid "Queue is not empty after probing"
+msgstr "Probe işleminden sonra kuyruk boş değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:169
+msgid "R clearance plane unspecified in cycle"
+msgstr "Döngü için R düzlemi tanımlanmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:170
+msgid "R i j k words all missing for arc"
+msgstr "Yay için R I J K parametreleri tam değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:171
+msgid "R less than x in cycle in yz plane"
+msgstr "YZ düzlemi için R değeri X'den küçük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:172
+msgid "R less than y in cycle in xz plane"
+msgstr "XZ düzlemi için R değeri Y'den küçük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:173
+msgid "R less than z in cycle in xy plane"
+msgstr "XY düzlemi için R değeri Z'den küçük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:174
+msgid "R word with no g code that uses it"
+msgstr "R parametresi uygun G kodu ile kullanılmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:175
+msgid "Radius to end of arc differs from radius to start"
+msgstr "Yay için başlangıç ve bitiş yarıçapları farklı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:176
+msgid "Radius too small to reach end point"
+msgstr "Yarıçap değeri hedef noktaya varabilmek için yeterince büyük değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:177
+msgid "Required parameter missing"
+msgstr "Eksik parametre"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:178
+msgid "Selected tool slot number too large"
+msgstr "Seçilen takım numarası çok büyük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:179
+msgid "Slash missing after first atan argument"
+msgstr "Birince atan parametresinden sonra / eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:180
+msgid "Spindle not turning clockwise in g84"
+msgstr "G84 komutu çalışırken spindle saat yönünde dönmüyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:181
+msgid "Spindle not turning in g86"
+msgstr "G86 komutu esnasında spindle dönmüyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:182
+msgid "Spindle not turning in g87"
+msgstr "G87 komutu esnasında spindle dönmüyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:183
+msgid "Spindle not turning in g88"
+msgstr "G88 komutu esnasında spindle dönmüyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:184
+msgid "Sscanf failed"
+msgstr "Sscanf esnasında hata"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:185
+msgid "Start point too close to probe point"
+msgstr "Başlangıç noktasu probe ile yaklaşılacak noktaya çok yakın"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:186
+msgid "Too many m codes on line"
+msgstr "Bir satırda çok fazla M kodu kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:187
+msgid "Tool length offset index too big"
+msgstr "Takım boyu ofseti için geçersiz indeks değeri"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:188
+msgid "Tool max too large"
+msgstr "Takım maksimum değeri çok büyük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:189
+msgid "Tool radius index too big"
+msgstr "Takım çapı için geçersiz indeks değeri"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:190
+msgid "Tool radius not less than arc radius with comp"
+msgstr "Takım yarıçapı, kompenzasyon esnasında yayın yarıçapından küçük olmamalı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:191
+msgid "Two g codes used from same modal group"
+msgstr "Aynı modal gruptan iki G kodunu aynı satırda kullanamazsınız"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:192
+msgid "Two m codes used from same modal group"
+msgstr "Aynı modal gruptan iki M kodunu aynı satırda kullanamazsınız"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:193
+msgid "Unable to open file"
+msgstr "Dosya açılamıyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:194
+msgid "Unclosed comment found"
+msgstr "Sonlandırılmamış açıklama"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:195
+msgid "Unclosed expression"
+msgstr "Sonlandırılmamış ifade"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:196
+msgid "Unknown g code used"
+msgstr "Bilinmeyen G kodu"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:197
+msgid "Unknown m code used"
+msgstr "Bilinmeyen M kodu"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:198
+msgid "Unknown operation"
+msgstr "Bilinmeyen işlem"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:199
+msgid "Unknown operation name starting with a"
+msgstr "A ile bilinmeyen işlem adı kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:200
+msgid "Unknown operation name starting with m"
+msgstr "M ile bilinmeyen işlem adı kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:201
+msgid "Unknown operation name starting with o"
+msgstr "O ile bilinmeyen işlem adı kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:202
+msgid "Unknown operation name starting with x"
+msgstr "X ile bilinmeyen işlem adı kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:203
+msgid "Unknown word starting with a"
+msgstr "A ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:204
+msgid "Unknown word starting with c"
+msgstr "C ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:205
+msgid "Unknown word starting with e"
+msgstr "E ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:206
+msgid "Unknown word starting with f"
+msgstr "F ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:207
+msgid "Unknown word starting with l"
+msgstr "L ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:208
+msgid "Unknown word starting with r"
+msgstr "R ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:209
+msgid "Unknown word starting with s"
+msgstr "S ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:210
+msgid "Unknown word starting with t"
+msgstr "T ile bilinmeyen parametre kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:211
+msgid "Unknown word where unary operation could be"
+msgstr "Bilinmeyen parametre"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:212
+msgid "X and y words missing for arc in xy plane"
+msgstr "XY düzlemindeki yay için X ve Y değerleri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:213
+msgid "X and z words missing for arc in xz plane"
+msgstr "XZ düzlemindeki yay için X ve Z değerleri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:214
+msgid "X value unspecified in yz plane canned cycle"
+msgstr "YZ düzlemindeki döngü için X değeri belirtilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:215
+msgid "X, y, z, a, b, c, u, v, and w words all missing with g38.2"
+msgstr "G38.2 komutunda X, Y, Z, A, B, C, U, V ve W değerlerinden hiçbiri kullanılmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:216
+msgid "Y and z words missing for arc in yz plane"
+msgstr "YZ düzlemindeki yay için Y ve Z değerleri eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:217
+msgid "Y value unspecified in xz plane canned cycle"
+msgstr "XZ düzlemindeki döngü için Y değeri belirtilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:218
+msgid "Z value unspecified in xy plane canned cycle"
+msgstr "XY düzlemindeki döngü için Z değeri belirtilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:219
+msgid "Zero or negative argument to ln"
+msgstr "ln için sıfır veya negatif bir değer kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:220
+msgid "Zero radius arc"
+msgstr "Sıfır yarıçaplı yay"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:221
+msgid "K word missing with g33/g33.1"
+msgstr "G33/G33.1 için K değeri kullanılmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:222
+msgid "F word used with a g33/g33.1"
+msgstr "G33/G33.1 ile F değeri kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:223
+msgid "G33 not supported"
+msgstr "G33 desteklenmiyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:224
+msgid "Canned cycles not supported"
+msgstr "Döngü desteklenmiyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:226
+msgid "Unknown operation name starting with e"
+msgstr "E ile bilinmeyen işlem kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:227
+msgid "Unknown operation name starting with n"
+msgstr "N ile bilinmeyen işlem kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:228
+msgid "Unknown operation name starting with g"
+msgstr "G ile bilinmeyen işlem kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:229
+msgid "Unknown operation name starting with l"
+msgstr "L ile bilinmeyen işlem kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:230
+msgid "Too many subroutine parameters"
+msgstr "Çok fazla alt fonksiyon parametresi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:231
+msgid "Too many subroutine levels"
+msgstr "Çok fazla iç içe alt fonksiyon çağrısı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:232
+msgid "Unknown control command in o word"
+msgstr "O ile bilnmeyen kontrol komutu kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:233
+msgid "Too many oword labels"
+msgstr "Çok fazla O etiketi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:234
+msgid "Unknown oword number"
+msgstr "Bilinmeyen O numarası"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:235
+msgid "Nested subroutine definition"
+msgstr "İç içe alt fonksiyon tanımlaması"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:236
+msgid "Not in subroutine definition"
+msgstr "Alt fonksiyon tanımında yok"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:237
+msgid "Return outside of subroutine"
+msgstr "Alt fonksiyon dışına taşma"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:239
+msgid "Need tool prepared -Txx- for toolchange"
+msgstr "Takım değiştirici için -Txx- takımının hazırlnaması gerekiyor"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:240
+msgid "Cannot change planes with cutter radius compensation on"
+msgstr "Kompenzasyon etkin iken düzlem değiştirilemez"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:241
+msgid "Cutter radius compensation allowed only in XY, XZ planes"
+msgstr "Kompenzasyon sadece Xy ve XZ düzlemlerinde kullanılabilir"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:243
+msgid "P word missing with G76"
+msgstr "G76 komutunda P parametresi kullanılmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:244
+msgid "I J or K words missing with G76"
+msgstr "G76 komutunda I, J veya K parametresi kullanılmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:245
+msgid "Cannot move rotary axes with G76"
+msgstr "G76 ile açısal eksen hareket ettirilemez"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:247
+msgid "Multiple e words on one line"
+msgstr "Bir satırda birden fazla E parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:248
+msgid "E word with no G76 or M66 to use it"
+msgstr "G76 veya M66 olmadan E parametresi kullanılmış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:250
+msgid "Named parameter not terminated"
+msgstr "Etiketli parametre sonlandırılmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:251
+msgid "Named parameter not defined"
+msgstr "Etiketli parametre tanımlanmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:252
+msgid "Named oword not terminated"
+msgstr "Etiketli O parametresi sonlandırılmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:253
+msgid "Named oword not defined"
+msgstr "Etiketli O parametresi tanımlanmamış"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:254
+msgid "Out of memory"
+msgstr "Hafıza yetersiz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:255
+msgid "Place holder for NCE_VARIABLE: should not occur"
+msgstr "NCE_VARIABLE için yer tutucu problemi"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:257
+msgid "X Y Z A B C J words not allowed with G43.1, G41 R, or G42 R"
+msgstr "G43.1, G41 R veya G42 R  ile X, Y, Z, A, B, C, J parametreleri kullanılamaz"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:258
+msgid "S word missing with G96"
+msgstr "G96 komutunda S parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:260
+msgid "Queue is not empty after external input"
+msgstr "Girdiler alındıktan sonra kuyruk boşalmadı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:261
+msgid "Can't select analog input with wait type != immediate return"
+msgstr "Analog girdi için anında (immediate) modu kullanılmalı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:262
+msgid "Zero timeout with wait type != immediate return"
+msgstr "Anında (immediate) modunda sıfrı zaman aşımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:263
+msgid "Invalid to select both a digital and an analog input with M66"
+msgstr "M66 ile aynı anda analog ve sayısal girdi kullanımı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:264
+msgid "Need to have either a valid P or a valid E word with M66"
+msgstr "M66 için geçerli bir P veya E değeri olmalı"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:266
+msgid "Q word missing with g73"
+msgstr "G73 komutunda Q parametresi eksik"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:267
+msgid "Digital input selected out of bounds"
+msgstr "Seçilen sayısal girdi geçerli değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:268
+msgid "Analog input selected out of bounds"
+msgstr "Seçilen analog girdi geçerli değil"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:270
+msgid "W value unspecified in UV plane canned cycle"
+msgstr "UV düzlemindeki döngü için W değeri belirtilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:271
+msgid "U value unspecified in VW plane canned cycle"
+msgstr "VW düzlemindeki döngü için U değeri belirtilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:272
+msgid "V value unspecified in UW plane canned cycle"
+msgstr "UW düzlemindeki döngü için V değeri belirtilmemiş"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:273
+msgid "R less than W in cycle in UV plane"
+msgstr "UV düzlemindeki döngü için R değeri, W değerinden küçük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:274
+msgid "R less than U in cycle in VW plane"
+msgstr "VW düzlemindeki döngü için R değeri, U değerinden küçük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:275
+msgid "R less than V in cycle in UW plane"
+msgstr "UW düzlemindeki döngü için R değeri, V değerinden küçük"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:277
+msgid "Unknown error"
+msgstr "Tanımlanamamış hata"
+
+#: emc/rs274ngc/rs274ngc_errors.cc:278
+msgid "The End"
+msgstr "Son"
+
+#: emc/rs274ngc/rs274ngc_pre.cc:774
+msgid "Queue is not empty after tool change"
+msgstr "Takım değiştirmeden sonra kuyruk boş değil"

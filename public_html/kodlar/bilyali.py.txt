@@ -1,0 +1,975 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+from Tkinter import *
+from time import sleep
+from os import system
+from re import compile, search
+
+class Uygulama:
+	def __init__(self, parent):
+		self.dosya_adi			= StringVar()
+		self.adet_cevre			= IntVar()
+		self.adet_halka			= IntVar()
+		self.adet_bilya			= StringVar()
+		self.sure			= StringVar()
+		self.ilk_merkez			= DoubleVar()
+		self.merkezler_arasi		= DoubleVar()
+		self.puntalama_hizi		= IntVar()
+		self.delme_hizi			= IntVar()
+		self.maksimum_ilerleme_hizi	= IntVar()
+		self.maksimum_donme_hizi	= IntVar()
+		self.punta_derinligi		= DoubleVar()
+		self.delme_derinligi		= DoubleVar()
+		self.guvenli_uzaklik		= DoubleVar()
+		self.helezon_katsayisi		= DoubleVar()
+		self.helezon_derece		= StringVar()
+		self.c_baslangic		= DoubleVar()
+		
+		self.klasor			= 'CNC/'
+		self.x_hane			= 4
+		self.z_hane			= 4
+		self.c_hane			= 4
+		self.bosluk			= '                '
+
+		# ilk degerler
+		self.dosya_adi.set('CAPxBOY')
+		self.adet_cevre.set(16)
+		self.adet_bilya.set('')
+		self.adet_halka.set(8)
+		self.sure.set('')
+		self.ilk_merkez.set(5.3)
+		self.merkezler_arasi.set(6.0)
+		self.puntalama_hizi.set(150)
+		self.delme_hizi.set(300)
+		self.maksimum_ilerleme_hizi.set(500)	# mm/sn
+		self.maksimum_donme_hizi.set(30)	# tur/dk
+		self.punta_derinligi.set(1.5)
+		self.delme_derinligi.set(4.5)
+		self.guvenli_uzaklik.set(1.0)
+		self.helezon_katsayisi.set(3.0)
+		self.helezon_derece.set('')
+		self.c_baslangic.set(0.0)
+	
+		# renk ayarlari
+		self.fg_dosya_adi		= 'brown'
+		self.fg_sure			= 'brown'
+		self.fg_adet_bilya		= 'brown'
+		self.fg_adet_cevre		= 'RoyalBlue3'
+		self.fg_adet_halka		= 'RoyalBlue3'
+		self.fg_ilk_merkez		= 'RoyalBlue3'
+		self.fg_merkezler_arasi		= 'RoyalBlue3'
+		self.fg_puntalama_hizi		= 'gray30'
+		self.fg_delme_hizi		= 'gray30'
+		self.fg_punta_derinligi		= 'gray30'
+		self.fg_delme_derinligi		= 'gray30'
+		self.fg_guvenli_uzaklik		= 'gray30'
+		self.fg_helezon_katsayisi	= 'peru'
+		self.fg_helezon_derece		= 'peru'
+		self.fg_c_baslangic		= 'peru'
+
+		# yazi alanlari ayarlari
+		self.baslik_width		= 26
+		self.baslik_font		= 'helvetica 12 bold'
+		self.girdi_width		= 10
+		self.girdi_font			= 'helvetica 12 normal'
+		self.not_width			= 10
+		self.not_font			= 'helvetica 10 italic'
+		self.dugme_height		= 1
+		self.dugme_width		= 10
+		self.dugme_font			= 'helvetica 12 bold'
+		self.girdi_bg_normal		= 'white'
+		self.girdi_bg_error		= 'yellow'
+		
+
+
+		# ana pencere
+		self.ust = parent
+		self.ust.wm_title(u'mapiCNC Bilyal\u0131 Bur\u00E7 i\u00E7in G Kod \u00DCretici')
+		self.ust.geometry('500x500+50+50')
+		
+		self.tasiyici = Frame(parent)
+		self.tasiyici.pack(
+				fill		= BOTH,
+				expand		= YES,
+				padx		= 8,
+				pady		= 8)
+
+
+
+		# frame'ler
+		self.degerler_penceresi	= Frame(self.tasiyici)
+		self.degerler_penceresi.configure(
+				relief		= SUNKEN,
+				borderwidth	= 1)
+		self.degerler_penceresi.pack(
+				fill		= BOTH,
+				expand		= YES)
+		
+		self.dugmeler_penceresi	= Frame(self.tasiyici)
+		self.dugmeler_penceresi.configure(
+				relief		= FLAT,
+				borderwidth	= 0)
+		self.dugmeler_penceresi.pack(
+				fill		= X,
+				expand		= YES)
+
+
+
+		###  dosya_adi ###
+		self.pencere_dosya_adi = Frame(self.degerler_penceresi)
+		self.pencere_dosya_adi.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_dosya_adi = Label(self.pencere_dosya_adi)
+		self.baslik_dosya_adi.configure(
+				text		= u'Dosya Ad\u0131',
+				anchor		= W,
+				fg		= self.fg_dosya_adi,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_dosya_adi.pack(side=LEFT)
+
+		self.girdi_dosya_adi = Entry(self.pencere_dosya_adi)
+		self.girdi_dosya_adi.configure(
+				background	= self.girdi_bg_normal,
+				width		= 2*self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.dosya_adi)
+		self.girdi_dosya_adi.pack(side=LEFT)
+
+
+
+		###  sure  ###
+		self.pencere_sure		= Frame(self.degerler_penceresi)
+		self.pencere_sure.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_sure = Label(self.pencere_sure)
+		self.baslik_sure.configure(
+				text		= u'Tahmini S\u00FCre',
+				anchor		= W,
+				fg		= self.fg_sure,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_sure.pack(side=LEFT)
+
+		self.girdi_sure = Entry(self.pencere_sure)
+		self.girdi_sure.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.sure,
+				state		= 'readonly',
+				takefocus	= False,
+				fg		= 'red1')
+		self.girdi_sure.pack(side=LEFT)
+
+
+
+		###  adet_bilya ###
+		self.pencere_adet_bilya	= Frame(self.degerler_penceresi)
+		self.pencere_adet_bilya.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_adet_bilya = Label(self.pencere_adet_bilya)
+		self.baslik_adet_bilya.configure(
+				text		= u'Toplam Bilya Say\u0131s\u0131',
+				anchor		= W,
+				fg		= self.fg_adet_bilya,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_adet_bilya.pack(side=LEFT)
+
+		self.girdi_adet_bilya = Entry(self.pencere_adet_bilya)
+		self.girdi_adet_bilya.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.adet_bilya,
+				state		= 'readonly',
+				takefocus	= False,
+				fg		= 'red1')
+		self.girdi_adet_bilya.pack(side=LEFT)
+
+		self.not_adet_bilya = Label(self.pencere_adet_bilya)
+		self.not_adet_bilya.configure(
+				text		= 'adet',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_adet_bilya.pack(side=LEFT)
+
+
+
+		###  adet_cevre ###
+		self.pencere_adet_cevre	= Frame(self.degerler_penceresi)
+		self.pencere_adet_cevre.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_adet_cevre = Label(self.pencere_adet_cevre)
+		self.baslik_adet_cevre.configure(
+				text		= u'Halkadaki Bilya Say\u0131s\u0131',
+				anchor		= W,
+				fg		= self.fg_adet_cevre,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_adet_cevre.pack(side=LEFT)
+
+		self.girdi_adet_cevre = Entry(self.pencere_adet_cevre)
+		self.girdi_adet_cevre.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.adet_cevre)
+		self.girdi_adet_cevre.pack(side=LEFT)
+
+		self.not_adet_cevre = Label(self.pencere_adet_cevre)
+		self.not_adet_cevre.configure(
+				text		= 'adet',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_adet_cevre.pack(side=LEFT)
+
+
+
+
+		###  adet_halka ###
+		self.pencere_adet_halka = Frame(self.degerler_penceresi)
+		self.pencere_adet_halka.pack(
+				side		= TOP,
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_adet_halka = Label(self.pencere_adet_halka)
+		self.baslik_adet_halka.configure(
+				text		= u'Halka Say\u0131s\u0131',
+				anchor		= W,
+				fg		= self.fg_adet_halka,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_adet_halka.pack(side=LEFT)
+
+		self.girdi_adet_halka = Entry(self.pencere_adet_halka)
+		self.girdi_adet_halka.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.adet_halka)
+		self.girdi_adet_halka.pack(side=LEFT)
+
+		self.not_adet_halka = Label(self.pencere_adet_halka)
+		self.not_adet_halka.configure(
+				text		= 'adet',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_adet_halka.pack(side=LEFT)
+
+
+
+		###  ilk_merkez ###
+		self.pencere_ilk_merkez = Frame(self.degerler_penceresi)
+		self.pencere_ilk_merkez.pack(
+				side		= TOP,
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_ilk_merkez = Label(self.pencere_ilk_merkez)
+		self.baslik_ilk_merkez.configure(
+				text		= u'\u0130lk Merkezin Z Konumu',
+				anchor		= W,
+				fg		= self.fg_ilk_merkez,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_ilk_merkez.pack(side=LEFT)
+
+		self.girdi_ilk_merkez = Entry(self.pencere_ilk_merkez)
+		self.girdi_ilk_merkez.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.ilk_merkez)
+		self.girdi_ilk_merkez.pack(side=LEFT)
+
+		self.not_ilk_merkez = Label(self.pencere_ilk_merkez)
+		self.not_ilk_merkez.configure(
+				text		= 'mm',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_ilk_merkez.pack(side=LEFT)
+
+
+
+		###  merkezler_arasi ###
+		self.pencere_merkezler_arasi = Frame(self.degerler_penceresi)
+		self.pencere_merkezler_arasi.pack(
+				side		= TOP,
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_merkezler_arasi = Label(self.pencere_merkezler_arasi)
+		self.baslik_merkezler_arasi.configure(
+				text		= u'Merkezler Aras\u0131 Uzakl\u0131k',
+				anchor		= W,
+				fg		= self.fg_merkezler_arasi,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_merkezler_arasi.pack(side=LEFT)
+
+		self.girdi_merkezler_arasi = Entry(self.pencere_merkezler_arasi)
+		self.girdi_merkezler_arasi.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.merkezler_arasi)
+		self.girdi_merkezler_arasi.pack(side=LEFT)
+
+		self.not_merkezler_arasi = Label(self.pencere_merkezler_arasi)
+		self.not_merkezler_arasi.configure(
+				text		= 'mm',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_merkezler_arasi.pack(side=LEFT)
+
+
+
+		###  puntalama_hizi ###
+		self.pencere_puntalama_hizi = Frame(self.degerler_penceresi)
+		self.pencere_puntalama_hizi.pack(
+				side		= TOP,
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_puntalama_hizi = Label(self.pencere_puntalama_hizi)
+		self.baslik_puntalama_hizi.configure(
+				text		= u'Puntalama H\u0131z\u0131',
+				anchor		= W,
+				fg		= self.fg_puntalama_hizi,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_puntalama_hizi.pack(side=LEFT)
+
+		self.girdi_puntalama_hizi = Entry(self.pencere_puntalama_hizi)
+		self.girdi_puntalama_hizi.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.puntalama_hizi)
+		self.girdi_puntalama_hizi.pack(side=LEFT)
+
+		self.not_puntalama_hizi = Label(self.pencere_puntalama_hizi)
+		self.not_puntalama_hizi.configure(
+				text		= 'mm / dk',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_puntalama_hizi.pack(side=LEFT)
+
+
+
+		###  delme_hizi ###
+		self.pencere_delme_hizi = Frame(self.degerler_penceresi)
+		self.pencere_delme_hizi.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_delme_hizi = Label(self.pencere_delme_hizi)
+		self.baslik_delme_hizi.configure(
+				text		= u'Delme H\u0131z\u0131',
+				anchor		= W,
+				fg		= self.fg_delme_hizi,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_delme_hizi.pack(side=LEFT)
+
+		self.girdi_delme_hizi = Entry(self.pencere_delme_hizi)
+		self.girdi_delme_hizi.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.delme_hizi)
+		self.girdi_delme_hizi.pack(side=LEFT)
+
+		self.not_delme_hizi = Label(self.pencere_delme_hizi)
+		self.not_delme_hizi.configure(
+				text		= 'mm / dk',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_delme_hizi.pack(side=LEFT)
+
+
+
+		###  punta_derinligi ###
+		self.pencere_punta_derinligi = Frame(self.degerler_penceresi)
+		self.pencere_punta_derinligi.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_punta_derinligi = Label(self.pencere_punta_derinligi)
+		self.baslik_punta_derinligi.configure(
+				text		= u'Punta Derinli\u011Fi',
+				anchor		= W,
+				fg		= self.fg_punta_derinligi,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_punta_derinligi.pack(side=LEFT)
+
+		self.girdi_punta_derinligi = Entry(self.pencere_punta_derinligi)
+		self.girdi_punta_derinligi.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.punta_derinligi)
+		self.girdi_punta_derinligi.pack(side=LEFT)
+
+		self.not_punta_derinligi = Label(self.pencere_punta_derinligi)
+		self.not_punta_derinligi.configure(
+				text		= 'mm',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_punta_derinligi.pack(side=LEFT)
+
+
+
+		###  delme_derinligi ###
+		self.pencere_delme_derinligi = Frame(self.degerler_penceresi)
+		self.pencere_delme_derinligi.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_delme_derinligi = Label(self.pencere_delme_derinligi)
+		self.baslik_delme_derinligi.configure(
+				text		= u'Delme Derinli\u011Fi',
+				anchor		= W,
+				fg		= self.fg_delme_derinligi,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_delme_derinligi.pack(side=LEFT)
+
+		self.girdi_delme_derinligi = Entry(self.pencere_delme_derinligi)
+		self.girdi_delme_derinligi.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.delme_derinligi)
+		self.girdi_delme_derinligi.pack(side=LEFT)
+
+		self.not_delme_derinligi = Label(self.pencere_delme_derinligi)
+		self.not_delme_derinligi.configure(
+				text		= 'mm',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_delme_derinligi.pack(side=LEFT)
+
+
+
+		###  guvenli_uzaklik ###
+		self.pencere_guvenli_uzaklik = Frame(self.degerler_penceresi)
+		self.pencere_guvenli_uzaklik.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_guvenli_uzaklik = Label(self.pencere_guvenli_uzaklik)
+		self.baslik_guvenli_uzaklik.configure(
+				text		= u'G\u00FCvenli Uzakl\u0131k',
+				anchor		= W,
+				fg		= self.fg_guvenli_uzaklik,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_guvenli_uzaklik.pack(side=LEFT)
+
+		self.girdi_guvenli_uzaklik = Entry(self.pencere_guvenli_uzaklik)
+		self.girdi_guvenli_uzaklik.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.guvenli_uzaklik)
+		self.girdi_guvenli_uzaklik.pack(side=LEFT)
+
+		self.not_guvenli_uzaklik = Label(self.pencere_guvenli_uzaklik)
+		self.not_guvenli_uzaklik.configure(
+				text		= 'mm',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_guvenli_uzaklik.pack(side=LEFT)
+
+
+
+		###  helezon_katsayisi ###
+		self.pencere_helezon_katsayisi = Frame(self.degerler_penceresi)
+		self.pencere_helezon_katsayisi.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_helezon_katsayisi = Label(self.pencere_helezon_katsayisi)
+		self.baslik_helezon_katsayisi.configure(
+				text		= u'Helezon Katsay\u0131s\u0131',
+				anchor		= W,
+				fg		= self.fg_helezon_katsayisi,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_helezon_katsayisi.pack(side=LEFT)
+
+		self.girdi_helezon_katsayisi = Entry(self.pencere_helezon_katsayisi)
+		self.girdi_helezon_katsayisi.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.helezon_katsayisi)
+		self.girdi_helezon_katsayisi.pack(side=LEFT)
+
+		self.not_helezon_katsayisi = Label(self.pencere_helezon_katsayisi)
+		self.not_helezon_katsayisi.configure(
+				text		= 'tur',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_helezon_katsayisi.pack(side=LEFT)
+
+
+
+		###  helezon_derece ###
+		self.pencere_helezon_derece = Frame(self.degerler_penceresi)
+		self.pencere_helezon_derece.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_helezon_derece = Label(self.pencere_helezon_derece)
+		self.baslik_helezon_derece.configure(
+				text		= u'Helezon Derece',
+				anchor		= W,
+				fg		= self.fg_helezon_derece,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_helezon_derece.pack(side=LEFT)
+
+		self.girdi_helezon_derece = Entry(self.pencere_helezon_derece)
+		self.girdi_helezon_derece.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.helezon_derece,
+				state		= 'readonly',
+				takefocus	= False,
+				fg		= 'red1')
+		self.girdi_helezon_derece.pack(side=LEFT)
+
+
+
+		###  c_baslangic ###
+		self.pencere_c_baslangic = Frame(self.degerler_penceresi)
+		self.pencere_c_baslangic.pack(
+				fill		= X,
+				expand		= YES)
+
+		self.baslik_c_baslangic = Label(self.pencere_c_baslangic)
+		self.baslik_c_baslangic.configure(
+				text		= u'C Ba\u015Flang\u0131\u00E7 Konumu',
+				anchor		= W,
+				fg		= self.fg_c_baslangic,
+				width		= self.baslik_width,
+				font		= self.baslik_font)
+		self.baslik_c_baslangic.pack(side=LEFT)
+
+		self.girdi_c_baslangic = Entry(self.pencere_c_baslangic)
+		self.girdi_c_baslangic.configure(
+				background	= self.girdi_bg_normal,
+				width		= self.girdi_width,
+				font		= self.girdi_font,
+				textvariable	= self.c_baslangic)
+		self.girdi_c_baslangic.pack(side=LEFT)
+
+		self.not_c_baslangic = Label(self.pencere_c_baslangic)
+		self.not_c_baslangic.configure(
+				text		= 'tur',
+				anchor		= W,
+				width		= self.not_width,
+				font		= self.not_font)
+		self.not_c_baslangic.pack(side=LEFT)
+
+
+
+		### dugme_g_kod ###
+		self.dugme_g_kod = Button(self.dugmeler_penceresi)
+		self.dugme_g_kod.configure(
+				text		= u'G Kod \u00DCret', 
+				height		= self.dugme_height,
+				width		= self.dugme_width,
+				font		= self.dugme_font,
+				command		= lambda: self.g_kod())
+		self.dugme_g_kod.bind('<Return>', lambda olay: self.g_kod())
+		self.dugme_g_kod.pack(
+				side		= LEFT,
+				padx		= 2, 
+				pady		= 2,
+				ipadx		= 2, 
+				ipady		= 2) 
+
+
+
+		### dugme_kapat ###
+		self.dugme_kapat = Button(self.dugmeler_penceresi)
+		self.dugme_kapat.configure(
+				text		= u'\u00C7\u0131k', 
+				height		= self.dugme_height,
+				width		= self.dugme_width,
+				font		= self.dugme_font,
+				command		= lambda: self.kapat())
+		self.dugme_kapat.bind('<Return>', lambda olay: self.kapat())
+		self.dugme_kapat.pack(
+				side		= RIGHT,
+				padx		= 2, 
+				pady		= 2,
+				ipadx		= 2, 
+				ipady		= 2) 
+
+
+
+		### guncelleme olaylari ###
+		self.girdi_dosya_adi.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_adet_cevre.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_adet_halka.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_ilk_merkez.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_merkezler_arasi.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_puntalama_hizi.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_delme_hizi.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_punta_derinligi.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_delme_derinligi.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_guvenli_uzaklik.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_helezon_katsayisi.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+		self.girdi_c_baslangic.configure(
+				validate	= 'focusout',
+				validatecommand	= lambda: self.verileri_guncelle())
+
+
+
+		self.girdi_dosya_adi.focus_force()
+		self.verileri_guncelle()
+
+
+
+	def kapat(self):
+		self.ust.destroy()
+
+
+
+	def verileri_guncelle(self):
+		if self.kontrol():
+			# bilya adedi
+			self.adet_bilya.set(self.adet_cevre.get() * self.adet_halka.get())
+
+			# sure
+			if self.puntalama_hizi.get() != 0 and self.delme_hizi.get != 0 \
+			and self.maksimum_ilerleme_hizi.get != 0 and self.maksimum_donme_hizi.get() != 0 \
+			and self.adet_cevre.get() != 0:
+				# bosta giderken, maksimum hizin 2/3'u aliniyor cunku yeterince hizlanamayacak
+				delme_suresi = (self.guvenli_uzaklik.get() + self.punta_derinligi.get()) \
+					/ self.puntalama_hizi.get() * 60.0 \
+					+ (self.delme_derinligi.get() - self.punta_derinligi.get()) \
+					/ self.delme_hizi.get() * 60.0 \
+					+ (self.delme_derinligi.get() + self.guvenli_uzaklik.get()) \
+					/ self.maksimum_ilerleme_hizi.get() * 60.0 *9.0/8.0
+
+				# maksimum hizin 2/3'u aliniyor
+				donme_suresi = 1.0 / self.adet_cevre.get() / self.maksimum_donme_hizi.get() * 60.0 * 9.0/8.0
+
+				# maksimum hizin 2/3'u aliniyor
+				halka_gecis_suresi = self.merkezler_arasi.get() / self.maksimum_ilerleme_hizi.get() \
+					* 60.0 * 9.0/8.0 \
+					+ self.helezon_katsayisi.get() / self.adet_cevre.get() / 11.0 \
+					/ self.maksimum_donme_hizi.get() * 60.0 * 9.0/8.0
+
+				home_suresi = (2 * (self.ilk_merkez.get() + 20.0) \
+					+ (self.adet_halka.get() - 1) * self.merkezler_arasi.get()) \
+					/ self.maksimum_ilerleme_hizi.get() * 60.0 * 4.0 / 3.0 \
+					+ 4
+
+				toplam_sure = (delme_suresi + donme_suresi) * self.adet_cevre.get() * self.adet_halka.get() \
+					+ halka_gecis_suresi * (self.adet_halka.get() - 1) \
+					+ home_suresi
+
+				sure_dk = int(toplam_sure/60)
+				sure_sn = int(toplam_sure - sure_dk * 60)
+
+				self.sure.set(str(sure_dk) + ' dk ' + \
+						str(sure_sn) + ' sn ')
+			else:
+				self.sure.set('')
+
+			# helezon acisi
+			if self.adet_cevre.get() > 0:
+				self.helezon_derece.set( \
+					str(round(360*self.helezon_katsayisi.get()/self.adet_cevre.get()/11.0, 1)) \
+					+ u' \u00B0')
+			else:
+				self.helezon_derece.set('')
+		else:
+			# kontrol basarili olmadiysa hesaplama yapma
+			self.adet_bilya.set('')
+			self.sure.set('')
+			self.helezon_derece.set('')
+			
+		return True
+
+
+		
+	def kontrol(self):
+		hata_var_mi			= 0
+		istenmeyen_karakter_var_mi	= compile('[^a-zA-z0-9_\-]')
+
+		# dosya_adi
+		if istenmeyen_karakter_var_mi.search(self.dosya_adi.get()):
+			self.girdi_dosya_adi.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+		else:
+			self.girdi_dosya_adi.configure(bg=self.girdi_bg_normal)
+			
+			
+		#adet_cevre
+		try:
+			if int(self.adet_cevre.get()) > 0:
+				self.girdi_adet_cevre.configure(bg=self.girdi_bg_normal)
+			else:
+				self.girdi_adet_cevre.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			self.girdi_adet_cevre.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# adet_halka
+		try:
+			if int(self.adet_halka.get()) > 0:
+				self.girdi_adet_halka.configure(bg=self.girdi_bg_normal)
+			else:
+				self.girdi_adet_halka.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			self.girdi_adet_halka.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# ilk_merkez
+		try:
+			v = float(self.ilk_merkez.get())
+			self.girdi_ilk_merkez.configure(bg=self.girdi_bg_normal)
+		except ValueError:
+			self.girdi_ilk_merkez.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# merkezler_arasi
+		try:
+			v = float(self.merkezler_arasi.get())
+			self.girdi_merkezler_arasi.configure(bg=self.girdi_bg_normal)
+		except ValueError:
+			self.girdi_merkezler_arasi.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# puntalama_hizi
+		try:
+			if int(self.puntalama_hizi.get()) > 0:
+				self.girdi_puntalama_hizi.configure(bg=self.girdi_bg_normal)
+			else:
+				self.girdi_puntalama_hizi.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			self.girdi_puntalama_hizi.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# delme_hizi
+		try:
+			if int(self.delme_hizi.get()) > 0:
+				self.girdi_delme_hizi.configure(bg=self.girdi_bg_normal)
+			else:
+				self.girdi_delme_hizi.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			self.girdi_delme_hizi.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# punta_derinligi
+		try:
+			if float(self.punta_derinligi.get()) >= 0:
+				self.girdi_punta_derinligi.configure(bg=self.girdi_bg_normal)
+			else:
+				self.girdi_punta_derinligi.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			self.girdi_punta_derinligi.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# delme_derinligi
+		try:
+			if float(self.delme_derinligi.get()) > 0:
+				self.girdi_delme_derinligi.configure(bg=self.girdi_bg_normal)
+			else:
+				self.girdi_delme_derinligi.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			self.girdi_delme_derinligi.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# delik, punta mesafesinden buyuk mu?
+		try:
+			if float(self.punta_derinligi.get()) > float(self.delme_derinligi.get()):
+				self.girdi_punta_derinligi.configure(bg=self.girdi_bg_error)
+				self.girdi_delme_derinligi.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			hata_var_mi = 1
+
+
+		# guvenli_uzaklik
+		try:
+			if float(self.guvenli_uzaklik.get()) > 0:
+				self.girdi_guvenli_uzaklik.configure(bg=self.girdi_bg_normal)
+			else:
+				self.girdi_guvenli_uzaklik.configure(bg=self.girdi_bg_error)
+				hata_var_mi = 1
+		except ValueError:
+			self.girdi_guvenli_uzaklik.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# helezon_katsayisi
+		try:
+			v = float(self.helezon_katsayisi.get())
+			self.girdi_helezon_katsayisi.configure(bg=self.girdi_bg_normal)
+		except ValueError:
+			self.girdi_helezon_katsayisi.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+
+		# c_baslangic
+		try:
+			v = float(self.c_baslangic.get())
+			self.girdi_c_baslangic.configure(bg=self.girdi_bg_normal)
+		except ValueError:
+			self.girdi_c_baslangic.configure(bg=self.girdi_bg_error)
+			hata_var_mi = 1
+
+		return not hata_var_mi
+
+
+
+	def g_kod(self):
+		if self.kontrol():
+			# yeni bir dosya olustur
+			d = open(self.klasor + self.dosya_adi.get() + '.ngc', 'w')
+			c_adim = 0
+			c_konum = self.c_baslangic.get()
+
+
+			# dosya basligini olustur
+			d.write('( ######################################### )\n')
+			d.write('( Dosya Adi                : ' + self.dosya_adi.get() + '.ngc )\n')
+			d.write('( Yaklasik Sure            : ' + self.sure.get() + ')\n')
+			d.write('( Toplam Bilya Sayisi      : ' + str(self.adet_bilya.get()) + ' adet )\n')
+			d.write('( Halka Sayisi             : ' + str(self.adet_halka.get()) + ' adet )\n')
+			d.write('( Halkadaki Bilya          : ' + str(self.adet_cevre.get()) + ' adet )\n')
+			d.write('( Ilk Merkezin Uzakligi    : ' + str(self.ilk_merkez.get()) + ' mm )\n')
+			d.write('( Halka Merkez Uzakliklari : ' + str(self.merkezler_arasi.get()) + ' mm )\n')
+			d.write('( Delik Derinligi          : ' + str(self.delme_derinligi.get()) + ' mm )\n')
+			d.write('( Helezon Acisi            : ' + str(round(360*self.helezon_katsayisi.get()/self.adet_cevre.get()/11.0,1)) + ' derece)\n')
+			d.write('( ######################################### )\n\n\n')
+
+			# uygun modlari sec
+			d.write('( ##### makine hazirlik bolumu  ##### )\n')
+			d.write('G40 G49         ( cap ve boy ofsetini sifirla                  )\n')
+			d.write('G18 G21         ( XZ duzlemi, metrik sistem                    )\n')
+			d.write('G54 G80 G90 G94 ( 1. koordinat, dur, absolute mod, ilerleme/dk )\n')
+			d.write('\n')
+
+			# kesici takimi, baslangic noktasina getir
+			d.write('( ##### guvenli baslama konumuna  gel ##### )\n')
+			d.write('G0 Z' + str(round(self.ilk_merkez.get(), self.z_hane)) + '\n')
+			d.write('G0 X' + str(round(self.guvenli_uzaklik.get(), self.x_hane)) + '\n')
+			d.write('G0 C-0.10\n')
+			d.write('\n')
+
+			# her halka icin...
+			for c in range(self.adet_halka.get()):
+				# siradaki halkaya gec
+				d.write('( ##### ' + str(c+1) + '. halkaya gec ##### )\n')
+				d.write('G0 Z' + str(round(self.ilk_merkez.get() + c * self.merkezler_arasi.get(), self.z_hane)) + '\n')
+				d.write('\n')
+
+				# her delik icin...
+				for h in range(self.adet_cevre.get()):
+					# parcayi, uygun aciya getir
+					d.write('( ### halka: ' + str(c+1) + '/' + str(self.adet_halka.get()) \
+						+ '  delik: ' + str(h+1) + '/' + str(self.adet_cevre.get()) + ' ### )\n')
+					d.write('G0 C' + str(round(c_konum, self.c_hane)) + '\n')
+
+					# punta deiligini ac
+					if self.punta_derinligi.get() > 0:
+						d.write('G1 X' + str(round(-1 * self.punta_derinligi.get(), self.x_hane)) + \
+						' F' + str(self.puntalama_hizi.get()) + '\n')
+						
+					# deligi del
+					d.write('G1 X' + str(round(-1 * self.delme_derinligi.get(), self.x_hane)) + ' F' + str(self.delme_hizi.get()) + '\n')
+
+					# delikten cik
+					d.write('G0 X' + str(round(self.guvenli_uzaklik.get(), self.x_hane)) + '\n')
+					d.write('\n')
+
+					# bir sonraki deligin acisini hesapla
+					c_konum = round(c_konum + (1.0 / self.adet_cevre.get()), self.c_hane)
+
+				# bir sonraki halkanin ilk deliginin acisini hesapla
+				c_konum = round(c_konum + self.helezon_katsayisi.get()/self.adet_cevre.get()/11.0, self.c_hane)
+
+			# kesici takimi, guvenli noktaya getir
+			d.write('G53 G0 X-2.0 Z2.0\n')
+			d.write('M30\n')
+			d.close()
+
+			# olusturulan dosyayi, editor ile ac
+			sleep(0.5)
+			system('/usr/bin/gedit ' + self.klasor + self.dosya_adi.get() + '.ngc')
+
+
+
+ana_pencere = Tk()
+uygulama = Uygulama(ana_pencere)
+ana_pencere.mainloop()

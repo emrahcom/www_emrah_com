@@ -1,0 +1,856 @@
+-------------------------------------------------------------------------------
+LIBAV-TOOLS (AVCONV) NOTLARI
+-------------------------------------------------------------------------------
+
+ffmpeg projesinden ayrılan bir grup, libav-tools adında alternatif bir ürün
+geliştiriyor. "ffmpeg" yerine "avconv", "ffplay" yerine "avplay", "ffserver"
+yerine "avserver" komutlarını kullanılacak. ffmpeg projesini de takip etmekte
+fayda var, olumlu gelişmeler olmakta.
+
+# Yükleme
+
+# aptitude install -t squeeze-backports libav-tools libavcodec-extra-53 \
+#	libavfilter-extra-2 libavformat-extra-53 libavutil-extra-51 \
+#	libpostproc-extra-52 libswscale-extra-2 x264
+
+aptitude install -t squeeze-backports libav-tools x264
+
+
+# İzleme
+avplay video.mpg
+avplay mmsh://85.111.3.55/ntv
+avplay mmst://95.0.159.138/tv1
+avplay mmst://95.0.159.131/trtbelgesel
+
+
+# Çevirme (mpeg -> flv)
+avconv -i video.mpg -r 25  -qmin 1 -qmax 6  -ar 22050 -ab 32k \
+	-vcodec flv -f flv video.flv
+
+
+# Bilgi alma
+avconv -codecs
+avconv -formats
+avconv -protocols
+
+
+# avconv options
+ -vcodec  copy ile kullanılırsa input file video formati aynen aktarılır.
+ -acodec  copy ile kullanılırsa input file audio formati aynen aktarılır.
+ -re	  realtime aktarma. Veriyi akma hızı ile işler. Stream ederken gerekli.
+ -s	  yükselik x genişlik
+ -ar	  audio frame rate
+ -ab	  audio bit rate
+ -r	  video frame rate
+ -b	  video bit rate
+ -sameq	  kaynakla yanı kalitede çıktı verir.
+ -qmin	  minimum kalite kaybı. Değer düştükce kalite artar.
+ -qmax	  maksimum kalite kaybı. Değer düştükçe kalite artar.
+
+
+# Örnek
+avconv -i input.mp4 -threads 0 -vprofile main -preset slow \
+-vcodec libx264 -b:v 512k -maxrate 512k -bufsize 1024k -vf scale=-1:480 \
+-strict experimental -c:a aac -ar 44100 -ab 48k output.mp4
+
+# vprofile
+high, main, baseline
+
+# preset
+ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow
+
+# vcodec
+libx264
+
+# vf
+-vf scale=-1:480
+-vf 'scale=720:trunc(ow/a/vsub)*vsub'
+
+# acodec
+libvo_aacenc
+
+
+# Streaming
+avserver
+
+avconv -re -i video.mpg -vcodec copy -acodec copy http://localhost:8090/feed1.ffm
+mplayer http://localhost:8090/test1.mp # goruntu kalitesi iyi ama takiliyor.
+
+avconv -i video.mpg -s 320x240 http://localhost:8090/feed1.ffm
+mplayer http://localhost:8090/test.asf # ses gelmiyor.
+mplayer http://localhost:8090/test1.mp # goruntu kalitesi dusuk.
+
+# Ekranı kaydetmek. (Stream ederken bir sorun çıkıyor)
+	avconv -f x11grab -s wxga -r 25 -i :0.0 \
+	-threads 0 -preset medium \
+	-c:v libx264 -b 800k -r 25 \
+	-an \
+	-f flv test.flv
+
+
+# Kaynaklar
+https://www.virag.si/2012/01/web-video-encoding-tutorial-with-ffmpeg-0-9/
+http://sonnati.wordpress.com/2011/07/11/ffmpeg-the-swiss-army-knife-of-internet-streaming-part-i/
+http://sonnati.wordpress.com/2011/08/08/ffmpeg-–-the-swiss-army-knife-of-internet-streaming-–-part-ii/
+http://sonnati.wordpress.com/2011/08/19/ffmpeg-–-the-swiss-army-knife-of-internet-streaming-–-part-iii/
+http://sonnati.wordpress.com/2011/08/30/ffmpeg-–-the-swiss-army-knife-of-internet-streaming-–-part-iv/
+http://ffmpeg.org/ffserver.html
+http://stream0.org/2009/10/22/howto_build_ffmpeg_on_debian_s/
+http://rodrigopolo.com/ffmpeg/cheats.html
+http://www.ioncannon.net/programming/452/iphone-http-streaming-with-ffmpeg-and-an-open-source-segmenter/
+
+
+
+-------------------------------------------------------------------------------
+ALSA NOTLARI
+-------------------------------------------------------------------------------
+
+# Yükleme
+aptitude install alsa-base alsa-utils
+
+# Mixerde Audio Capture'i açmak için...
+alsamixer
+	F4	(Capture)
+	Line	(Line-in'den capture yapılacaksa)
+	Aux	(Aux'dan capture yapılacaksa)
+	Mic	(Mikrofondan capture yapılacaksa)
+	Space	(seçimi onaylamak için)
+	Capture	(Capture için ses ayarı)
+
+
+
+-------------------------------------------------------------------------------
+TVTIME & SCANTV NOTLARI
+-------------------------------------------------------------------------------
+
+# Yükleme
+aptitude install tvtime scantv
+
+# Yayın yapan frekansları bulma
+scantv -c /dev/video0 -C /dev/vbi0
+	veya
+tvtime-scanner
+
+# Yayını izleme
+tvtime
+
+    F1              : Ana menu
+    ESC             : Çıkış
+    n               : Norm (PAL, SECAM vs) değiştirme
+    sol-sağ ok      : ses ayarları
+    yukari, aşağı   : Kanal değiştirme
+    f               : Full screen (tam ekran)
+    s               : Screnshot (ekran görüntüsünü alma)
+
+
+
+-------------------------------------------------------------------------------
+MENCODER & MPLAYER NOTLARI
+-------------------------------------------------------------------------------
+
+# Yükleme
+aptitude install -t squeeze-backports mencoder mplayer smplayer
+
+#aptitude install -t squeeze-backports mencoder mplayer2 smplayer
+#aptitude install mencoder mplayer
+
+# TV yayınını izleme
+mplayer tv:// -tv normid=5:freq=55.25:mjpeg:decimation=1:quality=70:\
+alsa:amode=1:forceaudio:immediatemode=0:volume=80
+
+	normid		: 5 (PAL-BG)
+	freq		: scantv ile bulunan frekans
+	mjpeg		: TV kartın üzerindenki MJPEG sıkıştırmayı kullanmak için
+	decimation	: 1 (MJPEG sıkıştırma için boyut. 1 -> 704x576 PAL)
+	quality		: JPEG sıkıştırma oranı
+	device		: aygıt (default /dev/video0)
+	input		: 0 = composite1
+			  1 = S-video
+	alsa		. Ses için ALSA kullan
+	forceaudio	: Ses aygıtı görünmese bile sesi capture et
+	amode		: 1 (0 = MONO, 1=STEREO)
+	immediatemode	: 0 (0 = capture Audio+Video
+			     1 = capture video, audio line-in ile...)
+	volume		: 80 (Ses oranı)
+
+"freq" kullanmayıp "-tvscan" kullanılarak mplayer ile birlikte otomatik kanal
+tarama başlatılabilir.
+
+# mms yayını kaydetme
+mencoder -nocache mms://85.111.3.55/ntv -ovc copy -oac copy -o ntv.avi
+mencoder -nocache mms://95.0.159.131/trtbelgesel -ovc copy -oac copy -o belgesel.avi
+
+avconv -i ntv.avi -vcodec flv -f flv -r 25 -b 512k -acodec libmp3lame -ar 44100 -ab 40k -y ntv.flv
+avconv -i belgesel.avi -vcodec flv -f flv -r 25 -b 775k -acodec libmp3lame -ar 44100 -ab 48k -y belgesel.flv
+
+# TV yayını kaydetme (TV tuner karti ile...)
+Boyutu oldukça büyük oluyor. FLV'ye çevirip kaydetmek daha mantıklı.
+
+mencoder -nocache tv:// -tv normid=5:freq=55.25:mjpeg:decimation=2:quality=50:\
+alsa:amode=1:forceaudio:immediatemode=0:volume=80 \
+-ovc copy -oac copy -o tv.avi
+
+mencoder -nocache tv:// -tv normid=5:freq=55.25:mjpeg:decimation=2:quality=50:\
+alsa:amode=1:forceaudio:immediatemode=0:volume=80 \
+-ovc copy -oac copy -o - -really-quiet | \
+avconv -i - \
+-vcodec flv -f flv -r 25 -b 775k \
+-acodec libmp3lame -ar 44100 -ab 48k \
+tv.flv
+
+
+# TV yayını kaydetme (Video, video capture karti ile; Audio, ses kartı line-in ile...)
+Videonun alındığı bağlantı noktasına göre input değeri değişir.
+input : 0 -> composite1, 1 -> S-Video
+
+mencoder -nocache tv:// -tv normid=5:mjpeg:decimation=2:quality=50:\
+alsa:amode=1:forceaudio:immediatemode=1:volume=80 \
+device=/dev/video0:input=0 \
+-ovc copy -oac copy -o - -really-quiet | \
+avconv -i - \
+-vcodec flv -f flv -r 25 -b 775k \
+-acodec libmp3lame -ar 44100 -ab 48k \
+tv.flv
+
+
+
+-------------------------------------------------------------------------------
+WOWZA SUNUCU NOTLARI
+-------------------------------------------------------------------------------
+
+# Amazon Panel & Wowza sunucu ekleme
+console.aws.amazon.com
+	EC2 panel-> EC2 Dashboard -> Launch Instance -> Community AMIs -> EBS
+	-> ami-1de3db69
+	aws-marketplace/WowzaMediaServer-ebs-lickey-3.0.5-x86_64-b2efb3c5-6645-448d-b595-8eaf905de0
+
+	Termination Protection -> Enable
+	Collector ve Repeater için ayrı firewall
+	Tag -> Name
+
+
+# Repeater Firewall ayarları
+	TCP	21		0.0.0.0/0
+	TCP	22		0.0.0.0/0
+	TCP	80		0.0.0.0/0
+	TCP	443		0.0.0.0/0
+	TCP	554		0.0.0.0/0
+	TCP	1935		0.0.0.0/0
+	TCP	8086		0.0.0.0/0
+	TCP	8084-8085	0.0.0.0/0
+	UDP	0-65535		0.0.0.0/0
+
+
+# Wowza sunucuya SSH erişimi
+IP adresini ve keyi öğrenmek için
+	EC2 panel -> Menu -> Instances -> Sunucu seçilecek -> Description ->
+	Public DNS : ec2-xxx-yyy-www-zzz.compute-1.amazonaws.com
+	(xxx.yyy.www.zzz IP adresi olarak kullanılacak)
+	Key Pair Name: anahtar_adi
+
+	EC2 Panel -> Networks & Security -> Key Pairs (Yüklenmiş olacak)
+
+	ssh-add anahtar_dosyasi
+	ssh ec2-user@xxx.yyy.www.zzz
+	sudo sh
+	su -l
+
+
+# Yüklenecek paketler
+	yum install tmux
+
+# ulimit ayarları
+Açılabilir dosya adedi arttırılacak.
+	vim /etc/security/limits.conf
+		*	soft	nofile	100000
+		*	hard	nofile	100000
+
+	ulimit -a
+	ulimit -Hn 100000
+	ulimit -Sn 100000
+	ulimit -a
+
+
+# Wowza collector ayarları
+SSH ile bağlanılır. Örnekte "emrah" adında uygulama oluşturuluyor. Başka bir
+isim de verilebilir. Bu örnekteki uygulama, kendisine gönderilen yayını alıp
+sonra yayınlayacak, yani "collector" olacak.
+
+	cd /usr/local/WowzaMediaServer/applications
+	mkdir emrah
+
+	cd /usr/local/WowzaMediaServer/conf/
+	mkdir emrah
+	cp live/Application.xml emrah/
+	vim emrah/Application.xml
+		<StreamType>live-lowlatency</StreamType>
+		<LiveStreamPacketizers>cupertinostreamingpacketizer,smoothstreamingpacketizer,sanjosestreamingpacketizer</LiveStreamPacketizers>
+
+	- <StreamType>
+	default: Statik Flash, H264/AAC ve MP3 dosyaları için video on demand streaming
+	live: Canlı video yayınlamak için (one-to-many için uygun)
+	live-lowlatency: Canlı video yayınlamak için (one-to-one veya one-to-few için uygun)
+	live-record: live ile aynı ama videoyu kaydetme de var.
+	liverepeater-origin: Canlı yayın aktarma için uygun.
+	liverepeater-edge: Canlı yayın aktarma için uygun.
+
+	/etc/init.d/WowzaMediaServer restart
+
+
+# Wowza repeater ayarları
+Yayını collector'den dinleyip tekrar eden uygulamaya "repeater" deniliyor.
+Repeater ayarları, collector gibi yapılıyor ama Application.xml dosyası
+aşağıdaki gibi olacak. "OriginURL" bölümünde yerel veya Internet IP adresi
+kullanılabilir.
+
+	cd /usr/local/WowzaMediaServer/applications
+	mkdir emrah
+
+	cd /usr/local/WowzaMediaServer/conf/
+	mkdir emrah
+	cp live/Application.xml emrah/
+	vim emrah/Application.xml
+		<StreamType>liverepeater-edge</StreamType>
+		<LiveStreamPacketizers>cupertinostreamingrepeater,smoothstreamingrepeater,sanjosestreamingrepeater</LiveStreamPacketizers>
+		<OriginURL>rtmp://xxx.yyy.www.zzz:1935/emrah</OriginURL>
+
+	/etc/init.d/WowzaMediaServer restart
+
+
+# Wowza sunucuyu restart ettirme
+/etc/init.d/WowzaMediaServer status
+/etc/init.d/WowzaMediaServer restart
+
+Uzaktan çalıştığını görmek için:
+curl 107.22.29.245:1935
+
+
+# Stream tipine göre linkler
+
+Flash (RTMP):
+[protocol-method]://[wowza-address]/[application]/[application-instance]/[stream-name]
+rtmp://xxx.yyy.www.zzz:1935/emrah
+rtmp://xxx.yyy.www.zzz:1935/emrah/mp4:video.mov
+
+Flash (HTTP - San Jose Streaming):
+http://[wowza-address]/[application]/[application-instance]/[stream-name]/manifest.f4m
+http://xxx.yyy.www.zzz:1935/emrah/manifest.f4m
+http://xxx.yyy.www.zzz:1935/emrah/mp4:video.mov/manifest.f4m
+
+Apple iPhone, iPad, iPod touch (HTTP - Cupertino Streaming):
+http://[wowza-address]/[application]/[application-instance]/[stream-name]/playlist.m3u8
+http://xxx.yyy.www.zzz:1935/emrah/playlist.m3u8
+http://xxx.yyy.www.zzz:1935/emrah/mp4:video.mov/playlist.m3u8
+
+Microsoft Silverlight (Smooth Streaming): GEREKSIZ
+http://[wowza-address]/[application]/[application-instance]/[stream-name]/Manifest
+http://xxx.yyy.www.zzz:1935/emrah/Manifest
+http://xxx.yyy.www.zzz:1935/emrah/mp4:video.mov/Manifest
+
+
+# Wowza Transcoder AddOn
+
+Transcoding: H264/AAC olmayan streami alıp multi-bitrate H264/AAC streame çevirir.
+Transrate: H264/AAC streami alıp multi-bitrate streame çevirir.
+
+
+
+-------------------------------------------------------------------------------
+WOWZA SUNUCUYA STREAM GÖNDERME
+-------------------------------------------------------------------------------
+
+# Wowza sunucuya avconv ile stream gönderme
+
+	avconv -i video.mpg \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 20050 -ab 32K \
+	rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+	avconv -re -i rtmp://93.187.203.125:1935/live/planet4 \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 20050 -ab 32K \
+	rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+	avconv -re -i rtmp://93.187.203.125:1935/live/planet4 \
+	-vcodec copy -f flv \
+	-acodec copy  \
+	rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+
+# Pipe kullanımı
+	# Pipe oluşturma
+	mkfifo pipe.mpg
+
+	# Pipe üzerinden Webcam stream
+	avconv -r 25 -f video4linux2 -i /dev/video0 \
+	-vcodec mpeg4 -f mpeg -b 200K -r 25 \
+	-acodec libmp3lame -ar 20050 -ab 32K \
+	-y pipe.mpg </dev/null &
+
+	cat pipe.mpg | avconv -f mpeg -i - \
+	-f flv \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden MPEG dosya stream
+	avconv -i video.mpg \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 22050 -ab 32K \
+	-y pipe.flv </dev/null &
+
+	cat pipe.flv | avconv -f flv -i - \
+	-f flv \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden MPEG dosya stream
+	# Named pipe tanimlamadan
+	avconv -i video.mpg \
+	-vcodec flv -f flv -b 200K -r 25 \
+	-acodec libmp3lame -ar 22050 -ab 32K \
+	pipe:1 | \
+	avconv -f flv -i - \
+	-f flv \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden mencoder çıktısını
+	# FLV formatında kaydetme
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -re -i - \
+	-vcodec flv -f flv -r 25 -b 775k \
+	-acodec libmp3lame -ar 44100 -ab 48k \
+	-y belgesel.flv
+
+	# Pipe üzerinden mencoder çıktısını
+	# Wowza'da yayınlamak
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -re -i - \
+	-vcodec flv -f flv -r 25 -b 775k \
+	-acodec libmp3lame -ar 44100 -ab 48k \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden mencoder çıktısını
+	# Wowza'da yayınlarken bir yandan da yayını kaydetme.
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	tee belgesel.avi | \
+	avconv -re -i - \
+	-vcodec flv -f flv -r 25 -b 775k \
+	-acodec libmp3lame -ar 44100 -ab 48k \
+	rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden H264 stream
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -re -i - \
+	-threads 0 -preset medium \
+	-c:v libx264 -b 800k \
+	-strict experimental -c:a aac -ar 44100 -ab 48k \
+	-f flv rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# Pipe üzerinden IPod stream
+	mencoder -nocache mms://95.0.159.131/trtbelgesel \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -i - \
+	-threads 0 \
+	-c:v libx264 -r 30000/1001 -b 768k -bt 240k -aspect 16:9 \
+	-coder 0 -bf 0 -flags2 -wpred-dct8x8 -level 13 -maxrate 768k -bufsize 3M \
+	-strict experimental -c:a aac -ac 2 -ar 48000 -ab 48k \
+	-f flv rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# TV kartından alınan yayını pipe üzerinde alıp bir yandan
+	# FLV formatında kaydederken bir yandan da Wowza'ya stream etme.
+	# TV kartından alınan yayın FLV'ye çevrilmeden kaydedilirse
+	# dosya boyutu çok büyük oluyor.
+	mencoder -nocache tv:// \
+	-tv normid=5:freq=55.25:mjpeg:decimation=2:quality=50:\
+	alsa:amode=1:forceaudio:immediatemode=0:volume=80 \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -re -i - \
+	-vcodec flv -f flv -r 25 -b 775k \
+	-acodec libmp3lame -ar 44100 -ab 48k pipe:1 | \
+	tee tvdump.flv | \
+	avconv -f flv -i - \
+	-f flv rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# TV kartından alınan yayını pipe üzerinde alıp bir yandan
+	# FLV formatında kaydederken bir yandan da Wowza'ya H264
+	# olarak stream etme.
+	mencoder -nocache tv:// \
+	-tv normid=5:freq=55.25:mjpeg:decimation=2:quality=50:\
+	alsa:amode=1:forceaudio:immediatemode=0:volume=80 \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -re -i - \
+	-threads 0 -preset medium \
+	-c:v libx264 -b 800k \
+	-strict experimental -c:a aac -ar 44100 -ab 48k \
+	-f flv pipe:1 | \
+	tee tvdump.flv | \
+	avconv -f flv -i - \
+	-f flv rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+	# TV kartından alınan yayını pipe üzerinde alıp bir yandan
+	# FLV formatında kaydederken bir yandan da Wowza'ya H264/IPod
+	# olarak stream etme.
+	mencoder -aspect 16:9 -nocache tv:// \
+	-tv normid=5:freq=55.25:mjpeg:decimation=2:quality=50:\
+	alsa:amode=1:forceaudio:immediatemode=0:volume=80 \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -re -i - \
+	-threads 0 \
+	-c:v libx264 -r 30000/1001 -b 768k -bt 240k -aspect 16:9 \
+	-coder 0 -bf 0 -flags2 -wpred-dct8x8 -level 13 -maxrate 1024k -bufsize 3M \
+	-strict experimental -c:a aac -ac 2 -ar 48000 -ab 48k \
+	-f flv rtmp://xxx.yyy.www.zzz/emrah/yayin1
+
+
+# Capture to Wowza
+COLLECTOR="rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1"
+ASPECT="16:9"
+DECIMATION="1"
+QUALITY="50"
+DEVICE="/dev/video0"
+DINPUT="0"
+WIDTH=800
+HEIGHT=405
+VBITRATE=$((50 * 25 * $WIDTH * $HEIGHT / 256))
+
+mencoder -aspect $ASPECT -nocache \
+tv:// -tv device=$DEVICE:input=$DINPUT:\
+normid=5:freq=83.25:mjpeg:decimation=$DECIMATION:quality=$QUALITY:\
+alsa:amode=1:forceaudio:immediatemode=0:volume=80 \
+-ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate=$VBITRATE:autoaspect \
+-oac copy \
+-o - -really-quiet | \
+avconv -re -i - \
+-threads 0 \
+-c:v libx264 -r 30000/1001 -b 384k -bt 240k -aspect $ASPECT \
+-coder 0 -bf 0 -flags2 -wpred-dct8x8 -level 13 -maxrate 768k -bufsize 3M \
+-strict experimental -c:a aac -ac 2 -ar 48000 -ab 48k \
+-f flv $COLLECTOR
+
+
+
+
+
+# Yayını izleme
+
+	avplay rtmp://xxx.yyy.www.zzz:1935/emrah/yayin1
+
+
+# Kaynaklar
+http://www.wowza.com/forums/content.php?213-FFmpeg-with-Wowza-Server-(MPEG-TS)
+
+
+
+-------------------------------------------------------------------------------
+WOWZA LOG
+-------------------------------------------------------------------------------
+
+# traffic.sh
+	#!/bin/bash
+
+	COLLECTOR="xxx.yyy.www.zzz"
+	COUNT="netstat -taunp 2>/dev/null | \
+		grep ':1935 ' | grep ESTABLISHED | \
+		grep -v ':::1935' | grep -v $COLLECTOR | \
+		wc -l"
+
+	for i in {1..300}
+		do echo "------------------------------------"
+		echo "Connection: `eval $COUNT`"
+		uptime
+
+		sleep 20
+	done
+
+
+# Log scriptini çalıştırma
+	./traffic.sh | tee traffic.log
+
+
+
+-------------------------------------------------------------------------------
+AMAZON EC2 İÇİN LOAD BALANCER
+-------------------------------------------------------------------------------
+
+# Load balancer oluşturma
+console.aws.amazon.com
+	EC2 panel-> Network & Security-> Load Balancers-> Create Load Balancer
+
+	Load Balancer Name: stream
+	(HTTP, 80, HTTP, 80)
+	(TCP, 1935, TCP, 1935)
+
+	EBS ve marketplace image gerekiyor. 3.0.5 serisi olsun.
+
+http://blog.ianbeyer.com/2012/05/10/converting-ec2-s3instance-store-image-to-ebs/
+
+
+
+-------------------------------------------------------------------------------
+AMAZON S3 İÇİN WEB ARAYÜZÜ
+-------------------------------------------------------------------------------
+
+# Bucket oluşturma
+Kontrol panel S3 sayfasından bucket oluşturulur.
+
+# Web arayüzü
+- Kontrol panel CloudFront sayfasından "Create Distribution" düğmesine
+tıklanır.
+
+- Delivery Method, depo olarak kullanılacaksa "Download", stream sunucu olarak
+kullanılacaksa "Streaming" seçilir.
+
+- CNAME verilir. Ornegin download.emrah.com
+
+- DNS sunucudan gerekiyorsa CNAME tanımlaması yapılır. CNAME, "Domain Name"
+bölümünde yer alan adrese yönlendirilir. 2sa02fs342s390.cloudfront.net benzeri
+bir adres...
+
+
+
+-------------------------------------------------------------------------------
+NGINX-RTMP-MODULE NOTLARI
+-------------------------------------------------------------------------------
+
+# Nginx'in nginx-rtmp-module desteği ile derlenmesi
+	mkdir nginx nginx_rtmp
+	cd nginx_rtmp
+	wget --no-check-certificate https://github.com/arut/nginx-rtmp-module/tarball/master
+	tar zxf master
+
+	cd ../nginx
+	apt-get source -t squeeze-backports nginx-extras
+	cp -arp ../nginx_rtmp/arut-nginx-rtmp-module-* \
+		nginx-1.2.1/debian/modules/nginx-rtmp-module
+	vim nginx-1.2.1/debian/rules
+		config.status.extras
+			...
+			...
+			# satir 170
+			--add-module=$(MODULESDIR)/nginx-rtmp-module \
+			--add-module=$(MODULESDIR)/nginx-rtmp-module/hls \
+
+	su -
+	apt-get build-dep -t squeeze-backports nginx-extras
+	aptitude install -t squeeze-backports libavcodec-dev libavformat-dev \
+		libavutil-dev
+	exit
+	cd nginx-1.2.1/
+	dpkg-buildpackage -rfakeroot -uc -b
+	cd ..
+	su
+	dpkg -i nginx-common_1.2.1-2~bpo60+1_all.deb
+	dpkg -i nginx-extras_1.2.1-2~bpo60+1_i386.deb
+
+
+# Ayarlar
+	/etc/nginx/nginx.conf
+		# Yeni surumde daha fazla worker kullanilabiliyor olabilir.
+		worker_processes 1;
+
+		rtmp {
+			server {
+				listen 1935;
+
+				application live {
+					live on;
+
+					allow publish 127.0.0.1;
+					deny publish all;
+					allow play all;
+				}
+			}
+		}
+
+
+	/etc/init.d/nginx configtest
+	/etc/init.d/nginx restart
+
+
+# Stream gönderme
+	mencoder -nocache mms://95.0.159.138/TRTMUZIK \
+	-ovc copy -oac copy -o - -really-quiet | \
+	avconv -re -i - \
+	-vcodec libx264 -vprofile baseline -preset slow \
+	-b:v 256k -maxrate 256k -bufsize 512k \
+	-threads 0 \
+	-strict experimental -c:a aac -ar 44100 -ab 48k \
+	-f flv rtmp://127.0.0.1:1935/live/yayin1
+
+
+# Yayınız izleme
+	mplayer rtmp://127.0.0.1:1935/live/yayin1
+
+
+# Kaynaklar
+	https://github.com/arut/nginx-rtmp-module
+	http://rarut.wordpress.com/
+
+
+
+
+
+-------------------------------------------------------------------------------
+FLOWPLAYER NOTLARI
+-------------------------------------------------------------------------------
+
+# Örnek player sayfası (stream)
+IDevice bağlanmaya çalışır. Bağlanan IDevice değilse Flash'a düşer.
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="flowplayer/flowplayer-3.2.11.min.js"></script>
+    <script type="text/javascript" src="flowplayer/flowplayer.ipad-3.2.11.min.js"></script>
+</head>
+
+<body>
+<div
+    id="player"
+    style="width:548px;height:276px;margin:0 auto;text-align:center">
+    <img src="flowplayer/splash.jpg"
+        width="548"
+        height="276"
+        border="0"
+        alt="Canli yayin"
+    />
+</div>
+
+<script type="text/javascript">
+$f("player", "flowplayer/flowplayer-3.2.14.swf", {
+    clip: {
+        url: 'rtmp://127.0.0.1:1935/live/yayin1',
+        autoPlay: true,
+        scaling: 'fit',
+        provider: 'yayin1',
+        ipadUrl: "http://127.0.0.1:1935/live/yayin1/playlist.m3u8"
+    },
+
+    plugins: {
+        yayin1: {
+                url: 'flowplayer/flowplayer.rtmp-3.2.11.swf'
+        }
+    }
+}).ipad();
+</script>
+
+</body>
+</html>
+
+-------------------------------------------------------------------------------
+# Örnek player sayfası (static)
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script type="text/javascript" src="flowplayer/flowplayer-3.2.11.min.js"></script>
+<script type="text/javascript" src="flowplayer/flowplayer.ipad-3.2.11.min.js"></script>
+</head>
+
+<body>
+<p>
+<a id="staticid" href="video.flv" class="player"
+style="display: block; width: 425px; height: 300px;">
+<img src="flowplayer/splash_425_300.jpg" border="0" alt="video oynat" />
+</a>
+</p>
+
+<script type="text/javascript">
+// <![CDATA
+	flowplayer(
+		"staticid",
+		"flowplayer/flowplayer-3.2.14.swf",
+		{ clip   : {	autoPlay: true,
+				scaling: "fit",
+				bufferLength: 3,
+				ipadUrl: "video.mp4" },
+
+		}).ipad();
+// ]]>
+</script>
+</body>
+</html>
+
+
+# Kaynaklar
+http://flowplayer.org/
+http://flowplayer.org/plugins/javascript/ipad.html
+http://flowplayer.org/plugins/streaming/rtmp.html
+
+
+
+-------------------------------------------------------------------------------
+JWPLAYER NOTLARI
+-------------------------------------------------------------------------------
+
+# Örnek player sayfası
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JW Player 5 Test</title>
+    <script type="text/javascript" src="jwplayer.js"></script>
+</head>
+<body>
+    <!-- Birinci Yontem Basi -->
+    <div id="mediaplayer"></div>
+    <script type="text/javascript">
+        jwplayer("mediaplayer").setup({
+            flashplayer: "player.swf",
+            id: "yayin",
+            file: "yayin1",
+            streamer: "rtmp://xxx.yyy.www.zzz:1935/emrah",
+            provider: "rtmp",
+            image: "preview.jpg"
+        });
+    </script>
+    <!-- Birinci Yontem Sonu -->
+
+    <!-- Ikinci Yontem Basi -->
+    <embed
+        flashvars="file=yayin1&streamer=rtmp://xxx.yyy.www.zzz:1935/emrah&provider=rtmp"
+        allowfullscreen="true"
+        allowscripaccess="always"
+        id="yayin"
+        name="yayin"
+        src="player.swf"
+    />
+    <!-- Ikinci Yontem Sonu -->
+</body>
+</html>
+
+
+# Kaynaklar
+http://www.longtailvideo.com/support/jw-player/jw-player-for-flash-v5/15995/jw-embedder-reference-guide
+http://www.longtailvideo.com/support/jw-player/jw-player-for-flash-v5/12538/supported-player-embed-methods
+http://www.wowza.com/forums/content.php?48-Using-JW-Player-5.x-with-Wowza-Server
+
+
+
+-------------------------------------------------------------------------------
+STREAM ADRESLERİ
+-------------------------------------------------------------------------------
+
+mms://85.111.3.55/ntv
+mms://85.111.3.55/cnbce
+mms://95.0.159.138/TV1
+mms://95.0.159.138/TV2
+mms://95.0.159.138/TRTBELGESEL
+mms://95.0.159.138/TRTMUZIK
+mms://yayin.tv-fm.com/sinema
+mms://yayin.tv-fm.com/belgeseltv
+mms://stream.hdtv1.cz/Film1cz-live
+rtmp://93.187.203.125:1935/live/planet4
+
+
+
+-------------------------------------------------------------------------------
+VIDEO DOSYASINA SUBTITLE GÖMME
+-------------------------------------------------------------------------------
+subtitle.srt dosyası UTF-8 olsun.
+
+mencoder video_inp.avi -utf8 -sub subtitle.srt -o video_out.avi \
+-oac pcm -ovc lavc -lavcopts vbitrate=1200
+
+

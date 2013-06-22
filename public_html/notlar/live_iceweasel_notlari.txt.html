@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>live_iceweasel_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+Live Iceweasel Notları
+----------------------
+
+- /etc/fstab
+
+  tmpfs   /var/cache/browser   tmpfs   noatime,size=64M,nr_inodes=10k,mode=777   0   0
+
+
+- mount
+
+  mkdir /var/cache/browser
+  mount /var/cache/browser
+
+
+- iceweasel about:config
+
+  browser.cache.disk.parent_directory -&gt; /var/cache/browser
+
+
+
+- /var/cache/browser/mozilla için sembolik link
+
+  cd
+  mv .mozilla .mozilla.org
+  ln -s /var/cache/browser/mozilla .mozilla
+
+
+
+- toram.sh (&tilde;/proje/mozilla_live/)
+
+  rm -rf /var/cache/browser/mozilla
+  mkdir -p /var/cache/browser/mozilla
+  cp -arp &tilde;/.mozilla.org/* /var/cache/browser/mozilla/
+
+
+
+- todisk.sh (&tilde;/proje/mozilla_live/)
+
+  rm -rf &tilde;/.mozilla.org/*
+  mkdir &tilde;/.mozilla.org/
+  cp -arp /var/cache/browser/mozilla/* &tilde;/.mozilla.org/
+
+
+
+- &tilde;/.config/openbox/autostart.sh
+
+  (sleep 2; &tilde;/proje/mozilla_live/toram.sh) &amp;
+</code></pre>
+</body>
+</html>

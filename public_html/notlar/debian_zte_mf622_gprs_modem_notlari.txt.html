@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>debian_zte_mf622_gprs_modem_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+- /usr/local/sbin/usb_modeswitch
+	http://www.draisberghof.de/usb_modeswitch/
+
+
+
+- /usr/local/sbin/usb_modeswitch_zte.sh
+	#!/bin/bash
+	sleep 5
+	usb_modeswitch  -v 0x19d2 -p 0x2000 -m 0x05 -M 5553424378758b88000000000000061b010000000000000000000000000000
+	sleep 1
+	rmmod usb_storage
+
+
+
+- /etc/udev/rules.d/z15_zte_mf622.rules
+
+	ACTION!=&quot;add&quot;, GOTO=&quot;zte_not_add_event&quot;
+
+	# Is this the ZeroCD device?
+	SUBSYSTEM==&quot;usb&quot;, SYSFS{idProduct}==&quot;2000&quot;,SYSFS{idVendor}==&quot;19d2&quot;, RUN+=&quot;/usr/local/sbin/usb_modeswitch_zte.sh&quot;
+
+	# Is this the actual modem?
+	SUBSYSTEM==&quot;usb&quot;, SYSFS{idProduct}==&quot;0001&quot;,SYSFS{idVendor}==&quot;19d2&quot;, MODE=&quot;0660&quot;, GROUP=&quot;dialout&quot;, RUN+=&quot;/sbin/modprobe usbserial vendor=0x19d2 product=0x0001&quot;
+
+	LABEL=&quot;zte_not_add_event&quot;
+
+
+
+- halt
+	Bilgisayar kapatılıp açılacak. Kapatıldıktan sonra ana enerji girişini kesmek ve yeniden açmak gerekiyor.
+
+
+
+- /etc/wvdial.conf
+	[Dialer turkcell]
+	Init1 = ATZ
+	Init2 = ATQ0 V1 E1 S0=0 &amp;C1 &amp;D2 +FCLASS=0
+	Init3 = AT+CGDCONT=1, &quot;IP&quot;, &quot;internet&quot;
+	Modem = /dev/ttyUSB2
+	Baud = 460800
+	ISDN = 0
+	New PPPD = yes
+	Modem Type = Analog Modem
+	Phone = *99#
+	Username = wap
+	Password = wap
+	Stupid Mode = 1
+	Dial Command = ATDT
+
+	[Dialer zte]
+	Init1 = ATZ
+	Init2 = ATQ0 V1 E1 S0=0 &amp;C1 &amp;D2 +FCLASS=0
+	Init3 = AT+CGDCONT=1, &quot;IP&quot;, &quot;apn_adi&quot;
+	Modem = /dev/ttyUSB2
+	Baud = 460800
+	ISDN = 0
+	New PPPD = yes
+	Modem Type = Analog Modem
+	Phone = *99#
+	Username = kullanici
+	Password = parola
+	Stupid Mode = 1
+	Dial Command = ATDT
+
+
+	apn_adi, kullanici, parola yazan yerler asıl bilgilere göre düzenlenecek.
+	Turkcell için:
+		apn_adi		= internet
+		kullanici	= wap
+		parola		= wap
+	
+	Bu dosyanın otomatik oluşturulması için 'wvdialconf' komutu kullanılabilir ama 
+	elle düzenleme yapmak yine de gerekiyor.
+
+
+- Bağlanmak için 
+	Ethernet üzerinden de ağ bağlantısı varsa öncelikle gateway'i ayarlamak veya etherneti durdurmak gerekebilir.
+
+	- Turkcell üzerinden internete bağlanmak için
+		wvdial turkcell
+	
+	- Alternatif bağlantı (zte) üzerinden ağa bağlanmak için
+		wvdial zte
+
+
+
+- Sorunlar
+	- Hatalı aygıt (device) seçiminde şu çıktı alınır:
+
+		--&gt; WvDial: Internet dialer version 1.60
+		--&gt; Cannot get information for serial port.
+		--&gt; Initializing modem.
+		--&gt; Sending: ATZ
+		--&gt; Sending: ATQ0
+		--&gt; Re-Sending: ATZ
+		--&gt; Modem not responding.
+
+
+		Çözmek için /etc/wvdial.conf dosyasında Modem bölümündeki aygıtın 
+		numarasını değiştirip deneyerek doğru aygıt numarasını bulmak gerekir.
+
+
+</code></pre>
+</body>
+</html>

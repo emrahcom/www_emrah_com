@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>wine_kurulum_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+WINE KURULUM NOTLARI
+
+*** paketlerin yüklenmesi
+	aptitude install wine
+
+	Bağımlılıklar nedeniyle şu paketler de otomatik olarak kurulur:
+		libwine
+		libwine-alsa
+		libwine-capi
+		libwine-cms
+		libwine-gl
+		libwine-gphoto2
+		libwine-ldap
+		libwine-print
+		libwine-sane
+		wine-bin
+		wine-utils
+
+
+--------------------------------------------------------------
+
+
+*** kullanıcı ayarları
+	- ilk çalıştırma
+		cd
+		winecfg
+			. Masaüstü Entegrasyonu bölümünde klasörlerin hedef dizini olmayacak
+			. Ses bölümüne girip ses test edilsin
+			
+		rm Vidyolarım Resimlerim Müziğim
+	
+	
+	- Wine dışına çıkan linklerin silinmesi ( güvenliği arttırmak için )
+		cd .wine
+		find -type l | xargs ls -alh
+			( .wine klasörü dışına çıkan link varsa düzenle )
+	
+
+	- test
+		wine notepad.exe
+
+		veya 
+
+		mkdir &tilde;/.wine/drive_c/downloads
+		cd &tilde;/.wine/drive_c/downloads/
+		wget http://the.earth.li/&tilde;sgtatham/putty/latest/x86/putty.exe
+
+		# Bu üç komut da çalıştırabilir. Birinci komut için dizinde olmak gerekiyor.
+		wine putty.exe
+		wine &quot;c:\downloads\putty.exe&quot;
+		wine c:\\downloads\\putty.exe
+
+
+--------------------------------------------------------------
+
+
+*** winetricks
+
+	- Betiğin son halini indirmek için
+		cd .wine
+		mkdir winetricks
+		cd winetricks
+		wget http://www.kegel.com/wine/winetricks
+		chmod u+x winetricks
+
+	- cabextract
+		su -
+		aptitude install cabextract
+		exit
+
+	- Örnek kullanım
+		./winetricks corefonts vcrun6
+
+	- Detaylı bilgi
+		http://wiki.winehq.org/winetricks
+
+
+corefonts
+vcrun6
+msi2
+mfc40
+dotnet20
+gdiplus
+riched20
+riched30
+</code></pre>
+</body>
+</html>

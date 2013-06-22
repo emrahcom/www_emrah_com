@@ -1,0 +1,230 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+import re
+import sys
+import socket
+import urllib
+import httplib
+import subprocess
+import smtplib
+from   os.path             import exists
+from   email.MIMEMultipart import MIMEMultipart
+from   email.MIMEText      import MIMEText
+
+# Programi calistiran makinenin kodu.
+KOD = 'makine_kodu'
+# Raporu alacak olan kisinin emaili.
+MAIL_ALICI1 = 'alici1@domain.com'
+# Raporu alacak olan kisinin emaili.
+MAIL_ALICI2 = 'alici2@domain.com'
+# Gmail hesabi.
+GMAIL_USER = 'gonderen@gmail.com'
+# Gmail parolasi.
+GMAIL_PASS = 'parola'
+# Gmail SMTP sunucu adresi.
+SMTP_ADRES = 'smtp.gmail.com'
+# Gmail SMTP sunucu portu.
+SMTP_PORT = 587
+# Rapor, sadece IP degistiginde mi gonderirsin?
+DEGISTIKCE = False
+# IP adresinin ogrenilecegi site
+SUNUCU = 'automation.whatismyip.com'
+# IP adresinin ogrenilecegi sayfa
+SAYFA = '/n09230945.asp'
+# Son tesbit edilen IP adresinin tutuldugu dosya
+IP_DOSYASI = '/tmp/sendreport'
+# Debug modu (2: hatayi raise et, 1: hatayi bildir, 0: cikti verme)
+DEBUG = 0
+# Raporu olusturan komutlar.
+RAPOR = """
+hostname
+uname -a
+echo -------------------------------------------------------------------------
+uptime
+echo -------------------------------------------------------------------------
+free
+echo -------------------------------------------------------------------------
+df -h
+echo -------------------------------------------------------------------------
+ip addr ls
+echo -------------------------------------------------------------------------
+ip route ls
+echo -------------------------------------------------------------------------
+ps aux
+"""
+
+
+
+# -----------------------------------------------------------------------------
+# whatismyip.com sitesinden IP adresini ogrenen bolum
+def IP(sunucu=SUNUCU, sayfa=SAYFA):
+    try:
+        # Siteye baglan, IP adresini al.
+        cnn = httplib.HTTPConnection(sunucu)
+        cnn.request('GET', sayfa)
+        res = cnn.getresponse()
+        cevap = res.read()
+        cnn.close
+
+        # IP adresi geldiyse dondur, gelmediyse hata var demektir.
+        sablon = re.compile('([\d\.]*)', re.IGNORECASE)
+        uyan = sablon.search(cevap)
+        if not uyan: raise RuntimeError
+
+        result = uyan.group(1)
+    except Exception, err:
+        if DEBUG > 1:
+            raise
+        elif DEBUG == 1:
+            print(str(err))
+
+        result =  None
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# IP adresinin degisip degismedigini kontrol eden bolum.
+def degistimi(ip):
+    try:
+        result = True
+
+        if not exists(IP_DOSYASI):
+            raise NameError('IP dosyasi bulunamadi')
+
+        pf = file(IP_DOSYASI, 'r')
+        eskiip = pf.read().strip()
+        pf.close()
+
+        # IP'ler ayni ise degismemis demektir.
+        if eskiip == ip:
+            result = False
+    except Exception, err:
+        if DEBUG > 1:
+            raise
+        elif DEBUG == 1:
+            print(str(err))
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+def ipkaydet(ip):
+    try:
+        file(IP_DOSYASI, 'w+').write("%s\n" % ip)
+
+        result = True
+    except Exception, err:
+        if DEBUG > 1:
+            raise
+        elif DEBUG == 1:
+            print(str(err))
+
+        result = False
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# Makine hakkinda cesitli komutlarla bilgi toplayip rapor olusturan bolum.
+def raporolustur():
+    try:
+        p = subprocess.Popen('sh',
+                             shell=True,
+                             stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                            )
+
+        p.stdin.write(RAPOR)
+        output = p.communicate()[0]
+        p.stdin.close()
+
+        result = output
+    except Exception, err:
+        if DEBUG > 1:
+            raise
+        elif DEBUG == 1:
+            print(str(err))
+
+        result = None
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+# raporu mail atan bolum
+def raporgonder(ip, rapor, kod=KOD):
+    try:
+        # Rapor yoksa hata var demektir.
+        if rapor is None:
+            raise NameError('Gonderilecek rapor bulunamadi')
+
+        # Maili olustur.
+        mail = MIMEMultipart()
+        mail['From']    = GMAIL_USER
+        mail['To']      = MAIL_ALICI1
+        mail['Cc']      = MAIL_ALICI2
+        mail['Subject'] = 'rapor: %s %s' % (kod, ip)
+        mail.attach(MIMEText(rapor))
+
+        # Maili gonder.
+        smtp = smtplib.SMTP(SMTP_ADRES, SMTP_PORT)
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
+        smtp.login(GMAIL_USER, GMAIL_PASS)
+        smtp.sendmail(GMAIL_USER, [MAIL_ALICI1, MAIL_ALICI2], mail.as_string())
+        smtp.close()
+
+        if DEBUG: print('Rapor gonderildi')
+
+        result = True
+    except Exception, err:
+        if DEBUG > 1:
+            raise
+        elif DEBUG == 1:
+            print(str(err))
+
+        result = False
+
+    return result
+
+
+
+# -----------------------------------------------------------------------------
+try:
+    # Programin asili kalmamasi icin baglanti suresini kisitla.
+    socket.setdefaulttimeout(10)
+
+    # IP adresini al.
+    ip = IP()
+
+    # IP degismemisse ve IP degismedigi surece rapor gonderilmeyecekse, cik.
+    dgs = degistimi(ip)
+    if DEGISTIKCE and not dgs:
+        sys.exit(1)
+
+    # IP adresi degismisse, yeni IP adresini kaydet.
+    if dgs and ip is not None:
+        ipkaydet(ip)
+
+    # Makine hakkinda rapor olustur.
+    rapor = raporolustur()
+
+    # Raporu email ile gonder.
+    if not raporgonder(ip, rapor):
+        raise NameError('Rapor gonderilirken hata olustu.')
+
+except Exception, err:
+    if DEBUG > 1:
+        raise
+    elif DEBUG == 1:
+        print(str(err))
+
+

@@ -1,0 +1,123 @@
+PYTHON SOCKET NOTLARI
+
+* socket.socket([family[, type[, proto]]])
+	- family
+		AF_UNIX
+		AF_INET
+		AF_INET6
+	
+	- type
+		SOCK_STREAM
+		SOCK_DGRAM
+
+* socket.bind(adres)
+	adres verisi, seçilen soket ailesine göre değişir. AF_INET için (host, port) ikiilisi gerekir
+
+* socket.listen(maksimum_baglanti_sayisi)
+	istemci bağlantıları için dinler
+
+* socket.accept()
+	istemci bağlantısını kabul eder. (connection, address) çiftini döndürür
+
+* socket.recv(buffer_boyu[, flag])
+	veriyi alır. buffer_boyu, 2'nin ufak bir katı şeklinde seçilmeli. Örneğin 1024
+
+
+* socket.recvfrom(buffer_boyu[, flag])
+	recv() ile benzer. (veri, adres) ikilisini döndürür.
+
+* socket.send(veri[, flag])
+	veri gönderir, gönderilen byte adedini döndürür. verinin tamami gönderilemediyse programcı gerekeni yapar.
+
+* socket.sendall(veri[, flag])
+	verinin tamamını gönderir. Gönderilemezse exception oluşur
+
+* socket.shutdown(mode)
+	veri alma veya göndermeyi kestiğini bildirir.
+	SHUT_RD, SHUT_WR, SHUT_RDWR
+
+* socket.close()
+	bağlantıyı kapatır
+
+* socket.setblocking(flag)
+	flag 0 ise non-blocking, 1 ise blocking soket kullanılır. Default olarak soketler blocking mod kullanır. 
+	non-blocking modda recv() veya send() işlemi hemen yapılmaya çalışır, yapılamazsa hata oluşur
+	blocking modda işlem bitene kadar beklenir.
+	
+
+* socket.settimeout(saniye)
+	bloking soketler için zaman aşımı süresi. saniye olarak None verilirse soket, blocking moda geçer ve 
+	işlem bitene kadar bekler
+
+* exceptions
+	. error		( soket ile ilgili hatalar	)
+	. herror	( adres ile ilgili hatalar	)
+	. gaierror	( adres ile ilgili hatalar	)
+	. timeout	( zaman aşımı			)
+	
+
+* Örnek kod (istemci)
+	#!/usr/bin/python
+	
+	import socket
+
+	ADRES	= "www.yahoo.com"
+	PORT	= 80
+	SUNUCU	= (ADRES, PORT)
+	SAYFA	= '/'
+
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.settimeout(20)
+	sock.connect(SUNUCU)
+	sock.sendall('GET %s HTML/1.0\n\n' % (SAYFA))
+	socket.shutdown(socket.SHUT_WR)
+
+	while True:
+		cevap = sock.recv(1024)
+		if not cevap: break
+		print cevap
+	
+	sock.close()
+	
+
+* Örnek kod (sunucu)
+	#!/usr/bin/python
+
+	import socket
+	import select
+
+	ADRES   = ''
+	PORT    = 10001
+	SUNUCU  = (ADRES, PORT)
+	TIMEOUT	= 5
+
+	try:
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		sock.bind(SUNUCU)
+
+		devam = True
+		while devam:
+			sock.listen(5)
+			(cnn, adres) = sock.accept()
+
+			while True:
+				(inp, out, exp) = select.select([cnn,], [], [], TIMEOUT)
+				if not inp: break
+
+				data = cnn.recv(1024)
+				if data == 'disconnect\r\n': break
+				if data == 'stop\r\n':
+					devam = False
+					break
+
+				print data.strip()
+
+			cnn.close()
+			print '----------------'
+	except: pass
+	finally:
+		try: sock.close()
+		except: pass
+
+

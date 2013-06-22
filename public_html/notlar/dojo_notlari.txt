@@ -1,0 +1,65 @@
+Dojo Notları
+------------
+
+- Yükleme
+	<head>
+	...
+	<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js"></script>
+	...
+
+	<script>
+		function init() {
+			alert("Dojo ready, version:" + dojo.version);
+		}
+
+		dojo.ready(init);
+	</script>
+
+	...
+	</head>
+
+
+
+- Belli aralıklarla çalışan fonksiyon
+	<script>
+		function repeater() {
+			dojo.byId("textbox1").innerHTML += "1";
+		}
+
+		function init() {
+			var interval = setInterval(repeater, 5000);
+		}
+
+		dojo.ready(init)
+	</script>
+
+
+	<body>
+		...
+		<div id="textbox1">1</div>
+	</body>
+
+
+
+- Sunucudaki text dosyadan veriyi okuyup bir alana yazan fonksiyon
+	# HTML dosya içinde
+
+		<div id="node1"></div>
+
+
+	# Javascript kodu
+		
+		function update_node1() {
+			var node1 = dojo.byId("node1");
+
+			var args = {    url: "static/data.txt",
+					handleAs: "text",
+					preventCache: true,
+					timeout: 3000,
+					load: function(data) {
+						node1.innerHTML = data; },
+					error: function() {}}
+			dojo.xhrGet(args); }
+
+		function auto_update_node1() {
+			var interval = setInterval(update_node1, 1500); }

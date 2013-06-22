@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>checkPOP3.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+
+# zenity paketini yuklenmesi gerekiyor.
+
+import getpass
+import poplib
+import time
+import os
+from email.header import decode_header
+
+
+INITIAL_WAIT    = 10
+PERIOD          = 300
+HOST            = 'pop.gmail.com'
+DEBUG           = 0
+
+
+
+# -----------------------------------------------------------------------------
+def getLoginInfo():
+    username = raw_input('Username : ')
+    password = getpass.getpass('Pasword  : ')
+    return (username, password)
+
+
+
+# -----------------------------------------------------------------------------
+def getMailInfo(username, password, pid):
+    maillist = []
+
+    try:
+        pop = poplib.POP3_SSL(HOST)
+        pop.user(username)
+        pop.pass_(password)
+
+        num = len(pop.list()[1])
+        for n in range(num):
+            mTo = mDate = mFrom = mSubject = ''
+
+            for satir in pop.retr(n+1)[1]:
+                satir = decode_header(satir)
+                if satir[0][0][0:6].upper() == &quot;FROM: &quot;:
+                    mFrom = satir[0][0][6:]
+                elif satir[0][0][0:4].upper() == &quot;TO: &quot;:
+                    mTo = satir[0][0][4:]
+                elif satir[0][0][0:6].upper() == &quot;DATE: &quot;:
+                    mDate = satir[0][0][6:]
+                elif satir[0][0][0:8].upper() == &quot;SUBJECT:&quot;:
+                    mSubject = satir[-1:][0][0]
+
+            if mSubject[0:6] == 'rapor:': continue
+            maillist.append([n+1, mFrom, mTo, mDate, mSubject])
+
+        pop.quit()
+    except poplib.error_proto:
+        if DEBUG:
+            raise
+        else:
+            command = &quot;zenity --error --text '&quot;
+            command += &quot;Connection failed for &lt;b&gt;%s&lt;/b&gt;\n&quot; % (username)
+            command += &quot;Pid... [%s]&quot; % (pid)
+            command += &quot;' &amp;&quot;
+            os.system(command)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            command = &quot;zenity --error --text '&quot;
+            command += &quot;Error for &lt;b&gt;%s&lt;/b&gt;\n&quot; % (username)
+            command += &quot;Pid... [%s]\n&quot; % (pid)
+            command += &quot;%s&quot; % (str(err))
+            command += &quot;' &amp;&quot;
+            os.system(command)
+
+    return maillist
+
+
+
+# -----------------------------------------------------------------------------
+def secureMessage(message):
+    message = message.replace('&quot;','&amp;quot;')
+    message = message.replace('&lt;','&amp;lt;')
+    message = message.replace('&gt;','&amp;gt;')
+
+    return message
+
+
+
+# -----------------------------------------------------------------------------
+def showDialog(username, maillist, pid):
+    try:
+        if not maillist: return None
+
+        msg = ''
+        for mail in maillist:
+            msg += '&lt;b&gt;From   :&lt;/b&gt; %s\n' % \
+                secureMessage(mail[1])
+            msg += '&lt;b&gt;To     :&lt;/b&gt; %s\n' % \
+                secureMessage(mail[2])
+            msg += '&lt;b&gt;Date   :&lt;/b&gt; %s\n' % \
+                secureMessage(mail[3])
+            msg += '&lt;b&gt;Subject:&lt;/b&gt; %s\n' % \
+                secureMessage(mail[4])
+            msg += '-------------------------------\n'
+        msg += '%s... [%s]' % (username, pid)
+
+        os.system('zenity --info --text &quot;%s&quot; &amp;' % msg)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            command = &quot;zenity --error --text '&quot;
+            command += &quot;Error for &lt;b&gt;%s&lt;/b&gt;\n&quot; % (username)
+            command += &quot;Pid... [%s]\n&quot; % (pid)
+            command += &quot;%s&quot; % (str(err))
+            command += &quot;' &amp;&quot;
+            os.system(command)
+
+
+
+# -----------------------------------------------------------------------------
+def startChecking():
+    while True:
+        (username, password) = getLoginInfo()
+
+        try                 : pid = os.fork()
+        except OSError, e   : pass
+
+        if not username: os._exit(0)
+        if pid == 0: break
+        print('%s... [%d]\n' % (username, pid))
+
+    time.sleep(INITIAL_WAIT)
+    pid = os.getpid()
+    while True:
+        maillist = getMailInfo(username, password, pid)
+        showDialog(username, maillist, pid)
+        time.sleep(PERIOD)
+
+
+
+# -----------------------------------------------------------------------------
+if __name__ == '__main__':
+    startChecking()
+</code></pre>
+</body>
+</html>

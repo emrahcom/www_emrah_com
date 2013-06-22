@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>lisp_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+Lisp Notları
+------------
+http://www.gigamonkeys.com/book/
+
+
+- Yükleme
+	aptitude install clisp
+
+- REPL (read-evaluate-print loop)
+	clisp
+		:h
+		(quit)
+
+- İlk örnekler
+	# Değerler
+	10
+	&quot;string&quot;
+	T
+	NIL
+
+	# Matematiksel işlem
+	(+ 2 2)
+
+	# Karşılaştırma
+	(= 2 3)
+	(&gt; 3 1)
+	(equal &quot;a&quot; &quot;b&quot;)
+
+	# Yazdırma
+	(format t &quot;hello world&quot;)
+		hello world
+	(format t &quot;&tilde;a &tilde;a&quot; &quot;hello&quot; &quot;world&quot;)
+		hello world
+	(format t &quot;&tilde;a&tilde;10t&tilde;a&quot; &quot;hello&quot; &quot;world&quot;)
+		hello     world
+	(format t &quot;&tilde;a&tilde;%&tilde;a&quot; &quot;hello&quot; &quot;world&quot;)
+		hello
+		world
+	(format t &quot;&tilde;{&tilde;a&tilde;}&quot; (list &quot;hello&quot; &quot;world&quot; &quot;hello&quot; &quot;world&quot;))
+		helloworldhelloworld
+	(format t &quot;&tilde;{&tilde;a%&tilde;}&quot; (list &quot;hello&quot; &quot;world&quot; &quot;hello&quot; &quot;world&quot;))
+		hello
+		world
+		hello
+		world
+
+	# Lisp dosyasını yükleme
+	(load &quot;dosya.lisp&quot;)
+	(load (compile-file &quot;dosya.lisp&quot;))
+
+	# Fonksiyon tanımlama ve çağırma
+	(defun hello ()
+		(format t &quot;hello world&quot;))
+
+	# Yapılan son işlemin sonucu fonksiyon değeri olarak gelir.
+	(hello)
+
+	# Listeler
+	(list 1 2 3)
+	(list 1 2 &quot;a&quot; &quot;b&quot;)
+	(list 1 (list 2 3))
+	(list :dagitim &quot;debian&quot; :kod &quot;squeeze&quot; :surum &quot;6.0&quot;)
+
+	# Anahtarlı listeden değer alma
+	(getf (list :dagitim &quot;debian&quot; :kod &quot;squeeze&quot; :surum &quot;6.0&quot;) :surum)
+
+	# Global bir değişken tanımlama
+	(defvar *gl* nil)
+
+	# Listeye eleman ekleme
+	(push 1 *gl*)
+	(push 2 *gl*)
+	(push (list 3 4) *gl*)
+
+	# dolist döngüyü, liste elemanlarının herbiri için çalıştırma
+	(dolist (item (list 1 2 3 4))
+		(print item))
+
+	# stdin ve stdout ile çalışma
+	(format *query-io* &quot;isminiz nedir?&quot;)
+	(read-line *query-io*)
+	(format *query-io* &quot;yasiniz?&quot;)
+	(or (parse-integer (read-line *query-io*) :junk-allowed t) 0)
+	(y-or-n-p &quot;devam mi?&quot;)
+
+	# Listeyi, dosyaya yazma.
+	(with-open-file (out &quot;dosya.txt&quot;
+			:direction :output
+			:if-exists :supersede)
+		(with-standard-io-syntax
+			(print (list 1 2) out)))
+
+	# Dosyadan okunan listeyi, bir değişkene yazma.
+	(with-open-file (in &quot;dosya.txt&quot;)
+		(with-standard-io-syntax
+			(setf mylist (read in)))
+
+	# loop ile döngü
+	(loop
+		(format *query-io* &quot;---&quot;)
+		(if (not (y-or-n-p &quot;Devam mi?&quot;))
+			(return)))
+	
+</code></pre>
+</body>
+</html>

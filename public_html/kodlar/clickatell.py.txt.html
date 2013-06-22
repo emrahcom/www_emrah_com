@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>clickatell.py.txt</title>
+</head>
+<body>
+<pre><code>
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+
+import re
+import sys
+import urllib
+
+FROM                = 'gonderen'                                                                # mesajin kim tarafindan gonderildigi
+CALLBACK            = 0                                                                         # geri cevap gonderilecek mi
+                                                                                                #   0 -&gt; gonderilmeyecek
+                                                                                                #   1 -&gt; anlik durum gonderilecek
+                                                                                                #   2 -&gt; son durum gonderilecek
+                                                                                                #   3 -&gt; hem anlik hem de son durum gonderilecek
+API_ID              = '0000000'                                                                 # Api numarasi
+KULLANICI           = 'kullanici'                                                               # kullanici adi
+PAROLA              = 'parola'                                                                  # kullanici parolasi
+SABLON_SESSION_ID   = re.compile('&circ;OK: (.+?)$')                                                 # session_id parse eden sablon
+SABLON_BALANCE      = re.compile('&circ;Credit: ([0-9\.]+?)$')                                       # balance parse eden sablon
+SABLON_SEND         = re.compile('&circ;ID: (.+?)$')                                                 # send_id parse eden sablon
+DEBUG               = 1
+
+
+# ---------------------------------------------------
+# session id alan bolum
+def getSessionId():
+    try:
+        params = urllib.urlencode({'api_id':API_ID, 'user':KULLANICI, 'password':PAROLA})
+        cnn = urllib.urlopen('https://api.clickatell.com/http/auth?%s' % params)
+        str = cnn.read()
+        if DEBUG: print('SESSION ID', str)
+
+        g = SABLON_SESSION_ID.search(str)
+        if g    : return (True, g.group(1))
+        else    : raise RuntimeError
+    except:
+        if DEBUG: print('SESSION ERROR')
+        return (False, '')
+
+
+# ---------------------------------------------------
+# balance alan bolum
+def getBalance(session_id):
+    try:
+        params = urllib.urlencode({'session_id':session_id})
+        cnn = urllib.urlopen('https://api.clickatell.com/http/getbalance?%s' % params)
+        str = cnn.read()
+        if DEBUG: print('BALANCE', str)
+
+        g = SABLON_BALANCE.search(str)
+        if g    : return float(g.group(1))
+        else    : raise RuntimeError
+    except:
+        if DEBUG: print('BALANCE ERROR')
+        return 0.0
+
+
+# ---------------------------------------------------
+# mesaj gonderen bolum
+def send(session_id, balance, to, from_, mesaj, callback):
+    try:
+        # balance yoksa mesaj gonderemez
+        if balance &lt; 1: raise RuntimeError
+        # to temizle
+        to = to_temizle(to)
+        # to veya from_ yoksa hata var demektir
+        if not to or not from_: raise RuntimeError
+        # mesaj boyu 160 karakterden uzun olamaz
+        if len(mesaj) &gt; 160: raise RuntimeError
+
+        # mesaji gonder
+        params = urllib.urlencode({'session_id':session_id, 'to':to, 'from':from_, 'text':mesaj, 'callback':callback})
+        cnn = urllib.urlopen(&quot;https://api.clickatell.com/http/sendmsg?%s&quot; % params)
+        str = cnn.read()
+        if DEBUG: print('SEND', str)
+
+        g = SABLON_SEND.search(str)
+        if g    : return (True, g.group(1))
+        else    : raise RuntimeError
+    except:
+        if DEBUG: print('SEND ERROR')
+        return (False, '')
+
+
+# ---------------------------------------------------
+# to kismindaki rakkam olmayan karakterleri temizleyen bolum
+def to_temizle(to):
+    try:
+        for c in to:
+            if not c.isdigit(): to = to.replace(c,'')
+        return to
+    except:
+        return ''
+
+
+if __name__ == '__main__':
+    (session_kuruldu_mu, session_id) = getSessionId()
+    if not session_kuruldu_mu: sys.exit(1)
+    balance = getBalance(session_id)
+    if not balance: sys.exit(1)
+
+    numara = '905552223344'
+    mesaj  = 'bu test mesaji gonderilecek'
+    (gonderildi_mi, send_id) = send(session_id, balance, numara, FROM, mesaj, CALLBACK)
+
+
+
+</code></pre>
+</body>
+</html>
