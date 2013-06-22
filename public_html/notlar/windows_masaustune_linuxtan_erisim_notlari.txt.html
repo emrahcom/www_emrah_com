@@ -15,46 +15,46 @@ WINDOWS MASAÜSTÜNE LINUX MAKİNEDEN ERİŞİM
   VNC'den hızlı
   Shutdown veya reboot için task manager menüsü kullanılacak
 
-	- Windows makinede yapılacaklar
-		
-		. Bilgisayarım (mouse sağ tuş) -&gt; Özellikler -&gt; Uzak -&gt; 
-		  Kullanıcıların bu bilgisayara uzaktan bağlanmalarına izin ver
+        - Windows makinede yapılacaklar
 
-	- Debian GNU/Linux makinede yapılacaklar
+                . Bilgisayarım (mouse sağ tuş) -&gt; Özellikler -&gt; Uzak -&gt;
+                  Kullanıcıların bu bilgisayara uzaktan bağlanmalarına izin ver
 
-		. aptitude install rdesktop
+        - Debian GNU/Linux makinede yapılacaklar
 
-		. TCP 3389 portuna erişim hakkı olacak
-	
-		. rdesktop [-k tr|en-us] [-u kullanici] [IP adresi][:port]
+                . aptitude install rdesktop
+
+                . TCP 3389 portuna erişim hakkı olacak
+
+                . rdesktop [-k tr|en-us] [-u kullanici] [IP adresi][:port]
 
 
 
 - VNC
   Bağlantı kurulunca karşı tarafın oturumu devam eder
-	- Windows makinede yapılacaklar
+        - Windows makinede yapılacaklar
 
-		. Download
-		  http://www.tightvnc.com/download.html
+                . Download
+                  http://www.tightvnc.com/download.html
 
-		. Kurulum
-			. Sadece sunucu
-			. HTTP sunucu iptal
-			. 8 karakter parola
-			. Servis olarak çalışsın
+                . Kurulum
+                        . Sadece sunucu
+                        . HTTP sunucu iptal
+                        . 8 karakter parola
+                        . Servis olarak çalışsın
 
-		. Windows Firewall'dan TCP 5900. port için izin
-		  Birden fazla bağlantı olacaksa 5900:5909
-		  HTTP sunucu da devrede olacaksa TCP 5800. port için de izin
+                . Windows Firewall'dan TCP 5900. port için izin
+                  Birden fazla bağlantı olacaksa 5900:5909
+                  HTTP sunucu da devrede olacaksa TCP 5800. port için de izin
 
 
-	- Debian GNU/Linux makinede yapılacaklar
+        - Debian GNU/Linux makinede yapılacaklar
 
-		. aptitude install xvnc4viewer
-		
-		. TCP 5900:5909 portlarına erişim hakkı verilecek
+                . aptitude install xvnc4viewer
 
-		. vncviewer [IP adresi][:port]
+                . TCP 5900:5909 portlarına erişim hakkı verilecek
+
+                . vncviewer [IP adresi][:port]
 </code></pre>
 </body>
 </html>

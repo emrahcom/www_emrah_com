@@ -10,66 +10,66 @@
 RSYNC NOTLARI
 
 *** Sunucu ve istemci makineye kurulumu (deamon'i çalıştırmak gerekmiyor)
-	aptitude install rsync
+        aptitude install rsync
 
 
 
 *** Kullanımı
-	rsync [SEÇENEKLER] KAYNAK [KAYNAK]... HEDEF
+        rsync [SEÇENEKLER] KAYNAK [KAYNAK]... HEDEF
 
 
-	- KAYNAK veya HEDEF'ten birisi uzaktaki makine olabilir. 
-	  Bu durumda uzaktaki makinenin formatı
+        - KAYNAK veya HEDEF'ten birisi uzaktaki makine olabilir.
+          Bu durumda uzaktaki makinenin formatı
 
-	  	[KULLANICI@]MAKİNE:KLASOR
-	
-
-	- KLASOR adının sonunda / varsa içeriğini alır
-	  Sonunda / yoksa klasörü de alıp hedef noktada oluşturur
-	
-
-	- Bazı seçenekler
-		-n		ne yapacağını göster ama yapma				(dry-run	)
-		-a		arşiv modu, -rlptgoD ile aynı				(archive	)
-		-r		alt klasörleri al					(recursive	)
-		-l		linkleri al						(link		)
-		-p		hakları koru						(permissions	)
-		-t		zamanı koru						(times		)
-		-g		grup bilgilerini koru					(group		)
-		-o		dosya sahibini koru					(owner		)
-		-D		aygıt ve özel dosyaları koru				(devices	)
-		-v		işlem anında açıklama yap				(verbose	)
-				v sayısı artırılarak daha detaylı açıklama istenebilir
-		-u		yeni dosyaların üzerine yazma				(update		)
-		--delete	kaynakta yer alamayan dosyaları sil
-		-b		silinen dosyaları yedekle				(backup		)
-		-e		bağlantı için kullanılacak protokol			(genelde ssh	)
-		-z		veri transferi esnasında verileri sıkıştır		(compress	)
-		-h		boyutları daha anlaşılır formatta verir			(human readable	)
-		-C		CVS tarafından gözardı edilen dosyaları göz ardı et	(CVS exclude	)
-		--exclude=	şablona uyan dosyaları göz ardı et
-		--include=	şablona uyan dosyaları göz ardı etme
-		--timeout=xx	zaman aşımı süresi. sadece dosya sisteminde çalıştığında
-				geçerli, ağ üzerinden çalışılıyorsa etkisiz.
-		--size-only	değişiklik yapılıp yapılmayacağına, boyuta bakıp karar
-				verir.
+                [KULLANICI@]MAKİNE:KLASOR
 
 
-	- SSH ile kullanımı
-		SSH timeout verilmezse rsync askıda kalabiliyor.
-		&tilde;/.ssh/config
-			ServerAliveInterval 10
-			ServerAliveCountMax 2
-			ConnectTimeout 10
+        - KLASOR adının sonunda / varsa içeriğini alır
+          Sonunda / yoksa klasörü de alıp hedef noktada oluşturur
+
+
+        - Bazı seçenekler
+                -n              ne yapacağını göster ama yapma                          (dry-run        )
+                -a              arşiv modu, -rlptgoD ile aynı                           (archive        )
+                -r              alt klasörleri al                                       (recursive      )
+                -l              linkleri al                                             (link           )
+                -p              hakları koru                                            (permissions    )
+                -t              zamanı koru                                             (times          )
+                -g              grup bilgilerini koru                                   (group          )
+                -o              dosya sahibini koru                                     (owner          )
+                -D              aygıt ve özel dosyaları koru                            (devices        )
+                -v              işlem anında açıklama yap                               (verbose        )
+                                v sayısı artırılarak daha detaylı açıklama istenebilir
+                -u              yeni dosyaların üzerine yazma                           (update         )
+                --delete        kaynakta yer alamayan dosyaları sil
+                -b              silinen dosyaları yedekle                               (backup         )
+                -e              bağlantı için kullanılacak protokol                     (genelde ssh    )
+                -z              veri transferi esnasında verileri sıkıştır              (compress       )
+                -h              boyutları daha anlaşılır formatta verir                 (human readable )
+                -C              CVS tarafından gözardı edilen dosyaları göz ardı et     (CVS exclude    )
+                --exclude=      şablona uyan dosyaları göz ardı et
+                --include=      şablona uyan dosyaları göz ardı etme
+                --timeout=xx    zaman aşımı süresi. sadece dosya sisteminde çalıştığında
+                                geçerli, ağ üzerinden çalışılıyorsa etkisiz.
+                --size-only     değişiklik yapılıp yapılmayacağına, boyuta bakıp karar
+                                verir.
+
+
+        - SSH ile kullanımı
+                SSH timeout verilmezse rsync askıda kalabiliyor.
+                &tilde;/.ssh/config
+                        ServerAliveInterval 10
+                        ServerAliveCountMax 2
+                        ConnectTimeout 10
 
 
 
 *** Örnekler
-	rsync -av klasor1/ klasor2/
-	rsync -zavuhbe &quot;ssh -l username -i keyfile -p 10022&quot; \
-	--delete --size-only 88.13.45.12:&tilde;/klasor1/ klasor2/
-		
-		
+        rsync -av klasor1/ klasor2/
+        rsync -zavuhbe &quot;ssh -l username -i keyfile -p 10022&quot; \
+        --delete --size-only 88.13.45.12:&tilde;/klasor1/ klasor2/
+
+
 </code></pre>
 </body>
 </html>

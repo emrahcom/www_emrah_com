@@ -10,38 +10,38 @@
 Python CherryPy Notları
 -----------------------
 . Yüklenecek paketler
-	python-cherrypy3
-	python-openssl	(SSL desteği olacaksa)
+        python-cherrypy3
+        python-openssl  (SSL desteği olacaksa)
 
 
- 
+
 . SSL için anahtar ver sertifikasının oluşturulması.
-	. Gizli anahtarın oluşturulması (parola girilecek)
-	openssl genrsa -des3 -out cherrypy.key 1024
+        . Gizli anahtarın oluşturulması (parola girilecek)
+        openssl genrsa -des3 -out cherrypy.key 1024
 
 
-	. Sertifika imza talebinin oluşturulması.
-	openssl req -new -key cherrypy.key -out cherrypy.csr
+        . Sertifika imza talebinin oluşturulması.
+        openssl req -new -key cherrypy.key -out cherrypy.csr
 
-	Country Name            : TR
-	State or Province Name  : Türkiye
-	Locality Name           : İstanbul
-	Organization Name       : Firma Ltd.
-	Organizational Unit Name: Yazılım
-	Common Name             : www.emrah.com
-	Email Address           : fakemail@www.emrah.com
+        Country Name            : TR
+        State or Province Name  : Türkiye
+        Locality Name           : İstanbul
+        Organization Name       : Firma Ltd.
+        Organizational Unit Name: Yazılım
+        Common Name             : www.emrah.com
+        Email Address           : fakemail@www.emrah.com
 
-	. Gizli anahtardan parolanın kaldırılması.
-	Web sunucu her başladığında gizli anahtarın parolasını sormasını
-	istemiyoruz.
-	cp cherrypy.key cherrypy.key.org
-	openssl rsa -in cherrypy.key.org -out cherrypy.key
-	chmod 600 cherrypy.key*
+        . Gizli anahtardan parolanın kaldırılması.
+        Web sunucu her başladığında gizli anahtarın parolasını sormasını
+        istemiyoruz.
+        cp cherrypy.key cherrypy.key.org
+        openssl rsa -in cherrypy.key.org -out cherrypy.key
+        chmod 600 cherrypy.key*
 
-	. Sertifikanın oluşturulması.
-	openssl x509 -req -days 18250 -in cherrypy.csr -signkey cherrypy.key \
-		-out cherrypy.crt
- 
+        . Sertifikanın oluşturulması.
+        openssl x509 -req -days 18250 -in cherrypy.csr -signkey cherrypy.key \
+                -out cherrypy.crt
+
 
 
 . SSL destekli basit bir CherryPy sunucu
@@ -84,10 +84,10 @@ def index(self, *args, **kwargs):
         # Host adini al.
         host = cherrypy.request.headers['host'].split(':')[0]
 
-	# Formdan 'passwd' diye bir deger gelmisse al.
-	passwd = None
-	if 'passwd' in kwargs.keys() and len(kwargs['passwd']) != 0:
-		passwd = kwargs['passwd']
+        # Formdan 'passwd' diye bir deger gelmisse al.
+        passwd = None
+        if 'passwd' in kwargs.keys() and len(kwargs['passwd']) != 0:
+                passwd = kwargs['passwd']
 
         result = '&lt;html&gt;&lt;body&gt;index&lt;/body&gt;&lt;/html&gt;'
     except Exception, err:

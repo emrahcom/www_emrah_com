@@ -12,14 +12,14 @@ GEDA NOTLARI
 
 - Kurulum
 
-	aptitude install geda gspiceui gnucap pcb geda-xgsch2pcb dbus-x11
+        aptitude install geda gspiceui gnucap pcb geda-xgsch2pcb dbus-x11
 
-	geda		-&gt; geda-doc geda-gnetlist geda-gschem geda-symbols
-			-&gt; guile-1.8-libs libgeda-common libgeda33 libstroke0
-	gspiceui	-&gt; gspiceui guile-1.6-libs gwave libglib1.2ldbl libgtk1.2
-			-&gt; libgtk1.2-common libguile-ltdl-1 libguilegtk-1.2-0{a} libqthreads-12 
-	pcb		-&gt; libgd2-xpm pcb-common pcb-gtk
-	geda-xgsch2pcb	-&gt; geda-gattrib geda-utils libgd2-xpm pcb pcb-common pcb-gtk python-dbus
+        geda            -&gt; geda-doc geda-gnetlist geda-gschem geda-symbols
+                        -&gt; guile-1.8-libs libgeda-common libgeda33 libstroke0
+        gspiceui        -&gt; gspiceui guile-1.6-libs gwave libglib1.2ldbl libgtk1.2
+                        -&gt; libgtk1.2-common libguile-ltdl-1 libguilegtk-1.2-0{a} libqthreads-12
+        pcb             -&gt; libgd2-xpm pcb-common pcb-gtk
+        geda-xgsch2pcb  -&gt; geda-gattrib geda-utils libgd2-xpm pcb pcb-common pcb-gtk python-dbus
 
 
 - geda-xgsch2pcb (proje yöneticisi)
@@ -27,39 +27,39 @@ GEDA NOTLARI
   Menuden Debian -&gt; Uygulamalar -&gt; Bilim -&gt; Elektronik -&gt; geda-xgsch2pcb
   Konsoldan çalıştırılacaksa sadece xgsch2pcb
 
-  	. proje oluşturma
-		yeni -&gt; blank -&gt; proje adı/yeri -&gt; uygula
-		schematic pages -&gt; ekle -&gt; create new
-		schematic pages -&gt; şema seç -&gt; edit schematic
+        . proje oluşturma
+                yeni -&gt; blank -&gt; proje adı/yeri -&gt; uygula
+                schematic pages -&gt; ekle -&gt; create new
+                schematic pages -&gt; şema seç -&gt; edit schematic
 
-	. proje dosyası formatı (.gsch2pcb)
-		schematics proje-page1.sch proje-page2.sch
-		output-name proje.pcb
+        . proje dosyası formatı (.gsch2pcb)
+                schematics proje-page1.sch proje-page2.sch
+                output-name proje.pcb
 
 
 - gschem (devre şeması)
 
-	. şemaya eleman eklemek için (insert) i
-	. value özelliğine değeri, sadece değer görünsün
-	. footprint, örneğin 10K direnç için R025, görünmez olsun
-	. aynı tipteki elemanların pinlerini sıralı numaralandırmak için slot
-	. Attributes -&gt; Autonumber text -&gt; Autonumber text in 'current page'
+        . şemaya eleman eklemek için (insert) i
+        . value özelliğine değeri, sadece değer görünsün
+        . footprint, örneğin 10K direnç için R025, görünmez olsun
+        . aynı tipteki elemanların pinlerini sıralı numaralandırmak için slot
+        . Attributes -&gt; Autonumber text -&gt; Autonumber text in 'current page'
 
 
 - pcb
 
-	. pcb kart1.pcb
+        . pcb kart1.pcb
 
 
 - symbol kütüphanesi ekleme
 
-	cd &tilde;/.gEDA
-	vim gafrc
-		(component-library &quot;${HOME}/.gEDA/gaf/&quot;)
-	mkdir gaf
-	cd gaf
-	wget http://www.luciani.org/geda/pcb/pcb-symbols-jcl_2008-4-25.tgz
-	tar zxf pcb-symbols-jcl_2008-4-25.tgz
+        cd &tilde;/.gEDA
+        vim gafrc
+                (component-library &quot;${HOME}/.gEDA/gaf/&quot;)
+        mkdir gaf
+        cd gaf
+        wget http://www.luciani.org/geda/pcb/pcb-symbols-jcl_2008-4-25.tgz
+        tar zxf pcb-symbols-jcl_2008-4-25.tgz
 </code></pre>
 </body>
 </html>

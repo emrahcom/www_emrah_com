@@ -18,64 +18,64 @@ aptitude install pptp-linux network-manager-pptp
 
 # /etc/ppp/chap-secrets
 
-	kullanici_adi	PPTP	parola	*
+        kullanici_adi   PPTP    parola  *
 
 
 # /etc/ppp/peers/baglanti_adi
 
-	pty &quot;pptp xxx.yyy.www.zzz --nolaunchpppd&quot;
-	name kullanici_adi
-	remotename PPTP
-	require-mppe-128
-	persist
-	file /etc/ppp/options.pptp
-	ipparam baglanti_adi
+        pty &quot;pptp xxx.yyy.www.zzz --nolaunchpppd&quot;
+        name kullanici_adi
+        remotename PPTP
+        require-mppe-128
+        persist
+        file /etc/ppp/options.pptp
+        ipparam baglanti_adi
 
 
 # Route edilecek ağ(lar)
 /etc/ppp/ip-up.d/baglanti_adi
 
-	#!/bin/sh
+        #!/bin/sh
 
-	NET=&quot;xxx.yyy.0.0/16&quot;
+        NET=&quot;xxx.yyy.0.0/16&quot;
 
-	if [ &quot;${PPP_IPPARAM}&quot; = &quot;baglanti_adi&quot; ]; then
-		route add -net ${NET} dev ${IFNAME}
-	fi
+        if [ &quot;${PPP_IPPARAM}&quot; = &quot;baglanti_adi&quot; ]; then
+                route add -net ${NET} dev ${IFNAME}
+        fi
 
 chmod +u /etc/ppp/ip-up.d/baglanti_adi
 
 /etc/ppp/ip-down.d/baglanti_adi
-	#!/bin/sh
+        #!/bin/sh
 
-	NET=&quot;xxx.yyy.0.0/16&quot;
+        NET=&quot;xxx.yyy.0.0/16&quot;
 
-	if [ &quot;${PPP_IPPARAM}&quot; = &quot;baglanti_adi&quot; ]; then
-		route del -net ${NET} dev ${IFNAME}
-	fi
+        if [ &quot;${PPP_IPPARAM}&quot; = &quot;baglanti_adi&quot; ]; then
+                route del -net ${NET} dev ${IFNAME}
+        fi
 
 chmod +u /etc/ppp/ip-down.d/baglanti_adi
 
 
 # VPN bağlantısını kurma
 
-	pon baglanti_adi
-		veya
-	pppd call baglanti_adi
+        pon baglanti_adi
+                veya
+        pppd call baglanti_adi
 
 
 # VPN bağlantısını kapatma
 
-	poff baglanti_adi
-		veya
-	killall pppd
+        poff baglanti_adi
+                veya
+        killall pppd
 
 
 # Durum
 
-	ifconfig
-	ip route ls
-	
+        ifconfig
+        ip route ls
+
 
 # Kaynaklar
 http://www.cyberciti.biz/tips/howto-configure-ubuntu-fedora-linux-pptp-client.html

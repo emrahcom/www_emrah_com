@@ -20,29 +20,29 @@
 # Mümkün olan en yeni sürüm Debian template'i kullanılarak kurulum yapılır.
 
 # XenServer'a SSH ile bağlanılır.
-	xe vm-list
-	xe vm-param-get uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 param-name=HVM-boot-policy
-		(boş olacak)
-	xe vm-param-get uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 param-name=PV-bootloader
-		(pygrub olacak)
-	xe vm-disk-list uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36
-	xe vbd-param-get uuid=8df76dac-6cb0-d80f-431c-0078742bb20d param-name=bootable
-		(true olacak)
-	xe-edit-bootloader -n &quot;Debian Wheezy i386&quot; -p 1 -f /grub/grub.cfg
-		(kernel ve ramdisk bilgilerini al)
-	xe vm-param-set uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 PV-bootloader-args=&quot;--kernel=/vmlinuz-3.2.0-4-686-pae --ramdisk=/initrd.img-3.2.0-4-686-pae&quot;
-	xe vm-param-set uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 PV-args=&quot;root=UUID=4cfc60fc-7485-41bf-9a53-80f03b253330 ro quiet&quot;
+        xe vm-list
+        xe vm-param-get uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 param-name=HVM-boot-policy
+                (boş olacak)
+        xe vm-param-get uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 param-name=PV-bootloader
+                (pygrub olacak)
+        xe vm-disk-list uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36
+        xe vbd-param-get uuid=8df76dac-6cb0-d80f-431c-0078742bb20d param-name=bootable
+                (true olacak)
+        xe-edit-bootloader -n &quot;Debian Wheezy i386&quot; -p 1 -f /grub/grub.cfg
+                (kernel ve ramdisk bilgilerini al)
+        xe vm-param-set uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 PV-bootloader-args=&quot;--kernel=/vmlinuz-3.2.0-4-686-pae --ramdisk=/initrd.img-3.2.0-4-686-pae&quot;
+        xe vm-param-set uuid=43cef7a5-5e2c-8243-f25f-b1a588195a36 PV-args=&quot;root=UUID=4cfc60fc-7485-41bf-9a53-80f03b253330 ro quiet&quot;
 
 # Kaynaklar
-	http://blog.403labs.com/post/1546501840/paravirtulization-with-citrix-xenserver-5-5-and-ubuntu
-	http://www.aikidokatech.com/?p=55
-	http://www.linuxplus.pl/paravirtulization-z-xcp-1-6-citrix-xenserver-6-1-debian-wheezy-7-0/
+        http://blog.403labs.com/post/1546501840/paravirtulization-with-citrix-xenserver-5-5-and-ubuntu
+        http://www.aikidokatech.com/?p=55
+        http://www.linuxplus.pl/paravirtulization-z-xcp-1-6-citrix-xenserver-6-1-debian-wheezy-7-0/
 
 # grub.cfg örnek
-	echo    'Loading Linux 3.2.0-4-686-pae ...'
-	linux   /vmlinuz-3.2.0-4-686-pae root=UUID=4cfc60fc-7485-41bf-9a53-80f03b253330 ro console=hvc0 quiet
-	echo    'Loading initial ramdisk ...'
-	initrd  /initrd.img-3.2.0-4-686-pae
+        echo    'Loading Linux 3.2.0-4-686-pae ...'
+        linux   /vmlinuz-3.2.0-4-686-pae root=UUID=4cfc60fc-7485-41bf-9a53-80f03b253330 ro console=hvc0 quiet
+        echo    'Loading initial ramdisk ...'
+        initrd  /initrd.img-3.2.0-4-686-pae
 
 
 
@@ -84,113 +84,113 @@ BIOS'da IDE seçili olacak. AHCI veya RAID seçili olmayacak.
 
 Birbirinin eşi 2 adet diski olan makineye standart kurulum yapılır. Kurulum
 esnasında sadece bir disk (/dev/sda) kullanılır. Diğeri için hiçbir işlem
-yapılmaz. 
+yapılmaz.
 
 
 # RAID'in oluşturulması
 SSH ile Citrix'e root olarak login olunur.
 
-	cd /tmp
-	wget http://ftp.bauer-power.net/misc/XenRAID/xenRAID.sh
-	chmod u+x xenRAID.sh
-	./xenRAID.sh
+        cd /tmp
+        wget http://ftp.bauer-power.net/misc/XenRAID/xenRAID.sh
+        chmod u+x xenRAID.sh
+        ./xenRAID.sh
 
 Makine otomatik reboot edecek. Tekrar root olarak login olunacak. RAID'in
 ve dosya sisteminin durumunu görmek için aşağıdaki komutlar kullanılabilir.
 md1 hazır olana kadar beklenecek. Hazır olması, IBM x3250 makinede 512 GB'lik
 disklerde 1 saat kadar sürüyor.
 
-	cat /etc/fstab
-	cat /proc/mdstat
-		# hazir olunca görünecek olan
-		Personalities : [raid1] 
-		md1 : active raid1 sdb3[1] sda3[0]
-		      479995328 blocks [2/2] [UU]
-		      
-		md0 : active raid1 sdb1[1]
-		      4194240 blocks [2/1] [_U]
-		      
-		unused devices: &lt;none&gt;
+        cat /etc/fstab
+        cat /proc/mdstat
+                # hazir olunca görünecek olan
+                Personalities : [raid1]
+                md1 : active raid1 sdb3[1] sda3[0]
+                      479995328 blocks [2/2] [UU]
+
+                md0 : active raid1 sdb1[1]
+                      4194240 blocks [2/1] [_U]
+
+                unused devices: &lt;none&gt;
 
 /dev/sda1 md0'a eklenecek. Senkronizasyon bitene kadar beklenecek. 1 dakikadan
 kısa sürüyor.
-	mdadm --manage /dev/md0 --add /dev/sda1
-	cat /proc/mdstat
-		# hazir olunca görünecek olan
-		md1 : active raid1 sdb3[1] sda3[0]
-		      479995328 blocks [2/2] [UU]
-		      
-		md0 : active raid1 sda1[0] sdb1[1]
-		      4194240 blocks [2/2] [UU]
-		      
-		unused devices: &lt;none&gt;
+        mdadm --manage /dev/md0 --add /dev/sda1
+        cat /proc/mdstat
+                # hazir olunca görünecek olan
+                md1 : active raid1 sdb3[1] sda3[0]
+                      479995328 blocks [2/2] [UU]
 
-	reboot
+                md0 : active raid1 sda1[0] sdb1[1]
+                      4194240 blocks [2/2] [UU]
+
+                unused devices: &lt;none&gt;
+
+        reboot
 
 
 # Local storage ayarları
 Bu işlemler sonucunda Local storage bağlanmamış görünüyor.
 
-	xe sr-list
-		uuid ( RO)                : 81424cee-d531-c029-5cee-34d14f5bcc0e
-			  name-label ( RW): Local storage
-		    name-description ( RW): 
-				host ( RO): ibmx3250
-				type ( RO): lvm
-			content-type ( RO): user
+        xe sr-list
+                uuid ( RO)                : 81424cee-d531-c029-5cee-34d14f5bcc0e
+                          name-label ( RW): Local storage
+                    name-description ( RW):
+                                host ( RO): ibmx3250
+                                type ( RO): lvm
+                        content-type ( RO): user
 
-	xe pbd-list
-		uuid ( RO)                  : 25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
-			     host-uuid ( RO): 5c639202-a229-4e2b-8f7a-f3dbe7dab76c
-	&gt;&gt;&gt;		       sr-uuid ( RO): 81424cee-d531-c029-5cee-34d14f5bcc0e
-			 device-config (MRO): device:
-		/dev/disk/by-id/scsi-SATA_WD5003ABYX-23_WD-WMAYP2801505-part3
-	&gt;&gt;&gt;	    currently-attached ( RO): false
+        xe pbd-list
+                uuid ( RO)                  : 25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
+                             host-uuid ( RO): 5c639202-a229-4e2b-8f7a-f3dbe7dab76c
+        &gt;&gt;&gt;                    sr-uuid ( RO): 81424cee-d531-c029-5cee-34d14f5bcc0e
+                         device-config (MRO): device:
+                /dev/disk/by-id/scsi-SATA_WD5003ABYX-23_WD-WMAYP2801505-part3
+        &gt;&gt;&gt;         currently-attached ( RO): false
 
 
 Bağlanamayan bu storage silinecek. sr-uuid ve pdb-uuid örnektir, her makinede
 değişir.
 
-	xe sr-list
-	&gt;&gt;&gt;	uuid ( RO)                : 81424cee-d531-c029-5cee-34d14f5bcc0e
-			  name-label ( RW): Local storage
-		    name-description ( RW): 
-				host ( RO): ibmx3250
-				type ( RO): lvm
-			content-type ( RO): user
+        xe sr-list
+        &gt;&gt;&gt;     uuid ( RO)                : 81424cee-d531-c029-5cee-34d14f5bcc0e
+                          name-label ( RW): Local storage
+                    name-description ( RW):
+                                host ( RO): ibmx3250
+                                type ( RO): lvm
+                        content-type ( RO): user
 
-	xe pbd-list sr-uuid=81424cee-d531-c029-5cee-34d14f5bcc0e
-	&gt;&gt;&gt;	uuid ( RO)                  : 25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
-			     host-uuid ( RO): 5c639202-a229-4e2b-8f7a-f3dbe7dab76c
-			       sr-uuid ( RO): 81424cee-d531-c029-5cee-34d14f5bcc0e
-			 device-config (MRO): device:
-		/dev/disk/by-id/scsi-SATA_WD5003ABYX-23_WD-WMAYP2801505-part3
-		    currently-attached ( RO): false
+        xe pbd-list sr-uuid=81424cee-d531-c029-5cee-34d14f5bcc0e
+        &gt;&gt;&gt;     uuid ( RO)                  : 25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
+                             host-uuid ( RO): 5c639202-a229-4e2b-8f7a-f3dbe7dab76c
+                               sr-uuid ( RO): 81424cee-d531-c029-5cee-34d14f5bcc0e
+                         device-config (MRO): device:
+                /dev/disk/by-id/scsi-SATA_WD5003ABYX-23_WD-WMAYP2801505-part3
+                    currently-attached ( RO): false
 
-	xe pbd-unplug uuid=25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
-	xe pbd-destroy uuid=25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
-	xe sr-forget uuid=81424cee-d531-c029-5cee-34d14f5bcc0e
+        xe pbd-unplug uuid=25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
+        xe pbd-destroy uuid=25a5234e-a4e8-e654-2bfe-6f24b3a70cdb
+        xe sr-forget uuid=81424cee-d531-c029-5cee-34d14f5bcc0e
 
 Artık SR ve PDB listesinde görünmüyor olması lazım.
-	xe sr-list
-	xe pbd-list
+        xe sr-list
+        xe pbd-list
 
 
 Yeni bir local storage oluşturulacak. Örnekteki host-uuid her makinede değişir.
 
-	xe host-list
-	&gt;&gt;&gt;	uuid ( RO)                : 5c639202-a229-4e2b-8f7a-f3dbe7dab76c
-			  name-label ( RW): ibmx3250
-		    name-description ( RW): Default install of XenServer
+        xe host-list
+        &gt;&gt;&gt;     uuid ( RO)                : 5c639202-a229-4e2b-8f7a-f3dbe7dab76c
+                          name-label ( RW): ibmx3250
+                    name-description ( RW): Default install of XenServer
 
-	xe sr-create content-type=user device-config:device=/dev/md1 \
-	host-uuid=5c639202-a229-4e2b-8f7a-f3dbe7dab76c \
-	name-label=&quot;Local Storage&quot; shared=false type=lvm
+        xe sr-create content-type=user device-config:device=/dev/md1 \
+        host-uuid=5c639202-a229-4e2b-8f7a-f3dbe7dab76c \
+        name-label=&quot;Local Storage&quot; shared=false type=lvm
 
 
 Artık SR ve PDB listesinde görünüyor olması lazım.
-	xe sr-list
-	xe pbd-list
+        xe sr-list
+        xe pbd-list
 
 Reboot edip storage'ın sorunsuz bağlandığından emin ol.
 
@@ -214,8 +214,8 @@ echo ----------------------------------
 sleep 3
 dd if=/dev/sda of=/dev/sdb bs=512 count=1
 echo -e &quot;\nt\n1\nfd\nt\n3\nfd\nw\nx&quot; | fdisk /dev/sdb
-[ -e /dev/md0 ] || mknod /dev/md0 b 9 0 
-[ -e /dev/md1 ] || mknod /dev/md1 b 9 1 
+[ -e /dev/md0 ] || mknod /dev/md0 b 9 0
+[ -e /dev/md1 ] || mknod /dev/md1 b 9 1
 mdadm --create /dev/md0 --level=1 --raid-devices=2 missing /dev/sdb1
 mdadm --create /dev/md1 --level=1 --raid-devices=2 missing /dev/sdb3
 pvcreate /dev/md1
@@ -229,7 +229,7 @@ mkdir /mnt/proc
 sed -r -i 's,LABEL=root-\w+ ,/dev/md0 ,g' /mnt/etc/fstab
 mkdir /root/initrd &amp;&amp; cd /root/initrd
 zcat /boot/initrd-`uname -r`.img | cpio -i &amp;&amp; \
-cp /lib/modules/`uname -r`/kernel/drivers/md/raid1.ko lib 
+cp /lib/modules/`uname -r`/kernel/drivers/md/raid1.ko lib
 q=&quot;echo Waiting for driver initialization.&quot;
 sed -r -i &quot;s,&circ;${q}$,\n\necho Loading raid1.ko module\ninsmod /lib/raid1.ko\n${q}\n,g&quot; init
 q=&quot;resume /var/swap/swap.001&quot;

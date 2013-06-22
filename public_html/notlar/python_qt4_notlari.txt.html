@@ -16,33 +16,33 @@ http://zetcode.com/tutorials/pyqt4/
 http://www.commandprompt.com/community/pyqt/book1.htm
 
 # Başlıca modüller
-	- QtCore
-	Grafik arayüzle doğrudan alakalı olmayan (non-gui) işlemler için
-	kullanılmaktadır. Veri tipleri, dosya/klasör işlemleri, process/thread,
-	streaming vs.
+        - QtCore
+        Grafik arayüzle doğrudan alakalı olmayan (non-gui) işlemler için
+        kullanılmaktadır. Veri tipleri, dosya/klasör işlemleri, process/thread,
+        streaming vs.
 
-	- QtGui
-	Grafik arayüz ile ilgili bileşenler ve sınıfları içerir.
+        - QtGui
+        Grafik arayüz ile ilgili bileşenler ve sınıfları içerir.
 
-	- QtNetwork
-	Network uygulamaları yazmak için gerekli bileşenleri içerir.
+        - QtNetwork
+        Network uygulamaları yazmak için gerekli bileşenleri içerir.
 
-	- QtXml
-	XML dosyaları ile çalışmak için gereken bileşenleri içerir.
+        - QtXml
+        XML dosyaları ile çalışmak için gereken bileşenleri içerir.
 
-	- QtSql
-	Veritabanları ile çalışmak için gereken bileşenleri içerir.
+        - QtSql
+        Veritabanları ile çalışmak için gereken bileşenleri içerir.
 
-	- QtSvg
-	Ölçeklenebilir vektörel grafiklerle (SVG) çalışabilmek için gereken
-	bileşenleri içerir.
+        - QtSvg
+        Ölçeklenebilir vektörel grafiklerle (SVG) çalışabilmek için gereken
+        bileşenleri içerir.
 
-	- QtOpenGL
-	2D ve 3D grafikleri render ederken kullanılacak bileşenleri içerir.
+        - QtOpenGL
+        2D ve 3D grafikleri render ederken kullanılacak bileşenleri içerir.
 
 
 # Kurulum
-	aptitude install python-qt4 pyqt4-dev-tools qt4-designer
+        aptitude install python-qt4 pyqt4-dev-tools qt4-designer
 
 
 
@@ -56,8 +56,8 @@ http://www.commandprompt.com/community/pyqt/book1.htm
 import sys
 from PyQt4 import QtGui, uic
 
-app	= QtGui.QApplication(sys.argv)
-window	= uic.loadUi(&quot;form_adi.ui&quot;)
+app     = QtGui.QApplication(sys.argv)
+window  = uic.loadUi(&quot;form_adi.ui&quot;)
 window.show()
 sys.exit(app.exec_())
 
@@ -75,16 +75,16 @@ from PyQt4 import QtCore, QtGui, uic
 
 
 class Pencere:
-	def saatGuncelle(self):
-		self.ui.labelSaat.setText(time.strftime('%H:%M:%S'))
-		QtCore.QTimer.singleShot(1000,  self.saatGuncelle)
+        def saatGuncelle(self):
+                self.ui.labelSaat.setText(time.strftime('%H:%M:%S'))
+                QtCore.QTimer.singleShot(1000,  self.saatGuncelle)
 
-	def __init__(self, ui):
-		self.ui = ui
-		QtCore.QTimer.singleShot(1000,  self.saatGuncelle)
+        def __init__(self, ui):
+                self.ui = ui
+                QtCore.QTimer.singleShot(1000,  self.saatGuncelle)
 
-	def show(self):
-		self.ui.show()
+        def show(self):
+                self.ui.show()
 
 app     = QtGui.QApplication(sys.argv)
 w       = Pencere(uic.loadUi(&quot;untitled.ui&quot;))
@@ -104,65 +104,65 @@ import sys
 from PyQt4 import QtCore, QtGui, uic
 
 class window:
-	def __init__(self, ui):
-		self.ui = ui
-		QtCore.QObject.connect(self.ui.pushButton, QtCore.SIGNAL(&quot;clicked()&quot;), self.slot1)
-		QtCore.QObject.connect(self.ui.pushButton, QtCore.SIGNAL(&quot;clicked()&quot;), self.ui, QtCore.SLOT(&quot;close()&quot;))
+        def __init__(self, ui):
+                self.ui = ui
+                QtCore.QObject.connect(self.ui.pushButton, QtCore.SIGNAL(&quot;clicked()&quot;), self.slot1)
+                QtCore.QObject.connect(self.ui.pushButton, QtCore.SIGNAL(&quot;clicked()&quot;), self.ui, QtCore.SLOT(&quot;close()&quot;))
 
-	def show(self):
-		self.ui.show()
+        def show(self):
+                self.ui.show()
 
-	def slot1(self):
-		print &quot;slot1 çalıştı&quot;
+        def slot1(self):
+                print &quot;slot1 çalıştı&quot;
 
 
 if __name__ == &quot;__main__&quot;:
-	app     = QtGui.QApplication(sys.argv)
-	w       = window(uic.loadUi(&quot;form1.ui&quot;))
-	w.show()
-	sys.exit(app.exec_())
-	
+        app     = QtGui.QApplication(sys.argv)
+        w       = window(uic.loadUi(&quot;form1.ui&quot;))
+        w.show()
+        sys.exit(app.exec_())
+
 
 
 #------------------------------------------------------------------------------
 # Dinamik widget
 #------------------------------------------------------------------------------
-	. Label oluşturmak
-	  self.label = QtGui.QLabel(self.ui)
+        . Label oluşturmak
+          self.label = QtGui.QLabel(self.ui)
 
-	. Yazıyı set etmek
-	  self.ui.label.setText(u'Yazı buraya')
+        . Yazıyı set etmek
+          self.ui.label.setText(u'Yazı buraya')
 
-	. Geometrisini belirtmek
-	  self.label.setGeometry(20, 20, 100, 100)
+        . Geometrisini belirtmek
+          self.label.setGeometry(20, 20, 100, 100)
 
-	. Boyut ve pozisyon bilgilerini almak
-	  x = self.label.x()
-	  y = self.label.y()
-	  w = self.label.width()
-	  h = self.label.height()
+        . Boyut ve pozisyon bilgilerini almak
+          x = self.label.x()
+          y = self.label.y()
+          w = self.label.width()
+          h = self.label.height()
 
-	. Göstermek - gizlemek
-	  self.label.show()
-	  self.label.hide()
+        . Göstermek - gizlemek
+          self.label.show()
+          self.label.hide()
 
-	. Bir süre spnra bir olayı tetiklemek
-	  QtCore.QTimer.singleShot(1000,  self.method_adi)
+        . Bir süre spnra bir olayı tetiklemek
+          QtCore.QTimer.singleShot(1000,  self.method_adi)
 
 
 
 #------------------------------------------------------------------------------
 # Style sheet
 #------------------------------------------------------------------------------
-	LABEL	= 'QLabel { color: rgb(0, 0, 255); }'
-	CERCEVE	= &quot;&quot;&quot;QLabel { border-radius: 8px; 
-			border-width: 2px; 
-			border-style: solid; 
-			border-color: rgb(0, 0, 255);
-		}&quot;&quot;&quot;
-	
-	self.ui.label.setStyleSheet(LABEL)
-	self.ui.cerceve.setStyleSheet(CERCEVE)
+        LABEL   = 'QLabel { color: rgb(0, 0, 255); }'
+        CERCEVE = &quot;&quot;&quot;QLabel { border-radius: 8px;
+                        border-width: 2px;
+                        border-style: solid;
+                        border-color: rgb(0, 0, 255);
+                }&quot;&quot;&quot;
+
+        self.ui.label.setStyleSheet(LABEL)
+        self.ui.cerceve.setStyleSheet(CERCEVE)
 
 
 

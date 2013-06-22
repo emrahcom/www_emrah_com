@@ -13,425 +13,425 @@ EMC HAL NOTLARI
 
 - Temel Kavramlar
 
-	. component (bileşen)	: girişleri, çıkışları ve davranışları tanımlanmış, 
-	gerektiğinde yüklenebilen ve diğer bileşenlerle ilişkilendirilebilen yazılım parçası
+        . component (bileşen)   : girişleri, çıkışları ve davranışları tanımlanmış,
+        gerektiğinde yüklenebilen ve diğer bileşenlerle ilişkilendirilebilen yazılım parçası
 
-	. parameter (parametre)	: bileşenlerin, diğer bileşenlerle ilişkilendirilmeyen ama 
-	buna rağmen erişilmesi gereken değerleridir. Giriş ve çıkış parametreleri olmak üzere 
-	iki çeşittirler.
+        . parameter (parametre) : bileşenlerin, diğer bileşenlerle ilişkilendirilmeyen ama
+        buna rağmen erişilmesi gereken değerleridir. Giriş ve çıkış parametreleri olmak üzere
+        iki çeşittirler.
 
-	. pin (uç)		: Bileşenleri birbirlerine bağlamak için kullanılan uçlardır. 
-	Her ucun bir adı vardır ve ilişkilendirmelerde, bu ad kullanılır. HAL uçları, yazılımın 
-	birer parçasıdır, donanıma ait uçlarla karıştırma.
+        . pin (uç)              : Bileşenleri birbirlerine bağlamak için kullanılan uçlardır.
+        Her ucun bir adı vardır ve ilişkilendirmelerde, bu ad kullanılır. HAL uçları, yazılımın
+        birer parçasıdır, donanıma ait uçlarla karıştırma.
 
-	. physical pin		: Fiziksel uçlar, gerçek dünyada var olan ve donanimları 
-	ilişkilendirmekte kullanılan I/O birimleridir.
+        . physical pin          : Fiziksel uçlar, gerçek dünyada var olan ve donanimları
+        ilişkilendirmekte kullanılan I/O birimleridir.
 
-	. Signal (sinyal)	: HAL sinyalleri, HAL uçlarını birbirlerine bağlayan sanal 
-	kablolardır. HAL sinyalleri, istendiği vakit HAL uclarına bağlanabilir veya ayrılabilir. 
-	Bu işlem, makine çalışırken dahi yapılabilir.
+        . Signal (sinyal)       : HAL sinyalleri, HAL uçlarını birbirlerine bağlayan sanal
+        kablolardır. HAL sinyalleri, istendiği vakit HAL uclarına bağlanabilir veya ayrılabilir.
+        Bu işlem, makine çalışırken dahi yapılabilir.
 
-	. type (tip)		: Sinyallerin ve uçların tipleri vardır. Bir sinyal, sadece aynı 
-	tipteki bir uca bağlanabilir. Şu an 8 adet tip vardır:
-		- BIT	: TRUE/FALSE veya ON/OFF değerleri alabilen tek bitlik tip
-		- FLOAT	: 32 bitlik kayan nokta
-		- U8	: 8 bitlik işaretsiz tamsayı	[0, 		+255]
-		- S8	: 8 bitlik işaretli tam sayı	[-128,		+127]
-		- U16	: 16 bitlik işaretsiz tamsayı	[0, 		+65535]
-		- S16	: 16 bitlik işaretli tam sayı	[-32768,	+32767]
-		- U32	: 32 bitlik işaretsiz tamsayı	[0,		+4294967295]
-		- S32	: 32 bitlik işaretli tam sayı	[-2147483648,	+2147483647]
+        . type (tip)            : Sinyallerin ve uçların tipleri vardır. Bir sinyal, sadece aynı
+        tipteki bir uca bağlanabilir. Şu an 8 adet tip vardır:
+                - BIT   : TRUE/FALSE veya ON/OFF değerleri alabilen tek bitlik tip
+                - FLOAT : 32 bitlik kayan nokta
+                - U8    : 8 bitlik işaretsiz tamsayı    [0,             +255]
+                - S8    : 8 bitlik işaretli tam sayı    [-128,          +127]
+                - U16   : 16 bitlik işaretsiz tamsayı   [0,             +65535]
+                - S16   : 16 bitlik işaretli tam sayı   [-32768,        +32767]
+                - U32   : 32 bitlik işaretsiz tamsayı   [0,             +4294967295]
+                - S32   : 32 bitlik işaretli tam sayı   [-2147483648,   +2147483647]
 
-	. function (işlev)	: Belli bazı işlemleri yapan kod bloklarıdır. Hangi sırayla ve 
-	hangi zaman aralığında çalışacakları, süreçler tarafından belirlenir. Genellikle önce 
-	girdiler okunur, sonra hesaplamalar yapılır ve son olarak da çıktılar gönderilir.
+        . function (işlev)      : Belli bazı işlemleri yapan kod bloklarıdır. Hangi sırayla ve
+        hangi zaman aralığında çalışacakları, süreçler tarafından belirlenir. Genellikle önce
+        girdiler okunur, sonra hesaplamalar yapılır ve son olarak da çıktılar gönderilir.
 
-	. thread (süreç)	: Süreç, gerçek zamanlı bir görevin, belli bir zaman aralığında 
-	çalışacak işlevler listesidir. Süreç ilk oluşturulduğunda bir zaman aralığı vardır ama 
-	işlevi yoktur. İşlevler, sürece sonradan ilave edilir ve süreç her çalıştırıldığında, 
-	belirtilen sırada çalışır.
-		
+        . thread (süreç)        : Süreç, gerçek zamanlı bir görevin, belli bir zaman aralığında
+        çalışacak işlevler listesidir. Süreç ilk oluşturulduğunda bir zaman aralığı vardır ama
+        işlevi yoktur. İşlevler, sürece sonradan ilave edilir ve süreç her çalıştırıldığında,
+        belirtilen sırada çalışır.
+
 
 
 - HAL Bileşenleri
 
-	. Dış bileşenler
+        . Dış bileşenler
 
-		- motion	: NML hareket komutlarını alan ve HAL ile etkileşen gerçek zamanlı 
-				  bir modül
-		- iocontrol	: NML I/O komutlarını alan ve HAL ile etkileşen kullanıcı uzayı 
-				  (user space) modülü
-		- classicladder	: I/O için HAL kullanan bir PLC
-		- halui		: NML komutları gönderen ve HAL ile etkileşen kullanıcı uzayında 
-				  çalışan program
+                - motion        : NML hareket komutlarını alan ve HAL ile etkileşen gerçek zamanlı
+                                  bir modül
+                - iocontrol     : NML I/O komutlarını alan ve HAL ile etkileşen kullanıcı uzayı
+                                  (user space) modülü
+                - classicladder : I/O için HAL kullanan bir PLC
+                - halui         : NML komutları gönderen ve HAL ile etkileşen kullanıcı uzayında
+                                  çalışan program
 
 
-	. İç bileşenler
+        . İç bileşenler
 
-		- stepgen	: pozisyon kontrollü adım sinyali üretici yazılım
-		- freqgen	: adım sinyali üretici yazılım
-		- encoder	: enkoder sayıcı yazılım
-		- pid		: PID (Orantı/İntegral/Türev) kontrol döngüsü
-		- siggen	: deneme amaçlı sin, cos, üçgen ve kare dalga üretici yazılım
-		- supply	: deneme amaçlı basit bir kaynak
-		- blocks	: faydalı bileşenler
+                - stepgen       : pozisyon kontrollü adım sinyali üretici yazılım
+                - freqgen       : adım sinyali üretici yazılım
+                - encoder       : enkoder sayıcı yazılım
+                - pid           : PID (Orantı/İntegral/Türev) kontrol döngüsü
+                - siggen        : deneme amaçlı sin, cos, üçgen ve kare dalga üretici yazılım
+                - supply        : deneme amaçlı basit bir kaynak
+                - blocks        : faydalı bileşenler
 
 
 
 - Donanım Sürücüleri
 
-	. hal_ax5214h	: Axiom Measurement &amp; Control AX5214H dijital I/O kartları için sürücü
-	. hal_m5i20	: Mesa Electronics 5i20 kartları için sürücü
-	. hal_motenc	: Vital Systems MOTENC-100 kartları için sürücü
-	. hal_parport	: PC paralel portu için sürücü
-	. hal_ppmc	: Pico Systems ailesi kontrolçüler için sürücü
-	. hal_stg	: Servo to Go kartı için sürücü
-	. hal_vti	: Vigilant Technologies PCI ENCDAC-4 kontrolçü için sürücü
+        . hal_ax5214h   : Axiom Measurement &amp; Control AX5214H dijital I/O kartları için sürücü
+        . hal_m5i20     : Mesa Electronics 5i20 kartları için sürücü
+        . hal_motenc    : Vital Systems MOTENC-100 kartları için sürücü
+        . hal_parport   : PC paralel portu için sürücü
+        . hal_ppmc      : Pico Systems ailesi kontrolçüler için sürücü
+        . hal_stg       : Servo to Go kartı için sürücü
+        . hal_vti       : Vigilant Technologies PCI ENCDAC-4 kontrolçü için sürücü
 
 
 
 - Araçlar
 
-	. halcmd	: Ayar ve optimizasyon için komut satırı aracı
-	. halgui	: Ayar ve optimizasyon için grafik arayüzlü araç
-	. halmeter	: HAL sinyalleri için multimeter
-	. halscope	: HAL sinyalleri için dijital osiloskop
+        . halcmd        : Ayar ve optimizasyon için komut satırı aracı
+        . halgui        : Ayar ve optimizasyon için grafik arayüzlü araç
+        . halmeter      : HAL sinyalleri için multimeter
+        . halscope      : HAL sinyalleri için dijital osiloskop
 
 
 
 - Temel komutlar
 
-	. scripts/realtime	status
-				start
-				stop
-	
-	. bin/halcmd	show	comp
-				pin
-				thread
-				param
-				funct
-				sig
+        . scripts/realtime      status
+                                start
+                                stop
 
-	. bin/halcmd	loadrt		&lt;BİLEŞEN_ADI&gt;
-			unloadrt	&lt;BİLEŞEN_ADI&gt;
-			unloadrt	all
+        . bin/halcmd    show    comp
+                                pin
+                                thread
+                                param
+                                funct
+                                sig
 
-	. bin/halcmd	loadrt	threads name1=&lt;THREAD_ADI&gt; period1=&lt;NANO_SANİYE&gt;
+        . bin/halcmd    loadrt          &lt;BİLEŞEN_ADI&gt;
+                        unloadrt        &lt;BİLEŞEN_ADI&gt;
+                        unloadrt        all
 
-	. bin/halcmd	addf	&lt;FONKSIYON_ADI&gt; &lt;THREAD_ADI&gt;	
+        . bin/halcmd    loadrt  threads name1=&lt;THREAD_ADI&gt; period1=&lt;NANO_SANİYE&gt;
 
-	. bin/halcmd	setp	&lt;PARAMETRE_ADI&gt; &lt;DEÐER&gt;
+        . bin/halcmd    addf    &lt;FONKSIYON_ADI&gt; &lt;THREAD_ADI&gt;
 
-	. bin/halcmd	newsig	&lt;SINYAL_ADI&gt; &lt;SINYAL_TİPİ&gt;
+        . bin/halcmd    setp    &lt;PARAMETRE_ADI&gt; &lt;DEÐER&gt;
 
-	. bin/halcmd	linksp	&lt;SINYAL_ADI&gt; (&lt;=|=&gt;) &lt;PIN_ADI&gt;
-	
-	. bin/halcmd	linkips	&lt;PIN_ADI&gt; (&lt;=|=&gt;) &lt;SINYAL_ADI&gt;
+        . bin/halcmd    newsig  &lt;SINYAL_ADI&gt; &lt;SINYAL_TİPİ&gt;
 
-	. bin/halcmd	save all &lt;DOSYA_ADI.HAL&gt;
-			-f &lt;DOSYA_ADI.HAL&gt;
+        . bin/halcmd    linksp  &lt;SINYAL_ADI&gt; (&lt;=|=&gt;) &lt;PIN_ADI&gt;
+
+        . bin/halcmd    linkips &lt;PIN_ADI&gt; (&lt;=|=&gt;) &lt;SINYAL_ADI&gt;
+
+        . bin/halcmd    save all &lt;DOSYA_ADI.HAL&gt;
+                        -f &lt;DOSYA_ADI.HAL&gt;
 
 
 
 * HAL programlama
 
-	. bileşen derleme ve kullanma aşamaları
-	
-		cd emc2/src/hal/components
-		vim comp_adi.comp
-		cd emc2/src
-		make
-		cd emc2
-		./scripts/realtime start
-		./bin/halcmd loadrt comp_adi 
-		./bin/halcmd show comp
-		./bin/halcmd unloadrt comp_adi
-		./scripts/realtime stop
+        . bileşen derleme ve kullanma aşamaları
+
+                cd emc2/src/hal/components
+                vim comp_adi.comp
+                cd emc2/src
+                make
+                cd emc2
+                ./scripts/realtime start
+                ./bin/halcmd loadrt comp_adi
+                ./bin/halcmd show comp
+                ./bin/halcmd unloadrt comp_adi
+                ./scripts/realtime stop
 
 
-	. bileşen biçimi
+        . bileşen biçimi
 
-		component	AD		[DÖKÜMAN];
-		pin		PIN_YÖNÜ	TİP	AD	[DÖKÜMAN];
-		param		PARAMETRE_YÖNÜ	TİP	AD	[= BASLANGIÇ_DEÐERİ]	[DÖKÜMAN];
-		function	AD		[fp | nofp]	[DÖKÜMAN];
-		option		AD		[DEÐER];
-		;;
-		MODULE_LICENSE(&quot;GPL&quot;);
-		FUNCTION(AD) {
-			...
-			...
-		}
+                component       AD              [DÖKÜMAN];
+                pin             PIN_YÖNÜ        TİP     AD      [DÖKÜMAN];
+                param           PARAMETRE_YÖNÜ  TİP     AD      [= BASLANGIÇ_DEÐERİ]    [DÖKÜMAN];
+                function        AD              [fp | nofp]     [DÖKÜMAN];
+                option          AD              [DEÐER];
+                ;;
+                MODULE_LICENSE(&quot;GPL&quot;);
+                FUNCTION(AD) {
+                        ...
+                        ...
+                }
 
 
-		AD		ad içinde geçen _ karakterleri - karakterine çevrilir
-				ad sonunda yer alan _ karakteri silinir
-				bileşen adının başındaki hal_, pin/parametre/fonksiyon oluşturulken silinir
-				fonksiyon adı _ ise, adı takip eden nokta da silinir
+                AD              ad içinde geçen _ karakterleri - karakterine çevrilir
+                                ad sonunda yer alan _ karakteri silinir
+                                bileşen adının başındaki hal_, pin/parametre/fonksiyon oluşturulken silinir
+                                fonksiyon adı _ ise, adı takip eden nokta da silinir
 
-		DÖKÜMAN		C tarzı &quot;...&quot; şeklinde not veya Python tarzı çok satırlı &quot;&quot;&quot;...&quot;&quot;&quot; kullanılabilir
-				
-		TİP		bit, s32, u32, float olabilir
+                DÖKÜMAN         C tarzı &quot;...&quot; şeklinde not veya Python tarzı çok satırlı &quot;&quot;&quot;...&quot;&quot;&quot; kullanılabilir
 
-		PİN_YÖNÜ	in, out, io
+                TİP             bit, s32, u32, float olabilir
 
-		PARAMETRE_YÖNÜ	r, rw
+                PİN_YÖNÜ        in, out, io
 
-		BAŞLANGIÇ	başlangıç değeri; eğer verilmezse parametre tipine göre 0 veya FALSE değeri alır
+                PARAMETRE_YÖNÜ  r, rw
 
-		fp		fonksiyonun kayan nokta hesaplaması yapacağını belirtir
-		nofp		fonksiyonun tamsayı hesaplaması yapacağını belirtir
-				default seçenek fp'dir
+                BAŞLANGIÇ       başlangıç değeri; eğer verilmezse parametre tipine göre 0 veya FALSE değeri alır
+
+                fp              fonksiyonun kayan nokta hesaplaması yapacağını belirtir
+                nofp            fonksiyonun tamsayı hesaplaması yapacağını belirtir
+                                default seçenek fp'dir
 
 
 * Örnek:
-	- hal bileşeninin hazırlanması
-		cd &tilde;/emc2/src/hal/components
-		vim test.comp
-			component test &quot;giris pininin degerini cikis pinine yazan bilesen&quot;;
-			
-			pin in bit in1 &quot;1. giris pini&quot;;
-			pin out bit out1 &quot;1. cikis pini&quot;;
-			
-			function _;
-			;;
-			
-			MODULE_LICENSE(&quot;GPL&quot;);
+        - hal bileşeninin hazırlanması
+                cd &tilde;/emc2/src/hal/components
+                vim test.comp
+                        component test &quot;giris pininin degerini cikis pinine yazan bilesen&quot;;
 
-			FUNCTION(_) {
-				out1 = in1;
-			}
+                        pin in bit in1 &quot;1. giris pini&quot;;
+                        pin out bit out1 &quot;1. cikis pini&quot;;
 
-		cd &tilde;/emc2/src
-		make
-	
+                        function _;
+                        ;;
 
-	- hal dosyasının hazırlanması
-		vim test.hal
-			# components
-			loadrt test
-			loadrt probe_parport
-			loadrt hal_parport cfg=0x0378
-			loadrt threads name1=slow period1=500000000
-			# signals
-			# nets
-			net par2test test.0.in1  &lt;= parport.0.pin-10-in
-			net test2par test.0.out1 =&gt; parport.0.pin-01-out
-			# parameter values
-			# realtime thread/function links
-			addf parport.0.read slow
-			addf test.0 slow
-			addf parport.0.write slow
-	
-	
-	- hal bileşeninin çalıştırılması
-		cd &tilde;/emc2
-		./scripts/realtime start
-		./bin/halcmd -f test.hal
-		./bin/halcmd start
-	
+                        MODULE_LICENSE(&quot;GPL&quot;);
 
-	- hal bileşeninin ve realtime'in durdurulması
-		./bin/halcmd stop
-		./bin/halcmd unloadrt all
-		./scripts/realtime stop
-		
+                        FUNCTION(_) {
+                                out1 = in1;
+                        }
+
+                cd &tilde;/emc2/src
+                make
+
+
+        - hal dosyasının hazırlanması
+                vim test.hal
+                        # components
+                        loadrt test
+                        loadrt probe_parport
+                        loadrt hal_parport cfg=0x0378
+                        loadrt threads name1=slow period1=500000000
+                        # signals
+                        # nets
+                        net par2test test.0.in1  &lt;= parport.0.pin-10-in
+                        net test2par test.0.out1 =&gt; parport.0.pin-01-out
+                        # parameter values
+                        # realtime thread/function links
+                        addf parport.0.read slow
+                        addf test.0 slow
+                        addf parport.0.write slow
+
+
+        - hal bileşeninin çalıştırılması
+                cd &tilde;/emc2
+                ./scripts/realtime start
+                ./bin/halcmd -f test.hal
+                ./bin/halcmd start
+
+
+        - hal bileşeninin ve realtime'in durdurulması
+                ./bin/halcmd stop
+                ./bin/halcmd unloadrt all
+                ./scripts/realtime stop
+
 
 
 - sampler
   Örnek (sample) toplayan realtime hal bileşeni
-  
-	- load
-	loadrt sampler depth=depth1[,depth2...] cfg=string1[,string2...]
 
-		. depth -&gt; FIFO boyu
-		. cfg	-&gt; herbir FIFO için veri formatı. string içinde her kolon için bir harf kullanılır
-				f -&gt; float pin
-				b -&gt; bit pin
-				s -&gt; s32 pin
-				u -&gt; u32 pin
+        - load
+        loadrt sampler depth=depth1[,depth2...] cfg=string1[,string2...]
 
-	- fonksiyon
-	  sampler.N
-	
-	- pin
-		. sampler.N.pin.M	input		M kolonundaki data pini. cfg string'inde belirtilen tiple aynı olmalı
-		. sampler.N.curr-depth	output	s32	o an FIFO'da bulunan örnek (sample) adedi
-		. sampler.N.full	output	bit	FIFO'nun dolu olup olmadığı. Dolu ise TRUE olur 
-		. sampler.N.enable	input	bit	FIFO'nun aktif olupolmadığı. TRUE yapılınca örnek toplanmaya başlanır
-	
-	- parametreler
-		. sampler.N.overruns	rw	s32	overrun adedi. FIFO dolu iken örnek alınırsa olur
-							setp ile resetlenebilir
-		. sampler.N.sample-num	rw	s32	en son kaçıncı örneğin alındığı
-							setp ile resetlenebilir
+                . depth -&gt; FIFO boyu
+                . cfg   -&gt; herbir FIFO için veri formatı. string içinde her kolon için bir harf kullanılır
+                                f -&gt; float pin
+                                b -&gt; bit pin
+                                s -&gt; s32 pin
+                                u -&gt; u32 pin
+
+        - fonksiyon
+          sampler.N
+
+        - pin
+                . sampler.N.pin.M       input           M kolonundaki data pini. cfg string'inde belirtilen tiple aynı olmalı
+                . sampler.N.curr-depth  output  s32     o an FIFO'da bulunan örnek (sample) adedi
+                . sampler.N.full        output  bit     FIFO'nun dolu olup olmadığı. Dolu ise TRUE olur
+                . sampler.N.enable      input   bit     FIFO'nun aktif olupolmadığı. TRUE yapılınca örnek toplanmaya başlanır
+
+        - parametreler
+                . sampler.N.overruns    rw      s32     overrun adedi. FIFO dolu iken örnek alınırsa olur
+                                                        setp ile resetlenebilir
+                . sampler.N.sample-num  rw      s32     en son kaçıncı örneğin alındığı
+                                                        setp ile resetlenebilir
 
 
 - halsampler
-  sampler bileşeninin topladığı örnekleri standart çıktıya veya dosyaya aktaran, 
+  sampler bileşeninin topladığı örnekleri standart çıktıya veya dosyaya aktaran,
   kullanıcı uzayında (userspace) çalışan hal bileşeni
 
-  	halsampler -c kanal -n adet -t
+        halsampler -c kanal -n adet -t
 
-		. kanal	-&gt; kaçıncı FIFO aygıtının okunacağı
-		. adet	-&gt; kaç adet örnek okunacağı
-		. -t	-&gt; çıktının ilk kolonuna örnek numarasını yazdırmak için
+                . kanal -&gt; kaçıncı FIFO aygıtının okunacağı
+                . adet  -&gt; kaç adet örnek okunacağı
+                . -t    -&gt; çıktının ilk kolonuna örnek numarasını yazdırmak için
 
 
 
 - sample bileşeni için örnek bir .hal dosyası
-	# load
-	#loadrt probe_parport
-	loadrt hal_parport cfg=&quot;0x0378 in&quot;
-	loadrt threads name1=slow period1=50000
-	loadrt sampler depth=6000 cfg=ssss
-	loadrt weighted_sum wsum_sizes=8,8,8,8
+        # load
+        #loadrt probe_parport
+        loadrt hal_parport cfg=&quot;0x0378 in&quot;
+        loadrt threads name1=slow period1=50000
+        loadrt sampler depth=6000 cfg=ssss
+        loadrt weighted_sum wsum_sizes=8,8,8,8
 
-	# nets
-	net wsum00      wsum.0.bit.0.in &lt;= parport.0.pin-02-in
-	net wsum01      wsum.0.bit.1.in &lt;= parport.0.pin-03-in
-	net wsum02      wsum.0.bit.2.in &lt;= parport.0.pin-04-in
-	net wsum03      wsum.0.bit.3.in &lt;= parport.0.pin-05-in
-	net wsum04      wsum.0.bit.4.in &lt;= parport.0.pin-10-in
-	net wsum05      wsum.0.bit.5.in &lt;= parport.0.pin-07-in
-	net wsum06      wsum.0.bit.6.in &lt;= parport.0.pin-08-in
-	net wsum07      wsum.0.bit.7.in &lt;= parport.0.pin-09-in
-	
-	#net wsum10     wsum.1.bit.0.in &lt;= parport.0.pin-02-in
-	#net wsum11     wsum.1.bit.1.in &lt;= parport.0.pin-03-in
-	#net wsum12     wsum.1.bit.2.in &lt;= parport.0.pin-04-in
-	#net wsum13     wsum.1.bit.3.in &lt;= parport.0.pin-05-in
-	#net wsum14     wsum.1.bit.4.in &lt;= parport.0.pin-06-in
-	#net wsum15     wsum.1.bit.5.in &lt;= parport.0.pin-07-in
-	#net wsum16     wsum.1.bit.6.in &lt;= parport.0.pin-08-in
-	#net wsum17     wsum.1.bit.7.in &lt;= parport.0.pin-09-in
-	#
-	#net wsum20     wsum.2.bit.0.in &lt;= parport.0.pin-02-in
-	#net wsum21     wsum.2.bit.1.in &lt;= parport.0.pin-03-in
-	#net wsum22     wsum.2.bit.2.in &lt;= parport.0.pin-04-in
-	#net wsum23     wsum.2.bit.3.in &lt;= parport.0.pin-05-in
-	#net wsum24     wsum.2.bit.4.in &lt;= parport.0.pin-06-in
-	#net wsum25     wsum.2.bit.5.in &lt;= parport.0.pin-07-in
-	#net wsum26     wsum.2.bit.6.in &lt;= parport.0.pin-08-in
-	#net wsum27     wsum.2.bit.7.in &lt;= parport.0.pin-09-in
-	#
-	#net wsum30     wsum.3.bit.0.in &lt;= parport.0.pin-02-in
-	#net wsum31     wsum.3.bit.1.in &lt;= parport.0.pin-03-in
-	#net wsum32     wsum.3.bit.2.in &lt;= parport.0.pin-04-in
-	#net wsum33     wsum.3.bit.3.in &lt;= parport.0.pin-05-in
-	#net wsum34     wsum.3.bit.4.in &lt;= parport.0.pin-06-in
-	#net wsum35     wsum.3.bit.5.in &lt;= parport.0.pin-07-in
-	#net wsum36     wsum.3.bit.6.in &lt;= parport.0.pin-08-in                                                      
-	#net wsum37     wsum.3.bit.7.in &lt;= parport.0.pin-09-in
-	
-	net sample0     sampler.0.pin.0 &lt;= wsum.0.sum
-	net sample1     sampler.0.pin.1 &lt;= wsum.1.sum
-	net sample2     sampler.0.pin.2 &lt;= wsum.2.sum
-	net sample3     sampler.0.pin.3 &lt;= wsum.3.sum
-	
-	# parameter values
-	setp sampler.0.enable 0
-	
-	# realtime thread/function links
-	addf parport.0.read slow 1
-	addf process_wsums slow 2
-	addf sampler.0 slow 3
-	addf parport.0.write slow -1
+        # nets
+        net wsum00      wsum.0.bit.0.in &lt;= parport.0.pin-02-in
+        net wsum01      wsum.0.bit.1.in &lt;= parport.0.pin-03-in
+        net wsum02      wsum.0.bit.2.in &lt;= parport.0.pin-04-in
+        net wsum03      wsum.0.bit.3.in &lt;= parport.0.pin-05-in
+        net wsum04      wsum.0.bit.4.in &lt;= parport.0.pin-10-in
+        net wsum05      wsum.0.bit.5.in &lt;= parport.0.pin-07-in
+        net wsum06      wsum.0.bit.6.in &lt;= parport.0.pin-08-in
+        net wsum07      wsum.0.bit.7.in &lt;= parport.0.pin-09-in
+
+        #net wsum10     wsum.1.bit.0.in &lt;= parport.0.pin-02-in
+        #net wsum11     wsum.1.bit.1.in &lt;= parport.0.pin-03-in
+        #net wsum12     wsum.1.bit.2.in &lt;= parport.0.pin-04-in
+        #net wsum13     wsum.1.bit.3.in &lt;= parport.0.pin-05-in
+        #net wsum14     wsum.1.bit.4.in &lt;= parport.0.pin-06-in
+        #net wsum15     wsum.1.bit.5.in &lt;= parport.0.pin-07-in
+        #net wsum16     wsum.1.bit.6.in &lt;= parport.0.pin-08-in
+        #net wsum17     wsum.1.bit.7.in &lt;= parport.0.pin-09-in
+        #
+        #net wsum20     wsum.2.bit.0.in &lt;= parport.0.pin-02-in
+        #net wsum21     wsum.2.bit.1.in &lt;= parport.0.pin-03-in
+        #net wsum22     wsum.2.bit.2.in &lt;= parport.0.pin-04-in
+        #net wsum23     wsum.2.bit.3.in &lt;= parport.0.pin-05-in
+        #net wsum24     wsum.2.bit.4.in &lt;= parport.0.pin-06-in
+        #net wsum25     wsum.2.bit.5.in &lt;= parport.0.pin-07-in
+        #net wsum26     wsum.2.bit.6.in &lt;= parport.0.pin-08-in
+        #net wsum27     wsum.2.bit.7.in &lt;= parport.0.pin-09-in
+        #
+        #net wsum30     wsum.3.bit.0.in &lt;= parport.0.pin-02-in
+        #net wsum31     wsum.3.bit.1.in &lt;= parport.0.pin-03-in
+        #net wsum32     wsum.3.bit.2.in &lt;= parport.0.pin-04-in
+        #net wsum33     wsum.3.bit.3.in &lt;= parport.0.pin-05-in
+        #net wsum34     wsum.3.bit.4.in &lt;= parport.0.pin-06-in
+        #net wsum35     wsum.3.bit.5.in &lt;= parport.0.pin-07-in
+        #net wsum36     wsum.3.bit.6.in &lt;= parport.0.pin-08-in
+        #net wsum37     wsum.3.bit.7.in &lt;= parport.0.pin-09-in
+
+        net sample0     sampler.0.pin.0 &lt;= wsum.0.sum
+        net sample1     sampler.0.pin.1 &lt;= wsum.1.sum
+        net sample2     sampler.0.pin.2 &lt;= wsum.2.sum
+        net sample3     sampler.0.pin.3 &lt;= wsum.3.sum
+
+        # parameter values
+        setp sampler.0.enable 0
+
+        # realtime thread/function links
+        addf parport.0.read slow 1
+        addf process_wsums slow 2
+        addf sampler.0 slow 3
+        addf parport.0.write slow -1
 
 
 
 - sampler ile toplanan veriyi analiz etmek
-	- paketler
-		aptitude install python-numpy python-scipy python-matplotlib
+        - paketler
+                aptitude install python-numpy python-scipy python-matplotlib
 
-	- veriyi array'e atmak (5 kolonlu bir sampler dosyasından...)
-		import numpy
-		c0, c1, c2, c3, c4 = numpy.loadtxt('sample.txt', unpack=True)
-	
-	- array degerleri ile oynamak
-		numpy, normal array degil numpy array olusturur
-		
-		t = [x*x+2 for x in c0]		# normal array
-		t = c0*c0+2			# numpy.array
-		y = numpy.sin(c1)
-		v = c2 - c3
+        - veriyi array'e atmak (5 kolonlu bir sampler dosyasından...)
+                import numpy
+                c0, c1, c2, c3, c4 = numpy.loadtxt('sample.txt', unpack=True)
 
-		c0.sum()
-		c0.min()
-		c0.max()
-		
+        - array degerleri ile oynamak
+                numpy, normal array degil numpy array olusturur
 
-	- grafik oluşturmak
-		import pylab
-		pylab.plot(c0, c1, linewidth=1.0)
-		pylab.plot(c0, c2, linewidth=1.0)
-		pylab.plot(c0, c3, linewidth=1.0)
-		pylab.xlabel('örnek')
-		pylab.ylabel('değerler')
-		pylab.title('Grafik')
-		pylab.grid(True)
-		pylab.show()
-	
+                t = [x*x+2 for x in c0]         # normal array
+                t = c0*c0+2                     # numpy.array
+                y = numpy.sin(c1)
+                v = c2 - c3
 
-	- ornek sampler.py
-		#!/usr/bin/python
-		# -*- coding: UTF-8 -*-
+                c0.sum()
+                c0.min()
+                c0.max()
 
-		import numpy
-		import pylab
 
-		PERIOD  = 50    # ornek toplama periodu, micro saniye olarak
+        - grafik oluşturmak
+                import pylab
+                pylab.plot(c0, c1, linewidth=1.0)
+                pylab.plot(c0, c2, linewidth=1.0)
+                pylab.plot(c0, c3, linewidth=1.0)
+                pylab.xlabel('örnek')
+                pylab.ylabel('değerler')
+                pylab.title('Grafik')
+                pylab.grid(True)
+                pylab.show()
 
-		c0, c1, c2, c3, c4 = numpy.loadtxt('sample.txt', unpack=True)
-		c0 = c0 / (1000000.0 / PERIOD)
 
-		#c1 = numpy.random.random(c0.size)
-		pylab.plot(c0, c1, linewidth=1.0)
-		pylab.xlabel('Ornek')
-		pylab.ylabel('Deger')
-		pylab.title('Grafik Test')
-		pylab.grid(True)
-		pylab.show()
-	
+        - ornek sampler.py
+                #!/usr/bin/python
+                # -*- coding: UTF-8 -*-
+
+                import numpy
+                import pylab
+
+                PERIOD  = 50    # ornek toplama periodu, micro saniye olarak
+
+                c0, c1, c2, c3, c4 = numpy.loadtxt('sample.txt', unpack=True)
+                c0 = c0 / (1000000.0 / PERIOD)
+
+                #c1 = numpy.random.random(c0.size)
+                pylab.plot(c0, c1, linewidth=1.0)
+                pylab.xlabel('Ornek')
+                pylab.ylabel('Deger')
+                pylab.title('Grafik Test')
+                pylab.grid(True)
+                pylab.show()
+
 
 
 - stepgen velocity mode ile spindle için freakans üretme
 
-	loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AXES
-	loadrt probe_parport
-	loadrt hal_parport cfg=&quot;0x378 out&quot;
-	setp parport.0.reset-time 4000
-	#loadrt stepgen step_type=0,0,0,0 ctrl_type=p,p,p,v
-	loadrt stepgen step_type=0,0,0,0 ctrl_type=1,1,1,0
-	loadrt scale
+        loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AXES
+        loadrt probe_parport
+        loadrt hal_parport cfg=&quot;0x378 out&quot;
+        setp parport.0.reset-time 4000
+        #loadrt stepgen step_type=0,0,0,0 ctrl_type=p,p,p,v
+        loadrt stepgen step_type=0,0,0,0 ctrl_type=1,1,1,0
+        loadrt scale
 
-	addf parport.0.read base-thread
-	addf stepgen.make-pulses base-thread
-	addf parport.0.write base-thread
-	addf parport.0.reset base-thread
+        addf parport.0.read base-thread
+        addf stepgen.make-pulses base-thread
+        addf parport.0.write base-thread
+        addf parport.0.reset base-thread
 
-	addf stepgen.capture-position servo-thread
-	addf motion-command-handler servo-thread
-	addf motion-controller servo-thread
-	addf stepgen.update-freq servo-thread
+        addf stepgen.capture-position servo-thread
+        addf motion-command-handler servo-thread
+        addf motion-controller servo-thread
+        addf stepgen.update-freq servo-thread
 
-	setp scale.0.in 0
-	setp scale.0.gain 0.010
-	setp scale.0.offset 0
-	addf scale.0 servo-thread
-	setp stepgen.3.position-scale 1
-	setp stepgen.3.maxvel 90
-	setp stepgen.3.steplen 1
-	setp stepgen.3.stepspace 0
-	setp stepgen.3.dirhold 20000
-	setp stepgen.3.dirsetup 20000
-	setp stepgen.3.maxaccel 2000
-	net spindle-enable &lt;= motion.spindle-on =&gt; stepgen.3.enable
-	net spindle-cmd &lt;= motion.spindle-speed-out =&gt; scale.0.in
+        setp scale.0.in 0
+        setp scale.0.gain 0.010
+        setp scale.0.offset 0
+        addf scale.0 servo-thread
+        setp stepgen.3.position-scale 1
+        setp stepgen.3.maxvel 90
+        setp stepgen.3.steplen 1
+        setp stepgen.3.stepspace 0
+        setp stepgen.3.dirhold 20000
+        setp stepgen.3.dirsetup 20000
+        setp stepgen.3.maxaccel 2000
+        net spindle-enable &lt;= motion.spindle-on =&gt; stepgen.3.enable
+        net spindle-cmd &lt;= motion.spindle-speed-out =&gt; scale.0.in
 
-	net spindle-freq &lt;= scale.0.out =&gt; stepgen.3.velocity-cmd
-	net spindle-out &lt;= stepgen.3.step =&gt; parport.0.pin-14-out
-	net spindle-cw =&gt; parport.0.pin-16-out
+        net spindle-freq &lt;= scale.0.out =&gt; stepgen.3.velocity-cmd
+        net spindle-out &lt;= stepgen.3.step =&gt; parport.0.pin-14-out
+        net spindle-cw =&gt; parport.0.pin-16-out
 
 </code></pre>
 </body>

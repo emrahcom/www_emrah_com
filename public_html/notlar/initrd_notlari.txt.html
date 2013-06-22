@@ -12,752 +12,752 @@ initrd Notları
 
 - image'in içine bakma
 
-	mkdir initrd
-	cd initrd
-	zcat /boot/initrd.img-2.6.32-5-686 | cpio -i
-	ls -1
-		bin
-		conf
-		etc
-		init
-		lib
-		sbin
-		scripts
+        mkdir initrd
+        cd initrd
+        zcat /boot/initrd.img-2.6.32-5-686 | cpio -i
+        ls -1
+                bin
+                conf
+                etc
+                init
+                lib
+                sbin
+                scripts
 
 
 - image'i yeniden oluşturma
-	cd initrd
-	find . | cpio -o -H newc &gt; /tmp/initrd.tmp
-	gzip /tmp/initrd.tmp
-	mv /tmp/initrd.tmp.gz initrd_custom.img
+        cd initrd
+        find . | cpio -o -H newc &gt; /tmp/initrd.tmp
+        gzip /tmp/initrd.tmp
+        mv /tmp/initrd.tmp.gz initrd_custom.img
 
 
 - initrd için tree çıktısı
-	.
-	├── bin
-	│   ├── busybox
-	│   ├── cat
-	│   ├── chroot
-	│   ├── cpio
-	│   ├── dd
-	│   ├── dmesg
-	│   ├── false
-	│   ├── fstype
-	│   ├── gunzip
-	│   ├── gzip
-	│   ├── halt
-	│   ├── insmod
-	│   ├── ipconfig
-	│   ├── kill
-	│   ├── ln
-	│   ├── losetup
-	│   ├── ls
-	│   ├── minips
-	│   ├── mkdir
-	│   ├── mkfifo
-	│   ├── mknod
-	│   ├── mount
-	│   ├── nfsmount
-	│   ├── nuke
-	│   ├── pivot_root
-	│   ├── poweroff
-	│   ├── readlink
-	│   ├── reboot
-	│   ├── resume
-	│   ├── run-init
-	│   ├── sh
-	│   ├── sh.shared
-	│   ├── sleep
-	│   ├── sync
-	│   ├── true
-	│   ├── umount
-	│   └── uname
-	├── conf
-	│   ├── arch.conf
-	│   ├── conf.d
-	│   │   └── resume
-	│   ├── initramfs.conf
-	│   └── modules
-	├── etc
-	│   ├── modprobe.d
-	│   │   ├── aliases.conf
-	│   │   ├── alsa-base-blacklist.conf
-	│   │   ├── alsa-base-blacklist.conf.dpkg-new
-	│   │   ├── alsa-base.conf
-	│   │   ├── alsa-base.conf.dpkg-new
-	│   │   ├── blacklist.conf
-	│   │   ├── fbdev-blacklist.conf
-	│   │   ├── i915-kms.conf
-	│   │   ├── linux-sound-base_noOSS.conf
-	│   │   └── radeon-kms.conf
-	│   └── udev
-	│       └── udev.conf
-	├── init
-	├── lib
-	│   ├── klibc-wbwbg7GBhllIGBCTEv0okjVELWk.so
-	│   ├── ld-linux.so.2
-	│   ├── libblkid.so.1
-	│   ├── libc.so.6
-	│   ├── libdevmapper.so.1.02.1
-	│   ├── libdl.so.2
-	│   ├── libm.so.6
-	│   ├── libselinux.so.1
-	│   ├── libudev.so.0
-	│   ├── libuuid.so.1
-	│   ├── modules
-	│   │   └── 2.6.32-5-686
-	│   │       ├── kernel
-	│   │       │   ├── drivers
-	│   │       │   │   ├── acpi
-	│   │       │   │   │   ├── fan.ko
-	│   │       │   │   │   └── thermal.ko
-	│   │       │   │   ├── ata
-	│   │       │   │   │   ├── ahci.ko
-	│   │       │   │   │   ├── ata_generic.ko
-	│   │       │   │   │   ├── ata_piix.ko
-	│   │       │   │   │   ├── libata.ko
-	│   │       │   │   │   ├── pata_ali.ko
-	│   │       │   │   │   ├── pata_amd.ko
-	│   │       │   │   │   ├── pata_artop.ko
-	│   │       │   │   │   ├── pata_atiixp.ko
-	│   │       │   │   │   ├── pata_atp867x.ko
-	│   │       │   │   │   ├── pata_cmd64x.ko
-	│   │       │   │   │   ├── pata_cs5520.ko
-	│   │       │   │   │   ├── pata_cs5530.ko
-	│   │       │   │   │   ├── pata_cs5536.ko
-	│   │       │   │   │   ├── pata_efar.ko
-	│   │       │   │   │   ├── pata_it821x.ko
-	│   │       │   │   │   ├── pata_jmicron.ko
-	│   │       │   │   │   ├── pata_marvell.ko
-	│   │       │   │   │   ├── pata_mpiix.ko
-	│   │       │   │   │   ├── pata_netcell.ko
-	│   │       │   │   │   ├── pata_ns87410.ko
-	│   │       │   │   │   ├── pata_ns87415.ko
-	│   │       │   │   │   ├── pata_oldpiix.ko
-	│   │       │   │   │   ├── pata_pdc2027x.ko
-	│   │       │   │   │   ├── pata_pdc202xx_old.ko
-	│   │       │   │   │   ├── pata_rdc.ko
-	│   │       │   │   │   ├── pata_rz1000.ko
-	│   │       │   │   │   ├── pata_sc1200.ko
-	│   │       │   │   │   ├── pata_sch.ko
-	│   │       │   │   │   ├── pata_serverworks.ko
-	│   │       │   │   │   ├── pata_sil680.ko
-	│   │       │   │   │   ├── pata_sis.ko
-	│   │       │   │   │   ├── pata_triflex.ko
-	│   │       │   │   │   ├── pata_via.ko
-	│   │       │   │   │   ├── pdc_adma.ko
-	│   │       │   │   │   ├── sata_inic162x.ko
-	│   │       │   │   │   ├── sata_mv.ko
-	│   │       │   │   │   ├── sata_nv.ko
-	│   │       │   │   │   ├── sata_promise.ko
-	│   │       │   │   │   ├── sata_qstor.ko
-	│   │       │   │   │   ├── sata_sil24.ko
-	│   │       │   │   │   ├── sata_sil.ko
-	│   │       │   │   │   ├── sata_sis.ko
-	│   │       │   │   │   ├── sata_svw.ko
-	│   │       │   │   │   ├── sata_sx4.ko
-	│   │       │   │   │   ├── sata_uli.ko
-	│   │       │   │   │   ├── sata_via.ko
-	│   │       │   │   │   └── sata_vsc.ko
-	│   │       │   │   ├── block
-	│   │       │   │   │   ├── aoe
-	│   │       │   │   │   │   └── aoe.ko
-	│   │       │   │   │   ├── brd.ko
-	│   │       │   │   │   ├── cciss.ko
-	│   │       │   │   │   ├── cpqarray.ko
-	│   │       │   │   │   ├── DAC960.ko
-	│   │       │   │   │   ├── drbd
-	│   │       │   │   │   │   └── drbd.ko
-	│   │       │   │   │   ├── floppy.ko
-	│   │       │   │   │   ├── loop.ko
-	│   │       │   │   │   ├── nbd.ko
-	│   │       │   │   │   ├── osdblk.ko
-	│   │       │   │   │   ├── paride
-	│   │       │   │   │   │   ├── aten.ko
-	│   │       │   │   │   │   ├── bpck6.ko
-	│   │       │   │   │   │   ├── bpck.ko
-	│   │       │   │   │   │   ├── comm.ko
-	│   │       │   │   │   │   ├── dstr.ko
-	│   │       │   │   │   │   ├── epat.ko
-	│   │       │   │   │   │   ├── epia.ko
-	│   │       │   │   │   │   ├── fit2.ko
-	│   │       │   │   │   │   ├── fit3.ko
-	│   │       │   │   │   │   ├── friq.ko
-	│   │       │   │   │   │   ├── frpw.ko
-	│   │       │   │   │   │   ├── kbic.ko
-	│   │       │   │   │   │   ├── ktti.ko
-	│   │       │   │   │   │   ├── on20.ko
-	│   │       │   │   │   │   ├── on26.ko
-	│   │       │   │   │   │   ├── paride.ko
-	│   │       │   │   │   │   ├── pcd.ko
-	│   │       │   │   │   │   ├── pd.ko
-	│   │       │   │   │   │   ├── pf.ko
-	│   │       │   │   │   │   ├── pg.ko
-	│   │       │   │   │   │   └── pt.ko
-	│   │       │   │   │   ├── pktcdvd.ko
-	│   │       │   │   │   ├── sx8.ko
-	│   │       │   │   │   ├── umem.ko
-	│   │       │   │   │   ├── virtio_blk.ko
-	│   │       │   │   │   └── xd.ko
-	│   │       │   │   ├── cdrom
-	│   │       │   │   │   └── cdrom.ko
-	│   │       │   │   ├── connector
-	│   │       │   │   │   └── cn.ko
-	│   │       │   │   ├── dca
-	│   │       │   │   │   └── dca.ko
-	│   │       │   │   ├── firewire
-	│   │       │   │   │   ├── firewire-core.ko
-	│   │       │   │   │   ├── firewire-ohci.ko
-	│   │       │   │   │   └── firewire-sbp2.ko
-	│   │       │   │   ├── hid
-	│   │       │   │   │   ├── hid-apple.ko
-	│   │       │   │   │   ├── hid-cherry.ko
-	│   │       │   │   │   ├── hid.ko
-	│   │       │   │   │   ├── hid-logitech.ko
-	│   │       │   │   │   ├── hid-microsoft.ko
-	│   │       │   │   │   └── usbhid
-	│   │       │   │   │       └── usbhid.ko
-	│   │       │   │   ├── i2c
-	│   │       │   │   │   ├── algos
-	│   │       │   │   │   │   └── i2c-algo-bit.ko
-	│   │       │   │   │   └── i2c-core.ko
-	│   │       │   │   ├── ide
-	│   │       │   │   │   ├── cs5535.ko
-	│   │       │   │   │   ├── delkin_cb.ko
-	│   │       │   │   │   ├── hpt366.ko
-	│   │       │   │   │   ├── ide-cd_mod.ko
-	│   │       │   │   │   ├── ide-core.ko
-	│   │       │   │   │   ├── ide-cs.ko
-	│   │       │   │   │   ├── ide-gd_mod.ko
-	│   │       │   │   │   ├── ide-generic.ko
-	│   │       │   │   │   ├── ide-pnp.ko
-	│   │       │   │   │   ├── ide-tape.ko
-	│   │       │   │   │   ├── it8172.ko
-	│   │       │   │   │   ├── it8213.ko
-	│   │       │   │   │   ├── opti621.ko
-	│   │       │   │   │   ├── piix.ko
-	│   │       │   │   │   ├── tc86c001.ko
-	│   │       │   │   │   └── trm290.ko
-	│   │       │   │   ├── input
-	│   │       │   │   │   └── ff-memless.ko
-	│   │       │   │   ├── leds
-	│   │       │   │   │   └── led-class.ko
-	│   │       │   │   ├── md
-	│   │       │   │   │   └── dm-mod.ko
-	│   │       │   │   ├── message
-	│   │       │   │   │   ├── fusion
-	│   │       │   │   │   │   ├── mptbase.ko
-	│   │       │   │   │   │   ├── mptfc.ko
-	│   │       │   │   │   │   ├── mptsas.ko
-	│   │       │   │   │   │   ├── mptscsih.ko
-	│   │       │   │   │   │   └── mptspi.ko
-	│   │       │   │   │   └── i2o
-	│   │       │   │   │       ├── i2o_block.ko
-	│   │       │   │   │       └── i2o_core.ko
-	│   │       │   │   ├── misc
-	│   │       │   │   │   ├── cb710
-	│   │       │   │   │   │   └── cb710.ko
-	│   │       │   │   │   ├── enclosure.ko
-	│   │       │   │   │   └── tifm_core.ko
-	│   │       │   │   ├── mmc
-	│   │       │   │   │   ├── card
-	│   │       │   │   │   │   ├── mmc_block.ko
-	│   │       │   │   │   │   └── sdio_uart.ko
-	│   │       │   │   │   ├── core
-	│   │       │   │   │   │   └── mmc_core.ko
-	│   │       │   │   │   └── host
-	│   │       │   │   │       ├── cb710-mmc.ko
-	│   │       │   │   │       ├── ricoh_mmc.ko
-	│   │       │   │   │       ├── sdhci.ko
-	│   │       │   │   │       ├── sdhci-pci.ko
-	│   │       │   │   │       ├── sdhci-pltfm.ko
-	│   │       │   │   │       ├── sdricoh_cs.ko
-	│   │       │   │   │       ├── tifm_sd.ko
-	│   │       │   │   │       ├── via-sdmmc.ko
-	│   │       │   │   │       └── wbsd.ko
-	│   │       │   │   ├── mtd
-	│   │       │   │   │   └── mtd.ko
-	│   │       │   │   ├── net
-	│   │       │   │   │   ├── 3c501.ko
-	│   │       │   │   │   ├── 3c503.ko
-	│   │       │   │   │   ├── 3c505.ko
-	│   │       │   │   │   ├── 3c507.ko
-	│   │       │   │   │   ├── 3c509.ko
-	│   │       │   │   │   ├── 3c515.ko
-	│   │       │   │   │   ├── 3c59x.ko
-	│   │       │   │   │   ├── 8139cp.ko
-	│   │       │   │   │   ├── 8139too.ko
-	│   │       │   │   │   ├── 82596.ko
-	│   │       │   │   │   ├── 8390.ko
-	│   │       │   │   │   ├── 8390p.ko
-	│   │       │   │   │   ├── ac3200.ko
-	│   │       │   │   │   ├── acenic.ko
-	│   │       │   │   │   ├── amd8111e.ko
-	│   │       │   │   │   ├── at1700.ko
-	│   │       │   │   │   ├── atl1c
-	│   │       │   │   │   │   └── atl1c.ko
-	│   │       │   │   │   ├── atl1e
-	│   │       │   │   │   │   └── atl1e.ko
-	│   │       │   │   │   ├── atlx
-	│   │       │   │   │   │   ├── atl1.ko
-	│   │       │   │   │   │   └── atl2.ko
-	│   │       │   │   │   ├── b44.ko
-	│   │       │   │   │   ├── benet
-	│   │       │   │   │   │   └── be2net.ko
-	│   │       │   │   │   ├── bnx2.ko
-	│   │       │   │   │   ├── bnx2x.ko
-	│   │       │   │   │   ├── bsd_comp.ko
-	│   │       │   │   │   ├── cassini.ko
-	│   │       │   │   │   ├── chelsio
-	│   │       │   │   │   │   └── cxgb.ko
-	│   │       │   │   │   ├── cnic.ko
-	│   │       │   │   │   ├── cs89x0.ko
-	│   │       │   │   │   ├── cxgb3
-	│   │       │   │   │   │   └── cxgb3.ko
-	│   │       │   │   │   ├── defxx.ko
-	│   │       │   │   │   ├── depca.ko
-	│   │       │   │   │   ├── dl2k.ko
-	│   │       │   │   │   ├── dnet.ko
-	│   │       │   │   │   ├── dummy.ko
-	│   │       │   │   │   ├── e1000
-	│   │       │   │   │   │   └── e1000.ko
-	│   │       │   │   │   ├── e1000e
-	│   │       │   │   │   │   └── e1000e.ko
-	│   │       │   │   │   ├── e100.ko
-	│   │       │   │   │   ├── e2100.ko
-	│   │       │   │   │   ├── eepro.ko
-	│   │       │   │   │   ├── eexpress.ko
-	│   │       │   │   │   ├── enc28j60.ko
-	│   │       │   │   │   ├── enic
-	│   │       │   │   │   │   └── enic.ko
-	│   │       │   │   │   ├── epic100.ko
-	│   │       │   │   │   ├── eql.ko
-	│   │       │   │   │   ├── eth16i.ko
-	│   │       │   │   │   ├── ethoc.ko
-	│   │       │   │   │   ├── ewrk3.ko
-	│   │       │   │   │   ├── fealnx.ko
-	│   │       │   │   │   ├── forcedeth.ko
-	│   │       │   │   │   ├── hamachi.ko
-	│   │       │   │   │   ├── hp100.ko
-	│   │       │   │   │   ├── hp.ko
-	│   │       │   │   │   ├── hp-plus.ko
-	│   │       │   │   │   ├── ifb.ko
-	│   │       │   │   │   ├── igb
-	│   │       │   │   │   │   └── igb.ko
-	│   │       │   │   │   ├── igbvf
-	│   │       │   │   │   │   └── igbvf.ko
-	│   │       │   │   │   ├── ipg.ko
-	│   │       │   │   │   ├── ixgb
-	│   │       │   │   │   │   └── ixgb.ko
-	│   │       │   │   │   ├── ixgbe
-	│   │       │   │   │   │   └── ixgbe.ko
-	│   │       │   │   │   ├── jme.ko
-	│   │       │   │   │   ├── ks8842.ko
-	│   │       │   │   │   ├── ks8851.ko
-	│   │       │   │   │   ├── ks8851_mll.ko
-	│   │       │   │   │   ├── lance.ko
-	│   │       │   │   │   ├── lp486e.ko
-	│   │       │   │   │   ├── macvlan.ko
-	│   │       │   │   │   ├── macvtap.ko
-	│   │       │   │   │   ├── mdio.ko
-	│   │       │   │   │   ├── mii.ko
-	│   │       │   │   │   ├── mlx4
-	│   │       │   │   │   │   ├── mlx4_core.ko
-	│   │       │   │   │   │   └── mlx4_en.ko
-	│   │       │   │   │   ├── myri10ge
-	│   │       │   │   │   │   └── myri10ge.ko
-	│   │       │   │   │   ├── natsemi.ko
-	│   │       │   │   │   ├── ne2k-pci.ko
-	│   │       │   │   │   ├── ne.ko
-	│   │       │   │   │   ├── netconsole.ko
-	│   │       │   │   │   ├── netxen
-	│   │       │   │   │   │   └── netxen_nic.ko
-	│   │       │   │   │   ├── ni52.ko
-	│   │       │   │   │   ├── ni65.ko
-	│   │       │   │   │   ├── niu.ko
-	│   │       │   │   │   ├── ns83820.ko
-	│   │       │   │   │   ├── pcnet32.ko
-	│   │       │   │   │   ├── phy
-	│   │       │   │   │   │   ├── broadcom.ko
-	│   │       │   │   │   │   ├── cicada.ko
-	│   │       │   │   │   │   ├── davicom.ko
-	│   │       │   │   │   │   ├── et1011c.ko
-	│   │       │   │   │   │   ├── icplus.ko
-	│   │       │   │   │   │   ├── libphy.ko
-	│   │       │   │   │   │   ├── lxt.ko
-	│   │       │   │   │   │   ├── marvell.ko
-	│   │       │   │   │   │   ├── mdio-bitbang.ko
-	│   │       │   │   │   │   ├── national.ko
-	│   │       │   │   │   │   ├── qsemi.ko
-	│   │       │   │   │   │   ├── realtek.ko
-	│   │       │   │   │   │   ├── smsc.ko
-	│   │       │   │   │   │   ├── ste10Xp.ko
-	│   │       │   │   │   │   └── vitesse.ko
-	│   │       │   │   │   ├── plip.ko
-	│   │       │   │   │   ├── ppp_async.ko
-	│   │       │   │   │   ├── ppp_deflate.ko
-	│   │       │   │   │   ├── ppp_generic.ko
-	│   │       │   │   │   ├── ppp_mppe.ko
-	│   │       │   │   │   ├── pppoe.ko
-	│   │       │   │   │   ├── pppol2tp.ko
-	│   │       │   │   │   ├── pppox.ko
-	│   │       │   │   │   ├── ppp_synctty.ko
-	│   │       │   │   │   ├── qla3xxx.ko
-	│   │       │   │   │   ├── qlge
-	│   │       │   │   │   │   └── qlge.ko
-	│   │       │   │   │   ├── r6040.ko
-	│   │       │   │   │   ├── r8169.ko
-	│   │       │   │   │   ├── rrunner.ko
-	│   │       │   │   │   ├── s2io.ko
-	│   │       │   │   │   ├── sb1000.ko
-	│   │       │   │   │   ├── sc92031.ko
-	│   │       │   │   │   ├── seeq8005.ko
-	│   │       │   │   │   ├── sfc
-	│   │       │   │   │   │   └── sfc.ko
-	│   │       │   │   │   ├── sis190.ko
-	│   │       │   │   │   ├── sis900.ko
-	│   │       │   │   │   ├── skfp
-	│   │       │   │   │   │   └── skfp.ko
-	│   │       │   │   │   ├── skge.ko
-	│   │       │   │   │   ├── sky2.ko
-	│   │       │   │   │   ├── slhc.ko
-	│   │       │   │   │   ├── slip.ko
-	│   │       │   │   │   ├── smc9194.ko
-	│   │       │   │   │   ├── smc-ultra.ko
-	│   │       │   │   │   ├── smsc9420.ko
-	│   │       │   │   │   ├── starfire.ko
-	│   │       │   │   │   ├── sundance.ko
-	│   │       │   │   │   ├── sungem.ko
-	│   │       │   │   │   ├── sungem_phy.ko
-	│   │       │   │   │   ├── sunhme.ko
-	│   │       │   │   │   ├── tehuti.ko
-	│   │       │   │   │   ├── tg3.ko
-	│   │       │   │   │   ├── tlan.ko
-	│   │       │   │   │   ├── tulip
-	│   │       │   │   │   │   ├── de2104x.ko
-	│   │       │   │   │   │   ├── de4x5.ko
-	│   │       │   │   │   │   ├── dmfe.ko
-	│   │       │   │   │   │   ├── tulip.ko
-	│   │       │   │   │   │   ├── uli526x.ko
-	│   │       │   │   │   │   ├── winbond-840.ko
-	│   │       │   │   │   │   └── xircom_cb.ko
-	│   │       │   │   │   ├── tun.ko
-	│   │       │   │   │   ├── typhoon.ko
-	│   │       │   │   │   ├── veth.ko
-	│   │       │   │   │   ├── via-rhine.ko
-	│   │       │   │   │   ├── via-velocity.ko
-	│   │       │   │   │   ├── virtio_net.ko
-	│   │       │   │   │   ├── vmxnet3
-	│   │       │   │   │   │   └── vmxnet3.ko
-	│   │       │   │   │   ├── vxge
-	│   │       │   │   │   │   └── vxge.ko
-	│   │       │   │   │   ├── wd.ko
-	│   │       │   │   │   ├── yellowfin.ko
-	│   │       │   │   │   └── znet.ko
-	│   │       │   │   ├── parport
-	│   │       │   │   │   └── parport.ko
-	│   │       │   │   ├── pcmcia
-	│   │       │   │   │   ├── pcmcia_core.ko
-	│   │       │   │   │   └── pcmcia.ko
-	│   │       │   │   ├── scsi
-	│   │       │   │   │   ├── 3w-9xxx.ko
-	│   │       │   │   │   ├── 3w-sas.ko
-	│   │       │   │   │   ├── 3w-xxxx.ko
-	│   │       │   │   │   ├── aacraid
-	│   │       │   │   │   │   └── aacraid.ko
-	│   │       │   │   │   ├── advansys.ko
-	│   │       │   │   │   ├── aha152x.ko
-	│   │       │   │   │   ├── aha1542.ko
-	│   │       │   │   │   ├── aic7xxx
-	│   │       │   │   │   │   ├── aic79xx.ko
-	│   │       │   │   │   │   └── aic7xxx.ko
-	│   │       │   │   │   ├── aic7xxx_old.ko
-	│   │       │   │   │   ├── aic94xx
-	│   │       │   │   │   │   └── aic94xx.ko
-	│   │       │   │   │   ├── arcmsr
-	│   │       │   │   │   │   └── arcmsr.ko
-	│   │       │   │   │   ├── atp870u.ko
-	│   │       │   │   │   ├── be2iscsi
-	│   │       │   │   │   │   └── be2iscsi.ko
-	│   │       │   │   │   ├── bfa
-	│   │       │   │   │   │   └── bfa.ko
-	│   │       │   │   │   ├── bnx2i
-	│   │       │   │   │   │   └── bnx2i.ko
-	│   │       │   │   │   ├── BusLogic.ko
-	│   │       │   │   │   ├── ch.ko
-	│   │       │   │   │   ├── cxgb3i
-	│   │       │   │   │   │   └── cxgb3i.ko
-	│   │       │   │   │   ├── dc395x.ko
-	│   │       │   │   │   ├── device_handler
-	│   │       │   │   │   │   ├── scsi_dh_alua.ko
-	│   │       │   │   │   │   ├── scsi_dh_emc.ko
-	│   │       │   │   │   │   ├── scsi_dh_hp_sw.ko
-	│   │       │   │   │   │   ├── scsi_dh.ko
-	│   │       │   │   │   │   └── scsi_dh_rdac.ko
-	│   │       │   │   │   ├── dmx3191d.ko
-	│   │       │   │   │   ├── dpt_i2o.ko
-	│   │       │   │   │   ├── dtc.ko
-	│   │       │   │   │   ├── eata.ko
-	│   │       │   │   │   ├── fcoe
-	│   │       │   │   │   │   ├── fcoe.ko
-	│   │       │   │   │   │   └── libfcoe.ko
-	│   │       │   │   │   ├── fdomain.ko
-	│   │       │   │   │   ├── fnic
-	│   │       │   │   │   │   └── fnic.ko
-	│   │       │   │   │   ├── gdth.ko
-	│   │       │   │   │   ├── hptiop.ko
-	│   │       │   │   │   ├── imm.ko
-	│   │       │   │   │   ├── in2000.ko
-	│   │       │   │   │   ├── initio.ko
-	│   │       │   │   │   ├── ipr.ko
-	│   │       │   │   │   ├── ips.ko
-	│   │       │   │   │   ├── iscsi_tcp.ko
-	│   │       │   │   │   ├── libfc
-	│   │       │   │   │   │   └── libfc.ko
-	│   │       │   │   │   ├── libiscsi.ko
-	│   │       │   │   │   ├── libiscsi_tcp.ko
-	│   │       │   │   │   ├── libsas
-	│   │       │   │   │   │   └── libsas.ko
-	│   │       │   │   │   ├── libsrp.ko
-	│   │       │   │   │   ├── lpfc
-	│   │       │   │   │   │   └── lpfc.ko
-	│   │       │   │   │   ├── megaraid
-	│   │       │   │   │   │   ├── megaraid_mbox.ko
-	│   │       │   │   │   │   ├── megaraid_mm.ko
-	│   │       │   │   │   │   └── megaraid_sas.ko
-	│   │       │   │   │   ├── megaraid.ko
-	│   │       │   │   │   ├── mpt2sas
-	│   │       │   │   │   │   └── mpt2sas.ko
-	│   │       │   │   │   ├── mvsas
-	│   │       │   │   │   │   └── mvsas.ko
-	│   │       │   │   │   ├── NCR53c406a.ko
-	│   │       │   │   │   ├── nsp32.ko
-	│   │       │   │   │   ├── osd
-	│   │       │   │   │   │   ├── libosd.ko
-	│   │       │   │   │   │   └── osd.ko
-	│   │       │   │   │   ├── osst.ko
-	│   │       │   │   │   ├── pas16.ko
-	│   │       │   │   │   ├── pcmcia
-	│   │       │   │   │   │   ├── aha152x_cs.ko
-	│   │       │   │   │   │   ├── fdomain_cs.ko
-	│   │       │   │   │   │   ├── nsp_cs.ko
-	│   │       │   │   │   │   ├── qlogic_cs.ko
-	│   │       │   │   │   │   └── sym53c500_cs.ko
-	│   │       │   │   │   ├── pmcraid.ko
-	│   │       │   │   │   ├── ppa.ko
-	│   │       │   │   │   ├── qla1280.ko
-	│   │       │   │   │   ├── qla2xxx
-	│   │       │   │   │   │   └── qla2xxx.ko
-	│   │       │   │   │   ├── qla4xxx
-	│   │       │   │   │   │   └── qla4xxx.ko
-	│   │       │   │   │   ├── qlogicfas408.ko
-	│   │       │   │   │   ├── qlogicfas.ko
-	│   │       │   │   │   ├── raid_class.ko
-	│   │       │   │   │   ├── scsi_debug.ko
-	│   │       │   │   │   ├── scsi_mod.ko
-	│   │       │   │   │   ├── scsi_tgt.ko
-	│   │       │   │   │   ├── scsi_transport_fc.ko
-	│   │       │   │   │   ├── scsi_transport_iscsi.ko
-	│   │       │   │   │   ├── scsi_transport_sas.ko
-	│   │       │   │   │   ├── scsi_transport_spi.ko
-	│   │       │   │   │   ├── scsi_transport_srp.ko
-	│   │       │   │   │   ├── scsi_wait_scan.ko
-	│   │       │   │   │   ├── sd_mod.ko
-	│   │       │   │   │   ├── ses.ko
-	│   │       │   │   │   ├── sg.ko
-	│   │       │   │   │   ├── sr_mod.ko
-	│   │       │   │   │   ├── stex.ko
-	│   │       │   │   │   ├── st.ko
-	│   │       │   │   │   ├── sym53c416.ko
-	│   │       │   │   │   ├── sym53c8xx_2
-	│   │       │   │   │   │   └── sym53c8xx.ko
-	│   │       │   │   │   ├── t128.ko
-	│   │       │   │   │   ├── tmscsim.ko
-	│   │       │   │   │   ├── u14-34f.ko
-	│   │       │   │   │   ├── ultrastor.ko
-	│   │       │   │   │   └── wd7000.ko
-	│   │       │   │   ├── ssb
-	│   │       │   │   │   └── ssb.ko
-	│   │       │   │   ├── thermal
-	│   │       │   │   │   └── thermal_sys.ko
-	│   │       │   │   ├── uio
-	│   │       │   │   │   └── uio.ko
-	│   │       │   │   ├── usb
-	│   │       │   │   │   ├── core
-	│   │       │   │   │   │   └── usbcore.ko
-	│   │       │   │   │   ├── host
-	│   │       │   │   │   │   ├── ehci-hcd.ko
-	│   │       │   │   │   │   ├── ohci-hcd.ko
-	│   │       │   │   │   │   ├── uhci-hcd.ko
-	│   │       │   │   │   │   └── xhci.ko
-	│   │       │   │   │   └── storage
-	│   │       │   │   │       ├── ums-alauda.ko
-	│   │       │   │   │       ├── ums-cypress.ko
-	│   │       │   │   │       ├── ums-datafab.ko
-	│   │       │   │   │       ├── ums-freecom.ko
-	│   │       │   │   │       ├── ums-isd200.ko
-	│   │       │   │   │       ├── ums-jumpshot.ko
-	│   │       │   │   │       ├── ums-karma.ko
-	│   │       │   │   │       ├── ums-onetouch.ko
-	│   │       │   │   │       ├── ums-sddr09.ko
-	│   │       │   │   │       ├── ums-sddr55.ko
-	│   │       │   │   │       ├── ums-usbat.ko
-	│   │       │   │   │       └── usb-storage.ko
-	│   │       │   │   └── virtio
-	│   │       │   │       └── virtio_pci.ko
-	│   │       │   ├── fs
-	│   │       │   │   ├── btrfs
-	│   │       │   │   │   └── btrfs.ko
-	│   │       │   │   ├── configfs
-	│   │       │   │   │   └── configfs.ko
-	│   │       │   │   ├── exportfs
-	│   │       │   │   │   └── exportfs.ko
-	│   │       │   │   ├── ext2
-	│   │       │   │   │   └── ext2.ko
-	│   │       │   │   ├── ext3
-	│   │       │   │   │   └── ext3.ko
-	│   │       │   │   ├── ext4
-	│   │       │   │   │   └── ext4.ko
-	│   │       │   │   ├── fscache
-	│   │       │   │   │   └── fscache.ko
-	│   │       │   │   ├── isofs
-	│   │       │   │   │   └── isofs.ko
-	│   │       │   │   ├── jbd
-	│   │       │   │   │   └── jbd.ko
-	│   │       │   │   ├── jbd2
-	│   │       │   │   │   └── jbd2.ko
-	│   │       │   │   ├── jfs
-	│   │       │   │   │   └── jfs.ko
-	│   │       │   │   ├── lockd
-	│   │       │   │   │   └── lockd.ko
-	│   │       │   │   ├── mbcache.ko
-	│   │       │   │   ├── nfs
-	│   │       │   │   │   └── nfs.ko
-	│   │       │   │   ├── nfs_common
-	│   │       │   │   │   └── nfs_acl.ko
-	│   │       │   │   ├── nls
-	│   │       │   │   │   └── nls_base.ko
-	│   │       │   │   ├── reiserfs
-	│   │       │   │   │   └── reiserfs.ko
-	│   │       │   │   ├── udf
-	│   │       │   │   │   └── udf.ko
-	│   │       │   │   └── xfs
-	│   │       │   │       └── xfs.ko
-	│   │       │   ├── lib
-	│   │       │   │   ├── crc16.ko
-	│   │       │   │   ├── crc-ccitt.ko
-	│   │       │   │   ├── crc-itu-t.ko
-	│   │       │   │   ├── crc-t10dif.ko
-	│   │       │   │   ├── libcrc32c.ko
-	│   │       │   │   ├── lru_cache.ko
-	│   │       │   │   └── zlib_deflate
-	│   │       │   │       └── zlib_deflate.ko
-	│   │       │   └── net
-	│   │       │       ├── ipv4
-	│   │       │       │   └── inet_lro.ko
-	│   │       │       └── sunrpc
-	│   │       │           ├── auth_gss
-	│   │       │           │   └── auth_rpcgss.ko
-	│   │       │           └── sunrpc.ko
-	│   │       ├── modules.alias
-	│   │       ├── modules.alias.bin
-	│   │       ├── modules.dep
-	│   │       ├── modules.dep.bin
-	│   │       ├── modules.devname
-	│   │       ├── modules.order
-	│   │       ├── modules.softdep
-	│   │       ├── modules.symbols
-	│   │       └── modules.symbols.bin
-	│   └── udev
-	│       ├── ata_id
-	│       ├── edd_id
-	│       ├── firmware.agent
-	│       ├── hotplug.functions
-	│       ├── path_id
-	│       ├── rules.d
-	│       │   ├── 50-udev-default.rules
-	│       │   ├── 55-dm.rules
-	│       │   ├── 60-persistent-storage-dm.rules
-	│       │   ├── 60-persistent-storage.rules
-	│       │   ├── 80-drivers.rules
-	│       │   └── 91-permissions.rules
-	│       ├── scsi_id
-	│       └── usb_id
-	├── sbin
-	│   ├── blkid
-	│   ├── dmsetup
-	│   ├── modprobe
-	│   ├── rmmod
-	│   ├── udevadm
-	│   └── udevd
-	└── scripts
-	    ├── functions
-	    ├── init-bottom
-	    │   ├── ORDER
-	    │   └── udev
-	    ├── init-top
-	    │   ├── all_generic_ide
-	    │   ├── blacklist
-	    │   ├── keymap
-	    │   ├── ORDER
-	    │   └── udev
-	    ├── local
-	    ├── local-premount
-	    │   ├── ORDER
-	    │   └── resume
-	    └── nfs
+        .
+        ├── bin
+        │   ├── busybox
+        │   ├── cat
+        │   ├── chroot
+        │   ├── cpio
+        │   ├── dd
+        │   ├── dmesg
+        │   ├── false
+        │   ├── fstype
+        │   ├── gunzip
+        │   ├── gzip
+        │   ├── halt
+        │   ├── insmod
+        │   ├── ipconfig
+        │   ├── kill
+        │   ├── ln
+        │   ├── losetup
+        │   ├── ls
+        │   ├── minips
+        │   ├── mkdir
+        │   ├── mkfifo
+        │   ├── mknod
+        │   ├── mount
+        │   ├── nfsmount
+        │   ├── nuke
+        │   ├── pivot_root
+        │   ├── poweroff
+        │   ├── readlink
+        │   ├── reboot
+        │   ├── resume
+        │   ├── run-init
+        │   ├── sh
+        │   ├── sh.shared
+        │   ├── sleep
+        │   ├── sync
+        │   ├── true
+        │   ├── umount
+        │   └── uname
+        ├── conf
+        │   ├── arch.conf
+        │   ├── conf.d
+        │   │   └── resume
+        │   ├── initramfs.conf
+        │   └── modules
+        ├── etc
+        │   ├── modprobe.d
+        │   │   ├── aliases.conf
+        │   │   ├── alsa-base-blacklist.conf
+        │   │   ├── alsa-base-blacklist.conf.dpkg-new
+        │   │   ├── alsa-base.conf
+        │   │   ├── alsa-base.conf.dpkg-new
+        │   │   ├── blacklist.conf
+        │   │   ├── fbdev-blacklist.conf
+        │   │   ├── i915-kms.conf
+        │   │   ├── linux-sound-base_noOSS.conf
+        │   │   └── radeon-kms.conf
+        │   └── udev
+        │       └── udev.conf
+        ├── init
+        ├── lib
+        │   ├── klibc-wbwbg7GBhllIGBCTEv0okjVELWk.so
+        │   ├── ld-linux.so.2
+        │   ├── libblkid.so.1
+        │   ├── libc.so.6
+        │   ├── libdevmapper.so.1.02.1
+        │   ├── libdl.so.2
+        │   ├── libm.so.6
+        │   ├── libselinux.so.1
+        │   ├── libudev.so.0
+        │   ├── libuuid.so.1
+        │   ├── modules
+        │   │   └── 2.6.32-5-686
+        │   │       ├── kernel
+        │   │       │   ├── drivers
+        │   │       │   │   ├── acpi
+        │   │       │   │   │   ├── fan.ko
+        │   │       │   │   │   └── thermal.ko
+        │   │       │   │   ├── ata
+        │   │       │   │   │   ├── ahci.ko
+        │   │       │   │   │   ├── ata_generic.ko
+        │   │       │   │   │   ├── ata_piix.ko
+        │   │       │   │   │   ├── libata.ko
+        │   │       │   │   │   ├── pata_ali.ko
+        │   │       │   │   │   ├── pata_amd.ko
+        │   │       │   │   │   ├── pata_artop.ko
+        │   │       │   │   │   ├── pata_atiixp.ko
+        │   │       │   │   │   ├── pata_atp867x.ko
+        │   │       │   │   │   ├── pata_cmd64x.ko
+        │   │       │   │   │   ├── pata_cs5520.ko
+        │   │       │   │   │   ├── pata_cs5530.ko
+        │   │       │   │   │   ├── pata_cs5536.ko
+        │   │       │   │   │   ├── pata_efar.ko
+        │   │       │   │   │   ├── pata_it821x.ko
+        │   │       │   │   │   ├── pata_jmicron.ko
+        │   │       │   │   │   ├── pata_marvell.ko
+        │   │       │   │   │   ├── pata_mpiix.ko
+        │   │       │   │   │   ├── pata_netcell.ko
+        │   │       │   │   │   ├── pata_ns87410.ko
+        │   │       │   │   │   ├── pata_ns87415.ko
+        │   │       │   │   │   ├── pata_oldpiix.ko
+        │   │       │   │   │   ├── pata_pdc2027x.ko
+        │   │       │   │   │   ├── pata_pdc202xx_old.ko
+        │   │       │   │   │   ├── pata_rdc.ko
+        │   │       │   │   │   ├── pata_rz1000.ko
+        │   │       │   │   │   ├── pata_sc1200.ko
+        │   │       │   │   │   ├── pata_sch.ko
+        │   │       │   │   │   ├── pata_serverworks.ko
+        │   │       │   │   │   ├── pata_sil680.ko
+        │   │       │   │   │   ├── pata_sis.ko
+        │   │       │   │   │   ├── pata_triflex.ko
+        │   │       │   │   │   ├── pata_via.ko
+        │   │       │   │   │   ├── pdc_adma.ko
+        │   │       │   │   │   ├── sata_inic162x.ko
+        │   │       │   │   │   ├── sata_mv.ko
+        │   │       │   │   │   ├── sata_nv.ko
+        │   │       │   │   │   ├── sata_promise.ko
+        │   │       │   │   │   ├── sata_qstor.ko
+        │   │       │   │   │   ├── sata_sil24.ko
+        │   │       │   │   │   ├── sata_sil.ko
+        │   │       │   │   │   ├── sata_sis.ko
+        │   │       │   │   │   ├── sata_svw.ko
+        │   │       │   │   │   ├── sata_sx4.ko
+        │   │       │   │   │   ├── sata_uli.ko
+        │   │       │   │   │   ├── sata_via.ko
+        │   │       │   │   │   └── sata_vsc.ko
+        │   │       │   │   ├── block
+        │   │       │   │   │   ├── aoe
+        │   │       │   │   │   │   └── aoe.ko
+        │   │       │   │   │   ├── brd.ko
+        │   │       │   │   │   ├── cciss.ko
+        │   │       │   │   │   ├── cpqarray.ko
+        │   │       │   │   │   ├── DAC960.ko
+        │   │       │   │   │   ├── drbd
+        │   │       │   │   │   │   └── drbd.ko
+        │   │       │   │   │   ├── floppy.ko
+        │   │       │   │   │   ├── loop.ko
+        │   │       │   │   │   ├── nbd.ko
+        │   │       │   │   │   ├── osdblk.ko
+        │   │       │   │   │   ├── paride
+        │   │       │   │   │   │   ├── aten.ko
+        │   │       │   │   │   │   ├── bpck6.ko
+        │   │       │   │   │   │   ├── bpck.ko
+        │   │       │   │   │   │   ├── comm.ko
+        │   │       │   │   │   │   ├── dstr.ko
+        │   │       │   │   │   │   ├── epat.ko
+        │   │       │   │   │   │   ├── epia.ko
+        │   │       │   │   │   │   ├── fit2.ko
+        │   │       │   │   │   │   ├── fit3.ko
+        │   │       │   │   │   │   ├── friq.ko
+        │   │       │   │   │   │   ├── frpw.ko
+        │   │       │   │   │   │   ├── kbic.ko
+        │   │       │   │   │   │   ├── ktti.ko
+        │   │       │   │   │   │   ├── on20.ko
+        │   │       │   │   │   │   ├── on26.ko
+        │   │       │   │   │   │   ├── paride.ko
+        │   │       │   │   │   │   ├── pcd.ko
+        │   │       │   │   │   │   ├── pd.ko
+        │   │       │   │   │   │   ├── pf.ko
+        │   │       │   │   │   │   ├── pg.ko
+        │   │       │   │   │   │   └── pt.ko
+        │   │       │   │   │   ├── pktcdvd.ko
+        │   │       │   │   │   ├── sx8.ko
+        │   │       │   │   │   ├── umem.ko
+        │   │       │   │   │   ├── virtio_blk.ko
+        │   │       │   │   │   └── xd.ko
+        │   │       │   │   ├── cdrom
+        │   │       │   │   │   └── cdrom.ko
+        │   │       │   │   ├── connector
+        │   │       │   │   │   └── cn.ko
+        │   │       │   │   ├── dca
+        │   │       │   │   │   └── dca.ko
+        │   │       │   │   ├── firewire
+        │   │       │   │   │   ├── firewire-core.ko
+        │   │       │   │   │   ├── firewire-ohci.ko
+        │   │       │   │   │   └── firewire-sbp2.ko
+        │   │       │   │   ├── hid
+        │   │       │   │   │   ├── hid-apple.ko
+        │   │       │   │   │   ├── hid-cherry.ko
+        │   │       │   │   │   ├── hid.ko
+        │   │       │   │   │   ├── hid-logitech.ko
+        │   │       │   │   │   ├── hid-microsoft.ko
+        │   │       │   │   │   └── usbhid
+        │   │       │   │   │       └── usbhid.ko
+        │   │       │   │   ├── i2c
+        │   │       │   │   │   ├── algos
+        │   │       │   │   │   │   └── i2c-algo-bit.ko
+        │   │       │   │   │   └── i2c-core.ko
+        │   │       │   │   ├── ide
+        │   │       │   │   │   ├── cs5535.ko
+        │   │       │   │   │   ├── delkin_cb.ko
+        │   │       │   │   │   ├── hpt366.ko
+        │   │       │   │   │   ├── ide-cd_mod.ko
+        │   │       │   │   │   ├── ide-core.ko
+        │   │       │   │   │   ├── ide-cs.ko
+        │   │       │   │   │   ├── ide-gd_mod.ko
+        │   │       │   │   │   ├── ide-generic.ko
+        │   │       │   │   │   ├── ide-pnp.ko
+        │   │       │   │   │   ├── ide-tape.ko
+        │   │       │   │   │   ├── it8172.ko
+        │   │       │   │   │   ├── it8213.ko
+        │   │       │   │   │   ├── opti621.ko
+        │   │       │   │   │   ├── piix.ko
+        │   │       │   │   │   ├── tc86c001.ko
+        │   │       │   │   │   └── trm290.ko
+        │   │       │   │   ├── input
+        │   │       │   │   │   └── ff-memless.ko
+        │   │       │   │   ├── leds
+        │   │       │   │   │   └── led-class.ko
+        │   │       │   │   ├── md
+        │   │       │   │   │   └── dm-mod.ko
+        │   │       │   │   ├── message
+        │   │       │   │   │   ├── fusion
+        │   │       │   │   │   │   ├── mptbase.ko
+        │   │       │   │   │   │   ├── mptfc.ko
+        │   │       │   │   │   │   ├── mptsas.ko
+        │   │       │   │   │   │   ├── mptscsih.ko
+        │   │       │   │   │   │   └── mptspi.ko
+        │   │       │   │   │   └── i2o
+        │   │       │   │   │       ├── i2o_block.ko
+        │   │       │   │   │       └── i2o_core.ko
+        │   │       │   │   ├── misc
+        │   │       │   │   │   ├── cb710
+        │   │       │   │   │   │   └── cb710.ko
+        │   │       │   │   │   ├── enclosure.ko
+        │   │       │   │   │   └── tifm_core.ko
+        │   │       │   │   ├── mmc
+        │   │       │   │   │   ├── card
+        │   │       │   │   │   │   ├── mmc_block.ko
+        │   │       │   │   │   │   └── sdio_uart.ko
+        │   │       │   │   │   ├── core
+        │   │       │   │   │   │   └── mmc_core.ko
+        │   │       │   │   │   └── host
+        │   │       │   │   │       ├── cb710-mmc.ko
+        │   │       │   │   │       ├── ricoh_mmc.ko
+        │   │       │   │   │       ├── sdhci.ko
+        │   │       │   │   │       ├── sdhci-pci.ko
+        │   │       │   │   │       ├── sdhci-pltfm.ko
+        │   │       │   │   │       ├── sdricoh_cs.ko
+        │   │       │   │   │       ├── tifm_sd.ko
+        │   │       │   │   │       ├── via-sdmmc.ko
+        │   │       │   │   │       └── wbsd.ko
+        │   │       │   │   ├── mtd
+        │   │       │   │   │   └── mtd.ko
+        │   │       │   │   ├── net
+        │   │       │   │   │   ├── 3c501.ko
+        │   │       │   │   │   ├── 3c503.ko
+        │   │       │   │   │   ├── 3c505.ko
+        │   │       │   │   │   ├── 3c507.ko
+        │   │       │   │   │   ├── 3c509.ko
+        │   │       │   │   │   ├── 3c515.ko
+        │   │       │   │   │   ├── 3c59x.ko
+        │   │       │   │   │   ├── 8139cp.ko
+        │   │       │   │   │   ├── 8139too.ko
+        │   │       │   │   │   ├── 82596.ko
+        │   │       │   │   │   ├── 8390.ko
+        │   │       │   │   │   ├── 8390p.ko
+        │   │       │   │   │   ├── ac3200.ko
+        │   │       │   │   │   ├── acenic.ko
+        │   │       │   │   │   ├── amd8111e.ko
+        │   │       │   │   │   ├── at1700.ko
+        │   │       │   │   │   ├── atl1c
+        │   │       │   │   │   │   └── atl1c.ko
+        │   │       │   │   │   ├── atl1e
+        │   │       │   │   │   │   └── atl1e.ko
+        │   │       │   │   │   ├── atlx
+        │   │       │   │   │   │   ├── atl1.ko
+        │   │       │   │   │   │   └── atl2.ko
+        │   │       │   │   │   ├── b44.ko
+        │   │       │   │   │   ├── benet
+        │   │       │   │   │   │   └── be2net.ko
+        │   │       │   │   │   ├── bnx2.ko
+        │   │       │   │   │   ├── bnx2x.ko
+        │   │       │   │   │   ├── bsd_comp.ko
+        │   │       │   │   │   ├── cassini.ko
+        │   │       │   │   │   ├── chelsio
+        │   │       │   │   │   │   └── cxgb.ko
+        │   │       │   │   │   ├── cnic.ko
+        │   │       │   │   │   ├── cs89x0.ko
+        │   │       │   │   │   ├── cxgb3
+        │   │       │   │   │   │   └── cxgb3.ko
+        │   │       │   │   │   ├── defxx.ko
+        │   │       │   │   │   ├── depca.ko
+        │   │       │   │   │   ├── dl2k.ko
+        │   │       │   │   │   ├── dnet.ko
+        │   │       │   │   │   ├── dummy.ko
+        │   │       │   │   │   ├── e1000
+        │   │       │   │   │   │   └── e1000.ko
+        │   │       │   │   │   ├── e1000e
+        │   │       │   │   │   │   └── e1000e.ko
+        │   │       │   │   │   ├── e100.ko
+        │   │       │   │   │   ├── e2100.ko
+        │   │       │   │   │   ├── eepro.ko
+        │   │       │   │   │   ├── eexpress.ko
+        │   │       │   │   │   ├── enc28j60.ko
+        │   │       │   │   │   ├── enic
+        │   │       │   │   │   │   └── enic.ko
+        │   │       │   │   │   ├── epic100.ko
+        │   │       │   │   │   ├── eql.ko
+        │   │       │   │   │   ├── eth16i.ko
+        │   │       │   │   │   ├── ethoc.ko
+        │   │       │   │   │   ├── ewrk3.ko
+        │   │       │   │   │   ├── fealnx.ko
+        │   │       │   │   │   ├── forcedeth.ko
+        │   │       │   │   │   ├── hamachi.ko
+        │   │       │   │   │   ├── hp100.ko
+        │   │       │   │   │   ├── hp.ko
+        │   │       │   │   │   ├── hp-plus.ko
+        │   │       │   │   │   ├── ifb.ko
+        │   │       │   │   │   ├── igb
+        │   │       │   │   │   │   └── igb.ko
+        │   │       │   │   │   ├── igbvf
+        │   │       │   │   │   │   └── igbvf.ko
+        │   │       │   │   │   ├── ipg.ko
+        │   │       │   │   │   ├── ixgb
+        │   │       │   │   │   │   └── ixgb.ko
+        │   │       │   │   │   ├── ixgbe
+        │   │       │   │   │   │   └── ixgbe.ko
+        │   │       │   │   │   ├── jme.ko
+        │   │       │   │   │   ├── ks8842.ko
+        │   │       │   │   │   ├── ks8851.ko
+        │   │       │   │   │   ├── ks8851_mll.ko
+        │   │       │   │   │   ├── lance.ko
+        │   │       │   │   │   ├── lp486e.ko
+        │   │       │   │   │   ├── macvlan.ko
+        │   │       │   │   │   ├── macvtap.ko
+        │   │       │   │   │   ├── mdio.ko
+        │   │       │   │   │   ├── mii.ko
+        │   │       │   │   │   ├── mlx4
+        │   │       │   │   │   │   ├── mlx4_core.ko
+        │   │       │   │   │   │   └── mlx4_en.ko
+        │   │       │   │   │   ├── myri10ge
+        │   │       │   │   │   │   └── myri10ge.ko
+        │   │       │   │   │   ├── natsemi.ko
+        │   │       │   │   │   ├── ne2k-pci.ko
+        │   │       │   │   │   ├── ne.ko
+        │   │       │   │   │   ├── netconsole.ko
+        │   │       │   │   │   ├── netxen
+        │   │       │   │   │   │   └── netxen_nic.ko
+        │   │       │   │   │   ├── ni52.ko
+        │   │       │   │   │   ├── ni65.ko
+        │   │       │   │   │   ├── niu.ko
+        │   │       │   │   │   ├── ns83820.ko
+        │   │       │   │   │   ├── pcnet32.ko
+        │   │       │   │   │   ├── phy
+        │   │       │   │   │   │   ├── broadcom.ko
+        │   │       │   │   │   │   ├── cicada.ko
+        │   │       │   │   │   │   ├── davicom.ko
+        │   │       │   │   │   │   ├── et1011c.ko
+        │   │       │   │   │   │   ├── icplus.ko
+        │   │       │   │   │   │   ├── libphy.ko
+        │   │       │   │   │   │   ├── lxt.ko
+        │   │       │   │   │   │   ├── marvell.ko
+        │   │       │   │   │   │   ├── mdio-bitbang.ko
+        │   │       │   │   │   │   ├── national.ko
+        │   │       │   │   │   │   ├── qsemi.ko
+        │   │       │   │   │   │   ├── realtek.ko
+        │   │       │   │   │   │   ├── smsc.ko
+        │   │       │   │   │   │   ├── ste10Xp.ko
+        │   │       │   │   │   │   └── vitesse.ko
+        │   │       │   │   │   ├── plip.ko
+        │   │       │   │   │   ├── ppp_async.ko
+        │   │       │   │   │   ├── ppp_deflate.ko
+        │   │       │   │   │   ├── ppp_generic.ko
+        │   │       │   │   │   ├── ppp_mppe.ko
+        │   │       │   │   │   ├── pppoe.ko
+        │   │       │   │   │   ├── pppol2tp.ko
+        │   │       │   │   │   ├── pppox.ko
+        │   │       │   │   │   ├── ppp_synctty.ko
+        │   │       │   │   │   ├── qla3xxx.ko
+        │   │       │   │   │   ├── qlge
+        │   │       │   │   │   │   └── qlge.ko
+        │   │       │   │   │   ├── r6040.ko
+        │   │       │   │   │   ├── r8169.ko
+        │   │       │   │   │   ├── rrunner.ko
+        │   │       │   │   │   ├── s2io.ko
+        │   │       │   │   │   ├── sb1000.ko
+        │   │       │   │   │   ├── sc92031.ko
+        │   │       │   │   │   ├── seeq8005.ko
+        │   │       │   │   │   ├── sfc
+        │   │       │   │   │   │   └── sfc.ko
+        │   │       │   │   │   ├── sis190.ko
+        │   │       │   │   │   ├── sis900.ko
+        │   │       │   │   │   ├── skfp
+        │   │       │   │   │   │   └── skfp.ko
+        │   │       │   │   │   ├── skge.ko
+        │   │       │   │   │   ├── sky2.ko
+        │   │       │   │   │   ├── slhc.ko
+        │   │       │   │   │   ├── slip.ko
+        │   │       │   │   │   ├── smc9194.ko
+        │   │       │   │   │   ├── smc-ultra.ko
+        │   │       │   │   │   ├── smsc9420.ko
+        │   │       │   │   │   ├── starfire.ko
+        │   │       │   │   │   ├── sundance.ko
+        │   │       │   │   │   ├── sungem.ko
+        │   │       │   │   │   ├── sungem_phy.ko
+        │   │       │   │   │   ├── sunhme.ko
+        │   │       │   │   │   ├── tehuti.ko
+        │   │       │   │   │   ├── tg3.ko
+        │   │       │   │   │   ├── tlan.ko
+        │   │       │   │   │   ├── tulip
+        │   │       │   │   │   │   ├── de2104x.ko
+        │   │       │   │   │   │   ├── de4x5.ko
+        │   │       │   │   │   │   ├── dmfe.ko
+        │   │       │   │   │   │   ├── tulip.ko
+        │   │       │   │   │   │   ├── uli526x.ko
+        │   │       │   │   │   │   ├── winbond-840.ko
+        │   │       │   │   │   │   └── xircom_cb.ko
+        │   │       │   │   │   ├── tun.ko
+        │   │       │   │   │   ├── typhoon.ko
+        │   │       │   │   │   ├── veth.ko
+        │   │       │   │   │   ├── via-rhine.ko
+        │   │       │   │   │   ├── via-velocity.ko
+        │   │       │   │   │   ├── virtio_net.ko
+        │   │       │   │   │   ├── vmxnet3
+        │   │       │   │   │   │   └── vmxnet3.ko
+        │   │       │   │   │   ├── vxge
+        │   │       │   │   │   │   └── vxge.ko
+        │   │       │   │   │   ├── wd.ko
+        │   │       │   │   │   ├── yellowfin.ko
+        │   │       │   │   │   └── znet.ko
+        │   │       │   │   ├── parport
+        │   │       │   │   │   └── parport.ko
+        │   │       │   │   ├── pcmcia
+        │   │       │   │   │   ├── pcmcia_core.ko
+        │   │       │   │   │   └── pcmcia.ko
+        │   │       │   │   ├── scsi
+        │   │       │   │   │   ├── 3w-9xxx.ko
+        │   │       │   │   │   ├── 3w-sas.ko
+        │   │       │   │   │   ├── 3w-xxxx.ko
+        │   │       │   │   │   ├── aacraid
+        │   │       │   │   │   │   └── aacraid.ko
+        │   │       │   │   │   ├── advansys.ko
+        │   │       │   │   │   ├── aha152x.ko
+        │   │       │   │   │   ├── aha1542.ko
+        │   │       │   │   │   ├── aic7xxx
+        │   │       │   │   │   │   ├── aic79xx.ko
+        │   │       │   │   │   │   └── aic7xxx.ko
+        │   │       │   │   │   ├── aic7xxx_old.ko
+        │   │       │   │   │   ├── aic94xx
+        │   │       │   │   │   │   └── aic94xx.ko
+        │   │       │   │   │   ├── arcmsr
+        │   │       │   │   │   │   └── arcmsr.ko
+        │   │       │   │   │   ├── atp870u.ko
+        │   │       │   │   │   ├── be2iscsi
+        │   │       │   │   │   │   └── be2iscsi.ko
+        │   │       │   │   │   ├── bfa
+        │   │       │   │   │   │   └── bfa.ko
+        │   │       │   │   │   ├── bnx2i
+        │   │       │   │   │   │   └── bnx2i.ko
+        │   │       │   │   │   ├── BusLogic.ko
+        │   │       │   │   │   ├── ch.ko
+        │   │       │   │   │   ├── cxgb3i
+        │   │       │   │   │   │   └── cxgb3i.ko
+        │   │       │   │   │   ├── dc395x.ko
+        │   │       │   │   │   ├── device_handler
+        │   │       │   │   │   │   ├── scsi_dh_alua.ko
+        │   │       │   │   │   │   ├── scsi_dh_emc.ko
+        │   │       │   │   │   │   ├── scsi_dh_hp_sw.ko
+        │   │       │   │   │   │   ├── scsi_dh.ko
+        │   │       │   │   │   │   └── scsi_dh_rdac.ko
+        │   │       │   │   │   ├── dmx3191d.ko
+        │   │       │   │   │   ├── dpt_i2o.ko
+        │   │       │   │   │   ├── dtc.ko
+        │   │       │   │   │   ├── eata.ko
+        │   │       │   │   │   ├── fcoe
+        │   │       │   │   │   │   ├── fcoe.ko
+        │   │       │   │   │   │   └── libfcoe.ko
+        │   │       │   │   │   ├── fdomain.ko
+        │   │       │   │   │   ├── fnic
+        │   │       │   │   │   │   └── fnic.ko
+        │   │       │   │   │   ├── gdth.ko
+        │   │       │   │   │   ├── hptiop.ko
+        │   │       │   │   │   ├── imm.ko
+        │   │       │   │   │   ├── in2000.ko
+        │   │       │   │   │   ├── initio.ko
+        │   │       │   │   │   ├── ipr.ko
+        │   │       │   │   │   ├── ips.ko
+        │   │       │   │   │   ├── iscsi_tcp.ko
+        │   │       │   │   │   ├── libfc
+        │   │       │   │   │   │   └── libfc.ko
+        │   │       │   │   │   ├── libiscsi.ko
+        │   │       │   │   │   ├── libiscsi_tcp.ko
+        │   │       │   │   │   ├── libsas
+        │   │       │   │   │   │   └── libsas.ko
+        │   │       │   │   │   ├── libsrp.ko
+        │   │       │   │   │   ├── lpfc
+        │   │       │   │   │   │   └── lpfc.ko
+        │   │       │   │   │   ├── megaraid
+        │   │       │   │   │   │   ├── megaraid_mbox.ko
+        │   │       │   │   │   │   ├── megaraid_mm.ko
+        │   │       │   │   │   │   └── megaraid_sas.ko
+        │   │       │   │   │   ├── megaraid.ko
+        │   │       │   │   │   ├── mpt2sas
+        │   │       │   │   │   │   └── mpt2sas.ko
+        │   │       │   │   │   ├── mvsas
+        │   │       │   │   │   │   └── mvsas.ko
+        │   │       │   │   │   ├── NCR53c406a.ko
+        │   │       │   │   │   ├── nsp32.ko
+        │   │       │   │   │   ├── osd
+        │   │       │   │   │   │   ├── libosd.ko
+        │   │       │   │   │   │   └── osd.ko
+        │   │       │   │   │   ├── osst.ko
+        │   │       │   │   │   ├── pas16.ko
+        │   │       │   │   │   ├── pcmcia
+        │   │       │   │   │   │   ├── aha152x_cs.ko
+        │   │       │   │   │   │   ├── fdomain_cs.ko
+        │   │       │   │   │   │   ├── nsp_cs.ko
+        │   │       │   │   │   │   ├── qlogic_cs.ko
+        │   │       │   │   │   │   └── sym53c500_cs.ko
+        │   │       │   │   │   ├── pmcraid.ko
+        │   │       │   │   │   ├── ppa.ko
+        │   │       │   │   │   ├── qla1280.ko
+        │   │       │   │   │   ├── qla2xxx
+        │   │       │   │   │   │   └── qla2xxx.ko
+        │   │       │   │   │   ├── qla4xxx
+        │   │       │   │   │   │   └── qla4xxx.ko
+        │   │       │   │   │   ├── qlogicfas408.ko
+        │   │       │   │   │   ├── qlogicfas.ko
+        │   │       │   │   │   ├── raid_class.ko
+        │   │       │   │   │   ├── scsi_debug.ko
+        │   │       │   │   │   ├── scsi_mod.ko
+        │   │       │   │   │   ├── scsi_tgt.ko
+        │   │       │   │   │   ├── scsi_transport_fc.ko
+        │   │       │   │   │   ├── scsi_transport_iscsi.ko
+        │   │       │   │   │   ├── scsi_transport_sas.ko
+        │   │       │   │   │   ├── scsi_transport_spi.ko
+        │   │       │   │   │   ├── scsi_transport_srp.ko
+        │   │       │   │   │   ├── scsi_wait_scan.ko
+        │   │       │   │   │   ├── sd_mod.ko
+        │   │       │   │   │   ├── ses.ko
+        │   │       │   │   │   ├── sg.ko
+        │   │       │   │   │   ├── sr_mod.ko
+        │   │       │   │   │   ├── stex.ko
+        │   │       │   │   │   ├── st.ko
+        │   │       │   │   │   ├── sym53c416.ko
+        │   │       │   │   │   ├── sym53c8xx_2
+        │   │       │   │   │   │   └── sym53c8xx.ko
+        │   │       │   │   │   ├── t128.ko
+        │   │       │   │   │   ├── tmscsim.ko
+        │   │       │   │   │   ├── u14-34f.ko
+        │   │       │   │   │   ├── ultrastor.ko
+        │   │       │   │   │   └── wd7000.ko
+        │   │       │   │   ├── ssb
+        │   │       │   │   │   └── ssb.ko
+        │   │       │   │   ├── thermal
+        │   │       │   │   │   └── thermal_sys.ko
+        │   │       │   │   ├── uio
+        │   │       │   │   │   └── uio.ko
+        │   │       │   │   ├── usb
+        │   │       │   │   │   ├── core
+        │   │       │   │   │   │   └── usbcore.ko
+        │   │       │   │   │   ├── host
+        │   │       │   │   │   │   ├── ehci-hcd.ko
+        │   │       │   │   │   │   ├── ohci-hcd.ko
+        │   │       │   │   │   │   ├── uhci-hcd.ko
+        │   │       │   │   │   │   └── xhci.ko
+        │   │       │   │   │   └── storage
+        │   │       │   │   │       ├── ums-alauda.ko
+        │   │       │   │   │       ├── ums-cypress.ko
+        │   │       │   │   │       ├── ums-datafab.ko
+        │   │       │   │   │       ├── ums-freecom.ko
+        │   │       │   │   │       ├── ums-isd200.ko
+        │   │       │   │   │       ├── ums-jumpshot.ko
+        │   │       │   │   │       ├── ums-karma.ko
+        │   │       │   │   │       ├── ums-onetouch.ko
+        │   │       │   │   │       ├── ums-sddr09.ko
+        │   │       │   │   │       ├── ums-sddr55.ko
+        │   │       │   │   │       ├── ums-usbat.ko
+        │   │       │   │   │       └── usb-storage.ko
+        │   │       │   │   └── virtio
+        │   │       │   │       └── virtio_pci.ko
+        │   │       │   ├── fs
+        │   │       │   │   ├── btrfs
+        │   │       │   │   │   └── btrfs.ko
+        │   │       │   │   ├── configfs
+        │   │       │   │   │   └── configfs.ko
+        │   │       │   │   ├── exportfs
+        │   │       │   │   │   └── exportfs.ko
+        │   │       │   │   ├── ext2
+        │   │       │   │   │   └── ext2.ko
+        │   │       │   │   ├── ext3
+        │   │       │   │   │   └── ext3.ko
+        │   │       │   │   ├── ext4
+        │   │       │   │   │   └── ext4.ko
+        │   │       │   │   ├── fscache
+        │   │       │   │   │   └── fscache.ko
+        │   │       │   │   ├── isofs
+        │   │       │   │   │   └── isofs.ko
+        │   │       │   │   ├── jbd
+        │   │       │   │   │   └── jbd.ko
+        │   │       │   │   ├── jbd2
+        │   │       │   │   │   └── jbd2.ko
+        │   │       │   │   ├── jfs
+        │   │       │   │   │   └── jfs.ko
+        │   │       │   │   ├── lockd
+        │   │       │   │   │   └── lockd.ko
+        │   │       │   │   ├── mbcache.ko
+        │   │       │   │   ├── nfs
+        │   │       │   │   │   └── nfs.ko
+        │   │       │   │   ├── nfs_common
+        │   │       │   │   │   └── nfs_acl.ko
+        │   │       │   │   ├── nls
+        │   │       │   │   │   └── nls_base.ko
+        │   │       │   │   ├── reiserfs
+        │   │       │   │   │   └── reiserfs.ko
+        │   │       │   │   ├── udf
+        │   │       │   │   │   └── udf.ko
+        │   │       │   │   └── xfs
+        │   │       │   │       └── xfs.ko
+        │   │       │   ├── lib
+        │   │       │   │   ├── crc16.ko
+        │   │       │   │   ├── crc-ccitt.ko
+        │   │       │   │   ├── crc-itu-t.ko
+        │   │       │   │   ├── crc-t10dif.ko
+        │   │       │   │   ├── libcrc32c.ko
+        │   │       │   │   ├── lru_cache.ko
+        │   │       │   │   └── zlib_deflate
+        │   │       │   │       └── zlib_deflate.ko
+        │   │       │   └── net
+        │   │       │       ├── ipv4
+        │   │       │       │   └── inet_lro.ko
+        │   │       │       └── sunrpc
+        │   │       │           ├── auth_gss
+        │   │       │           │   └── auth_rpcgss.ko
+        │   │       │           └── sunrpc.ko
+        │   │       ├── modules.alias
+        │   │       ├── modules.alias.bin
+        │   │       ├── modules.dep
+        │   │       ├── modules.dep.bin
+        │   │       ├── modules.devname
+        │   │       ├── modules.order
+        │   │       ├── modules.softdep
+        │   │       ├── modules.symbols
+        │   │       └── modules.symbols.bin
+        │   └── udev
+        │       ├── ata_id
+        │       ├── edd_id
+        │       ├── firmware.agent
+        │       ├── hotplug.functions
+        │       ├── path_id
+        │       ├── rules.d
+        │       │   ├── 50-udev-default.rules
+        │       │   ├── 55-dm.rules
+        │       │   ├── 60-persistent-storage-dm.rules
+        │       │   ├── 60-persistent-storage.rules
+        │       │   ├── 80-drivers.rules
+        │       │   └── 91-permissions.rules
+        │       ├── scsi_id
+        │       └── usb_id
+        ├── sbin
+        │   ├── blkid
+        │   ├── dmsetup
+        │   ├── modprobe
+        │   ├── rmmod
+        │   ├── udevadm
+        │   └── udevd
+        └── scripts
+            ├── functions
+            ├── init-bottom
+            │   ├── ORDER
+            │   └── udev
+            ├── init-top
+            │   ├── all_generic_ide
+            │   ├── blacklist
+            │   ├── keymap
+            │   ├── ORDER
+            │   └── udev
+            ├── local
+            ├── local-premount
+            │   ├── ORDER
+            │   └── resume
+            └── nfs
 
-	128 directories, 545 files
+        128 directories, 545 files
 
 
 - Encrypted sistem
 
-	. /boot hariç şifreli disk bölümlerinden oluşan sistem kurulur.
-	. /boot için 64 MB alan yeterli.
-	. Şifreli partitionlar, normalde ihtiyaç duyulandan %30 büyük olsun.
-	. Swap için randomkey, diğer şifreli partitionlar için passphrase kullanılsın.
-	. cryptsetup ve sharutils paketleri kurulsun.
+        . /boot hariç şifreli disk bölümlerinden oluşan sistem kurulur.
+        . /boot için 64 MB alan yeterli.
+        . Şifreli partitionlar, normalde ihtiyaç duyulandan %30 büyük olsun.
+        . Swap için randomkey, diğer şifreli partitionlar için passphrase kullanılsın.
+        . cryptsetup ve sharutils paketleri kurulsun.
 
-	- Anahtarın oluşturulması
-	head -c 2880 /dev/urandom | uuencode -m - | head -n 65 | tail -n 64 &gt;key.txt
+        - Anahtarın oluşturulması
+        head -c 2880 /dev/urandom | uuencode -m - | head -n 65 | tail -n 64 &gt;key.txt
 
-	- Anahtarın şifreli disk bölümlerine eklenmesi
-	cryptsetup luksAddKey /dev/sda5 key.txt
-	cryptsetup luksAddKey /dev/sda6 key.txt
-	cryptsetup luksAddKey /dev/sda7 key.txt
-	cryptsetup luksAddKey /dev/sda8 key.txt
+        - Anahtarın şifreli disk bölümlerine eklenmesi
+        cryptsetup luksAddKey /dev/sda5 key.txt
+        cryptsetup luksAddKey /dev/sda6 key.txt
+        cryptsetup luksAddKey /dev/sda7 key.txt
+        cryptsetup luksAddKey /dev/sda8 key.txt
 
-	- Keyscript oluşturulması
-	/ altında herhangi bir yere olabilir ama / mount edildiginde erişilebilecek
-	bir yer olmalı çünkü update-initramfs çalıştığında bu script'i bulup 
-	initrd içine koyacak.
+        - Keyscript oluşturulması
+        / altında herhangi bir yere olabilir ama / mount edildiginde erişilebilecek
+        bir yer olmalı çünkü update-initramfs çalıştığında bu script'i bulup
+        initrd içine koyacak.
 
-	/root/scripts/key.sh
-	#!/bin/sh
-	if [ -z &quot;`grep init /proc/cmdline`&quot; ]
-	then
-	exec cat &lt;&lt;EOF
-	.....
-	.....
-	Bu bolume key.txt dosyasinin icerigi gelecek.
-	.....
-	.....
-	EOF
-	fi
+        /root/scripts/key.sh
+        #!/bin/sh
+        if [ -z &quot;`grep init /proc/cmdline`&quot; ]
+        then
+        exec cat &lt;&lt;EOF
+        .....
+        .....
+        Bu bolume key.txt dosyasinin icerigi gelecek.
+        .....
+        .....
+        EOF
+        fi
 
-	- Dosya sadece root erişimine açık.
-	chown root: /root/scripts/key.sh
-	chmod 700 /root/scripts/key.sh
+        - Dosya sadece root erişimine açık.
+        chown root: /root/scripts/key.sh
+        chmod 700 /root/scripts/key.sh
 
-	- Şifreli bölümler için anahtar kullanılmasının söylenmesi.
-	/etc/crypttab
-	sda5_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
-	sda6_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
-	sda7_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
-	sda8_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
+        - Şifreli bölümler için anahtar kullanılmasının söylenmesi.
+        /etc/crypttab
+        sda5_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
+        sda6_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
+        sda7_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
+        sda8_crypt   UUID=sdasda   none   luks,keyscript=/root/scripts/key.sh
 
-	- initramfs'nin yeniden oluşturulması.
-	update-initramfs -u
+        - initramfs'nin yeniden oluşturulması.
+        update-initramfs -u
 </code></pre>
 </body>
 </html>

@@ -10,26 +10,26 @@
 Python Unicode Notları
 ----------------------
 
-'ğüşi'					&lt;- string
-u'ĞÜŞİ'					&lt;- unicode
+'ğüşi'                                  &lt;- string
+u'ĞÜŞİ'                                 &lt;- unicode
 
 
-'ğüşi' + u'ĞÜŞİ'			&lt;- yanlış
-'ğüşi' + u'ĞÜŞİ'.encode('utf-8')	&lt;- doğru bir kullanım, sonu. string
-'ğüşi%s' % u'ĞÜŞİ'			&lt;- doğru bir kullanım, sonuç unicode
-'ğüşi'.decode() + u'ĞÜŞİ'		&lt;- doğru bir kullanım, sonuç unicode
-u'a\u0061'				&lt;- doğru bir kullanım, sonuç unicode u'aa'
+'ğüşi' + u'ĞÜŞİ'                        &lt;- yanlış
+'ğüşi' + u'ĞÜŞİ'.encode('utf-8')        &lt;- doğru bir kullanım, sonu. string
+'ğüşi%s' % u'ĞÜŞİ'                      &lt;- doğru bir kullanım, sonuç unicode
+'ğüşi'.decode() + u'ĞÜŞİ'               &lt;- doğru bir kullanım, sonuç unicode
+u'a\u0061'                              &lt;- doğru bir kullanım, sonuç unicode u'aa'
 
 
-'ğüşi'.decode('utf-8')			&lt;- utf-8 string'i, unicode'a çevirir
-u'ĞÜŞİ'.encode('utf-8')			&lt;- unicode'u, utf-8 stribg'e çevirir
+'ğüşi'.decode('utf-8')                  &lt;- utf-8 string'i, unicode'a çevirir
+u'ĞÜŞİ'.encode('utf-8')                 &lt;- unicode'u, utf-8 stribg'e çevirir
 
 
 # ekran, dosya, socket v.b. ortamlara yazdırmadan önce string'e çevirmek gerekir
-print u'ĞÜŞİ'				&lt;- print komutu otomatik string çevrimi yapar
-print u'ĞÜŞİ'.encode('utf-8')		&lt;- print komutuna manuel çevrim yaptırma
-print str.encode('utf-8', 'ignore')	&lt;- basılamayan karakterleri gözardı eder
-print str.encode('utf-8', 'replace')	&lt;- basılamayan karakterlerin yerine ? karakterini basar
+print u'ĞÜŞİ'                           &lt;- print komutu otomatik string çevrimi yapar
+print u'ĞÜŞİ'.encode('utf-8')           &lt;- print komutuna manuel çevrim yaptırma
+print str.encode('utf-8', 'ignore')     &lt;- basılamayan karakterleri gözardı eder
+print str.encode('utf-8', 'replace')    &lt;- basılamayan karakterlerin yerine ? karakterini basar
 
 d.write(u'ĞÜŞİ'.encode('utf-8'))
 os.system('echo %s' % u'ĞÜŞİ'.encode('utf-8'))
@@ -40,12 +40,12 @@ sock.send(u'ĞÜŞİ'.encode('utf-8'))
 cnn = sqlite.connect(DATABASE, timeout=DATABASE_TIMEOUT)
 crs = cnn.cursor()
 sql = &quot;&quot;&quot;SELECT *
-	FROM tablo&quot;&quot;&quot;
+        FROM tablo&quot;&quot;&quot;
 crs.execute(sql)
 row = crs.fetchone()
 cnn.close()
 
-type(row[0])				&lt;- &lt;type 'unicode'&gt;
+type(row[0])                            &lt;- &lt;type 'unicode'&gt;
 alan1 = row[0].encode('utf-8')
 
 
@@ -58,14 +58,14 @@ d.close()
 # regex için unicode desteği almak isteniyorsa re.UNICODE
 # bu sayede unicode'a uygun işlem yapılır
 sablon = re.compile('doku', re.UNICODE)
-type(str)				&lt;- &lt;type 'str'&gt;
+type(str)                               &lt;- &lt;type 'str'&gt;
 
 
 # locale'de kullanılan encopding hakkında bilgi almak için
 (dil, encoding) = locale.getdefaultlocale()
 
-dil		&lt;- 'tr_TR'
-encoding	&lt;- 'UTF8'
+dil             &lt;- 'tr_TR'
+encoding        &lt;- 'UTF8'
 </code></pre>
 </body>
 </html>

@@ -7,165 +7,165 @@
 </head>
 <body>
 <pre><code>
-Bu notlar, Debian Etch içindir. 
-	- Masaüstü uygulamalarının kurulduğu
-	- Çekirdeğin, RTAI yaması ile gerektiği gibi yamalandığı
-	- linux-headers, rtai-modules ve rtai-dev paketlerinin yüklenmiş olduğu 
+Bu notlar, Debian Etch içindir.
+        - Masaüstü uygulamalarının kurulduğu
+        - Çekirdeğin, RTAI yaması ile gerektiği gibi yamalandığı
+        - linux-headers, rtai-modules ve rtai-dev paketlerinin yüklenmiş olduğu
 varsayılmıştır.
 
 
 
 * Paralel port modülünün bilgisayar açıldığında yüklenmesi için
 
-	echo install parport_pc /bin/true &gt;/etc/modprobe.d/emc2
-	
-	
+        echo install parport_pc /bin/true &gt;/etc/modprobe.d/emc2
+
+
 
 * Gerekli paketlerin yüklenmesi
 
-	apt-get install	python
-				-&gt; blt
-				-&gt; tk8.4
-				
-			python-imaging
-			python-imaging-tk
-			python-numarray
-			python-dev
-				-&gt; python2.4-dev
-				
-			tcl8.4-dev
-			tk8.4-dev
-				-&gt; libice-dev
-				-&gt; libsm-dev
-				-&gt; libx11-dev
-				-&gt; libxau-dev
-				-&gt; libxdmcp-dev
-				-&gt; libxext-dev
-				-&gt; libxt-dev
-				-&gt; x-dev
-				-&gt; x11proto-core-dev
-				-&gt; x11proto-input-dev
-				-&gt; x11proto-kb-dev
-				-&gt; x11proto-xext-dev
-				-&gt; xtrans-dev
+        apt-get install python
+                                -&gt; blt
+                                -&gt; tk8.4
 
-			yapps2
-				-&gt; yapps2-runtime
+                        python-imaging
+                        python-imaging-tk
+                        python-numarray
+                        python-dev
+                                -&gt; python2.4-dev
 
-			libgtk2.0-dev
-				-&gt; libatk1.0-dev
-				-&gt; libcairo2-dev
-				-&gt; libexpat1-dev
-				-&gt; libfontconfig1-dev
-				-&gt; libfreetype6-dev
-				-&gt; libglib2.0-dev
-				-&gt; libpango1.0-dev
-				-&gt; libpng12-dev
-				-&gt; libxcursor-dev
-				-&gt; libxfixes-dev
-				-&gt; libxft-dev
-				-&gt; libxi-dev
-				-&gt; libxinerama-dev
-				-&gt; libxrandr-dev
-				-&gt; libxrender-dev
-				-&gt; pkg-config
-				-&gt; x11proto-fixes-dev
-				-&gt; x11proto-randr-dev
-				-&gt; x11proto-render-dev
-				-&gt; x11proto-xinerama-dev
-				-&gt; zliblg-dev
+                        tcl8.4-dev
+                        tk8.4-dev
+                                -&gt; libice-dev
+                                -&gt; libsm-dev
+                                -&gt; libx11-dev
+                                -&gt; libxau-dev
+                                -&gt; libxdmcp-dev
+                                -&gt; libxext-dev
+                                -&gt; libxt-dev
+                                -&gt; x-dev
+                                -&gt; x11proto-core-dev
+                                -&gt; x11proto-input-dev
+                                -&gt; x11proto-kb-dev
+                                -&gt; x11proto-xext-dev
+                                -&gt; xtrans-dev
 
-			libpth-dev
-				-&gt; libpth20
-				
-			libreadline5-dev
-			libxmu-dev
-				-&gt; libxmu-headers
+                        yapps2
+                                -&gt; yapps2-runtime
 
-			libxaw7-dev
-				-&gt; libxaw-headers
-				-&gt; libxpm-dev
+                        libgtk2.0-dev
+                                -&gt; libatk1.0-dev
+                                -&gt; libcairo2-dev
+                                -&gt; libexpat1-dev
+                                -&gt; libfontconfig1-dev
+                                -&gt; libfreetype6-dev
+                                -&gt; libglib2.0-dev
+                                -&gt; libpango1.0-dev
+                                -&gt; libpng12-dev
+                                -&gt; libxcursor-dev
+                                -&gt; libxfixes-dev
+                                -&gt; libxft-dev
+                                -&gt; libxi-dev
+                                -&gt; libxinerama-dev
+                                -&gt; libxrandr-dev
+                                -&gt; libxrender-dev
+                                -&gt; pkg-config
+                                -&gt; x11proto-fixes-dev
+                                -&gt; x11proto-randr-dev
+                                -&gt; x11proto-render-dev
+                                -&gt; x11proto-xinerama-dev
+                                -&gt; zliblg-dev
 
-			xlibmesa-gl-dev
-				-&gt; libgl1-mesa-dev
-				-&gt; libgl1-mesa-dri
-				-&gt; mesa-common-dev
+                        libpth-dev
+                                -&gt; libpth20
 
-			xlibmesa-glu
-			libglu1-mesa-dev
-			pciutils-dev
-			bwidget
-			cvs
-			latex2html
-				-&gt; libnetpbm10
-				-&gt; libt1-5
-				-&gt; netpbm
-				-&gt; perl-doc
-				-&gt; tetex-base
-				-&gt; tetex-bin
-				-&gt; tetex-extra
-				-&gt; tex-common
+                        libreadline5-dev
+                        libxmu-dev
+                                -&gt; libxmu-headers
 
-			preview-latex-style
-			latex-xft-fonts
-			libaiksaurus-1.2-0c2a
-				-&gt; libaiksaurus-1.2-data
+                        libxaw7-dev
+                                -&gt; libxaw-headers
+                                -&gt; libxpm-dev
 
-			libgnomeprintui2.2-dev
-				-&gt; libxml2-dev
-				-&gt; libart-2.0-dev
-				-&gt; libgnomecanvas2-dev
-				-&gt; libgnomeprint2.2-dev
+                        xlibmesa-gl-dev
+                                -&gt; libgl1-mesa-dev
+                                -&gt; libgl1-mesa-dri
+                                -&gt; mesa-common-dev
 
-			imagemagick
-				-&gt; libmagick9
-				-&gt; libjasper-1.701-1
+                        xlibmesa-glu
+                        libglu1-mesa-dev
+                        pciutils-dev
+                        bwidget
+                        cvs
+                        latex2html
+                                -&gt; libnetpbm10
+                                -&gt; libt1-5
+                                -&gt; netpbm
+                                -&gt; perl-doc
+                                -&gt; tetex-base
+                                -&gt; tetex-bin
+                                -&gt; tetex-extra
+                                -&gt; tex-common
 
-			lyx
-				-&gt; groff
-				-&gt; libqt3-mt
-				-&gt; libtiff-tools
-				-&gt; lyx-common
-				-&gt; lyx-qt
-				-&gt; xdg-utils
+                        preview-latex-style
+                        latex-xft-fonts
+                        libaiksaurus-1.2-0c2a
+                                -&gt; libaiksaurus-1.2-data
+
+                        libgnomeprintui2.2-dev
+                                -&gt; libxml2-dev
+                                -&gt; libart-2.0-dev
+                                -&gt; libgnomecanvas2-dev
+                                -&gt; libgnomeprint2.2-dev
+
+                        imagemagick
+                                -&gt; libmagick9
+                                -&gt; libjasper-1.701-1
+
+                        lyx
+                                -&gt; groff
+                                -&gt; libqt3-mt
+                                -&gt; libtiff-tools
+                                -&gt; lyx-common
+                                -&gt; lyx-qt
+                                -&gt; xdg-utils
 
 
 
 * EMC2 için CVS klasörünün oluşturulması ve güncellenmesi
 
-	- CVS klasörünü oluşturma
-	  CVS klasörü daha önceden oluşturulduysa, bu işlemi yeniden yapmaya gerek yok
-	
-		mkdir proje
-		cd proje
-		mkdir emc2
-		cd emc2
-		cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs co -rHEAD -dhead emc2
+        - CVS klasörünü oluşturma
+          CVS klasörü daha önceden oluşturulduysa, bu işlemi yeniden yapmaya gerek yok
+
+                mkdir proje
+                cd proje
+                mkdir emc2
+                cd emc2
+                cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs co -rHEAD -dhead emc2
 
 
-	- CVS klasörünün güncellenmesi
-	
-		cd &tilde;/proje/emc2
-		cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs update -dP head
+        - CVS klasörünün güncellenmesi
+
+                cd &tilde;/proje/emc2
+                cvs -z5 -d:ext:anon@cvs.linuxcnc.org:/cvs update -dP head
 
 
 
 * Kaynak kodunun derlenmesi
 
-	cd &tilde;/proje/emc2
-	rm `date +%Y%m%d` -rf
-	cp head `date +%Y%m%d` -R
-	cd `date +%Y%m%d`/src
-	./configure --enable-run-in-place --enable-build-documentation
-	make
-	su -c &quot;make setuid&quot;
+        cd &tilde;/proje/emc2
+        rm `date +%Y%m%d` -rf
+        cp head `date +%Y%m%d` -R
+        cd `date +%Y%m%d`/src
+        ./configure --enable-run-in-place --enable-build-documentation
+        make
+        su -c &quot;make setuid&quot;
 
-	
+
 
 * EMC2'nin çalıştırılması
 
-	cd &tilde;/proje/emc2/`date +%Y%m%d`
-	./scripts/emc
+        cd &tilde;/proje/emc2/`date +%Y%m%d`
+        ./scripts/emc
 
 
 

@@ -11,137 +11,137 @@ E-MAIL NOTLARI
 
 exim4
 -----
-	* LANG= dpkg-reconfigure exim4-config  (root)
-	
-		. General type of mail configuration			: mail sent by smarthost; no local mail
-		. System mail name					: comp1.emrah.com
-		. IP-addresses to listen on for incoming SMTP connec.	: 127.0.0.1
-		. Other destinations for which mail is accepted		: 
-		. Visible domain name for local	users			: comp1.emrah.com
-		. IP address or host name of the outgoing smarthost	: smtp.gmail.com::587
-		. Keep number of DNS-queries minimal			: No	( DNS sunucu kurulu olan ve sürekli Internet'e bağlı makineler için )
-									: Yes	( Internet'e sürekli bağlı olmayan makineler için )
-		. Split configuration into small files?			: Yes
+        * LANG= dpkg-reconfigure exim4-config  (root)
 
-		x domains to relay mail for				: comp1.emrah.com
-		x machines to relay mail for				: 192.168.1.0/24
+                . General type of mail configuration                    : mail sent by smarthost; no local mail
+                . System mail name                                      : comp1.emrah.com
+                . IP-addresses to listen on for incoming SMTP connec.   : 127.0.0.1
+                . Other destinations for which mail is accepted         :
+                . Visible domain name for local users                   : comp1.emrah.com
+                . IP address or host name of the outgoing smarthost     : smtp.gmail.com::587
+                . Keep number of DNS-queries minimal                    : No    ( DNS sunucu kurulu olan ve sürekli Internet'e bağlı makineler için )
+                                                                        : Yes   ( Internet'e sürekli bağlı olmayan makineler için )
+                . Split configuration into small files?                 : Yes
 
-
-	* /etc/exim4/passwd.client
-
-		gmail-smtp.l.google.com:kullanici:parola
-		*.google.com:kullanici:parola
-		smtp.gmail.com:kullanici:parola
+                x domains to relay mail for                             : comp1.emrah.com
+                x machines to relay mail for                            : 192.168.1.0/24
 
 
-	* /etc/exim4/conf.d/transport/30_exim4-config_remote_smtp_smarthost
-	  port satırı eklenecek
+        * /etc/exim4/passwd.client
 
-		driver = smtp
-		port=587
-		hosts_try_auth = &lt;; ${if exists{CONFDIR/passwd.client}
-
-
-	* /etc/email-address dosyasında hangi kullanıcı için hangi e-mail adresi gözükeceği belirtilir
-	
-		root: admin@emrah.gen.tr
-		emrah: emrah@yahoo.com
+                gmail-smtp.l.google.com:kullanici:parola
+                *.google.com:kullanici:parola
+                smtp.gmail.com:kullanici:parola
 
 
-	* restart
-		update-exim4.conf
-		/etc/init.d/exim4 restart
+        * /etc/exim4/conf.d/transport/30_exim4-config_remote_smtp_smarthost
+          port satırı eklenecek
 
-	
+                driver = smtp
+                port=587
+                hosts_try_auth = &lt;; ${if exists{CONFDIR/passwd.client}
+
+
+        * /etc/email-address dosyasında hangi kullanıcı için hangi e-mail adresi gözükeceği belirtilir
+
+                root: admin@emrah.gen.tr
+                emrah: emrah@yahoo.com
+
+
+        * restart
+                update-exim4.conf
+                /etc/init.d/exim4 restart
+
+
 
 procmail
 --------
-	* klasörleri oluştur
-	
-		. cd $HOME
-		. mkdir -p mail/a_inbox/{cur,new,tmp}
-		. mkdir -p mail/a_sent/{cur,new,tmp}
-		. mkdir -p mail/b_gmail_hesap1/{cur,new,tmp}
-		. mkdir -p mail/b_gmail_hesap2/{cur,new,tmp}
-		. mkdir -p mail/b_isp_hesap1/{cur,new,tmp}
-		. mkdir -p mail/l_emc/{cur,new,tmp}
-		. mkdir -p mail/l_rtai/{cur,new,tmp}
-		. mkdir -p mail/l_xenomai/{cur,new,tmp}
-		. mkdir -p mail/l_adeos/{cur,new,tmp}
-		. mkdir -p mail/l_comedi/{cur,new,tmp}
-		. mkdir -p mail/l_security/{cur,new,tmp}
-		. mkdir -p mail/l_debian-embedded/{cur,new,tmp}
-		. mkdir -p mail/l_debian-kernel/{cur,new,tmp}
-		. mkdir -p mail/l_debian-user-turkish/{cur,new,tmp}
+        * klasörleri oluştur
+
+                . cd $HOME
+                . mkdir -p mail/a_inbox/{cur,new,tmp}
+                . mkdir -p mail/a_sent/{cur,new,tmp}
+                . mkdir -p mail/b_gmail_hesap1/{cur,new,tmp}
+                . mkdir -p mail/b_gmail_hesap2/{cur,new,tmp}
+                . mkdir -p mail/b_isp_hesap1/{cur,new,tmp}
+                . mkdir -p mail/l_emc/{cur,new,tmp}
+                . mkdir -p mail/l_rtai/{cur,new,tmp}
+                . mkdir -p mail/l_xenomai/{cur,new,tmp}
+                . mkdir -p mail/l_adeos/{cur,new,tmp}
+                . mkdir -p mail/l_comedi/{cur,new,tmp}
+                . mkdir -p mail/l_security/{cur,new,tmp}
+                . mkdir -p mail/l_debian-embedded/{cur,new,tmp}
+                . mkdir -p mail/l_debian-kernel/{cur,new,tmp}
+                . mkdir -p mail/l_debian-user-turkish/{cur,new,tmp}
 
 
-	* chmod 700 mail/ -R
+        * chmod 700 mail/ -R
 
 
-	* $HOME/.procmailrc
-	
-		MAILDIR		= $HOME/mail/
-		LOGFILE		= $HOME/.procmaillog
-		VERBOSE		= no
+        * $HOME/.procmailrc
 
-		:0
-		* &circ;TO_ *hesap1@gmail.com
-		b_gmail_hesap1/
-	
-		:0
-		* &circ;TO_ *hesap2@gmail.com
-		b_gmail_hesap2/
-	
-		:0
-		* &circ;TO_ *hesap1@isp.com
-		b_isp_hesap1/
-	
-		:0
-		* &circ;TO_ *emc-users
-		l_emc/
-	
-		:0
-		* &circ;TO_ *emc-developers
-		l_emc/
-	
-		:0
-		* &circ;TO_ *emc-commit
-		l_emc/
-	
-		:0
-		* &circ;TO_ *rtai
-		l_rtai/
-	
-		:0
-		* &circ;TO_ *xenomai
-		l_xenomai/
-	
-		:0
-		* &circ;TO_ *adeos
-		l_adeos/
-	
-		:0
-		* &circ;TO_ *comedi
-		l_comedi/
-	
-		:0
-		* &circ;TO_ *debian-security-announce
-		l_security/
-	
-		:0
-		* &circ;TO_ *debian-embedded
-		l_debian-embedded/
-	
-		:0
-		* &circ;TO_ *debian-kernel
-		l_debian-kernel/
-	
-		:0
-		* &circ;TO_ *debian-user-turkish
-		l_debian-user-turkish/
-	
-		:0
-		a_inbox/
+                MAILDIR         = $HOME/mail/
+                LOGFILE         = $HOME/.procmaillog
+                VERBOSE         = no
+
+                :0
+                * &circ;TO_ *hesap1@gmail.com
+                b_gmail_hesap1/
+
+                :0
+                * &circ;TO_ *hesap2@gmail.com
+                b_gmail_hesap2/
+
+                :0
+                * &circ;TO_ *hesap1@isp.com
+                b_isp_hesap1/
+
+                :0
+                * &circ;TO_ *emc-users
+                l_emc/
+
+                :0
+                * &circ;TO_ *emc-developers
+                l_emc/
+
+                :0
+                * &circ;TO_ *emc-commit
+                l_emc/
+
+                :0
+                * &circ;TO_ *rtai
+                l_rtai/
+
+                :0
+                * &circ;TO_ *xenomai
+                l_xenomai/
+
+                :0
+                * &circ;TO_ *adeos
+                l_adeos/
+
+                :0
+                * &circ;TO_ *comedi
+                l_comedi/
+
+                :0
+                * &circ;TO_ *debian-security-announce
+                l_security/
+
+                :0
+                * &circ;TO_ *debian-embedded
+                l_debian-embedded/
+
+                :0
+                * &circ;TO_ *debian-kernel
+                l_debian-kernel/
+
+                :0
+                * &circ;TO_ *debian-user-turkish
+                l_debian-user-turkish/
+
+                :0
+                a_inbox/
 
 
 
@@ -151,73 +151,73 @@ getmail daha iyi bir seçenek
 
 getmail
 -------
-	* aptitude install getmail4 (root)
+        * aptitude install getmail4 (root)
 
-	* klasor ve dosyalar
-		cd
-		mkdir .getmail
-		chmod 700 .getmail
-		cd .getmail
-		touch hesap1@gmail.com
-		touch hesap2@gmail.com
-		touch hesap1@isp.com
-		chmod 600 *
+        * klasor ve dosyalar
+                cd
+                mkdir .getmail
+                chmod 700 .getmail
+                cd .getmail
+                touch hesap1@gmail.com
+                touch hesap2@gmail.com
+                touch hesap1@isp.com
+                chmod 600 *
 
-	* örnek bir ayar dosyasi ( &tilde;/.getmail/hesap1@gmail.com )
-		[retriever]
-		type            = SimplePOP3SSLRetriever
-		server          = pop.gmail.com
-		username        = hesap1
-		port            = 995
-		password        = xxxx
+        * örnek bir ayar dosyasi ( &tilde;/.getmail/hesap1@gmail.com )
+                [retriever]
+                type            = SimplePOP3SSLRetriever
+                server          = pop.gmail.com
+                username        = hesap1
+                port            = 995
+                password        = xxxx
 
-		[destination]
-		type            = MDA_external
-		path            = /usr/bin/procmail
+                [destination]
+                type            = MDA_external
+                path            = /usr/bin/procmail
 
-	* test
-		getmail --rcfile hesap1@gmail.com
-	
-	* crontab -e
-		*/15 * * * * getmail -q --rcfile hesap1@gmail.com
-		*/15 * * * * getmail -q --rcfile hesap2@gmail.com
-		*/15 * * * * getmail -q --rcfile hesap1@isp.com
+        * test
+                getmail --rcfile hesap1@gmail.com
+
+        * crontab -e
+                */15 * * * * getmail -q --rcfile hesap1@gmail.com
+                */15 * * * * getmail -q --rcfile hesap2@gmail.com
+                */15 * * * * getmail -q --rcfile hesap1@isp.com
 
 
-		
+
 fetchmail
 --------
-	* aptitude install fetchmail  (root)
+        * aptitude install fetchmail  (root)
 
 
-	* $HOME/.fetchmailrc
-	
-		poll pop.gmail.com with protocol pop3,
-			user hesap1 there is emrah here ssl,
-			with password xxxx;
-		
-		poll pop.gmail.com with protocol pop3,
-			user hesap2 there is emrah here ssl,
-			with password xxxx;
-		
-		poll mail.isp.com with protocol pop3,
-			user hesap1 there is emrah here,
-			with password xxxx;
-		
-		mda '/usr/bin/procmail -f fetchmail'
+        * $HOME/.fetchmailrc
+
+                poll pop.gmail.com with protocol pop3,
+                        user hesap1 there is emrah here ssl,
+                        with password xxxx;
+
+                poll pop.gmail.com with protocol pop3,
+                        user hesap2 there is emrah here ssl,
+                        with password xxxx;
+
+                poll mail.isp.com with protocol pop3,
+                        user hesap1 there is emrah here,
+                        with password xxxx;
+
+                mda '/usr/bin/procmail -f fetchmail'
 
 
-	* chmod 600 .fetchmailrc
+        * chmod 600 .fetchmailrc
 
 
-	* test
+        * test
 
-		fetchmail -vk
+                fetchmail -vk
 
 
-	* crontab -e
-	
-		*/15 * * * * fetchmail -s
+        * crontab -e
+
+                */15 * * * * fetchmail -s
 
 
 
@@ -225,88 +225,88 @@ lynx
 ----
 HTML formatındaki mailleri görmek için kullanılacak
 
-	* aptitude install lynx (root)
+        * aptitude install lynx (root)
 
 
 
 mailcap
 -------
-	* mail ile gelen farklı formattaki dosyaların neyle gösterileceğini
-	  belirlemek için kullanılacak
+        * mail ile gelen farklı formattaki dosyaların neyle gösterileceğini
+          belirlemek için kullanılacak
 
-	  cd
-	  touch .mailcap
+          cd
+          touch .mailcap
 
-	* &tilde;/.mailcap
-		text/html	; lynx -dump -nolist -force_html  %s	; copiousoutput
+        * &tilde;/.mailcap
+                text/html       ; lynx -dump -nolist -force_html  %s    ; copiousoutput
 
 
 
 mutt
 ----
-	* $HOME/.muttrc
+        * $HOME/.muttrc
 
-		set mbox_type           = maildir
-		set mbox                = &quot;&tilde;/mail/a_inbox/&quot;
-		set spoolfile           = &quot;&tilde;/mail/a_inbox/&quot;
-		set folder              = &quot;&tilde;/mail/&quot;
-		set record              = &quot;&tilde;/mail/a_sent/&quot;
+                set mbox_type           = maildir
+                set mbox                = &quot;&tilde;/mail/a_inbox/&quot;
+                set spoolfile           = &quot;&tilde;/mail/a_inbox/&quot;
+                set folder              = &quot;&tilde;/mail/&quot;
+                set record              = &quot;&tilde;/mail/a_sent/&quot;
 
-		alternates hesap1@gmail.com hesap2@gmail.com hesap1@isp.com
+                alternates hesap1@gmail.com hesap2@gmail.com hesap1@isp.com
 
-		mailboxes +a_inbox
-		mailboxes +a_sent
-		mailboxes +b_gmail_hesap1
-		mailboxes +b_gmail_hesap2
-		mailboxes +b_isp_hesap1
-		mailboxes +l_emc
-		mailboxes +l_rtai
-		mailboxes +l_xenomai
-		mailboxes +l_adeos
-		mailboxes +l_comedi
-		mailboxes +l_security
-		mailboxes +l_debian-embedded
-		mailboxes +l_debian-kernel
-		mailboxes +l_debian-user-turkish
+                mailboxes +a_inbox
+                mailboxes +a_sent
+                mailboxes +b_gmail_hesap1
+                mailboxes +b_gmail_hesap2
+                mailboxes +b_isp_hesap1
+                mailboxes +l_emc
+                mailboxes +l_rtai
+                mailboxes +l_xenomai
+                mailboxes +l_adeos
+                mailboxes +l_comedi
+                mailboxes +l_security
+                mailboxes +l_debian-embedded
+                mailboxes +l_debian-kernel
+                mailboxes +l_debian-user-turkish
 
-		folder-hook     .                       my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     b_gmail_hesap1		my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     b_gmail_hesap2		my_hdr From: hesap2 &lt;hesap2@gmail.com&gt;
-		folder-hook     b_isp_hesap1		my_hdr From: hesap1 &lt;hesap1@isp.com&gt;
-		folder-hook     l_emc                   my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_rtai			my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_xenomai		my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_adeos			my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_comedi		my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_security		my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_debian-embedded	my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_debian-kernel		my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
-		folder-hook     l_debian-user-turkish   my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     .                       my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     b_gmail_hesap1          my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     b_gmail_hesap2          my_hdr From: hesap2 &lt;hesap2@gmail.com&gt;
+                folder-hook     b_isp_hesap1            my_hdr From: hesap1 &lt;hesap1@isp.com&gt;
+                folder-hook     l_emc                   my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_rtai                  my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_xenomai               my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_adeos                 my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_comedi                my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_security              my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_debian-embedded       my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_debian-kernel         my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
+                folder-hook     l_debian-user-turkish   my_hdr From: hesap1 &lt;hesap1@gmail.com&gt;
 
-		set include		= yes
-		set beep_new		= yes
+                set include             = yes
+                set beep_new            = yes
 
-		macro index G &quot;!getmail -rhesap1@gmail.com -rhesap2@gmail.com -rhesap1@isp.com\n&quot; &quot;Getmail ile yeni postaları al&quot;
-		macro pager G &quot;!getmail -rhesap1@gmail.com -rhesap2@gmail.com -rhesap1@isp.com\n&quot; &quot;Getmail ile yeni postaları al&quot;
-		#macro index G &quot;!fetchmail\n&quot; &quot;Fetchmail ile yeni postaları al&quot;
-		#macro pager G &quot;!fetchmail\n&quot; &quot;Fetchmail ile yeni postaları al&quot;
+                macro index G &quot;!getmail -rhesap1@gmail.com -rhesap2@gmail.com -rhesap1@isp.com\n&quot; &quot;Getmail ile yeni postaları al&quot;
+                macro pager G &quot;!getmail -rhesap1@gmail.com -rhesap2@gmail.com -rhesap1@isp.com\n&quot; &quot;Getmail ile yeni postaları al&quot;
+                #macro index G &quot;!fetchmail\n&quot; &quot;Fetchmail ile yeni postaları al&quot;
+                #macro pager G &quot;!fetchmail\n&quot; &quot;Fetchmail ile yeni postaları al&quot;
 
-		auto_view text/html
-		auto_view text/HTML
-		alternative_order text/plain text/html
-		set mailcap_path=&tilde;/.mailcap:/etc/mailcap
+                auto_view text/html
+                auto_view text/HTML
+                alternative_order text/plain text/html
+                set mailcap_path=&tilde;/.mailcap:/etc/mailcap
 
 
-	* programı başlatmak için
+        * programı başlatmak için
 
-		mutt -y
-	
+                mutt -y
+
 
 mail
 ----
-	* mail komutunda header bilgileri
+        * mail komutunda header bilgileri
 
-	  mail -a 'from: emrah &lt;emrah.test@yahoo.com&gt;' -a 'reply-to: emrah.test@yahoo.com' -s 'deneme mesaji' arkadasim@yahoo.com
+          mail -a 'from: emrah &lt;emrah.test@yahoo.com&gt;' -a 'reply-to: emrah.test@yahoo.com' -s 'deneme mesaji' arkadasim@yahoo.com
 </code></pre>
 </body>
 </html>

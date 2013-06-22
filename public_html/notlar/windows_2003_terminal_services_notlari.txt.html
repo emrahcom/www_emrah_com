@@ -8,68 +8,68 @@
 <body>
 <pre><code>
 * linkler
-	- Genel
-	  http://www.msterminalservices.org/
-	  http://www.2x.com/
+        - Genel
+          http://www.msterminalservices.org/
+          http://www.2x.com/
 
-	- kapasite
-	  http://www.microsoft.com/technet/prodtechnol/win2kts/maintain/optimize/w2ktsscl.mspx
+        - kapasite
+          http://www.microsoft.com/technet/prodtechnol/win2kts/maintain/optimize/w2ktsscl.mspx
 
-	- kurulum
-	  http://www.windowsnetworking.com/articles_tutorials/Windows_2003_Terminal_Services_Part1.html
-	  http://www.windowsnetworking.com/articles_tutorials/Windows_2003_Terminal_Services_Part2.html
-	  http://winfaq.msterminalservices.org/faqs2.cfm?id=450&amp;category=2&amp;sortby=date
+        - kurulum
+          http://www.windowsnetworking.com/articles_tutorials/Windows_2003_Terminal_Services_Part1.html
+          http://www.windowsnetworking.com/articles_tutorials/Windows_2003_Terminal_Services_Part2.html
+          http://winfaq.msterminalservices.org/faqs2.cfm?id=450&amp;category=2&amp;sortby=date
 
-	- PXE
-	  http://thinstation.sourceforge.net/wiki/index.php/ThIndex
-	  http://pxes.sourceforge.net/howtos/ms_only_environment/
-	  http://pxes.sourceforge.net/readme.html
-	  http://www.microsoft.com/technet/prodtechnol/windows2000serv/deploy/depopt/remoteos.mspx
-	  http://www.microsoft.com/technet/technetmag/issues/2006/10/WindowsPE/default.aspx
-	  http://www.microsoft.com/technet/prodtechnol/windows2000serv/howto/remoteos.mspx
-	  http://silent.gumph.org/content/4/7/071-diskless-windows-pxe.html
-	  http://silent.gumph.org/content/4/7/072-diskless-windows-pxe.html
-	  http://silent.gumph.org/content/4/7/073-diskless-windows-pxe.html
-	  http://www.kegel.com/linux/pxe.html
-	  http://www.2x.com/pxes/
-	  http://thinstation.sourceforge.net/comprehensive_win_inst_guide.html
-	  http://linuxgazette.net/issue93/levkovich.html
-	  http://www.wilisystem.com/
-	  http://www.programurl.com/software/boot-services.htm
+        - PXE
+          http://thinstation.sourceforge.net/wiki/index.php/ThIndex
+          http://pxes.sourceforge.net/howtos/ms_only_environment/
+          http://pxes.sourceforge.net/readme.html
+          http://www.microsoft.com/technet/prodtechnol/windows2000serv/deploy/depopt/remoteos.mspx
+          http://www.microsoft.com/technet/technetmag/issues/2006/10/WindowsPE/default.aspx
+          http://www.microsoft.com/technet/prodtechnol/windows2000serv/howto/remoteos.mspx
+          http://silent.gumph.org/content/4/7/071-diskless-windows-pxe.html
+          http://silent.gumph.org/content/4/7/072-diskless-windows-pxe.html
+          http://silent.gumph.org/content/4/7/073-diskless-windows-pxe.html
+          http://www.kegel.com/linux/pxe.html
+          http://www.2x.com/pxes/
+          http://thinstation.sourceforge.net/comprehensive_win_inst_guide.html
+          http://linuxgazette.net/issue93/levkovich.html
+          http://www.wilisystem.com/
+          http://www.programurl.com/software/boot-services.htm
 
-	- FAQ
-	  http://winfaq.msterminalservices.org/faqs.cfm?category=2&amp;sortby=date
+        - FAQ
+          http://winfaq.msterminalservices.org/faqs.cfm?category=2&amp;sortby=date
 
 
 
 * kapasite
-	- sunucu
-		RAM (sistem)	: 256 MB
-		RAM (kullanıcı)	: 20 MB/kullanıcı
+        - sunucu
+                RAM (sistem)    : 256 MB
+                RAM (kullanıcı) : 20 MB/kullanıcı
 
-	- istemci
-		işlemci		: PI 
-		RAM		: 64 MB
+        - istemci
+                işlemci         : PI
+                RAM             : 64 MB
 
-	- örnek sistem
-		PIII 450MHz
-		1 GB RAM
-		Azami 25 yüklü kullanıcı
-		Azami 35 ortalama kullanıcı
-		Azami 200 veri giren operatör
+        - örnek sistem
+                PIII 450MHz
+                1 GB RAM
+                Azami 25 yüklü kullanıcı
+                Azami 35 ortalama kullanıcı
+                Azami 200 veri giren operatör
 
 
 
 * kurulum aşamaları
 
-	+---------------+         +-----------+
-	| W2K3 Terminal |         | GNU/Linux |
-	|    Server     |---------|    LTSP   |
-	|               |         |           |
-	+---------------+         +-----------+
+        +---------------+         +-----------+
+        | W2K3 Terminal |         | GNU/Linux |
+        |    Server     |---------|    LTSP   |
+        |               |         |           |
+        +---------------+         +-----------+
                 |                       |
- 	        |                       |
-		|                       |
+                |                       |
+                |                       |
           +------------+          +----------+
           | yerel ağ   |          |          |
           |   thin     |          | Internet |
@@ -77,92 +77,92 @@
           +------------+          +----------+
 
 
-	- Sunucuda yapılacak işlerin tesbit edilmesi
-		. Yazılım geliştirme
-		. Makine tasarımı
-		. Ofis otomasyonu
-		. Muhasebe
+        - Sunucuda yapılacak işlerin tesbit edilmesi
+                . Yazılım geliştirme
+                . Makine tasarımı
+                . Ofis otomasyonu
+                . Muhasebe
 
-	- Sunucuya yüklenecek uygulama yazılımlarının tesbit edilmesi
-		. Delphi
-		. Solidworks
-		. MS Office
-		. Muhasebe ?
-		. Şirket için geliştirilmiş özel yazılımlar
+        - Sunucuya yüklenecek uygulama yazılımlarının tesbit edilmesi
+                . Delphi
+                . Solidworks
+                . MS Office
+                . Muhasebe ?
+                . Şirket için geliştirilmiş özel yazılımlar
 
-	- Sunucuya yüklenecek sunucu yazılımlarının tesbiti
-		. Windows Terminal Services
-		. DNS server ? (PXE istiyorsa kurulsun)
-		. DHCP server ? (PXE istiyorsa kurulsun)
-		. TFTP server ? (PXE istiyorsa kurulsun)
-		. Web server ? (Terminal services, web üzerinden çalıştırılmayacaksa gerek yok)
-		. File server ? (Dosya alışverişi fiziksel medya ile olacaksa gerek yok)
-		. MS SQL Server ? (ayrı makineye de olabilir)
-		. Print server
-		. Fax server ? (sunucuya modem bağlanması güvenlik sorunu yaratabilir)
+        - Sunucuya yüklenecek sunucu yazılımlarının tesbiti
+                . Windows Terminal Services
+                . DNS server ? (PXE istiyorsa kurulsun)
+                . DHCP server ? (PXE istiyorsa kurulsun)
+                . TFTP server ? (PXE istiyorsa kurulsun)
+                . Web server ? (Terminal services, web üzerinden çalıştırılmayacaksa gerek yok)
+                . File server ? (Dosya alışverişi fiziksel medya ile olacaksa gerek yok)
+                . MS SQL Server ? (ayrı makineye de olabilir)
+                . Print server
+                . Fax server ? (sunucuya modem bağlanması güvenlik sorunu yaratabilir)
 
-	- Windows Terminal Services kurulması
+        - Windows Terminal Services kurulması
 
-	- Test kullanıcısının oluşturulması
+        - Test kullanıcısının oluşturulması
 
-	- Windows XP makineden bağlantının test edilmesi
+        - Windows XP makineden bağlantının test edilmesi
 
-	- GNU/Linux'tan rdesktop ile test edilmesi
+        - GNU/Linux'tan rdesktop ile test edilmesi
 
-	- disket veya CD ile boot denemesi
+        - disket veya CD ile boot denemesi
 
-	- PXE'den boot için ayarların yapılması ve test edilmesi
+        - PXE'den boot için ayarların yapılması ve test edilmesi
 
-	- Uygulamama yazılımlarının çalışabilirliklerinin test edilmesi
+        - Uygulamama yazılımlarının çalışabilirliklerinin test edilmesi
 
-	- Performans testlerinin yapılması
+        - Performans testlerinin yapılması
 
-	- Bütün kullanıcı hesaplarının oluşturulması
+        - Bütün kullanıcı hesaplarının oluşturulması
 
-	- Kullanıcılara, sadece terminal server üzerindne bağlanma yetkisinin verilmesi
-	  Makine başından veya bir başka makine ile ağdan bağlanmak yasaklanacak
+        - Kullanıcılara, sadece terminal server üzerindne bağlanma yetkisinin verilmesi
+          Makine başından veya bir başka makine ile ağdan bağlanmak yasaklanacak
 
-	- Kullanıcıların yerel işletim sistemlerini silmeden geçişin 1. aşamasının tamamlanması
-	
-	- Internet bağlantılarında kullanılacak sunucu makinenin hazırlanması
-	
-	- Internet üzerinden yapılacak işlerin test edilmesi
-		. Web sörf
-		. e-mail
-		. dosya alış-verişi
-		. MSN Messenger
-		
-	- Terminal kullanıcılarının ve özel kullanıcıların tesbiti
-	  Özel kullanıcıların, kendi sabitdiskleri ve makinelerinde yüklü işletim sistemleri olacak
-	  PXE desteği olmayan makineler için boot CD'si hazırlanacak
+        - Kullanıcıların yerel işletim sistemlerini silmeden geçişin 1. aşamasının tamamlanması
 
-	- Yerel donanımın toplanması
-		. sabit diskler
-		. CDROM sürücüler
-		. Disket sürücüler
-		. Fazla RAM modulleri
+        - Internet bağlantılarında kullanılacak sunucu makinenin hazırlanması
+
+        - Internet üzerinden yapılacak işlerin test edilmesi
+                . Web sörf
+                . e-mail
+                . dosya alış-verişi
+                . MSN Messenger
+
+        - Terminal kullanıcılarının ve özel kullanıcıların tesbiti
+          Özel kullanıcıların, kendi sabitdiskleri ve makinelerinde yüklü işletim sistemleri olacak
+          PXE desteği olmayan makineler için boot CD'si hazırlanacak
+
+        - Yerel donanımın toplanması
+                . sabit diskler
+                . CDROM sürücüler
+                . Disket sürücüler
+                . Fazla RAM modulleri
 
 
 
 * dezavantajları
-	- istemciler, sunucu kaynaklarını kullanıyor
-	- Windows 2003 kaç kullanıcılıysa o kadar oturum açılabilir.
-	- ölçekleme sorunu var. kullanıcı adedi çoğaldıkca terminal server sayısını arttırmak gerekecek
-	- Güvenlik sebebiyle, Internet'e çıkışların bu makine üzerinden yapılmaması ve 
-	  sisteme dosya giriş-çıkışlarının kontrollü bir noktadan yapılması gerekiyor. 
-	  Bazı işlerde bu, kullanım zorluğuna neden olabilir. 
-	- Yazılan yazılımların farklı ortamlarda (örneğin Windows XP'de) test edilmesi 
-	  için ayrı makineye ihtiyaç var
-	- onaylı olmayan yazıcı sürücülerinde muhtemelen sorun çıkarıyor
-	- lisansız kullanıcılar bağlanamaz (120 gün bağlanabiliyor)
+        - istemciler, sunucu kaynaklarını kullanıyor
+        - Windows 2003 kaç kullanıcılıysa o kadar oturum açılabilir.
+        - ölçekleme sorunu var. kullanıcı adedi çoğaldıkca terminal server sayısını arttırmak gerekecek
+        - Güvenlik sebebiyle, Internet'e çıkışların bu makine üzerinden yapılmaması ve
+          sisteme dosya giriş-çıkışlarının kontrollü bir noktadan yapılması gerekiyor.
+          Bazı işlerde bu, kullanım zorluğuna neden olabilir.
+        - Yazılan yazılımların farklı ortamlarda (örneğin Windows XP'de) test edilmesi
+          için ayrı makineye ihtiyaç var
+        - onaylı olmayan yazıcı sürücülerinde muhtemelen sorun çıkarıyor
+        - lisansız kullanıcılar bağlanamaz (120 gün bağlanabiliyor)
 
 
 
 * avantajları
-	- merkezi bir noktadan yazılımlar yönetilecek
-	- izin verildigi taktirde her yerden, her makineden kullanıcılar kendi ortamına ulasabilecek
-	- istenildiği takdirde kullanıcı, kendi işletim sistemini ve sunucudaki işletim sistemini 
-	  aynı anda kullanabiliyor. Özel kullanıcılar için bu alternatif daha uygun
+        - merkezi bir noktadan yazılımlar yönetilecek
+        - izin verildigi taktirde her yerden, her makineden kullanıcılar kendi ortamına ulasabilecek
+        - istenildiği takdirde kullanıcı, kendi işletim sistemini ve sunucudaki işletim sistemini
+          aynı anda kullanabiliyor. Özel kullanıcılar için bu alternatif daha uygun
 
 </code></pre>
 </body>

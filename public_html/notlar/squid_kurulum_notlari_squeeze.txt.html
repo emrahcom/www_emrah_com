@@ -13,476 +13,476 @@ Squeeze için Squid + SquidGuard Kurulum Notları
 
 - shorewall yüklenecek
 
-	. aptitude install shorewall
-		-&gt; iptables
-	. /usr/share/doc/shorewall/examples/ altında örnek ayar dosyaları var
+        . aptitude install shorewall
+                -&gt; iptables
+        . /usr/share/doc/shorewall/examples/ altında örnek ayar dosyaları var
 
-	. /usr/share/shorewall/ altında makrolar bulunmakta
+        . /usr/share/shorewall/ altında makrolar bulunmakta
 
-	. /etc/shorewall/interfaces
-		#ZONE   INTERFACE       BROADCAST       OPTIONS
-		net     eth0            detect          tcpflags,nosmurfs,routefilter,logmartians
-		loc     eth1            detect          tcpflags,nosmurfs,routefilter,logmartians,dhcp
+        . /etc/shorewall/interfaces
+                #ZONE   INTERFACE       BROADCAST       OPTIONS
+                net     eth0            detect          tcpflags,nosmurfs,routefilter,logmartians
+                loc     eth1            detect          tcpflags,nosmurfs,routefilter,logmartians,dhcp
 
-	. /etc/shorewall/masq
-		#INTERFACE              SOURCE          ADDRESS         PROTO   PORT(S) IPSEC   MARK
-		eth0                    10.0.0.0/8,\
-		                        169.254.0.0/16,\
-		                        172.16.0.0/12,\
-		                        192.168.0.0/16
+        . /etc/shorewall/masq
+                #INTERFACE              SOURCE          ADDRESS         PROTO   PORT(S) IPSEC   MARK
+                eth0                    10.0.0.0/8,\
+                                        169.254.0.0/16,\
+                                        172.16.0.0/12,\
+                                        192.168.0.0/16
 
-	. /etc/shorewall/policy
-		#SOURCE         DEST            POLICY          LOG LEVEL       LIMIT:BURST
-		$FW             net             ACCEPT
-		loc             net             REJECT          info
-		net             all             DROP            info
-		# THE FOLLOWING POLICY MUST BE LAST
-		all             all             REJECT          info
+        . /etc/shorewall/policy
+                #SOURCE         DEST            POLICY          LOG LEVEL       LIMIT:BURST
+                $FW             net             ACCEPT
+                loc             net             REJECT          info
+                net             all             DROP            info
+                # THE FOLLOWING POLICY MUST BE LAST
+                all             all             REJECT          info
 
-	. /etc/shorewall/routestopped
-		#INTERFACE      HOST(S)                  OPTIONS
-		eth1            -
+        . /etc/shorewall/routestopped
+                #INTERFACE      HOST(S)                  OPTIONS
+                eth1            -
 
-	. /etc/shorewall/shorewall.conf
-		IP_FORWARDING=Yes
-		ADD_SNAT_ALIASES=Yes
+        . /etc/shorewall/shorewall.conf
+                IP_FORWARDING=Yes
+                ADD_SNAT_ALIASES=Yes
 
-	. /etc/shorewall/zones
-		#ZONE   TYPE    OPTIONS                 IN                      OUT
-		#                                       OPTIONS                 OPTIONS
-		fw      firewall
-		net     ipv4
-		loc     ipv4
+        . /etc/shorewall/zones
+                #ZONE   TYPE    OPTIONS                 IN                      OUT
+                #                                       OPTIONS                 OPTIONS
+                fw      firewall
+                net     ipv4
+                loc     ipv4
 
-	. /etc/shorewall/rules
-		#ACTION         	SOURCE          DEST            PROTO   DEST    SOURCE          ORIGINAL        RATE            USER/   MARK
-		# ------------------------------------------------------------------
-		# firewall -&gt;
-		ACCEPT          	$FW             loc             icmp
-		ACCEPT          	$FW             net             icmp
-		DNS(ACCEPT)     	$FW             net
-		# ------------------------------------------------------------------
-		# local -&gt; firewall
-		Ping(ACCEPT)    	loc             $FW
-		DNS(ACCEPT)     	loc             $FW
-		HTTP(ACCEPT)    	loc             $FW
-		SSH(ACCEPT)     	loc             $FW
-		# dhcp
-		ACCEPT          	loc             $FW             udp     67:68
-		# ssh
-		ACCEPT          	loc             $FW             tcp     10022
-		# squid
-		ACCEPT          	loc             $FW             tcp     3128
-		# transparent proxy
-		REDIRECT        	loc             3128            tcp     80      -               !10.0.0.1
-		# ------------------------------------------------------------------
-		# local -&gt; internet (izinli protokol bile olsa engellenen adresler)
-		# facebook
-		REJECT:info             loc             net:66.220.144.0/20
-		REJECT:info             loc             net:69.63.176.0/20
-		# tunnel
-		REJECT:info             loc             net:64.20.60.99
-		REJECT:info             loc             net:67.159.1.17
-		REJECT:info             loc             net:67.159.12.3
-		REJECT:info             loc             net:64.20.60.106
-		REJECT:info             loc             net:67.159.19.11
-		REJECT:info             loc             net:67.159.45.53
-		REJECT:info             loc             net:67.159.46.12
-		REJECT:info             loc             net:67.159.47.43
-		REJECT:info             loc             net:67.159.56.86
-		REJECT:info             loc             net:69.28.217.10
-		REJECT:info             loc             net:74.54.82.151
-		REJECT:info             loc             net:74.54.82.243
-		REJECT:info             loc             net:74.63.107.46
-		REJECT:info             loc             net:74.63.75.132
-		REJECT:info             loc             net:74.63.75.133
-		REJECT:info             loc             net:74.63.93.149
-		REJECT:info             loc             net:208.87.33.151
-		REJECT:info             loc             net:63.119.44.197
-		REJECT:info             loc             net:66.116.109.44
-		REJECT:info             loc             net:67.159.47.205
-		REJECT:info             loc             net:67.159.51.158
-		REJECT:info             loc             net:69.64.147.211
-		REJECT:info             loc             net:216.240.187.103
-		# ------------------------------------------------------------------
-		# local -&gt; internet
-		Ping(ACCEPT)    	loc             net
-		DNS(ACCEPT)     	loc             net
-		FTP(ACCEPT)     	loc             net
-		JabberPlain(ACCEPT)    	loc             net
-		JabberSecure(ACCEPT)   	loc             net
-		HTTP(ACCEPT)    	loc             net
-		#HTTPS(ACCEPT)    	loc             net
-		Mail(ACCEPT)    	loc             net
-		NTP(ACCEPT)     	loc             net
-		POP3(ACCEPT)    	loc             net
-		POP3S(ACCEPT)   	loc             net
-		RDP(ACCEPT)   		loc             net
-		SSH(ACCEPT)     	loc             net
-		VNC(ACCEPT)     	loc             net
-		# MSN Messenger
-		ACCEPT			loc		net		tcp	1863
-		# MSN Messenger Voice
-		ACCEPT			loc		net		tcp	6901
-		ACCEPT			loc		net		udp	6901
-		# ------------------------------------------------------------------
-		# local -&gt; internet  (HTTPS icin izinli adresler)
-		# amazon
-		HTTPS(ACCEPT)           loc             net:75.101.128.0/17
-		HTTPS(ACCEPT)           loc             net:174.129.0.0/16
-		HTTPS(ACCEPT)           loc             net:184.72.0.0/15
-		# akamai
-		HTTPS(ACCEPT)           loc             net:2.16.0.0/13
-		HTTPS(ACCEPT)           loc             net:88.221.48.0/22
-		HTTPS(ACCEPT)           loc             net:88.221.200.0-88.221.207.255
-		HTTPS(ACCEPT)           loc             net:92.122.0.0-92.123.255.255
-		HTTPS(ACCEPT)           loc             net:95.100.176.0-95.100.191.255
-		HTTPS(ACCEPT)           loc             net:184.84.0.0/14
-		# adobe
-		HTTPS(ACCEPT)           loc             net:192.150.14.0/24
-		# apple
-		HTTPS(ACCEPT)           loc             net:17.0.0.0/8                                                  
-		# facebook
-		#HTTPS(ACCEPT)          loc             net:69.63.176.0/20
-		#HTTPS(ACCEPT)          loc             net:66.220.144.0/20
-		# google / gmail
-		HTTPS(ACCEPT)           loc             net:66.102.0.0/20
-		HTTPS(ACCEPT)           loc             net:74.125.0.0/16
-		HTTPS(ACCEPT)           loc             net:72.14.192.0/18
-		HTTPS(ACCEPT)           loc             net:209.85.128.0/17
-		# microsoft / msn
-		HTTPS(ACCEPT)           loc             net:111.221.16.0-111.221.31.255
-		HTTPS(ACCEPT)           loc             net:65.52.0.0/14
-		HTTPS(ACCEPT)           loc             net:64.4.0.0/18
-		HTTPS(ACCEPT)           loc             net:94.245.64.0-94.245.127.255
-		HTTPS(ACCEPT)           loc             net:202.89.224.0-202.89.239.255
-		HTTPS(ACCEPT)           loc             net:207.46.0.0/16
-		HTTPS(ACCEPT)           loc             net:213.199.160.0-213.199.191.255
-		# mozilla
-		HTTPS(ACCEPT)           loc             net:63.245.208.0/20
-		# opendns
-		HTTPS(ACCEPT)           loc             net:67.215.64.0/19
-		# rapidshare
-		#HTTPS(ACCEPT)           loc             net:80.239.128.0/19
-		#HTTPS(ACCEPT)           loc             net:195.122.128.0/18
-		# Symantec
-		HTTPS(ACCEPT)           loc             net:143.127.0.0/16
-		HTTPS(ACCEPT)           loc             net:166.98.0.0/16
-		# verisign
-		HTTPS(ACCEPT)           loc             net:69.58.176.0/20
-		# yahoo
-		HTTPS(ACCEPT)           loc             net:69.147.64.0-69.147.127.255
-		HTTPS(ACCEPT)           loc             net:217.163.20.0/23
-		# akbank
-		HTTPS(ACCEPT)           loc             net:217.169.192.0-217.169.199.255
-		# bankasya
-		HTTPS(ACCEPT)           loc             net:212.252.202.0/24
-		# ecod (elektronik belge dagitim)
-		HTTPS(ACCEPT)           loc             net:193.201.136.0/22
-		# finansbank
-		HTTPS(ACCEPT)           loc             net:62.18.64.0/24
-		HTTPS(ACCEPT)           loc             net:62.18.68.0/24
-		HTTPS(ACCEPT)           loc             net:62.18.72.0/24
-		HTTPS(ACCEPT)           loc             net:62.108.64.0/24
-		# garanti
-		HTTPS(ACCEPT)           loc             net:194.29.208.0-194.29.215.255
-		# halkbank
-		HTTPS(ACCEPT)           loc             net:193.108.213.0/24
-		# hsbc
-		HTTPS(ACCEPT)           loc             net:212.127.96.0/19
-		# hepsiburada
-		HTTPS(ACCEPT)           loc             net:193.28.225.0                                                
-		# ing bank
-		HTTPS(ACCEPT)           loc             net:85.158.100.0-85.158.103.255
-		# isbank
-		HTTPS(ACCEPT)           loc             net:213.161.144.64-213.161.144.127
-		# koc.net
-		HTTPS(ACCEPT)           loc             net:195.87.0.0/16
-		HTTPS(ACCEPT)           loc             net:81.8.0.0/17
-		# kuveytturk
-		HTTPS(ACCEPT)           loc             net:91.208.199.0/24
-		# mynet
-		#HTTPS(ACCEPT)          loc             net:212.101.96.0/19
-		# ptt
-		HTTPS(ACCEPT)           loc             net:212.175.128.0/17
-		# sosyal guvenlik kurumu
-		HTTPS(ACCEPT)           loc             net:195.245.227.0/24
-		# teb (adsl fatura)
-		HTTPS(ACCEPT)           loc             net:213.148.64.0-213.148.71.255
-		# turkiye finans
-		HTTPS(ACCEPT)           loc             net:77.72.184.0/24
-		# turktelekom
-		HTTPS(ACCEPT)           loc             net:88.255.51.144-88.255.51.159
-		# vakifbank
-		HTTPS(ACCEPT)           loc             net:195.142.246.0-195.142.247.255
-		# yapikredi
-		HTTPS(ACCEPT)           loc             net:193.254.228.0-193.254.229.255
-		# ------------------------------------------------------------------
-		# internet -&gt; firewall
-		Ping(DROP)      	net             $FW
-		SSH(ACCEPT)     	net             $FW
-		# ssh
-		ACCEPT          	net             $FW             tcp     10022
-		# sarg
-		REDIRECT                net             80              tcp     10080
-		# ------------------------------------------------------------------
-		# internet -&gt; local
-		HTTP(ACCEPT)    	net             loc:10.0.0.101
-		HTTP(DNAT)      	net             loc:10.0.0.101
+        . /etc/shorewall/rules
+                #ACTION                 SOURCE          DEST            PROTO   DEST    SOURCE          ORIGINAL        RATE            USER/   MARK
+                # ------------------------------------------------------------------
+                # firewall -&gt;
+                ACCEPT                  $FW             loc             icmp
+                ACCEPT                  $FW             net             icmp
+                DNS(ACCEPT)             $FW             net
+                # ------------------------------------------------------------------
+                # local -&gt; firewall
+                Ping(ACCEPT)            loc             $FW
+                DNS(ACCEPT)             loc             $FW
+                HTTP(ACCEPT)            loc             $FW
+                SSH(ACCEPT)             loc             $FW
+                # dhcp
+                ACCEPT                  loc             $FW             udp     67:68
+                # ssh
+                ACCEPT                  loc             $FW             tcp     10022
+                # squid
+                ACCEPT                  loc             $FW             tcp     3128
+                # transparent proxy
+                REDIRECT                loc             3128            tcp     80      -               !10.0.0.1
+                # ------------------------------------------------------------------
+                # local -&gt; internet (izinli protokol bile olsa engellenen adresler)
+                # facebook
+                REJECT:info             loc             net:66.220.144.0/20
+                REJECT:info             loc             net:69.63.176.0/20
+                # tunnel
+                REJECT:info             loc             net:64.20.60.99
+                REJECT:info             loc             net:67.159.1.17
+                REJECT:info             loc             net:67.159.12.3
+                REJECT:info             loc             net:64.20.60.106
+                REJECT:info             loc             net:67.159.19.11
+                REJECT:info             loc             net:67.159.45.53
+                REJECT:info             loc             net:67.159.46.12
+                REJECT:info             loc             net:67.159.47.43
+                REJECT:info             loc             net:67.159.56.86
+                REJECT:info             loc             net:69.28.217.10
+                REJECT:info             loc             net:74.54.82.151
+                REJECT:info             loc             net:74.54.82.243
+                REJECT:info             loc             net:74.63.107.46
+                REJECT:info             loc             net:74.63.75.132
+                REJECT:info             loc             net:74.63.75.133
+                REJECT:info             loc             net:74.63.93.149
+                REJECT:info             loc             net:208.87.33.151
+                REJECT:info             loc             net:63.119.44.197
+                REJECT:info             loc             net:66.116.109.44
+                REJECT:info             loc             net:67.159.47.205
+                REJECT:info             loc             net:67.159.51.158
+                REJECT:info             loc             net:69.64.147.211
+                REJECT:info             loc             net:216.240.187.103
+                # ------------------------------------------------------------------
+                # local -&gt; internet
+                Ping(ACCEPT)            loc             net
+                DNS(ACCEPT)             loc             net
+                FTP(ACCEPT)             loc             net
+                JabberPlain(ACCEPT)     loc             net
+                JabberSecure(ACCEPT)    loc             net
+                HTTP(ACCEPT)            loc             net
+                #HTTPS(ACCEPT)          loc             net
+                Mail(ACCEPT)            loc             net
+                NTP(ACCEPT)             loc             net
+                POP3(ACCEPT)            loc             net
+                POP3S(ACCEPT)           loc             net
+                RDP(ACCEPT)             loc             net
+                SSH(ACCEPT)             loc             net
+                VNC(ACCEPT)             loc             net
+                # MSN Messenger
+                ACCEPT                  loc             net             tcp     1863
+                # MSN Messenger Voice
+                ACCEPT                  loc             net             tcp     6901
+                ACCEPT                  loc             net             udp     6901
+                # ------------------------------------------------------------------
+                # local -&gt; internet  (HTTPS icin izinli adresler)
+                # amazon
+                HTTPS(ACCEPT)           loc             net:75.101.128.0/17
+                HTTPS(ACCEPT)           loc             net:174.129.0.0/16
+                HTTPS(ACCEPT)           loc             net:184.72.0.0/15
+                # akamai
+                HTTPS(ACCEPT)           loc             net:2.16.0.0/13
+                HTTPS(ACCEPT)           loc             net:88.221.48.0/22
+                HTTPS(ACCEPT)           loc             net:88.221.200.0-88.221.207.255
+                HTTPS(ACCEPT)           loc             net:92.122.0.0-92.123.255.255
+                HTTPS(ACCEPT)           loc             net:95.100.176.0-95.100.191.255
+                HTTPS(ACCEPT)           loc             net:184.84.0.0/14
+                # adobe
+                HTTPS(ACCEPT)           loc             net:192.150.14.0/24
+                # apple
+                HTTPS(ACCEPT)           loc             net:17.0.0.0/8
+                # facebook
+                #HTTPS(ACCEPT)          loc             net:69.63.176.0/20
+                #HTTPS(ACCEPT)          loc             net:66.220.144.0/20
+                # google / gmail
+                HTTPS(ACCEPT)           loc             net:66.102.0.0/20
+                HTTPS(ACCEPT)           loc             net:74.125.0.0/16
+                HTTPS(ACCEPT)           loc             net:72.14.192.0/18
+                HTTPS(ACCEPT)           loc             net:209.85.128.0/17
+                # microsoft / msn
+                HTTPS(ACCEPT)           loc             net:111.221.16.0-111.221.31.255
+                HTTPS(ACCEPT)           loc             net:65.52.0.0/14
+                HTTPS(ACCEPT)           loc             net:64.4.0.0/18
+                HTTPS(ACCEPT)           loc             net:94.245.64.0-94.245.127.255
+                HTTPS(ACCEPT)           loc             net:202.89.224.0-202.89.239.255
+                HTTPS(ACCEPT)           loc             net:207.46.0.0/16
+                HTTPS(ACCEPT)           loc             net:213.199.160.0-213.199.191.255
+                # mozilla
+                HTTPS(ACCEPT)           loc             net:63.245.208.0/20
+                # opendns
+                HTTPS(ACCEPT)           loc             net:67.215.64.0/19
+                # rapidshare
+                #HTTPS(ACCEPT)           loc             net:80.239.128.0/19
+                #HTTPS(ACCEPT)           loc             net:195.122.128.0/18
+                # Symantec
+                HTTPS(ACCEPT)           loc             net:143.127.0.0/16
+                HTTPS(ACCEPT)           loc             net:166.98.0.0/16
+                # verisign
+                HTTPS(ACCEPT)           loc             net:69.58.176.0/20
+                # yahoo
+                HTTPS(ACCEPT)           loc             net:69.147.64.0-69.147.127.255
+                HTTPS(ACCEPT)           loc             net:217.163.20.0/23
+                # akbank
+                HTTPS(ACCEPT)           loc             net:217.169.192.0-217.169.199.255
+                # bankasya
+                HTTPS(ACCEPT)           loc             net:212.252.202.0/24
+                # ecod (elektronik belge dagitim)
+                HTTPS(ACCEPT)           loc             net:193.201.136.0/22
+                # finansbank
+                HTTPS(ACCEPT)           loc             net:62.18.64.0/24
+                HTTPS(ACCEPT)           loc             net:62.18.68.0/24
+                HTTPS(ACCEPT)           loc             net:62.18.72.0/24
+                HTTPS(ACCEPT)           loc             net:62.108.64.0/24
+                # garanti
+                HTTPS(ACCEPT)           loc             net:194.29.208.0-194.29.215.255
+                # halkbank
+                HTTPS(ACCEPT)           loc             net:193.108.213.0/24
+                # hsbc
+                HTTPS(ACCEPT)           loc             net:212.127.96.0/19
+                # hepsiburada
+                HTTPS(ACCEPT)           loc             net:193.28.225.0
+                # ing bank
+                HTTPS(ACCEPT)           loc             net:85.158.100.0-85.158.103.255
+                # isbank
+                HTTPS(ACCEPT)           loc             net:213.161.144.64-213.161.144.127
+                # koc.net
+                HTTPS(ACCEPT)           loc             net:195.87.0.0/16
+                HTTPS(ACCEPT)           loc             net:81.8.0.0/17
+                # kuveytturk
+                HTTPS(ACCEPT)           loc             net:91.208.199.0/24
+                # mynet
+                #HTTPS(ACCEPT)          loc             net:212.101.96.0/19
+                # ptt
+                HTTPS(ACCEPT)           loc             net:212.175.128.0/17
+                # sosyal guvenlik kurumu
+                HTTPS(ACCEPT)           loc             net:195.245.227.0/24
+                # teb (adsl fatura)
+                HTTPS(ACCEPT)           loc             net:213.148.64.0-213.148.71.255
+                # turkiye finans
+                HTTPS(ACCEPT)           loc             net:77.72.184.0/24
+                # turktelekom
+                HTTPS(ACCEPT)           loc             net:88.255.51.144-88.255.51.159
+                # vakifbank
+                HTTPS(ACCEPT)           loc             net:195.142.246.0-195.142.247.255
+                # yapikredi
+                HTTPS(ACCEPT)           loc             net:193.254.228.0-193.254.229.255
+                # ------------------------------------------------------------------
+                # internet -&gt; firewall
+                Ping(DROP)              net             $FW
+                SSH(ACCEPT)             net             $FW
+                # ssh
+                ACCEPT                  net             $FW             tcp     10022
+                # sarg
+                REDIRECT                net             80              tcp     10080
+                # ------------------------------------------------------------------
+                # internet -&gt; local
+                HTTP(ACCEPT)            net             loc:10.0.0.101
+                HTTP(DNAT)              net             loc:10.0.0.101
 
 
-	. /etc/default/shorewall
-		startup=1
+        . /etc/default/shorewall
+                startup=1
 
-	. /etc/init.d/shorewall restart
+        . /etc/init.d/shorewall restart
 
 
 
 - squid3 yüklenecek
 
-	. /etc/security/limits.conf
-		*              soft    nofile         8192
-		*              hard    nofile         8192
+        . /etc/security/limits.conf
+                *              soft    nofile         8192
+                *              hard    nofile         8192
 
-	. aptitude install squid3
-		-&gt; squid3-common squid-langpack libltd17
+        . aptitude install squid3
+                -&gt; squid3-common squid-langpack libltd17
 
-	. /etc/squid3/squid.conf
-		acl localnet src 10.0.0.0/8
-		acl localnet src 172.16.0.0/12
-		acl localnet src 192.168.0.0/16
+        . /etc/squid3/squid.conf
+                acl localnet src 10.0.0.0/8
+                acl localnet src 172.16.0.0/12
+                acl localnet src 192.168.0.0/16
 
-		http_access allow localnet
-		http_access allow localhost
+                http_access allow localnet
+                http_access allow localhost
 
-		# transparent olacaksa
-		http_port 3128 intercept
-	
+                # transparent olacaksa
+                http_port 3128 intercept
+
 
 
 - squidGuard yüklenecek
 
-	. aptitude install squidguard
-		-&gt; libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl liburi-perl libwww-perl
+        . aptitude install squidguard
+                -&gt; libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl liburi-perl libwww-perl
 
-	. blacklist
-		cd /var/lib/squidguard/db/
-		wget http://www.shallalist.de/Downloads/shallalist.tar.gz
-		tar zxf shallalist.tar.gz
-		cd BL/
-		mv * ../
-		cd ..
-		rm -rf BL/
-		mkdir whitelist
-		touch whitelist/domains
-		touch whitelist/urls
-		mkdir blacklist
-		touch blacklist/domains
-		touch blacklist/urls
-		touch blacklist/expressions
-		chown proxy: * -R
+        . blacklist
+                cd /var/lib/squidguard/db/
+                wget http://www.shallalist.de/Downloads/shallalist.tar.gz
+                tar zxf shallalist.tar.gz
+                cd BL/
+                mv * ../
+                cd ..
+                rm -rf BL/
+                mkdir whitelist
+                touch whitelist/domains
+                touch whitelist/urls
+                mkdir blacklist
+                touch blacklist/domains
+                touch blacklist/urls
+                touch blacklist/expressions
+                chown proxy: * -R
 
-	. /etc/squid/squidGuard.conf
-		dbhome /var/lib/squidguard/db
-		logdir /var/log/squid
+        . /etc/squid/squidGuard.conf
+                dbhome /var/lib/squidguard/db
+                logdir /var/log/squid
 
-		src admin {
-			ip              10.0.0.47
-		}
+                src admin {
+                        ip              10.0.0.47
+                }
 
-		dest whitelist {
-			domainlist      whitelist/domains
-			urllist         whitelist/urls
-		}
+                dest whitelist {
+                        domainlist      whitelist/domains
+                        urllist         whitelist/urls
+                }
 
-		dest blacklist {
-			domainlist      blacklist/domains
-			urllist         blacklist/urls
-			expressionlist  blacklist/expressions
-		}
+                dest blacklist {
+                        domainlist      blacklist/domains
+                        urllist         blacklist/urls
+                        expressionlist  blacklist/expressions
+                }
 
-		dest adv {
-			domainlist      adv/domains
-			urllist         adv/urls
-		}
+                dest adv {
+                        domainlist      adv/domains
+                        urllist         adv/urls
+                }
 
-		dest chat {
-			domainlist      chat/domains
-			urllist         chat/urls
-		}
+                dest chat {
+                        domainlist      chat/domains
+                        urllist         chat/urls
+                }
 
-		dest dating {
-			domainlist      dating/domains
-			urllist         dating/urls
-		}
+                dest dating {
+                        domainlist      dating/domains
+                        urllist         dating/urls
+                }
 
-		dest drugs {
-			domainlist      drugs/domains
-			urllist         drugs/urls
-		}
+                dest drugs {
+                        domainlist      drugs/domains
+                        urllist         drugs/urls
+                }
 
-		dest dynamic {
-			domainlist      dynamic/domains
-			urllist         dynamic/urls
-		}
+                dest dynamic {
+                        domainlist      dynamic/domains
+                        urllist         dynamic/urls
+                }
 
-		dest fortunetelling {
-			domainlist      fortunetelling/domains
-			urllist         fortunetelling/urls
-		}
+                dest fortunetelling {
+                        domainlist      fortunetelling/domains
+                        urllist         fortunetelling/urls
+                }
 
-		dest gamble {
-			domainlist      gamble/domains
-			urllist         gamble/urls
-		}
+                dest gamble {
+                        domainlist      gamble/domains
+                        urllist         gamble/urls
+                }
 
-		dest gamesmisc {
-			domainlist      hobby/games-misc/domains
-			urllist         hobby/games-misc/urls
-		}
+                dest gamesmisc {
+                        domainlist      hobby/games-misc/domains
+                        urllist         hobby/games-misc/urls
+                }
 
-		dest gamesonline {
-			domainlist      hobby/games-online/domains
-			urllist         hobby/games-online/urls
-		}
+                dest gamesonline {
+                        domainlist      hobby/games-online/domains
+                        urllist         hobby/games-online/urls
+                }
 
-		dest hacking {
-			domainlist      hacking/domains
-			urllist         hacking/urls
-		}
+                dest hacking {
+                        domainlist      hacking/domains
+                        urllist         hacking/urls
+                }
 
-		dest models {
-			domainlist      models/domains
-			urllist         models/urls
-		}
+                dest models {
+                        domainlist      models/domains
+                        urllist         models/urls
+                }
 
-		dest porn {
-			domainlist      porn/domains
-			urllist         porn/urls
-		}
+                dest porn {
+                        domainlist      porn/domains
+                        urllist         porn/urls
+                }
 
-		dest redirector {
-			domainlist      redirector/domains
-			urllist         redirector/urls
-		}
+                dest redirector {
+                        domainlist      redirector/domains
+                        urllist         redirector/urls
+                }
 
-		dest sex_education {
-			domainlist      sex/education/domains
-			urllist         sex/education/urls
-		}
+                dest sex_education {
+                        domainlist      sex/education/domains
+                        urllist         sex/education/urls
+                }
 
-		dest sex_lingerie {
-			domainlist      sex/lingerie/domains
-			urllist         sex/lingerie/urls
-		}
+                dest sex_lingerie {
+                        domainlist      sex/lingerie/domains
+                        urllist         sex/lingerie/urls
+                }
 
-		dest socialnet {
-			domainlist      socialnet/domains
-			urllist         socialnet/urls
-		}
+                dest socialnet {
+                        domainlist      socialnet/domains
+                        urllist         socialnet/urls
+                }
 
-		dest spyware {
-			domainlist      spyware/domains
-			urllist         spyware/urls
-		}
+                dest spyware {
+                        domainlist      spyware/domains
+                        urllist         spyware/urls
+                }
 
-		dest tracker {
-			domainlist      tracker/domains
-			urllist         tracker/urls
-		}
+                dest tracker {
+                        domainlist      tracker/domains
+                        urllist         tracker/urls
+                }
 
-		dest warez {
-			domainlist      warez/domains
-			urllist         warez/urls
-		}
+                dest warez {
+                        domainlist      warez/domains
+                        urllist         warez/urls
+                }
 
-		acl {
-			admin {
-				pass any
-			}
+                acl {
+                        admin {
+                                pass any
+                        }
 
-			default {
-				pass     whitelist !blacklist !adv !chat !dating !drugs !dynamic !fortunetelling !gamble !gamesonline !gamesmisc !hacking !models !porn !redirector !sex_education !sex_lingerie !socialnet !spyware !tracker !warez any
-				redirect http://www.google.com
-			}
-		}
-	
-
-	. /var/lib/squidguard/db/blacklist/domains
-		iddaa.com.tr
-		tr.msn.com
-
-	. /var/lib/squidguard/db/blacklist/urls
-		www.milliyet.com.tr/fotogaleri/
+                        default {
+                                pass     whitelist !blacklist !adv !chat !dating !drugs !dynamic !fortunetelling !gamble !gamesonline !gamesmisc !hacking !models !porn !redirector !sex_education !sex_lingerie !socialnet !spyware !tracker !warez any
+                                redirect http://www.google.com
+                        }
+                }
 
 
-	. veritabanını güncelleme/oluşturma
-		chown proxy: /var/log/squid
-		su proxy -c &quot;squidGuard -C all&quot;
-		
+        . /var/lib/squidguard/db/blacklist/domains
+                iddaa.com.tr
+                tr.msn.com
 
-	. /etc/squid3/squid.conf
-		url_rewrite_program /usr/bin/squidGuard -c /etc/squid/squidGuard.conf
+        . /var/lib/squidguard/db/blacklist/urls
+                www.milliyet.com.tr/fotogaleri/
 
-	. yeni ayarları aktif hale getirme
-		squid3 -k reconfigure
 
-	. her güncellemeden sonra
-		su proxy -c &quot;squidGuard -bC all&quot;; squid3 -k reconfigure
-		
+        . veritabanını güncelleme/oluşturma
+                chown proxy: /var/log/squid
+                su proxy -c &quot;squidGuard -C all&quot;
+
+
+        . /etc/squid3/squid.conf
+                url_rewrite_program /usr/bin/squidGuard -c /etc/squid/squidGuard.conf
+
+        . yeni ayarları aktif hale getirme
+                squid3 -k reconfigure
+
+        . her güncellemeden sonra
+                su proxy -c &quot;squidGuard -bC all&quot;; squid3 -k reconfigure
+
 
 
 - SquidGuard veritabanının düzenli güncellenmesi
-	
-	. proxy kullanıcısı için klasör ve programın hazırlanması
-		mkdir /home/proxy
-		cp blacklist_update_shalla.py /home/proxy/	# http://emrah.com/kodlar/blacklist_update_shalla.py.txt
-		chown proxy: /home/proxy -R
-		chmod 744 /home/proxy/blacklist_update_shalla.py
 
-	. crontab'a ekleme
-		/root/scripts/cron_blacklist.sh
-			#!/bin/sh
-			(su -l proxy -c /home/proxy/blacklist_update_shalla.py &amp;&amp; squid3 -k reconfigure) &amp;
+        . proxy kullanıcısı için klasör ve programın hazırlanması
+                mkdir /home/proxy
+                cp blacklist_update_shalla.py /home/proxy/      # http://emrah.com/kodlar/blacklist_update_shalla.py.txt
+                chown proxy: /home/proxy -R
+                chmod 744 /home/proxy/blacklist_update_shalla.py
 
-		/etc/crontab
-			07 5    * * 6   root    /root/scripts/cron_blacklist.sh &gt;/dev/null 2&gt;&amp;1
+        . crontab'a ekleme
+                /root/scripts/cron_blacklist.sh
+                        #!/bin/sh
+                        (su -l proxy -c /home/proxy/blacklist_update_shalla.py &amp;&amp; squid3 -k reconfigure) &amp;
 
-	. Shalla kara listeye kayıt eklemek için
-	  http://www.shallalist.de/submissions.html
+                /etc/crontab
+                        07 5    * * 6   root    /root/scripts/cron_blacklist.sh &gt;/dev/null 2&gt;&amp;1
+
+        . Shalla kara listeye kayıt eklemek için
+          http://www.shallalist.de/submissions.html
 
 
 - sarg yüklenecek
 
-	. /etc/apt/sources.list
-		deb http://backports.debian.org/debian-backports/  squeeze/backports  main
+        . /etc/apt/sources.list
+                deb http://backports.debian.org/debian-backports/  squeeze/backports  main
 
-	. aptitude update
+        . aptitude update
 
-	. aptitude install sarg
+        . aptitude install sarg
 
-	. /etc/sarg/sarg.conf
-		access_log /var/log/squid3/access.log
-		output_dir /var/www/sarg
+        . /etc/sarg/sarg.conf
+                access_log /var/log/squid3/access.log
+                output_dir /var/www/sarg
 
-	. /etc/sarg/sarg-reports.conf
-		       SARG=/usr/bin/sarg
-		     CONFIG=/etc/sarg/sarg.conf
-		    HTMLOUT=/var/www/sarg
-		  PAGETITLE=&quot;Access Reports on $(hostname)&quot;
-		    LOGOIMG=/sarg/images/sarg.png
-		   LOGOLINK=&quot;http://$(hostname)/&quot;
-		      DAILY=Daily
-		     WEEKLY=Weekly
-		    MONTHLY=Monthly
-		EXCLUDELOG1=&quot;SARG: No records found&quot;
-		EXCLUDELOG2=&quot;SARG: End&quot;
+        . /etc/sarg/sarg-reports.conf
+                       SARG=/usr/bin/sarg
+                     CONFIG=/etc/sarg/sarg.conf
+                    HTMLOUT=/var/www/sarg
+                  PAGETITLE=&quot;Access Reports on $(hostname)&quot;
+                    LOGOIMG=/sarg/images/sarg.png
+                   LOGOLINK=&quot;http://$(hostname)/&quot;
+                      DAILY=Daily
+                     WEEKLY=Weekly
+                    MONTHLY=Monthly
+                EXCLUDELOG1=&quot;SARG: No records found&quot;
+                EXCLUDELOG2=&quot;SARG: End&quot;
 
-	. /etc/crontab
-		00 08-22/1      * * *   root    sarg-reports today
+        . /etc/crontab
+                00 08-22/1      * * *   root    sarg-reports today
 
-	. web sunucu
-		Raporu görebilmek için lighttpd veya apache2 kurulabilir.
+        . web sunucu
+                Raporu görebilmek için lighttpd veya apache2 kurulabilir.
 </code></pre>
 </body>
 </html>

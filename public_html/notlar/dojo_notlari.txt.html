@@ -11,67 +11,67 @@ Dojo Notları
 ------------
 
 - Yükleme
-	&lt;head&gt;
-	...
-	&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js&quot;&gt;&lt;/script&gt;
-	...
+        &lt;head&gt;
+        ...
+        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js&quot;&gt;&lt;/script&gt;
+        ...
 
-	&lt;script&gt;
-		function init() {
-			alert(&quot;Dojo ready, version:&quot; + dojo.version);
-		}
+        &lt;script&gt;
+                function init() {
+                        alert(&quot;Dojo ready, version:&quot; + dojo.version);
+                }
 
-		dojo.ready(init);
-	&lt;/script&gt;
+                dojo.ready(init);
+        &lt;/script&gt;
 
-	...
-	&lt;/head&gt;
+        ...
+        &lt;/head&gt;
 
 
 
 - Belli aralıklarla çalışan fonksiyon
-	&lt;script&gt;
-		function repeater() {
-			dojo.byId(&quot;textbox1&quot;).innerHTML += &quot;1&quot;;
-		}
+        &lt;script&gt;
+                function repeater() {
+                        dojo.byId(&quot;textbox1&quot;).innerHTML += &quot;1&quot;;
+                }
 
-		function init() {
-			var interval = setInterval(repeater, 5000);
-		}
+                function init() {
+                        var interval = setInterval(repeater, 5000);
+                }
 
-		dojo.ready(init)
-	&lt;/script&gt;
+                dojo.ready(init)
+        &lt;/script&gt;
 
 
-	&lt;body&gt;
-		...
-		&lt;div id=&quot;textbox1&quot;&gt;1&lt;/div&gt;
-	&lt;/body&gt;
+        &lt;body&gt;
+                ...
+                &lt;div id=&quot;textbox1&quot;&gt;1&lt;/div&gt;
+        &lt;/body&gt;
 
 
 
 - Sunucudaki text dosyadan veriyi okuyup bir alana yazan fonksiyon
-	# HTML dosya içinde
+        # HTML dosya içinde
 
-		&lt;div id=&quot;node1&quot;&gt;&lt;/div&gt;
+                &lt;div id=&quot;node1&quot;&gt;&lt;/div&gt;
 
 
-	# Javascript kodu
-		
-		function update_node1() {
-			var node1 = dojo.byId(&quot;node1&quot;);
+        # Javascript kodu
 
-			var args = {    url: &quot;static/data.txt&quot;,
-					handleAs: &quot;text&quot;,
-					preventCache: true,
-					timeout: 3000,
-					load: function(data) {
-						node1.innerHTML = data; },
-					error: function() {}}
-			dojo.xhrGet(args); }
+                function update_node1() {
+                        var node1 = dojo.byId(&quot;node1&quot;);
 
-		function auto_update_node1() {
-			var interval = setInterval(update_node1, 1500); }
+                        var args = {    url: &quot;static/data.txt&quot;,
+                                        handleAs: &quot;text&quot;,
+                                        preventCache: true,
+                                        timeout: 3000,
+                                        load: function(data) {
+                                                node1.innerHTML = data; },
+                                        error: function() {}}
+                        dojo.xhrGet(args); }
+
+                function auto_update_node1() {
+                        var interval = setInterval(update_node1, 1500); }
 </code></pre>
 </body>
 </html>

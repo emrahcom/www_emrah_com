@@ -12,146 +12,146 @@ NETWORK NOTLARI
 
 - iproute
 
-	. link listesi
+        . link listesi
 
-  	  ip link list
-
-
-	. link bilgisi
-	
-	  ip link show eth0
+          ip link list
 
 
-	. linki açıp kapatma
+        . link bilgisi
 
-	  ip link set eth0 down
-	  ip link set eth0 up
-
-
-	. addr listesi
-
-	  ip addr list
+          ip link show eth0
 
 
-	. bir linkin adresi
+        . linki açıp kapatma
 
-	  ip addr show eth0
-
-
-	. bir linke adres ekleme
-
-	  ip addr add 192.168.2.10/24 dev eth0
+          ip link set eth0 down
+          ip link set eth0 up
 
 
-	. bir linke ait bütün ipv4 adreslerini silme
+        . addr listesi
 
-	  ip -4 addr flush label 'eth0'
-
-
-	. route listesi
-
-	  ip route show all
+          ip addr list
 
 
-	. bir IP adresine ait route'u görmek için
+        . bir linkin adresi
 
-	  ip route get 69.147.114.224
-
-
-	. belli bir IP grubu için route kaydı
-
-	  ip route show 192.168.100.0/24
+          ip addr show eth0
 
 
-	. kısa süre önce erişilen adreslerin route bilgisi
+        . bir linke adres ekleme
 
-	  ip route show cache
-
-
-	. route ekleme
-
-	  ip route add 0.0.0.0/0 via 10.0.0.1 [dev eth0]
+          ip addr add 192.168.2.10/24 dev eth0
 
 
-	. route silme
+        . bir linke ait bütün ipv4 adreslerini silme
 
-	  ip route del 0.0.0.0/0
-
-
-	. bütün route kayıtlarını silme
-
-	  ip route flush
+          ip -4 addr flush label 'eth0'
 
 
-	. ağdaki bağlantı kurmuş makinelerin listesi
+        . route listesi
 
-	  ip neigh list
-
-
-	. ağdaki bir makineye erişim durumu
-
-	  ip neigh show 192.168.1.23
+          ip route show all
 
 
-	. ARP tablosunda bir IP için olan kaydı silme
+        . bir IP adresine ait route'u görmek için
 
-	  ip -s neigh flush 192.168.1.23
-	  ip -s neigh flush all
-
-
-- netstat 
-
-	. route listesi
-
-	  netstat -r
+          ip route get 69.147.114.224
 
 
-	. mevcut tcp ve udp bağlantıları
-	
-	  netstat -taunp
+        . belli bir IP grubu için route kaydı
+
+          ip route show 192.168.100.0/24
+
+
+        . kısa süre önce erişilen adreslerin route bilgisi
+
+          ip route show cache
+
+
+        . route ekleme
+
+          ip route add 0.0.0.0/0 via 10.0.0.1 [dev eth0]
+
+
+        . route silme
+
+          ip route del 0.0.0.0/0
+
+
+        . bütün route kayıtlarını silme
+
+          ip route flush
+
+
+        . ağdaki bağlantı kurmuş makinelerin listesi
+
+          ip neigh list
+
+
+        . ağdaki bir makineye erişim durumu
+
+          ip neigh show 192.168.1.23
+
+
+        . ARP tablosunda bir IP için olan kaydı silme
+
+          ip -s neigh flush 192.168.1.23
+          ip -s neigh flush all
+
+
+- netstat
+
+        . route listesi
+
+          netstat -r
+
+
+        . mevcut tcp ve udp bağlantıları
+
+          netstat -taunp
 
 
 - tcpdump
 
-	. aptitude install tcpdump
+        . aptitude install tcpdump
 
-	. tcpdump
+        . tcpdump
 
-		-i eth0		arayüz belirtme
-		-n		adres ve portlari isme çevirme
-		-t		timestamp basma
-		-p		promiscuous moda geçme
-		-c 10		kaç paket alınıncaya kadar çalışacağını belirtme. belirtilmezse sürekl çalışır
-		-w dosya	alınan paketlerin hangi dosyaya yazılacağı
-		
-		host host_adi
-		dst host host_adi
-		src host host_adi
-		gateway host_adi
-		ether dst eth_adi
-		ether src eth_adi
-		ether host eth_adi
-		port port_no
-		src port port_no
-		dst port port_no
+                -i eth0         arayüz belirtme
+                -n              adres ve portlari isme çevirme
+                -t              timestamp basma
+                -p              promiscuous moda geçme
+                -c 10           kaç paket alınıncaya kadar çalışacağını belirtme. belirtilmezse sürekl çalışır
+                -w dosya        alınan paketlerin hangi dosyaya yazılacağı
+
+                host host_adi
+                dst host host_adi
+                src host host_adi
+                gateway host_adi
+                ether dst eth_adi
+                ether src eth_adi
+                ether host eth_adi
+                port port_no
+                src port port_no
+                dst port port_no
 
 
 - fping
-	. aptitude install fping
+        . aptitude install fping
 
-	. fping -c1 -g 10.0.0.0/8
-	  fping -c1 -g 192.168.1.0/24
+        . fping -c1 -g 10.0.0.0/8
+          fping -c1 -g 192.168.1.0/24
 
 - arping
   Layer 2'de çalışıyor. root olarak çalıştırılacak.
 
-	. aptitude install arping
+        . aptitude install arping
 
-	. arping -c1 192.168.1.50
-	  arping -c1 00:11:85:4c:01:01
+        . arping -c1 192.168.1.50
+          arping -c1 00:11:85:4c:01:01
 
-	# IP adresi çakışan MAC'ler
-	. arping -i eth0 -d 192.168.1.50
+        # IP adresi çakışan MAC'ler
+        . arping -i eth0 -d 192.168.1.50
 
 - SYN flood &amp; SYN cookie
   syncookie aktif hale getirince SYN backlog kuyrugu (tcp_max_syn_backlog)
@@ -159,39 +159,39 @@ NETWORK NOTLARI
   başlanır. SYN cookie gönderilirken kuyruk kullanılmadığı için kaynak
   tüketilmez.
 
-	. /etc/sysctl.conf
-		# SYN cookie aktif (default 0)
-		net.ipv4.tcp_syncookies=1
-		# SYN-ACK gondermek icin kac kere deneme yapilacagi (default 5)
-		net.ipv4.tcp_synack_retries=2
-		# TIME_WAIT durumundaki kaynaklar tekrar kullanilmaya calisilacak mi (default 0)
-		net.ipv4.tcp_tw_reuse=1
-		# TIME_WAIT durumunda ne kadar bekletilecegi (default 60)
-		net.ipv4.tcp_fin_timeout=15
+        . /etc/sysctl.conf
+                # SYN cookie aktif (default 0)
+                net.ipv4.tcp_syncookies=1
+                # SYN-ACK gondermek icin kac kere deneme yapilacagi (default 5)
+                net.ipv4.tcp_synack_retries=2
+                # TIME_WAIT durumundaki kaynaklar tekrar kullanilmaya calisilacak mi (default 0)
+                net.ipv4.tcp_tw_reuse=1
+                # TIME_WAIT durumunda ne kadar bekletilecegi (default 60)
+                net.ipv4.tcp_fin_timeout=15
 
-	. Değişikliği aktif hale getirme
-		sysctl -p
+        . Değişikliği aktif hale getirme
+                sysctl -p
 
-	. Değişiklik sonucunu görme
-		cat /proc/sys/net/ipv4/tcp_syncookies
+        . Değişiklik sonucunu görme
+                cat /proc/sys/net/ipv4/tcp_syncookies
 
-	. SYN kuyruk uzunluğu
-		cat /proc/sys/net/ipv4/tcp_max_syn_backlog
+        . SYN kuyruk uzunluğu
+                cat /proc/sys/net/ipv4/tcp_max_syn_backlog
 
-	. SYN-ACK göndermek için kaç kere deneme yapılacağı.
-		cat /proc/sys/net/ipv4/tcp_synack_retries
+        . SYN-ACK göndermek için kaç kere deneme yapılacağı.
+                cat /proc/sys/net/ipv4/tcp_synack_retries
 
-	
+
 - Network hızı
-	. nuttcp kurulumu
-		aptitude intall nuttcp
+        . nuttcp kurulumu
+                aptitude intall nuttcp
 
-	. Sunucuyu başlatmak
-		nuttcp -S
+        . Sunucuyu başlatmak
+                nuttcp -S
 
-	. İstemciden transferi başlatmak
-		nuttp sunucu_ip
-		nuttp -r sunucu_ip
+        . İstemciden transferi başlatmak
+                nuttp sunucu_ip
+                nuttp -r sunucu_ip
 </code></pre>
 </body>
 </html>

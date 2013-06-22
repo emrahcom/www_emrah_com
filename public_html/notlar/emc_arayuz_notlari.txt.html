@@ -15,52 +15,52 @@ Sürüm 2.3.4 için geçerli
 
 - Dil dosyalarının alınması
 
-	mkdir emctr
-	cd emctr
-	cp &tilde;/emc2/src/po/{README,axis.pot,rs274_err.pot,tcl.pot} .
+        mkdir emctr
+        cd emctr
+        cp &tilde;/emc2/src/po/{README,axis.pot,rs274_err.pot,tcl.pot} .
 
 
 - Dil dosyalarının klonlanması
 
-	cp axis.pot tr_TR_axis.po
-	cp rs274_err.pot tr_TR_rs274_err.po
-	cp tcl.pot tr_TR.po
+        cp axis.pot tr_TR_axis.po
+        cp rs274_err.pot tr_TR_rs274_err.po
+        cp tcl.pot tr_TR.po
 
 
 - Dil dosyalarının güncellenmesi
 
-	msgmerge -U tr_TR_axis.po &tilde;/emc2/src/po/axis.pot
-	msgmerge -U tr_TR_rs274_err.po &tilde;/emc2/src/po/rs274_err.pot
-	msgmerge -U tr_TR.po &tilde;/emc2/src/po/tcl.pot
+        msgmerge -U tr_TR_axis.po &tilde;/emc2/src/po/axis.pot
+        msgmerge -U tr_TR_rs274_err.po &tilde;/emc2/src/po/rs274_err.pot
+        msgmerge -U tr_TR.po &tilde;/emc2/src/po/tcl.pot
 
 
 - Dil dosyalarının düzenlenmesi
 
-	vim tr_TR_axis.po
-	vim tr_TR_rs274_err.po
-	vim tr_TR.po
+        vim tr_TR_axis.po
+        vim tr_TR_rs274_err.po
+        vim tr_TR.po
 
 
 - Dil dosyalarının sisteme eklenmesi
 
-	cp tr_TR* &tilde;/emc2/src/po/
-	cd &tilde;/emc2/src/po/
-	make
+        cp tr_TR* &tilde;/emc2/src/po/
+        cd &tilde;/emc2/src/po/
+        make
 
 
 - Axis'in özelleştirilmesi
-	cp &tilde;/emc2/bin/axis myaxis
-	cp &tilde;/emc2/share/axis/tcl/axis.tcl myaxis.tcl
-	vim myaxis
-		117: # nf.source_lib_tcl(root_window,&quot;axis.tcl&quot;)
-		118: nf.source_lib_tcl(root_window,&quot;myaxis.tcl&quot;)
-	vim myaxis.tcl
-		...
-		...
-	cp myaxis &tilde;/emc2/bin/
-	cp myaxis.tcl &tilde;/emc2/share/axis/tcl/
-	vim myconfig.ini
-		DISPLAY = myaxis
+        cp &tilde;/emc2/bin/axis myaxis
+        cp &tilde;/emc2/share/axis/tcl/axis.tcl myaxis.tcl
+        vim myaxis
+                117: # nf.source_lib_tcl(root_window,&quot;axis.tcl&quot;)
+                118: nf.source_lib_tcl(root_window,&quot;myaxis.tcl&quot;)
+        vim myaxis.tcl
+                ...
+                ...
+        cp myaxis &tilde;/emc2/bin/
+        cp myaxis.tcl &tilde;/emc2/share/axis/tcl/
+        vim myconfig.ini
+                DISPLAY = myaxis
 </code></pre>
 </body>
 </html>

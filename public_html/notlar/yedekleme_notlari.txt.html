@@ -29,24 +29,24 @@ echo '' &gt;&gt; $log
 
 # dosya ve klasorlerin yedeklenmesi
 tar czf /root/yedekleme/yedek_fs_dosya_adi_$tarih.tar.gz \
-	/home/kullanici/mail \
-	/home/kullanici/dokumanlar \
-	/home/kullanici/projeler \
-	/home/kullanici/.procmailrc \
-	/home/kullanici/.fetchmailrc \
-	/home/kullanici/.muttrc \
-	/home/kullanici/.ssh \
-	/home/kullanici/.vimrc \
-	/home/kullanici/.xchat2 \
-	2&gt;&amp;1 | grep -v 'Removing leading' &gt;&gt; $log
+        /home/kullanici/mail \
+        /home/kullanici/dokumanlar \
+        /home/kullanici/projeler \
+        /home/kullanici/.procmailrc \
+        /home/kullanici/.fetchmailrc \
+        /home/kullanici/.muttrc \
+        /home/kullanici/.ssh \
+        /home/kullanici/.vimrc \
+        /home/kullanici/.xchat2 \
+        2&gt;&amp;1 | grep -v 'Removing leading' &gt;&gt; $log
 
 
 # mysql veritabanlarinin yedeklenmesi
 /etc/init.d/mysql stop &gt;&gt; $log &amp;&amp; \
-	tar czf /root/yedekleme/yedek_db_dosya_adi_$tarih.tar.gz \
-		/var/lib/mysql/veritabani_1 \
-		/var/lib/mysql/veritabani_2 \
-		2&gt;&amp;1 | grep -v 'Removing leading' &gt;&gt; $log
+        tar czf /root/yedekleme/yedek_db_dosya_adi_$tarih.tar.gz \
+                /var/lib/mysql/veritabani_1 \
+                /var/lib/mysql/veritabani_2 \
+                2&gt;&amp;1 | grep -v 'Removing leading' &gt;&gt; $log
 sleep 5
 /etc/init.d/mysql start &gt;&gt; $log
 
@@ -54,11 +54,11 @@ sleep 5
 # samba paylasimlarinin yedeklenmesi
 mount -t smbfs -o username=kullanici,password=parola //192.168.0.123/klasor /root/yedekleme/smb
 tar czf /root/yedekleme/yedek_smb_dosya_adi_$tarih.tar.gz \
-	/root/yedekleme/smb/klasor_1 \
-	/root/yedekleme/smb/klasor_2 \
-	/root/yedekleme/smb/dosya_1 \
-	/root/yedekleme/smb/dosya_2 \
-	2&gt;&amp;1 | grep -v 'Removing leading' &gt;&gt; $log
+        /root/yedekleme/smb/klasor_1 \
+        /root/yedekleme/smb/klasor_2 \
+        /root/yedekleme/smb/dosya_1 \
+        /root/yedekleme/smb/dosya_2 \
+        2&gt;&amp;1 | grep -v 'Removing leading' &gt;&gt; $log
 umount /root/yedekleme/smb
 
 echo '--------------------------' &gt;&gt; $log
@@ -70,28 +70,28 @@ echo '--------------------------' &gt;&gt; $log
 -----------------------------------
 
 - dosya biçimi (en sonda 2 boş satır bırak)
-# m h dom mon dow user	command
-20 3	* * *	root    /root/yedekleme/cron_yedekleme.sh
+# m h dom mon dow user  command
+20 3    * * *   root    /root/yedekleme/cron_yedekleme.sh
 
-	- Ayın belli günleri yedekleme yapmak için dom (day of month) bölümüne günler [1-31] yazılır. 
-		Örnek: 3,12,21,30
-	- Haftanın belli günleri yedekleme yapmak için dow (day of week) bölümüne günler [0-6] yazılır. 
-		Örnek: 0,3,5
-	- Bir aralığı belirtmek için - kullanılır. 
-		Örnek: 3-8
-	- Her x'de bir tekrarlatmak için
-		Örnek: Her 5 dakikada bir tekrarlatmak için dakika bölümüne
-			*/5
-	- Komutta sorun çıktığında e-mail uyarısı gelmemesi için komut sonuna
-		&gt;/dev/null 2&gt;&amp;1
+        - Ayın belli günleri yedekleme yapmak için dom (day of month) bölümüne günler [1-31] yazılır.
+                Örnek: 3,12,21,30
+        - Haftanın belli günleri yedekleme yapmak için dow (day of week) bölümüne günler [0-6] yazılır.
+                Örnek: 0,3,5
+        - Bir aralığı belirtmek için - kullanılır.
+                Örnek: 3-8
+        - Her x'de bir tekrarlatmak için
+                Örnek: Her 5 dakikada bir tekrarlatmak için dakika bölümüne
+                        */5
+        - Komutta sorun çıktığında e-mail uyarısı gelmemesi için komut sonuna
+                &gt;/dev/null 2&gt;&amp;1
 
 - crontab'da yapılan değişikliklerin etkili olmaya başlaması için
-	/etc/init.d/crontab restart
+        /etc/init.d/crontab restart
 
 - alternatif yöntem
-	- crontab -e komutu ile dosya düzenlenir
-	- crontab -l ile mevcut liste görülür
-	- crontab -r ile kullanıcının crontab dosyası silinir
+        - crontab -e komutu ile dosya düzenlenir
+        - crontab -l ile mevcut liste görülür
+        - crontab -r ile kullanıcının crontab dosyası silinir
 </code></pre>
 </body>
 </html>

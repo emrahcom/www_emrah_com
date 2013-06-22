@@ -11,7 +11,7 @@ Python Cheetah Notları
 ----------------------
 
 . Kurulacak paketler
-	python-cheetah
+        python-cheetah
 
 
 
@@ -26,15 +26,15 @@ from Cheetah.Template import Template
 WEB_TEMPLATES = '/home/emrah/web/templates'
 
 if __name__ == '__main__':
-	# Template icindeki degiskenlerin degerlerini belirle.
-	tmplist = { 'alan1'	: 5,
-		    'alan2'	: True,
-		    'alan3'	: ['mavi', 'kırmızı', 'yeşil'],
-		    'alan4'	: 'deger4'}
-	# Template dosyasina degerleri verip olusan ciktiyi al.
-	tmpl = Template(file=&quot;%s/test.tmpl&quot; % (WEB_TEMPLATES),
-			searchList=tmplist)
-	print('%s' % (tmpl))
+        # Template icindeki degiskenlerin degerlerini belirle.
+        tmplist = { 'alan1'     : 5,
+                    'alan2'     : True,
+                    'alan3'     : ['mavi', 'kırmızı', 'yeşil'],
+                    'alan4'     : 'deger4'}
+        # Template dosyasina degerleri verip olusan ciktiyi al.
+        tmpl = Template(file=&quot;%s/test.tmpl&quot; % (WEB_TEMPLATES),
+                        searchList=tmplist)
+        print('%s' % (tmpl))
 
 
 
@@ -45,18 +45,18 @@ if __name__ == '__main__':
 #include &quot;header.html&quot;
 &lt;body&gt;
 #if $alan2
-	&lt;b&gt;True&lt;/b&gt;
+        &lt;b&gt;True&lt;/b&gt;
 #else
-	&lt;b&gt;False&lt;/b&gt;
+        &lt;b&gt;False&lt;/b&gt;
 #end if
 
 #for $renk in $alan3:
-	&lt;i&gt;${renk}&lt;/i&gt;
+        &lt;i&gt;${renk}&lt;/i&gt;
 #end for
 
 ## satir atlamadan
 #for $renk in $alan3:
-	&lt;i&gt;${renk}&lt;/i&gt;&amp;nbsp;#slurp
+        &lt;i&gt;${renk}&lt;/i&gt;&amp;nbsp;#slurp
 #end for
 
 #set veri4 = alan4

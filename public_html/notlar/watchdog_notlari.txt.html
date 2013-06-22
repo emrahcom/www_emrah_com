@@ -10,44 +10,44 @@
 WATCHDOG NOTLARI
 ----------------
 
-- yükleme 
-	aptitude install watchdog
+- yükleme
+        aptitude install watchdog
 
 
 - servisler
-	/etc/init.d/watchdog
-	/etc/init.d/wd_keepalive
+        /etc/init.d/watchdog
+        /etc/init.d/wd_keepalive
 
 
 - ayarlar
-	/etc/default/watchdog
-		run_watchdog=1
-		watchdog_module=&quot;advantechwdt&quot;
-		#watchdog_module=&quot;softdog&quot;
-	
-	 /etc/watchdog.conf
-	 	watchdog-device		= /dev/watchdog
-		realtime		= yes
-		priority		= 1
+        /etc/default/watchdog
+                run_watchdog=1
+                watchdog_module=&quot;advantechwdt&quot;
+                #watchdog_module=&quot;softdog&quot;
+
+         /etc/watchdog.conf
+                watchdog-device         = /dev/watchdog
+                realtime                = yes
+                priority                = 1
 
 
 - manuel kullanım
-	. servisler kapatılacak
+        . servisler kapatılacak
 
-	. çekirdek modülünün yüklenmesi
-		modprobe MODUL
+        . çekirdek modülünün yüklenmesi
+                modprobe MODUL
 
-	. çekirdek modülünün kaldırılması
-		echo 'V' &gt;/dev/watchdog
-		rmmod MODUL
-	
-	. klasik kullanım şekli (python ile)
-		d = open('/dev/watchdog', 'w')
-		while True:
-			d.write('1')
-			time.sleep(10)
-		d.write('V')
-		d.close()
+        . çekirdek modülünün kaldırılması
+                echo 'V' &gt;/dev/watchdog
+                rmmod MODUL
+
+        . klasik kullanım şekli (python ile)
+                d = open('/dev/watchdog', 'w')
+                while True:
+                        d.write('1')
+                        time.sleep(10)
+                d.write('V')
+                d.close()
 
 
 - Advantech PCM-9375 için Watchdog kullanımı
