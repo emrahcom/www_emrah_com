@@ -46,7 +46,7 @@ Bu dökümanda, www.emrah.com için yapılan işlemlerle ilgili notlar yer alır
     cd ~/proje/www_emrah_com
     git add -A
     git commit -m "web icerigi yuklendi"
-    git push
+    git push origin master
 
 
 # Web sunucudaki yerel deponun güncellenmesi (web sunucu, emrah)
