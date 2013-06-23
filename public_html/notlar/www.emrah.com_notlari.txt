@@ -1,0 +1,95 @@
+# -----------------------------------------------------------------------------
+# www.emrah.com notları
+# -----------------------------------------------------------------------------
+
+Bu dökümanda, www.emrah.com için yapılan işlemlerle ilgili notlar yer alır.
+
+
+
+# -----------------------------------------------------------------------------
+# WEB İÇERİĞİNİN GIT DEPOSU İLE YÖNETİLMESİ
+# -----------------------------------------------------------------------------
+
+# Git kurulumu (web sunucu, root)
+    aptitude install git
+
+
+# Ana Git deposunun oluşturulması (web sunucu, emrah)
+    mkdir ~/repositories
+    cd ~/repositories
+    mkdir www_emrah_com.git
+    cd www_emrah_com.git
+    git init --bare
+
+
+# Yerel Git deposunun oluşturulması (web sunucu, emrah)
+    mkdir ~/proje
+    cd ~/proje
+    git clone --no-hardlinks ~/repositories/www_emrah_com.git
+
+
+# Yerel Git deposunun oluşturulması (desktop, emrah)
+    mkdir ~/proje
+    cd ~/proje
+    git clone ssh://emrah@emrah.com:22/~/repositories/www_emrah_com.git
+
+
+# Web içeriğinin Git depoya yüklenmesi (desktop, emrah)
+    mkdir -p ~/proje/www_emrah_com/public_html
+    cd ~/proje/www_emrah_com/public_html
+    (web içeriği bu kısma yüklenir)
+
+    mkdir -p ~/proje/www_emrah_com/emrah_com_updates
+    cd ~/proje/www_emrah_com/emrah_com_updates
+    (site ile ilgili scriptler buraya yüklenir)
+
+    cd ~/proje/www_emrah_com
+    git add -A
+    git commit -m "web icerigi yuklendi"
+    git push
+
+
+# Web sunucudaki yerel deponun güncellenmesi (web sunucu, emrah)
+    cd ~/proje/www_emrah_com
+    git pull
+
+
+# Gitweb kurulumu (root)
+  Nginx +  fastcgi ile kullanılacak.
+
+    aptitude install gitweb fcgiwrap
+
+    vim /etc/gitweb.conf
+        #$projectroot = "/var/cache/git";
+        $projectroot = "/home/emrah/repositories";
+
+
+    vim /etc/nginx/sites-enabled/emrah.com
+        root    /home/emrah/proje/www_emrah_com/public_html;
+
+        location /gitweb {
+            alias       /usr/share/gitweb;
+            index       index.cgi;
+            include     fastcgi_params;
+            gzip        off;
+            if ($uri ~ "/gitweb/index.cgi") {
+                fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+            }
+        }
+
+
+    /etc/init.d/fcgiwrap restart
+    /etc/init.d/nginx configtest
+    /etc/init.d/nginx restart
+
+
+
+# -----------------------------------------------------------------------------
+# WEB İÇERİĞİ GÜNCELLEME SCRIPTLERİNİN CRONTAB İLE ÇALIŞTIRILMASI
+# -----------------------------------------------------------------------------
+
+vim /etc/crontab
+01 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/update.py
+03 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/dilbert.py
+05 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/userfriendly.py
+07 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/txt2html.py
