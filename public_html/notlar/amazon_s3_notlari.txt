@@ -1,0 +1,113 @@
+# -----------------------------------------------------------------------------
+# AMAZON S3 NOTLARI
+# -----------------------------------------------------------------------------
+Bu dökümanda, Amazon S3 servisinin kullanımı ile ilgili notlar yer alır.
+
+
+# -----------------------------------------------------------------------------
+# S3CMD
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    aptitude install s3cmd
+
+
+# Ayar dosyasını oluşturma
+    s3cmd --configure
+
+
+# Ayar dosyasında değişiklik
+    vim ~/.s3cfg
+        access_key = ...
+        secret_key = ...
+        #bucket_location = US
+        bucket_location = EU
+        acl_public = False
+        ...
+        ...
+
+
+# Sık kullanılan parametreler
+    # bucketleri listeleme
+        s3cmd ls
+
+    # bucketteki nesneleri listeleme
+        s3cmd ls s3://bucket_adi/
+        s3cmd ls s3://bucket_adi/a*
+
+    # buckete dosya kopyalama
+        s3cmd put dosya s3://bucket_adi/
+
+    # buckete dosya kopyalama (public)
+        s3cmd -P put dosya s3://bucket_adi/
+
+    # bucketten dosya alma
+        s3cmd get s3://bucket_adi/dosya_adi dosya_adi
+
+    # bucket disk kullanımı
+        s3cmd du s3://bucket_adi
+
+    # S3'deki dosyanın haklarını değiştirmek.
+        s3cmd -P setacl s3://bucket_adi/dosya
+
+    # Ayar dosyasını belirtmek
+        s3cmd -c /path/to/s3cfg ...
+
+    # Senkronizasyon
+        s3cmd --no-delete-removed --no-encrypt --no-check-md5 \
+        -P -H sync /path/to/local/folder s3://bucket_adi/remote_folder
+
+
+# -----------------------------------------------------------------------------
+# S3FS
+# -----------------------------------------------------------------------------
+
+    # Kaynak
+        http://code.google.com/p/s3fs/wiki/FuseOverAmazon
+        https://forums.aws.amazon.com/thread.jspa?threadID=39361
+
+
+    # Derleme için gerekli paketler (root)
+        aptitude install build-essential libfuse-dev fuse-utils \
+        libcurl4-openssl-dev libxml2-dev mime-support
+
+
+    # Derleme (normal kullanıcı)
+        mkdir -p ~/source/s3fs
+        cd ~/source/s3fs
+        wget http://s3fs.googlecode.com/files/s3fs-1.71.tar.gz
+        tar xvzf s3fs-1.71.tar.gz
+        cd s3fs-1.71/
+        ./configure --prefix=/usr
+        make
+
+
+    # Yükleme (root)
+        su
+        make install
+
+
+    # Otomatik mount için ayar dosyası
+        vim ~/.passwd-s3fs
+            access_key:secret_key
+
+        chmod 600 ~/.passwd-s3fs
+
+
+    # Mount etme
+        mkdir mountpoint
+        s3fs bucket_name mountpoint
+
+
+    # Umount
+        fusermount -u mountpoint
+
+
+    # Otomatik mount
+      vim /etc/fstab
+          s3fs#bucket_name  /mount/point  fuse  allow_other,use_cache=/tmp,url=https://s3.amazonaws.com  0  0
+
+
+      mount /mount/point
+      umount /mount/point
+
