@@ -39,5 +39,5 @@ else:
                 dosya.write(icerik)
                 dosya.close()
         else:
-                print('resim tesbit edilemedi')
+                print('Resim tesbit edilemedi')
 
