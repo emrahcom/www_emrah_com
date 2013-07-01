@@ -215,6 +215,9 @@ aptitude hold nginx-common nginx-extras
                                         hls on;
                                         hls_path /tmp/live;
                                         hls_fragment 5s;
+
+                                        wait_video on;
+                                        wait_key on;
                                 }
                         }
                 }
