@@ -65,15 +65,26 @@ Bu dökümanda, www.emrah.com için yapılan işlemlerle ilgili notlar yer alır
 
 
     vim /etc/nginx/sites-enabled/emrah.com
-        root    /home/emrah/proje/www_emrah_com/public_html;
+        server {
+            listen      80;
+            server_name emrah.com
+                        www.emrah.com;
+            root        /home/emrah/proje/www_emrah_com/public_html;
+            index       index.html;
+            access_log  /var/log/nginx/access.emrah.com.log;
 
-        location /gitweb {
-            alias       /usr/share/gitweb;
-            index       index.cgi;
-            include     fastcgi_params;
-            gzip        off;
-            if ($uri ~ "/gitweb/index.cgi") {
-                fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+            location /gitweb {
+                alias       /usr/share/gitweb;
+                index       index.cgi;
+                include     fastcgi_params;
+                gzip        off;
+                if ($uri ~ "/gitweb/index.cgi") {
+                    fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+                }
+            }
+
+            location /kuran {
+                autoindex on;
             }
         }
 
