@@ -1,0 +1,134 @@
+# -----------------------------------------------------------------------------
+# NAGIOS NOTLARI
+# -----------------------------------------------------------------------------
+
+Bu dökümanda, Debian Wheezy makineye Nagios3 sunucu kurulumu ve bu sunucu ile
+çeşitli makine ve servislerin takibi ile ilgili notlar yer alır.
+
+
+
+# -----------------------------------------------------------------------------
+# DEBIAN WHEEZY SUNUCU
+# -----------------------------------------------------------------------------
+Makineleri takip edecek olan Nagios sunucu makine.
+
+# Kurulum
+    aptitude install --with-recommend nagios3 nagios-nrpe-plugin
+
+    Kurulum esnasında "nagiosadmin" kullanıcısı için parola girilecek.
+
+
+# İlk kurulum sonrası izleme. Web tarayıcı ile
+    http://xxx.vvv.yyy.zzz/nagios3
+        nagiosadmin / parola
+
+
+# Apache ayarları
+    Apache için standart ayarlar yapılacak. SSL sertifikası tanımlanırsa iyi
+    olur. Nagios arayüzüne https ile bağlanılabilsin.
+
+
+# Standart dışı SSH portu kullanılıyorsa
+    /etc/nagios3/conf.d/services_nagios2.cfg
+        ...
+        hostgroup_name                  ssh-servers
+        check_command                   check_ssh_port!10022
+
+
+# Nagios'un yeni ayarlarla yeniden başlatılması
+    /etc/init.d/nagios3 restart
+
+
+# Exim4 ayarları.
+  Mail atabilmesi için gerekli. Internete mail atabilen sunucu olarak
+  tanımlanacak.
+
+    dpkg-reconfigure exim4-config
+
+
+# SMS ile uyarı mesajı atacaksa
+    vim /etc/nagios3/conf.d/custom_commands.cfg
+        # 'notify-host-by-sms' command definition
+        define command{
+            command_name    notify-host-by-sms
+            command_line    /path/to/sms_client $CONTACTPAGER$ "** $NOTIFICATIONTYPE$ Host Alert: $HOSTNAME$ is $HOSTSTATE$ **"
+        }
+
+        # 'notify-service-by-sms' command definition
+        define command{
+            command_name    notify-service-by-sms
+            command_line    /path/to/sms_client $CONTACTPAGER$ "** $NOTIFICATIONTYPE$ Host Alert: $HOSTNAME$ is $HOSTSTATE$ **"
+        }
+
+    vim /etc/nagios3/conf.d/contacts_nagios2.cfg
+        define contact{
+            ...
+            ...
+            service_notification_commands   notify-service-by-email,notify-service-by-sms
+            host_notification_commands      notify-host-by-email,notify-host-by-sms
+            pager                           5553334455
+        }
+
+
+
+# -----------------------------------------------------------------------------
+# DEBIAN WHEEZY CLIENT
+# -----------------------------------------------------------------------------
+Durumu takip edilecek bir Debian Wheezy makinede yapılacak işlemler.
+
+# Kurulum
+    aptitude install --with-recommends nagios-nrpe-server
+
+
+# Ayarlar
+    vim /etc/nagios/nrpe.cfg
+        server_port=5666
+        # Nagios sunucu IP'si. Sadece bu IP adresi Nagios bilgilerini alabilir.
+        allowed_hosts=xxx.vvv.yyy.zzz
+        command[check_sda1]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/sda1
+
+
+
+# -----------------------------------------------------------------------------
+# CLIENT İÇİN SUNUCUDA YAPILACAK AYARLAR
+# -----------------------------------------------------------------------------
+
+# vim /etc/nagios3/conf.d/host_hostadi.cfg
+    define service{
+        use                             generic-service
+        host_name                       hostadi
+        service_description             Disk Space /
+        check_command                   check_nrpe_1arg!check_sda1 -p 5666
+    }
+
+
+# vim /etc/nagios3/conf.d/host_hostadi.cfg
+    define hostgroup {
+        ...
+        ...
+        members                         hostadi
+    }
+
+
+
+# -----------------------------------------------------------------------------
+# KONTROL KOMUTLARI (check_command)
+# -----------------------------------------------------------------------------
+
+# check_dig
+    check_dig!www.alanadi.com
+
+# APT
+    check_nrpe_1arg!check_apt -p 5667
+
+    Client makinede her gece cron ile güncelleme yapılmalı.
+        apt-get update && apt-get -dy dist-upgrade
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://blog.sanctum.geek.nz/nagios-on-debian-primer/
+http://www.michael-hammer.at/blog/nagios/
+http://www.syslogs.org/nagios-kurulumu-ve-yapilandirmasi/
