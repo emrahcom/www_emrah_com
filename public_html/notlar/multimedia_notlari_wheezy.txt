@@ -149,8 +149,9 @@ aptitude install avidemux avidemux-cli
 aptitude install mjpegtools lame twolame
 
 
+
 # -----------------------------------------------------------------------------
-# NGINX RTMP
+# NGINX RTMP MODULE
 # -----------------------------------------------------------------------------
 
 # Derleme icin gerekli paketler.
@@ -200,44 +201,51 @@ aptitude hold nginx-common nginx-extras
 
 
 # Nginx ayarları
+/etc/nginx/nginx.conf
+    rtmp {
+        server {
+            listen 1935;
 
-        - /etc/nginx/nginx.conf
-                rtmp {
-                        server {
-                                listen 1935;
+            application live {
+                live on;
 
-                                application live {
-                                        live on;
-                                        allow publish 127.0.0.1;
-                                        deny publish all;
-                                        allow play all;
+                # pull rtmp://xxx.www.yyy.zzz:1935;
+                # pull rtmp://xxx.www.yyy.zzz:1935/live/stream name=stream1 static;
 
-                                        hls on;
-                                        hls_path /tmp/live;
-                                        hls_fragment 5s;
+                allow publish 127.0.0.1;
+                deny publish all;
+                allow play all;
 
-                                        wait_video on;
-                                        wait_key on;
-                                }
-                        }
-                }
+                hls on;
+                hls_path /tmp/live;
+                hls_fragment 5s;
 
-        - /etc/nginx/sites-available/default
-                location /hls {
-                        alias /tmp/live;
-                }
-
-        - tmpfs altında hls path
-                mkdir /tmp/live
-                chown www-data: /tmp/live
-
-        - restart
-                /etc/init.d/nginx configtest
-                /etc/init.d/nginx restart
+                wait_video on;
+                wait_key on;
+            }
+        }
+    }
 
 
+/etc/nginx/sites-available/default
+    location /hls {
+        alias /tmp/live;
+    }
 
+
+- tmpfs altında hls path
+    mkdir /tmp/live
+    chown www-data: /tmp/live
+
+- restart
+    /etc/init.d/nginx configtest
+    /etc/init.d/nginx restart
+
+
+
+# -----------------------------------------------------------------------------
 # Stream gönderme
+# -----------------------------------------------------------------------------
 
 ffmpeg -i mmsh://85.111.3.55/ntv \
 -threads 0 -vprofile baseline -preset medium \
@@ -342,3 +350,82 @@ ffmpeg  -re -i - \
         ami-d81b12ac
         379101102735/debian-wheezy-amd64-20130208
         Default user: admin
+
+
+
+# -----------------------------------------------------------------------------
+# NGINX İLE ŞARTLI STREAM İZLEME
+# -----------------------------------------------------------------------------
+
+# Kurulumlar
+    aptitude install python-geoip
+    aptitude install uwsgi uwsgi-plugin-python
+
+
+# Python kontrol kodu
+/home/kullanici/wsgi/geocheck.py
+    #!/usr/bin/python
+    #-*- coding: utf-8 -*-
+
+    import GeoIP
+    from cgi import parse_qs
+
+    ALLOWED_COUNTRIES = ['TR']
+
+    def application(environ, start_response):
+        # Izleyici IP adresini al.
+        args = parse_qs(env['wsgi.input'].read())
+        addr = args.get('addr', [''])[0]
+
+        # Izleyici ulke kodunu al.
+        g = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
+        country = g.country_code_by_addr(addr)
+
+        # Ziyaretci, izin verilen bir ulkede ise onay mesajini hazirla.
+        if country in ALLOWED_COUNTRIES:
+            status = '200 OK'
+            output = 'OK'
+        else:
+            status = '500 ERROR'
+            output = 'error'
+
+        # Onay veya red cevabi dondur.
+        response_headers = [('Content-type', 'text/plain'),
+                            ('Content-Length', str(len(output)))]
+        start_response(status, response_headers)
+        return [output]
+
+
+# UWSGI ayarları
+/etc/uwsgi/apps-available/geocheck.ini
+    [uwsgi]
+    plugins = python
+    uid = kullanici
+    gid = www-data
+    socket=/var/run/uwsgi/app/geocheck/socket
+    wsgi-file = /home/kullanici/wsgi/geocheck.py
+
+cd /etc/uwsgi/apps-enabled
+ln -s ../apps-available/geocheck.ini .
+/etc/init.d/uwsgi restart
+
+
+# Stream'i izlemek isteyenlerin kontrol sayfasına yönlendirilmesi
+/etc/nginx/nginx.conf
+    rtmp {
+        server {
+            listen 1935;
+
+            application live {
+                live on;
+                on_play http://localhost/geocheck;
+        ...
+        ...
+    }
+
+
+/etc/nginx/sites-enabled/default
+    location /geocheck {
+        include uwsgi_params;
+        uwsgi_pass unix:/var/run/uwsgi/app/geocheck/socket;
+    }
