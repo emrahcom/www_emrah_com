@@ -51,7 +51,9 @@ Bu dökümanda, www.emrah.com için yapılan işlemlerle ilgili notlar yer alır
 
 # Web sunucudaki yerel deponun güncellenmesi (web sunucu, emrah)
     cd ~/proje/www_emrah_com
+    git stash
     git pull
+    git stash clear
 
 
 # Gitweb kurulumu (root)
