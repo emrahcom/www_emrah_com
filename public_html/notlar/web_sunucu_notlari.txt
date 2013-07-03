@@ -1,143 +1,123 @@
-Apache Notları
---------------
+# -----------------------------------------------------------------------------
+# WEB SUNUCU NOTLARI
+# -----------------------------------------------------------------------------
 
-- Kurulum
-        # PHP ile kullanilacaksa
-        aptitude install apache2-mpm-prefork libapache2-mod-php5 php5-cli \
-                php5-curl php5-gd php5-mcrypt php5-mysql
-
-        # Thread sorunu olmayan bir dil ile kullanılacaksa
-        aptitude install apache2-mpm-worker
+Bu dökümanda, web sunucu kurarken gerekli olabilecek notlar yer alır.
 
 
-- Ayarlar
-        # Ayarların doğruluğunun testi
-        restart veya reload yapmadan önce ayarların doğruluğu test edilsin.
-                apachectl configtest
-                /etc/init.d/apache2 reload
 
-        # Yoğun sunucularda apache2-mpm-prefork için
+# -----------------------------------------------------------------------------
+# APACHE2
+# -----------------------------------------------------------------------------
 
-        curl site.com | grep "src=" | wc -l ile bir bağlantıda yaklaşık
-        kaç adet istek olabileceğini tahmin et. Buna göre MaxKeepAliveRequests
-        değerini belirle.
+# Kurulum
+    # PHP ile kullanilacaksa
+    aptitude install apache2-mpm-prefork libapache2-mod-php5 php5-cli \
+    php5-curl php5-gd php5-mcrypt php5-mysql
 
-        ps aux | grep apache2 ile RSS satırına bakıp her bağlantı için fiziksel
-        hafızadan yaklaşık kaç KB kullanıldığını kontrol et.
-        [Apacheye_ayrilan_RAM] / [RSS_degeri] formülü ile MaxClients değerinin
-        kaç olabileceğini tahmin et.
-
-        MaxClients 256'dan büyük olacaksa ServerLimit değerini ona eşitle.
+    # Thread sorunu olmayan bir dil ile kullanılacaksa
+    aptitude install apache2-mpm-worker
 
 
-        /etc/apache2/apache2.conf
-                Timeout 45
-                KeepAlive On
-                MaxKeepAliveRequests 256
+# Ayarlar
+    # Ayarların doğruluğunun test edilmesi
+    restart veya reload yapmadan önce ayarların doğruluğu test edilsin.
 
-                <IfModule mpm_prefork_module>
-                    StartServers            5
-                    MinSpareServers        10
-                    MaxSpareServers       100
-                    ServerLimit           512
-                    MaxClients            512
-                    MaxRequestsPerChild   500
-                </IfModule>
-
-        /etc/security/limits.conf
-                www-data         hard    nofile          65536
-                www-data         soft    nofile          65536
+        apachectl configtest
+        /etc/init.d/apache2 reload
 
 
-        # Güvenlik
-        /etc/apache2/conf.d/security
-                ServerTokens Prod
-                ServerSignature Off
-                TraceEnable Off
+    # Yoğun sunucularda apache2-mpm-prefork için
+
+    curl site.com | grep "src=" | wc -l ile bir bağlantıda yaklaşık
+    kaç adet istek olabileceğini tahmin et. Buna göre MaxKeepAliveRequests
+    değerini belirle.
+
+    ps aux | grep apache2 ile RSS satırına bakıp her bağlantı için fiziksel
+    hafızadan yaklaşık kaç KB kullanıldığını kontrol et.
+    [Apacheye_ayrilan_RAM] / [RSS_degeri] formülü ile MaxClients değerinin
+    kaç olabileceğini tahmin et.
+
+    MaxClients 256'dan büyük olacaksa ServerLimit değerini ona eşitle.
+
+    /etc/apache2/apache2.conf
+        Timeout 45
+        KeepAlive On
+        MaxKeepAliveRequests 256
+
+        <IfModule mpm_prefork_module>
+            StartServers            5
+            MinSpareServers        10
+            MaxSpareServers        40
+            ServerLimit           256
+            MaxClients            256
+            MaxRequestsPerChild  2000
+        </IfModule>
+
+    /etc/security/limits.conf
+            www-data         hard    nofile          65536
+            www-data         soft    nofile          65536
 
 
-        # Dosya tipine göre cache süreleri
-        cd /etc/apache2/mods-enabled
-        ln -s ../mods-available/expires.load .
-
-        /etc/apache2/sites-enables/ilgili_dosya
-                <Directory ...>
-                        ...
-
-                        <IfModule mod_expires.c>
-                                ExpiresActive on
-                                ExpiresDefault "access plus 4 hours"
-                                ExpiresByType image/jpeg "access plus 30 days"
-                                ExpiresByType image/jpg "access plus 30 days"
-                                ExpiresByType image/gif "access plus 30 days"
-                                ExpiresByType image/png "access plus 30 days"
-                                ExpiresByType image/bmp "access plus 30 days"
-                                ExpiresByType text/css "access plus 30 days"
-                                ExpiresByType text/html "access plus 30 seconds"
-                                ExpiresByType text/xml "access plus 45 seconds"
-                                ExpiresByType text/plain "access plus 60 seconds"
-                                ExpiresByType text/javascript "modification plus 30 days"
-                                ExpiresByType application/javascript "access plus 30 days"
-                                ExpiresByType application/x-javascript "access plus 30 days"
-                                ExpiresByType application/x-shockwave-flash "access plus 30 days"
-                        </IfModule>
-                </Directory>
-
-        Expire zamanını ve sayfanın header bilgilerini görmek için:
-        curl --head http://www.emrah.com/resim.jpg
-
-        # Enable edilecek modüller
-        a2enmod rewrite
-
-        # Sitelerin kendi kurallarını yazabilmesi için
-        /etc/apache2/sites-enabled/xxx
-                AllowOverride All
-
-        # Apache'yi yeniden başlat.
-        /etc/init.d/apache2 restart
+    # Güvenlik
+    /etc/apache2/conf.d/security
+            ServerTokens Prod
+            ServerSignature Off
+            TraceEnable Off
 
 
-- Self-signed sertifika
-        - SSL desteğini aktif hale getirme.
+    # Enable edilecek modüller
+    a2enmod rewrite
+
+    # Sitelerin kendi kurallarını yazabilmesi için
+    /etc/apache2/sites-enabled/xxx
+            AllowOverride All
+
+    # Apache'yi yeniden başlat.
+    /etc/init.d/apache2 restart
+
+
+# Self-signed sertifika
+        # SSL desteğini aktif hale getirme.
             a2enmod ssl
             a2ensite default-ssl
             /etc/init.d/apache2 restart
 
-        - Custom sertifika
+        # Custom sertifika
             mkdir /etc/apache2/ssl
             cd /etc/apache2/ssl
             openssl req -x509 -days 365 -newkey rsa:1024 -keyout hostkey.key -nodes -out hostcert.pem
             chmod 600 *
 
-        - /etc/apache2/sites-enabled/default-ssl
+        # /etc/apache2/sites-enabled/default-ssl
             #SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
             #SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
             SSLCertificateFile    /etc/apache2/ssl/hostcert.pem
             SSLCertificateKeyFile /etc/apache2/ssl/hostkey.key
 
-        - restart
+        # restart
             /etc/init.d/apache2 restart
 
 
-- Apache Server Status
-        - mod_status aktif hale getirilecek. Default aktif.
+# Apache Server Status
+        # mod_status aktif hale getirilecek. Default aktif.
             a2enmod status
 
-        - İzin veriler IP adresleri
+        # İzin veriler IP adresleri
           /etc/apache2/mods-enabled/status.conf
             Deny from all
             Allow from 127.0.0.1 ::1
             Allow from 10.20.30.0/24
 
-        - İzleme
+        # İzleme
             http://ip_adresi/server-status
 
 
-- ApacheTop
-        aptitude install apachetop libgamin0
+# ApacheTop
+        aptitude install apachetop
 
 
-- Nginx: reverse proxy
+# Nginx: reverse proxy
   Yoğun sitelerde Apache önüne Nginx, reverse proxy olarak konulabilir.
 
         # Kurulum
@@ -487,3 +467,8 @@ Apache Notları
                 net.ipv4.tcp_tw_reuse=1
                 # TIME_WAIT durumunda ne kadar bekletilecegi (default 60)
                 net.ipv4.tcp_fin_timeout=15
+
+
+
+- Nginx + UWSGI
+        
