@@ -429,3 +429,7 @@ ln -s ../apps-available/geocheck.ini .
         include uwsgi_params;
         uwsgi_pass unix:/var/run/uwsgi/app/geocheck/socket;
     }
+
+
+# Kaynaklar
+https://github.com/arut/nginx-rtmp-module/wiki/Directives
