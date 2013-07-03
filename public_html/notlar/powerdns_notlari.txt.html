@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>powerdns_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# POWERDNS NOTLARI
+# -----------------------------------------------------------------------------
+
+Bu dokumanda, PostgreSQL destekli PowerDNS kurulum notları yer almaktadır.
+Debian Wheezy i386 makinede denenmiştir
+
+
+
+# -----------------------------------------------------------------------------
+# DEBIAN
+# -----------------------------------------------------------------------------
+
+# Standart Debian Wheezy makine kurulumu yapılır.
+
+# /etc/hostname
+    pns1
+
+# /etc/hosts
+    127.0.1.1       pns1.domain.net  pns1
+
+
+
+# -----------------------------------------------------------------------------
+# POSTGRESQL
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    aptitude install postgresql postgresql-contrib
+
+
+
+# -----------------------------------------------------------------------------
+# POWERDNS
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    aptitude install pdns-server pdns-backend-pgsql
+        . Configure database for pdns-backend-pgsql with dbconfig-common?
+          -&gt; Yes
+
+        . PostgreSQL application password for pdns-backend-pgsql
+          -&gt; Boş bırak, random parola üretilsin.
+
+        . Veritabanı ayarları /etc/powerdns/pdns.d/pdns.local.gpgsql
+        dosyasında. Default ayarları değiştirmeye gerek yok.
+
+# launch ile ilgili bug'in düzeltilmesi.
+    Config dosyalarinda bir hata var. İki ayrı &quot;launch&quot; satiri olmamasi
+    gerekiyor. Bu hata düzeltilecek.
+
+    vim /etc/powerdns/pdns.d/pdns.simplebind
+        #launch=bind
+
+    vim /etc/powerdns/pdns.d/pdns.local.gpgsql
+        #launch=gpgsql
+
+    vim /etc/powerdns/pdns.conf
+        launch=gpgsql,bind
+        include=/etc/powerdns/pdns.d
+
+# slave modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
+    slave=yes
+
+# Servisin restart edilmesi.
+    /etc/init.d/pdns restart
+
+# Servisin çalıştığının görülmesi.
+dig ile localhost sorgulandığında cevap alınması gerekiyor. &quot;netstat&quot; ile
+53. portun pdns tarafından dinlenilip dinlenilmediğine de bakılabilir.
+    dig @localhost
+
+
+
+# -----------------------------------------------------------------------------
+# APACHE2
+# -----------------------------------------------------------------------------
+
+# Gerekli Debian paketlerinin kurulumu
+    aptitude install apache2-mpm-prefork libapache2-mod-php5 ssl-cert
+
+# Default sayfa boş olsun.
+    echo &quot;&quot; &gt;/var/www/index.html
+
+# Apache için SSL sertifikası oluşturma.
+    a2ensite default-ssl
+    a2enmod ssl
+    /etc/init.d/apache2 restart
+
+    make-ssl-cert /usr/share/ssl-cert/ssleay.cnf /etc/ssl/private/pns1.domain.net.crt
+        Host Name           : pns1.domain.net
+        Alternative name    : (boş bırakılacak)
+
+    vim /etc/apache2/sites-enabled/default-ssl
+        #SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
+        #SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+        SSLCertificateFile    /etc/ssl/private/pns1.domain.net.crt
+
+    /etc/init.d/apache2 restart
+
+# Web sayfalarına parola ile erişim. Poweradmin ayrıca parola soracak.
+    vim /etc/apache2/sites-enabled/000-default
+        &lt;Directory /var/www/&gt;
+            #AllowOverride None
+            AllowOverride All
+
+    vim /etc/apache2/sites-enabled/default-ssl
+        &lt;Directory /var/www/&gt;
+            #AllowOverride None
+            AllowOverride All
+
+    su -l kullanici
+    mkdir htaccess
+    cd htaccess
+    htpasswd -sc htpasswd kullanici
+        (basit bir parola girilsin. Poweradmin ayrıca parola soracak)
+    exit
+
+    cd /var/www/
+    vim .htaccess
+        AuthUserFile    /home/kullanici/htaccess/htpasswd
+        AuthType        Basic
+        AuthName        &quot;...&quot;
+        Require         valid-user
+        Options         Indexes
+
+
+    /etc/init.d/apache2 restart
+
+# Web testi.
+Linke girildiğinde sertifika için onay sorması, parola sorması ve boş sayfa
+göstermesi gerekmekte.
+    https://ip_adresi/
+
+
+
+# -----------------------------------------------------------------------------
+# POWERADMIN
+# -----------------------------------------------------------------------------
+
+# Gerekli Debian paketlerinin kurulumu
+    aptitude install php5 php5-mcrypt
+    aptitude install php-pear php-mdb2 php-mdb2-driver-pgsql php5-pgsql
+
+# Poweradmin dosyalarının indirilmesi
+http://poweradmin.github.io/poweradmin/ adresinden son sürüm görülebilir.
+
+    cd
+    wget https://github.com/downloads/poweradmin/poweradmin/poweradmin-2.1.6.tgz
+    tar xzfv poweradmin-2.1.6.tgz
+    mv poweradmin-2.1.6 /var/www/poweradmin
+    touch /var/www/poweradmin/inc/config.inc.php
+    cd /var/www
+    chown www-data: poweradmin -R
+
+
+# PowerAdmin arayüzünden yüklemenin yapılması
+
+    - Web tarayıcı ile Install sayfasina girilir.
+        https://ip_adresi/poweradmin/install/
+
+    - Installation step 3
+    Gerekli bilgiler /etc/powerdns/pdns.d/pdns.local.gpgsql dosyasında.
+        Username                    : pdns
+        Password                    : (veritabanı kullanıcısı parolası)
+        Database type               : PostgreSQL
+        Hostname                    : 127.0.0.1
+        DB Port                     : 5432
+        Database                    : pdns
+        Poweradmin administrator    : (PowerAdmin web panel admin parolası)
+
+    - Installation step 4
+        Username                    : poweradmin
+        Password                    : (poweradmin için veritabanı parolası)
+        Hostmaster                  : hostmaster.domain.net
+        Primary nameserver          : pns1.domain.net
+        Secondary nameserver        : pns2.domain.net
+
+    - Installation step 5
+    Bu adımda verilen komutları postgres kullanıcısı olarak çalıştır.
+
+        su -l postgres
+        createuser -E -P poweradmin
+            ...
+            ...
+        psql pdns
+            ...
+            ...
+        (postgres kullanıcı hesabından çıkılacak)
+
+    - Installation step 7
+    Bu adıma kadar ilerlenecek.
+
+    - Install klasörünün silinmesi
+        (root olunacak)
+        rm -rf /var/www/poweradmin/install/
+
+
+# PowerAdmin arayüzüne girilmesi
+    https://ip_adresi/poweradmin/index.php
+
+    Username                        : admin
+    Password                        : (PowerAdmin admin parolası)
+
+
+
+# -----------------------------------------------------------------------------
+# KURULAN PAKETLERİN/YAZILIMLARIN SİLİNMESİ
+# -----------------------------------------------------------------------------
+Bir sebepten dolayı kuralan uygulamalar silinmek istenirse, bu bölümdeki
+adımlar uygulanacak.
+
+Burada anlatıldığı gibi silme yapılırsa, ayar dosyaları ve bu dökümanda
+anlatılan bütün paketler silinmiş olur. Aynı servisleri kullanan başka
+uygulamalar varsa, bu uygulamaların çalışması aksar. Bu nedenle silme işlemi
+yapılırken ne yapıldığının farkında olunup yapılması gerekmekte.
+
+# Apache2
+    cd
+    aptitude purge apache2-mpm-prefork libapache2-mod-php5 apache2.2-common
+    rm -rf /var/log/apache2
+    rm -rf /var/www
+    rm /etc/ssl/private/pns1.domain.net.crt
+
+# Powerdns
+    aptitude purge pdns-server pdns-backend-pgsql
+        &lt;yes&gt;
+        &lt;yes&gt;
+
+# PostgreSQL
+    aptitude purge postgresql postgresql-contrib postgresql-common postgresql-9.1
+    aptitude purge postgresql-client-common postgresql-client-9.1
+    rm -rf /var/lib/postgresql
+
+# Kalan ufak paketler ve ayr dosyaları
+    aptitude purge ssl-cert
+    aptitude purge &quot;&tilde;c&quot;
+
+
+
+# -----------------------------------------------------------------------------
+# DNS TANIMLAMALARI
+# -----------------------------------------------------------------------------
+
+DNS ile ilgili tanımlamalar Poweradmin web panelinden yapılacak.
+
+# Slave zone
+Verileri, başka bir DNS sunucudan alınacak zone'lar, Poweradmin panelden
+&quot;slave zone&quot; olarak eklenir. Veriler alındıktan sonra &quot;master zone&quot; olarak
+tanımı değiştirilebilir veya &quot;slave zone&quot; olarak çalışmaya devam eder.
+
+Master DNS sunucunun, slave makineye sorgulama izni vermesi için bazı ayarların
+yapılması gerekmektedir.
+
+Master DNS sunucu Bind ise /etc/bind/named.conf.local dosyasında ilgili zone
+için şu ayarlar yapılır:
+    zone &quot;alanadi.com&quot; {
+        type master;
+        allow-transfer {powernds_slave_makine_ip_adresi;};
+        file &quot;/etc/bind/pri.alanadi.com&quot;;
+    };
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+- http://www.howtoforge.com/installing-powerdns-with-mysql-backend-and-poweradmin-on-debian-squeeze
+- http://www.howtoforge.com/installing-powerdns-with-mysql-backend-and-poweradmin-on-debian-squeeze-p2
+- https://www.poweradmin.org/
+- https://github.com/poweradmin/poweradmin
+- http://www.debiantutorials.com/installing-powerdns-recursor/
+- /usr/share/doc/apache2.2-common/README.Debian.gz
+</code></pre>
+</body>
+</html>

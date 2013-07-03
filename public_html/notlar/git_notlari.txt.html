@@ -7,26 +7,26 @@
 </head>
 <body>
 <pre><code>
-GIT NOTLARI
------------
+# -----------------------------------------------------------------------------
+# GIT NOTLARI
+# -----------------------------------------------------------------------------
 
-- kaynaklar
+# kaynaklar
 
         http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
         https://we.riseup.net/debian/git-development-howto
         http://sitaramc.github.com/gitolite/doc/1-INSTALL.html (gitolite kurulum)
         http://sitaramc.github.com/gitolite/doc/2-admin.html  (gitolite yönetim)
         http://marklodato.github.com/visual-git-guide/index-en.html
+        http://gitready.com/
 
 
+# yükleme
 
-- yükleme
-
-        aptitude install git-core gitk git-gui
-
+        aptitude install git
 
 
-- kullanıcı bilgileri
+# kullanıcı bilgileri
 
         git config --global user.name &quot;emrah&quot;
         git config --global user.email &quot;emrah@mail.com&quot;
@@ -34,84 +34,117 @@ GIT NOTLARI
         cat &tilde;/.gitconfig
 
 
-- yerel depo
-
-        - komutlar
-                git init
-                vim .gitignore
-                git add file(s)
-                git add .               # butun degisen ve yeni dosyalari guncellenecekler listesine ekle
-                git add -u              # degisiklik olmus veya silinmis dosyalari guncellenecekler listesine ekle
-                git add -A              # yeni eklenen dosyaları guncellenecekler listesine ekler.
-                git commit -m 'not'     # guncelle
-                git diff                # son guncelleme ve mevcut durum arasindaki farklar
-                git status              # degisen dosyalar
-                git log                 # guncelleme gecmisi
-
-        - örnek
-
-                mkdir src
-                cd src
-                touch file1
-                touch file2
-                touch file3
-                git init
-                echo file3 &gt; .gitignore
-
-                git status
-                git add .
-                git status
-                git commit -m 'ilk commit notu'
-                git status
-                git log
-
-                echo 'xxx' &gt;&gt; file1
-                git diff HEAD   (veya sadece git diff)
-                git add file1
-                git commit -m 'ikinci commit notu'
-                git log
+# Ana depo oluşturmak
+        mkdir repositories
+        cd repositories
+        mkdir repo1.git
+        cd repo1.git
+        git init --bare
 
 
-- uzak depo
+# Yerel depoyu, ana depodan klonlayarak oluşturmak
+        # Aynı makinedelerse
+        mkdir repositories
+        cd repositories
+        git clone --no-hardlinks &tilde;/repositories/repo1.git
 
-        - ana depoyu oluşturmak
-          --bare ile oluşturulan depoda doğrudan değişiklik yapılamaz.
-                cd
-                mkdir depo
-                cd depo
-                git --bare init
-
-        - depoyu klonlamak
-                cd
-                mkdir yerel
-                cd yerel
-                git clone &tilde;/depo proje1                 # ayni dosya sisteminde
-                git ssh://adres:port/&tilde;/depo proje1      # ssh ile
-
-        - son değişiklikleri ana depodan almak
-                cd &tilde;/yerel/proje1
-                git pull
-
-        - değişiklik yapıp ana depoya yükleme
-                cd &tilde;/yerel/proje1
-                (değişiklikleri yap)
-                git add .
-                git commit -m 'degisiklik yapildi'
-                git push origin master
+        # SSH ile bağlanılacaksa
+        mkdir repositories
+        cd repositories
+        git clone ssh://kullanici@sunucu.adresi:22/&tilde;/repositories/repo1.git
 
 
-- eski surumlere ulaşmak
+# Yerel depo oluşturmak (ana depo kullanılmayacak)
+        mkdir repositories
+        cd repositories
+        mkdir repo1.git
+        cd repo1.git
+        git init
+
+
+# Yerel depoda yapılabilecek ilk işlemler (depo henüz boş)
+        cd repositories/repo1.git
+        vim .gitignore
+            (sürüm kontrolü yapılmayacak dosyalar/klasörler yazılır)
+
+        (Dosyalar ve klasörler oluşturulur)
+        git add -A
+        git commit -m &quot;depo ilk hal&quot;
+
+        # Ana depo varsa, ana depo güncellenir
+        git push origin master
+
+
+# git add (calisma alanindaki degisiklikleri indekse ekleme)
+        git add file(s)     # belirtilen dosyalari eklemek
+        git add .           # degisen ve yeni eklenen dosyalari eklemek
+        git add -u          # degisen ve silinen dosyalari eklemek
+        git add -A          # degisen, yeni eklenen ve silinen dosyalari eklemek
+
+
+# git commit (indeks durumunu, yerel depoya kaydetmek)
+        git commit -m &quot;aciklama notu&quot;
+
+
+# git push (yerel depodaki değişiklikleri, ana depoya aktarmak)
+        git push
+
+
+# git pull (ana deponun son halini, çalışma alanına almak)
+        git pull
+
+
+# git diff (farkları görmek)
+        git diff            # calisma alani ve indeks arasindaki farklar
+        git diff HEAD       # calisma alani ve yerel depo arasindaki farklar
+
+
+# git status (calisma alaninin indeks ve yerel depoya gore durumu)
+        git status
+
+
+# git log (commit loglarini gosterme)
+        git log
+
+
+# Çalışma alanında yapılan değişikliği geri almak
+        # henüz add yapılmamışsa...
+        git checkout file(s)    # indeksteki kopyaya donme
+        git checkout .          # indeksteki kopyaya donme
+
+        # add yapılmışsa, dolayısı ile indeksteki kopya da değişmiş...
+        git checkout HEAD file(s)   # yerel depodaki kopyaya donme
+        git checkout HEAD .         # yerel depodaki kopyaya donme
+
+
+# git reset (yapılan commit'i iptal etmek)
+        git reset --hard HEAD&tilde;1     # 1 commit geri dönülür.
+                                    # indeks eski haline gelir.
+                                    # calisma alani eski haline gelir.
+
+        git reset HEAD&tilde;1            # 1 commit geri dönülür.
+                                    # indeks eski haline gelir.
+                                    # calisma alanindaki degisiklikler korunur.
+
+        git reset --soft HEAD&tilde;1     # 1 commit geri dönülür.
+                                    # indeksteki degisiklikler korunur.
+                                    # calisma alanindaki degisiklikler korunur.
+
+
+# git revert (yapılan commit'i iptal eden patch ekleme)
+        git revert &lt;commit_id&gt;
+
+
+# eski surumlere ulaşmak
 
         git log file1
         git show 0323e5918144ec29a069c7ab23cac40ed921d31d:file1
         git show HEAD:file1
         git show HEAD&tilde;2:file1
 
-
         git tag v0.1 0323e5918144ec29a069c7ab23cac40ed921d31d
         git show v0.1:file1
         git show v0.1:file2
-
 
         vim file1
         git reset file1
@@ -119,7 +152,7 @@ GIT NOTLARI
         git checkout -f file1
 
 
-- Güncelleme çakışmalarını çözmek.
+# Güncelleme çakışmalarını çözmek.
         - push aşamasında aynı anda güncellenmiş dosyaların listesi yer alır.
         - Dosya içinde eklenen ve çıkan satırlar işaretlidir. Bu kısımlar
           düzeltilir.
@@ -128,19 +161,8 @@ GIT NOTLARI
             git commit -m &quot;merged&quot;
             git push
 
-- Yapılan değişikliği geri almak
-        - Son değişiklikleri iptal edip HEAD'e dönmek.
-        git reset -- hard HEAD
 
-        - Sadece bir dosyayı, depodaki haline geri döndürmek
-        git checkout -- dosya
-        git checkout HEAD dosya
-
-        - Son yapılan commit'i geri alma.
-        git revert HEAD
-
-
-- branch ile çalışma
+# branch ile çalışma
         - branch oluşturma
                 git branch test
 
@@ -162,26 +184,17 @@ GIT NOTLARI
                 git branch -d test
 
 
-- depoyu klonlamak (klasör henuz yok, emc2-dev adıyla oluşacak)
+# depoyu klonlamak (klasör henuz yok, emc2-dev adıyla oluşacak)
         git clone git://git.linuxcnc.org/git/emc2.git emc2-dev
 
-- depodan son değişiklikleri almak
-        git pull --rebase
 
-- kendi değişikliklerimizi depoya yüklemek
-        (yaptıklarımız yerel depoya commit edilecek)
-        git pull --rebase
-        (çakışma varsa düzeltilecek)
-        git push
-
-- henüz yayınlanmaya hazır değişikliklerimiz varken depodan güncelleme
+# henüz yayınlanmaya hazır değişikliklerimiz varken depodan güncelleme
         git stash save
-        git pull --rebase
+        git pull
         git stash apply
 
 
-
-- Gitolite sunucu ayarları
+# Gitolite sunucu ayarları
         - Kurulum
         aptitude install gitolite
 
@@ -230,8 +243,7 @@ GIT NOTLARI
         git push
 
 
-
-- Kullanıcı
+# Kullanıcı
         - Anahtarı yükleme
         ssh-add .ssh/kullanici1
 

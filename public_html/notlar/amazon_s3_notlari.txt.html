@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>amazon_s3_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# AMAZON S3 NOTLARI
+# -----------------------------------------------------------------------------
+Bu dökümanda, Amazon S3 servisinin kullanımı ile ilgili notlar yer alır.
+
+İçerik güncellendiğinde, CloudFront'a bu güncellemeler geç yansıyor. Bu
+nedenler web yayınında doğrudan Amazon S3 kullanılabilir. S3'un webten
+erişilebilir olması için Amazon konsolda, S3 bölümünde, depo için
+&quot;Enable website hosting&quot; özelliği seçilecek. &quot;Index Document&quot; için index.html
+adlı bir dosya oluşturulup seçilebilir.
+
+
+# -----------------------------------------------------------------------------
+# S3CMD
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    aptitude install s3cmd
+
+
+# Ayar dosyasını oluşturma
+    s3cmd --configure
+
+
+# Ayar dosyasında değişiklik
+    vim &tilde;/.s3cfg
+        access_key = ...
+        secret_key = ...
+        #bucket_location = US
+        bucket_location = EU
+        acl_public = False
+        ...
+        ...
+
+
+# Sık kullanılan parametreler
+    # bucketleri listeleme
+        s3cmd ls
+
+    # bucketteki nesneleri listeleme
+        s3cmd ls s3://bucket_adi/
+        s3cmd ls s3://bucket_adi/a*
+
+    # buckete dosya kopyalama
+        s3cmd put dosya s3://bucket_adi/
+
+    # buckete dosya kopyalama (public)
+        s3cmd -P put dosya s3://bucket_adi/
+
+    # bucketten dosya alma
+        s3cmd get s3://bucket_adi/dosya_adi dosya_adi
+
+    # bucket disk kullanımı
+        s3cmd du s3://bucket_adi
+
+    # S3'deki dosyanın haklarını değiştirmek.
+        s3cmd -P setacl s3://bucket_adi/dosya
+
+    # Ayar dosyasını belirtmek
+        s3cmd -c /path/to/s3cfg ...
+
+    # Senkronizasyon
+        s3cmd --no-delete-removed --no-encrypt --no-check-md5 \
+        -P -H sync /path/to/local/folder s3://bucket_adi/remote_folder
+
+
+# -----------------------------------------------------------------------------
+# S3FS
+# -----------------------------------------------------------------------------
+
+    # Kaynak
+        http://code.google.com/p/s3fs/wiki/FuseOverAmazon
+        https://forums.aws.amazon.com/thread.jspa?threadID=39361
+
+
+    # Derleme için gerekli paketler (root)
+        aptitude install build-essential libfuse-dev fuse-utils \
+        libcurl4-openssl-dev libxml2-dev mime-support
+
+
+    # Derleme (normal kullanıcı)
+        mkdir -p &tilde;/source/s3fs
+        cd &tilde;/source/s3fs
+        wget http://s3fs.googlecode.com/files/s3fs-1.71.tar.gz
+        tar xvzf s3fs-1.71.tar.gz
+        cd s3fs-1.71/
+        ./configure --prefix=/usr
+        make
+
+
+    # Yükleme (root)
+        su
+        make install
+
+
+    # Otomatik mount için ayar dosyası
+        vim &tilde;/.passwd-s3fs
+            access_key:secret_key
+
+        chmod 600 &tilde;/.passwd-s3fs
+
+
+    # Mount etme
+        mkdir mountpoint
+        s3fs bucket_name mountpoint
+
+
+    # Umount
+        fusermount -u mountpoint
+
+
+    # Otomatik mount
+      vim /etc/fstab
+          s3fs#bucket_name  /mount/point  fuse  noatime,allow_other,default_acl=public-read,enable_noobj_cache,use_cache=/tmp,url=https://s3-eu-west-1.amazonaws.com  0  0
+
+
+      mount /mount/point
+      umount /mount/point
+
+</code></pre>
+</body>
+</html>
