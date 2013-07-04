@@ -400,8 +400,9 @@ ffmpeg  -re -i - \
 /etc/uwsgi/apps-available/geocheck.ini
     [uwsgi]
     plugins = python
-    uid = kullanici
+    uid = www-data
     gid = www-data
+    master = true
     socket=/var/run/uwsgi/app/geocheck/socket
     wsgi-file = /home/kullanici/wsgi/geocheck.py
 
