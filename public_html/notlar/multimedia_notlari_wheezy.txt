@@ -209,19 +209,31 @@ aptitude hold nginx-common nginx-extras
             application live {
                 live on;
 
+                # Bir sunucudaki butun streamler cekilecekse...
                 # pull rtmp://xxx.www.yyy.zzz:1935;
+                # Bir sunucudaki sadece bir stream cekilecekse...
                 # pull rtmp://xxx.www.yyy.zzz:1935/live/stream name=stream1 static;
 
+                # Yayin gonderebilecek IP adresleri.
                 allow publish 127.0.0.1;
                 deny publish all;
+                # Yayini izleyebilecek IP adresleri.
                 allow play all;
 
+                # HLS formatinda da yayin yapilacaksa...
                 hls on;
-                hls_path /tmp/live;
+                hls_path /var/tmp/hls;
                 hls_fragment 5s;
 
+                # Yayina baslamak icin key-frame beklenecekse...
                 wait_video on;
                 wait_key on;
+
+                # Yayini kaydilecekse...
+                record all;
+                record_path /var/tmp/record;
+                record_unique on;
+                record_interval 30m;
             }
         }
     }
@@ -229,17 +241,38 @@ aptitude hold nginx-common nginx-extras
 
 /etc/nginx/sites-available/default
     location /hls {
-        alias /tmp/live;
+        alias /var/tmp/hls;
+    }
+
+    location /video {
+        alias /var/tmp/record;
+        autoindex on;
     }
 
 
 - tmpfs altında hls path
-    mkdir /tmp/live
-    chown www-data: /tmp/live
+    mkdir /var/tmp/hls
+    chown www-data: /var/tmp/hls
+    mkdir /var/tmp/record
+    chown www-data: /var/tmp/record
+
 
 - restart
     /etc/init.d/nginx configtest
     /etc/init.d/nginx restart
+
+
+- HLS klasörü ramdisk olacaksa /etc/fstab icinde
+tmpfs  /var/tmp/hls  tmpfs  noatime,size=512M,nr_inodes=10k,mode=1777  0  0
+
+
+- Belli aralıklarla eski video segmentleri temizlenecekse
+    /root/scripts/cleanup.sh
+    #!/bin/bash
+    find /var/tmp/hls/ -type f -cmin +5 | xargs -iX rm X
+
+    /etc/crontab
+    *  *    * * *   root    /root/scripts/cleanup.sh >/dev/null 2>&1
 
 
 
@@ -249,7 +282,7 @@ aptitude hold nginx-common nginx-extras
 
 ffmpeg -i mmsh://85.111.3.55/ntv \
 -threads 0 -vprofile baseline -preset medium \
--c:v libx264 -b:v 256k -maxrate 256k -bufsize 512k \
+-c:v libx264 -b:v 256k -maxrate 256k -bufsize 512k -g 1 \
 -strict experimental -c:a aac -r:a 48000 -b:a 64k \
 -f flv rtmp://localhost:1935/live/yayin1
 
@@ -288,7 +321,7 @@ alsa:adevice=hw.0:forceaudio:audiorate=48000:amode=1:immediatemode=0 \
 -o - -really-quiet | \
 ffmpeg  -re -i - -threads 0 \
 -c:v libx264 -profile:v baseline -preset slow \
--b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT \
+-b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT -g 1 \
 -strict experimental -c:a aac -ac 2 -ar 48000 -ab 64k \
 -f flv rtmp://localhost:1935/live/yayin1
 
@@ -310,7 +343,7 @@ alsa:adevice=hw.0:forceaudio:audiorate=48000:amode=1:immediatemode=0 \
 -oac copy \
 -o - -really-quiet | \
 ffmpeg  -re -i - -threads 0 \
--c:v libx264 -profile:v baseline -preset ultrafast \
+-c:v libx264 -profile:v baseline -preset ultrafast -g 1 \
 -strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 96k \
 -f flv pipe:1 | \
 ffplay -f flv -i -
@@ -335,7 +368,7 @@ ffmpeg  -re -i - \
 -f alsa -i default \
 -threads 0 \
 -vcodec libx264 -vprofile baseline -preset medium \
--b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT \
+-b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT -g 1 \
 -strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 64k \
 -f flv rtmp://localhost:1935/live/yayin1
 
