@@ -216,6 +216,7 @@ aptitude hold nginx-common nginx-extras
 
                 # Yayin gonderebilecek IP adresleri.
                 allow publish 127.0.0.1;
+                allow publish X.Y.W.Z;
                 deny publish all;
                 # Yayini izleyebilecek IP adresleri.
                 allow play all;
@@ -240,6 +241,7 @@ aptitude hold nginx-common nginx-extras
                 record_suffix -%Y%m%d-%T.flv;
 
                 # exec ile push (ffmpeg yuklu olmasi gerekiyor)
+                allow play 127.0.0.1;
                 exec ffmpeg -re -i rtmp://localhost:1935/$app/$name -g 1 -vcodec copy -acodec copy -f flv rtmp://X.Y.V.Z:1935/$app/$name;
             }
         }
