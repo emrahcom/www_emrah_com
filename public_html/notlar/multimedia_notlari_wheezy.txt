@@ -237,6 +237,10 @@ aptitude hold nginx-common nginx-extras
                 record_path /var/tmp/record;
                 record_unique on;
                 record_interval 30m;
+                record_suffix -%Y%m%d-%T.flv;
+
+                # exec ile push (ffmpeg yuklu olmasi gerekiyor)
+                exec ffmpeg -re -i rtmp://localhost:1935/$app/$name -g 1 -vcodec copy -acodec copy -f flv rtmp://X.Y.V.Z:1935/$app/$name;
             }
         }
     }
@@ -466,6 +470,7 @@ ln -s ../apps-available/geocheck.ini .
         include uwsgi_params;
         uwsgi_pass unix:/var/run/uwsgi/app/geocheck/socket;
     }
+
 
 
 # Kaynaklar
