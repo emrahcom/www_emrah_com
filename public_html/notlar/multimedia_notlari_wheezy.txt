@@ -224,6 +224,9 @@ aptitude hold nginx-common nginx-extras
                 hls on;
                 hls_path /var/tmp/hls;
                 hls_fragment 5s;
+                hls_playlist_length 60s;
+                hls_continuous on;
+                hls_cleanup on;
 
                 # Yayina baslamak icin key-frame beklenecekse...
                 wait_video on;
@@ -269,7 +272,7 @@ tmpfs  /var/tmp/hls  tmpfs  noatime,size=512M,nr_inodes=10k,mode=1777  0  0
 - Belli aralıklarla eski video segmentleri temizlenecekse
     /root/scripts/cleanup.sh
     #!/bin/bash
-    find /var/tmp/hls/ -type f -cmin +5 | xargs -iX rm X
+    find /var/tmp/hls/ -type f -name "*.ts" -cmin +5 | xargs -iX rm X
 
     /etc/crontab
     *  *    * * *   root    /root/scripts/cleanup.sh >/dev/null 2>&1
