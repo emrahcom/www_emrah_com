@@ -33,6 +33,7 @@ ffplay  -loglevel quiet -v quiet \
 
 # Kaynaklar
 http://ffmpeg.org/trac/ffmpeg/wiki/x264EncodingGuide
+http://ffmpeg.org/trac/ffmpeg/wiki/AACEncodingGuide
 
 
 
