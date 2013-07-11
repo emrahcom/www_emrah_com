@@ -30,6 +30,11 @@ ffplay -f alsa -ac 2 -i default
 ffplay  -loglevel quiet -v quiet \
 -f video4linux2 -video_size 320x240 -vb 1024k -i /dev/video0
 
+# Ses çevrimi sırasında native AAC kullanılacaksa...
+    -c:a libfdk_aac -vbr 1 \
+ yerine
+    -strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 64k \
+
 
 # Kaynaklar
 http://ffmpeg.org/trac/ffmpeg/wiki/x264EncodingGuide
@@ -293,7 +298,7 @@ tmpfs  /var/tmp/hls  tmpfs  noatime,size=512M,nr_inodes=10k,mode=1777  0  0
 ffmpeg -i mmsh://85.111.3.55/ntv \
 -threads 0 -vprofile baseline -preset medium \
 -c:v libx264 -b:v 256k -maxrate 256k -bufsize 512k -g 1 \
--strict experimental -c:a aac -r:a 48000 -b:a 64k \
+-c:a libfdk_aac -vbr 1 \
 -f flv rtmp://localhost:1935/live/yayin1
 
 
@@ -332,7 +337,7 @@ alsa:adevice=hw.0:forceaudio:audiorate=48000:amode=1:immediatemode=0 \
 ffmpeg  -re -i - -threads 0 \
 -c:v libx264 -profile:v baseline -preset slow \
 -b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT -g 1 \
--strict experimental -c:a aac -ac 2 -ar 48000 -ab 64k \
+-c:a libfdk_aac -vbr 1 \
 -f flv rtmp://localhost:1935/live/yayin1
 
 
@@ -354,7 +359,7 @@ alsa:adevice=hw.0:forceaudio:audiorate=48000:amode=1:immediatemode=0 \
 -o - -really-quiet | \
 ffmpeg  -re -i - -threads 0 \
 -c:v libx264 -profile:v baseline -preset ultrafast -g 1 \
--strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 96k \
+-c:a libfdk_aac -vbr 1 \
 -f flv pipe:1 | \
 ffplay -f flv -i -
 
@@ -379,7 +384,7 @@ ffmpeg  -re -i - \
 -threads 0 \
 -vcodec libx264 -vprofile baseline -preset medium \
 -b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT -g 1 \
--strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 64k \
+-c:a libfdk_aac -vbr 1 \
 -f flv rtmp://localhost:1935/live/yayin1
 
 
