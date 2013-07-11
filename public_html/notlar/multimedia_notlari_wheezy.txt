@@ -483,3 +483,5 @@ ln -s ../apps-available/geocheck.ini .
 
 # Kaynaklar
 https://github.com/arut/nginx-rtmp-module/wiki/Directives
+# RTMP/RTSP/MMS/M3U8 adresleri
+http://radyodelisi.blogspot.com/
