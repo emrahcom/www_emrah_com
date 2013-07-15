@@ -248,7 +248,7 @@ aptitude hold nginx-common nginx-extras
 
                 # exec ile push (ffmpeg yuklu olmasi gerekiyor)
                 allow play 127.0.0.1;
-                exec ffmpeg -i rtmp://localhost:1935/$app/$name -vcodec copy -acodec copy -f flv rtmp://X.Y.V.Z:1935/$app/$name;
+                exec /home/kullanici/scripts/push.sh
             }
         }
     }
@@ -270,6 +270,22 @@ aptitude hold nginx-common nginx-extras
     chown www-data: /var/tmp/hls
     mkdir /var/tmp/record
     chown www-data: /var/tmp/record
+
+
+- push.sh
+    mkdir -p /home/kullanici/scripts
+    touch /home/kullanici/scripts/push.sh
+    chown www-data: /home/kullanici/scripts/push.sh
+    chmod u+x /home/kullanici/scripts/push.sh
+    vim /home/kullanici/scripts/push.sh
+        #!/bin/bash
+
+        app=$1
+        name=$2
+
+        ps aux | egrep ffmpeg | egrep $app | egrep $name | awk '{ print $2; }' | xargs -iX sudo /bin/kill X
+        sleep 2
+        ffmpeg -i rtmp://localhost:1935/$app/$name -vcodec copy -acodec copy -f flv rtmp://X.Y.V.Z:1935/$app/$name
 
 
 - restart
