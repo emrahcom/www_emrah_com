@@ -283,7 +283,7 @@ aptitude hold nginx-common nginx-extras
         app=$1
         name=$2
 
-        ps aux | egrep ffmpeg | egrep $app | egrep $name | awk '{ print $2; }' | xargs -iX sudo /bin/kill X
+        ps aux | egrep ffmpeg | egrep $app | egrep $name | awk '{ print $2; }' | xargs -iX kill X
         sleep 2
         ffmpeg -i rtmp://localhost:1935/$app/$name -vcodec copy -acodec copy -f flv rtmp://X.Y.V.Z:1935/$app/$name
 
