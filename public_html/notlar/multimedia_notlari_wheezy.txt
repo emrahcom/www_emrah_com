@@ -39,6 +39,8 @@ ffplay  -loglevel quiet -v quiet \
 # Kaynaklar
 http://ffmpeg.org/trac/ffmpeg/wiki/x264EncodingGuide
 http://ffmpeg.org/trac/ffmpeg/wiki/AACEncodingGuide
+https://sites.google.com/site/linuxencoding/x264-ffmpeg-mapping
+http://sonnati.wordpress.com/2011/08/19/ffmpeg-–-the-swiss-army-knife-of-internet-streaming-–-part-iii/
 
 
 
