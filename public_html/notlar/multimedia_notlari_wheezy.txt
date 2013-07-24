@@ -210,6 +210,13 @@ aptitude hold nginx-common nginx-extras
 
 # Nginx ayarları
 /etc/nginx/nginx.conf
+    # worker_process degeri, core sayisi kadar olsun.
+    worker_processes 4;
+
+    rtmp_auto_push on;
+    rtmp_auto_push_reconnect 1s;
+    rtmp_socket_dir /tmp;
+
     rtmp {
         server {
             listen 1935;
@@ -265,6 +272,23 @@ aptitude hold nginx-common nginx-extras
         alias /var/tmp/record;
         autoindex on;
     }
+
+    location /rtmp_stat {
+        rtmp_stat all;
+        rtmp_stat_stylesheet rtmp_stat.xsl;
+    }
+
+    location /rtmp_stat.xsl {
+        root /var/tmp/;
+    }
+
+
+- rtmp_stat.xsl
+    cp /home/kullanici/source/nginx/nginx-1.2.1/debian/modules/nginx-rtmp-module/stat.xsl /var/tmp/rtmp_stat.xsl
+    chown www-data: /var/tmp/rtmp_stat.xsl
+
+    RTMP durumunu takip etmek için:
+    http://ip_adresi/rtmp_stat
 
 
 - tmpfs altında hls path
