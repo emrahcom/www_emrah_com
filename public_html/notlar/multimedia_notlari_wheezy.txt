@@ -220,6 +220,7 @@ aptitude hold nginx-common nginx-extras
     rtmp {
         server {
             listen 1935;
+            ping 20s;
 
             application live {
                 live on;
@@ -239,8 +240,9 @@ aptitude hold nginx-common nginx-extras
                 # HLS formatinda da yayin yapilacaksa...
                 hls on;
                 hls_path /var/tmp/hls;
-                hls_fragment 5s;
+                hls_fragment 10s;
                 hls_playlist_length 60s;
+                hls_sync 300ms;
                 hls_continuous on;
                 hls_cleanup on;
 
