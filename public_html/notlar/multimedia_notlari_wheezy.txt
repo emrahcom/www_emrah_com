@@ -220,7 +220,6 @@ aptitude hold nginx-common nginx-extras
     rtmp {
         server {
             listen 1935;
-            ping 20s;
 
             application live {
                 live on;
