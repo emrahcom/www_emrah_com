@@ -231,6 +231,7 @@ aptitude hold nginx-common nginx-extras
     rtmp {
         server {
             listen 1935;
+            drop_idle_publisher 10s;
 
             application live {
                 live on;
