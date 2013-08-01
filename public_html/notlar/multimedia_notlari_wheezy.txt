@@ -295,6 +295,13 @@ aptitude hold nginx-common nginx-extras
         root /var/tmp/;
     }
 
+    location /rtmp_control {
+        rtmp_control all;
+
+        auth_basic "Restricted";
+        auth_basic_user_file /home/kullanici/nginx/htpasswd;
+    }
+
 
 - rtmp_stat.xsl
     cp /home/kullanici/source/nginx/nginx-1.2.1/debian/modules/nginx-rtmp-module/stat.xsl /var/tmp/rtmp_stat.xsl
@@ -302,6 +309,17 @@ aptitude hold nginx-common nginx-extras
 
     RTMP durumunu takip etmek için:
     http://ip_adresi/rtmp_stat
+
+
+- rtmp_control
+    # Bir izleyiciyi drop etme.
+        curl -u user:passwd "http://ip_adresi/rtmp_control/drop/client?app=uygulama_adi&name=yayin_adi&addr=X.Y.W.Z"
+
+    # Bütün izleyicileri drop etme.
+        curl -u user:passwd "http://ip_adresi/rtmp_control/drop/client?app=uygulama_adi&name=yayin_adi"
+
+    # Bir yayıncıyı drop etme.
+        curl -u user:passwd "http://ip_adresi/rtmp_control/drop/publisher?app=uygulama_adi&name=yayin_adi"
 
 
 - tmpfs altında hls path
@@ -473,7 +491,8 @@ ffmpeg  -re -i - \
     import GeoIP
     from cgi import parse_qs
 
-    ALLOWED_COUNTRIES = ['TR']
+    ENABLE_GEOIP = True
+    ALLOWED_COUNTRIES = ['TR', 'US']
 
     def application(environ, start_response):
         # Izleyici IP adresini al.
@@ -485,7 +504,7 @@ ffmpeg  -re -i - \
         country = g.country_code_by_addr(addr)
 
         # Ziyaretci, izin verilen bir ulkede ise onay mesajini hazirla.
-        if country in ALLOWED_COUNTRIES:
+        if not ENABLE_GEOIP or country in ALLOWED_COUNTRIES:
             status = '200 OK'
             output = 'OK'
         else:
