@@ -488,30 +488,54 @@ ffmpeg  -re -i - \
     #!/usr/bin/python
     #-*- coding: utf-8 -*-
 
+    import re
     import GeoIP
     from cgi import parse_qs
 
-    ENABLE_GEOIP = True
+    # Bolgesel erisim denetimi aktif mi? Aktif ise sadece izinli bolgeden gelen
+    # izleyiciler yayini izleyebilir.
+    ENABLE_GEOIP = False
+    # Izinli bolgeler.
     ALLOWED_COUNTRIES = ['TR', 'US']
+    # pageurl icin regex.
+    RE_PAGEURL = re.compile('http://([a-zA-Z0-9._-]+)')
+    # Izinli sitelerin listesi.
+    ALLOWED_SITES = ['emrah.com',
+                     'www.emrah.com']
 
-    def application(environ, start_response):
-        # Izleyici IP adresini al.
+    def application(env, start_response):
+        # Default olarak izleyiciye izin verilir.
+        status = '200 OK'
+        output = 'OK'
+
+        # Izleyici bilgilerini al.
         args = parse_qs(env['wsgi.input'].read())
         addr = args.get('addr', [''])[0]
+        pageurl = args.get('pageurl', [''])[0]
 
-        # Izleyici ulke kodunu al.
+        # Referer adresi al.
+        site = ''
+        g = RE_PAGEURL.search(pageurl)
+        if g:
+            site = g.group(1)
+
+        # Izleyici bolge kodunu al.
         g = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
         country = g.country_code_by_addr(addr)
 
-        # Ziyaretci, izin verilen bir ulkede ise onay mesajini hazirla.
-        if not ENABLE_GEOIP or country in ALLOWED_COUNTRIES:
-            status = '200 OK'
-            output = 'OK'
-        else:
+        # Bolge denetimi varsa ve izleyici, izin verilen bolgeden degilse, yayini
+        # izleyemez.
+        if (ENABLE_GEOIP is True) and (country not in ALLOWED_COUNTRIES):
+            status = '500 ERROR'
+            output = 'error'
+        # Ziyaretci bir web sitesinden geldiyse ve bu site, izinli siteler
+        # listesinde yoksa, yayini izleyemez.
+        elif len(pageurl) and (site not in ALLOWED_SITES):
             status = '500 ERROR'
             output = 'error'
 
-        # Onay veya red cevabi dondur.
+        # Cevabi dondur. '200 OK' donerse stream baslar, '500 ERROR' donerse stream
+        # baslamaz.
         response_headers = [('Content-type', 'text/plain'),
                             ('Content-Length', str(len(output)))]
         start_response(status, response_headers)
