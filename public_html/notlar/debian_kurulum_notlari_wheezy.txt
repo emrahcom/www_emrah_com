@@ -299,7 +299,16 @@ aptitude install dpkg-dev build-essential fakeroot
                         z $@ | head -10
                 }
 
+        - ~/.zshrc (root için)
+                binkey -v
+                alias ls='ls --color=auto'
+                export TMOUT=1200
+
         - ~/.zshrc (normal kullanıcı)
+                binkey -v
+                alias ls='ls --color=auto'
+                export TMOUT=1200
+
                 alias z='~/bin/zargan.py'
                 zz(){
                         z $@ | more
@@ -307,7 +316,6 @@ aptitude install dpkg-dev build-essential fakeroot
                 zl(){
                         z $@ | head -10
                 }
-                alias ls='ls --color=auto'
 
         - ~/.config/fish/config.fish
                 alias z='~/bin/zargan.py'
