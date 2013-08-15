@@ -21,6 +21,9 @@ Configure the network           : Özel bi durum olmadıkça DHCP kulan.
                                   sunucudan ayarla. DNS ayarlamak gerekirse,
                                   aşağıdakiler kullanılabilir.
 
+                                        4.4.4.2         Level3
+                                        4.4.4.3         Level3
+                                        4.4.4.4         Level3
                                         208.67.222.222  OpenDNS
                                         208.67.220.220  OpenDNS
                                         8.8.8.8         Google
