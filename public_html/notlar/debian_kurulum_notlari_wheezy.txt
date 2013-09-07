@@ -260,7 +260,6 @@ aptitude install zenity                                 # checkPOP3 kullanilacak
 # Programlama (masaüstü) paketleri
 aptitude install python-qt4
 aptitude install dia                                    # UML ve benzeri diagramlar icin
-aptitude install bouml                                  # UML ve benzeri diagramlar icin
 
 # Debian kaynak kod paketleri ile çalışılacaksa
 aptitude install dpkg-dev build-essential fakeroot
