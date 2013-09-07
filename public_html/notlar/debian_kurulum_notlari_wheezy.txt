@@ -63,9 +63,6 @@ deb http://mozilla.debian.net/ wheezy-backports iceweasel-release
 deb http://www.deb-multimedia.org wheezy main non-free
 deb-src http://www.deb-multimedia.org wheezy main non-free
 
-# Bouml
-deb http://www.bouml.fr/apt/wheezy wheezy non-free
-
 
 # /etc/apt/apt.conf.d/80recommends
 APT::Install-Recommends "0";
@@ -77,8 +74,9 @@ APT::Default-Release "wheezy";
 
 
 # Anahtar yüklemeleri
-# Bouml
-wget -q http://www.bouml.fr/bouml_key.asc -O- | apt-key add -
+# Iceweasel release
+aptitude install pkg-mozilla-archive-keyring
+
 
 # Güncelleme
 aptitude update && \
