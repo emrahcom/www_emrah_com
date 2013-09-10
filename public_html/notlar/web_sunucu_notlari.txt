@@ -107,7 +107,7 @@ Bu dökümanda, web sunucu kurarken gerekli olabilecek notlar yer alır.
 # Custom sertifika
     mkdir /etc/apache2/ssl
     cd /etc/apache2/ssl
-    openssl req -x509 -days 365 -newkey rsa:1024 -keyout hostkey.key -nodes -out hostcert.pem
+    openssl req -x509 -days 1800 -newkey rsa:1024 -keyout hostkey.key -nodes -out hostcert.pem
     chmod 600 *
 
 # /etc/apache2/sites-enabled/default-ssl
