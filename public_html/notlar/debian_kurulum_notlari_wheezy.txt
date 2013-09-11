@@ -53,8 +53,8 @@ deb-src http://security.debian.org/ wheezy/updates main
 
 # Surum guncellemesi yapilan paketler kullanilacaksa...
 # Sadece masaustu makinelerde eklensin.
-deb http://http.debian.net/debian wheezy-updates main contrib non-free
-deb-src http://http.debian.net/debian wheezy-updates main contrib non-free
+deb http://ftp.us.debian.org/debian wheezy-updates main
+deb-src http://ftp.us.debian.org/debian wheezy-updates main
 
 # Iceweasel yeni surumler kullanilacaksa...
 deb http://mozilla.debian.net/ wheezy-backports iceweasel-release
