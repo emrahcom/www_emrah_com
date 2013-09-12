@@ -188,6 +188,7 @@ Servis restart edilmeden önce mutlaka yapılsın.
     http {
             keepalive_timeout 2;
             client_max_body_size 16M;       # maksimum upload boyu icin gerekli.
+            large_client_header_buffers 4 16k; # client headers'i icin buffer boyutu.
 
             server_tokens off;              # Sunucu hakkinda bilgi vermesin
             proxy_hide_header X-Powered-By;
