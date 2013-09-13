@@ -185,7 +185,7 @@ aptitude install python-ipy
 aptitude install htop iotop iftop bmon bwm-ng
 
 # network paketleri
-aptitude install fping arping whois curl dnsutils telnet
+aptitude install fping arping whois curl dnsutils telnet sshuttle
 aptitude install nuttcp ngrep netcat-openbsd
 aptitude install ethtool net-tools nmap tcpdump dnsmasq
 aptitude install minicom                (Seri porttan bağlanan cihazlar için)

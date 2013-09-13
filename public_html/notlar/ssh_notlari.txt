@@ -2,7 +2,7 @@ SSH NOTLARI
 -----------
 
 
-* Anahtar çiftinin üretilmesi
+# Anahtar çiftinin üretilmesi
         cd ~/.ssh
         ssh-keygen -t rsa -b 2048 -f dosya_adi
 
@@ -17,7 +17,7 @@ SSH NOTLARI
 
 
 
-* Genel anahtarın sunucuya yüklenmesi
+# Genel anahtarın sunucuya yüklenmesi
         ssh-copy-id -i dosya_adi.pub kullanici@12.12.12.12
         ssh-copy-id -i dosya_adi.pub "kullanici@12.12.12.12 -p2222"
 
@@ -33,7 +33,7 @@ SSH NOTLARI
 
 
 
-* ssh-agent'ın çalıştırılması
+# ssh-agent'ın çalıştırılması
         ssh-agent, konsola geçildiğinde otomatik olarak çalışır. Ayrıca bir işlem
         yapmaya gerek yok.
                 ssh-agent /bin/bash     ( başlatmak için        )
@@ -41,7 +41,7 @@ SSH NOTLARI
 
 
 
-* ssh-agent'a özel anahtarların eklenmesi
+# ssh-agent'a özel anahtarların eklenmesi
         ssh-add ~/.ssh/dosya_adi
 
         Özel anahtar eklenirken geçiş kelimesi (passphrase) sorulur. Aynı anda birçok
@@ -53,7 +53,7 @@ SSH NOTLARI
 
 
 
-* ssh ile çalışma
+# ssh ile çalışma
         Bundan sonra parola yazılmadan normal ssh işlemleri yapılabilir.
 
         Örnek:
@@ -63,13 +63,13 @@ SSH NOTLARI
 
 
 
-* Cevap vermeyen ssh oturumunu sonlandırma
+# Cevap vermeyen ssh oturumunu sonlandırma
 
         <enter>~.
 
 
 
-* ssh sunucuya sadece key kullanılarak bağlanılması isteniyorsa ve parola ile
+# ssh sunucuya sadece key kullanılarak bağlanılması isteniyorsa ve parola ile
   girişe izin verilmeyecekse
 
         /etc/sshd_config
@@ -77,29 +77,29 @@ SSH NOTLARI
 
 
 
-* Uzaktaki makinedeki logu takip etme
+# Uzaktaki makinedeki logu takip etme
         ssh -t 12.12.12.12 "tail -f /var/log/xxx"
 
 
 
-* Bağlantıda parola sormasın, key ile bağlanmayı denesin
+# Bağlantıda parola sormasın, key ile bağlanmayı denesin
         ssh -o PasswordAuthentication=no domain.com
 
 
 
-* Key'e göre bağlanan kullanıcının, shell yerine başka bir programı başlatıyor olması için
+# Key'e göre bağlanan kullanıcının, shell yerine başka bir programı başlatıyor olması için
         Sunucuda ~/.ssh/authorized_keys dosyasında:
 
         command='/usr/bin/python' ssh-rsa ....
 
 
 
-* Host key kontrolunun bir bağlantıda geçici olarak kaldırılması
+# Host key kontrolunun bir bağlantıda geçici olarak kaldırılması
         ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no domain.com
 
 
 
-* ssh ile X uygulamalarının uzaktan çalıştırılması
+# ssh ile X uygulamalarının uzaktan çalıştırılması
         - Sunucuda X yüklü olmayacaksa xauth paketini yüklemek gerekiyor.
                 aptitude install xauth
 
@@ -113,7 +113,7 @@ SSH NOTLARI
 
 
 
-* sshfs
+# sshfs
         sshfs paketi bir ara incelensin. Debian deposundan yüklenen pakette bir sorun var.
 
         - sshfs paketini yükle
@@ -134,7 +134,7 @@ SSH NOTLARI
                 -o ssh_command="ssh -p22 -l kullanici -i ~/.ssh/key"
 
 
-* Transfer edilen verinin sıkıştırılması
+# Transfer edilen verinin sıkıştırılması
         ssh, scp gibi komutlara -C parametresi eklenir. Bağlantı yavaş ise kullanılmalı.
         Hızlı bağlantılarda tersine yavaşlamaya sebep olabilir.
 
@@ -147,7 +147,19 @@ SSH NOTLARI
                         CompressionLevel=9
 
 
-* SSH tunel
+# sshuttle ile VPN
+        # Client kurulum
+        aptitude install sshuttle
+
+        # Sunucu kurulum
+        SSH Server ve Python kurulu olması gerekiyor.
+
+        # VPN bağlantısı (root olarak)
+        ssh -r kullanici@ip_adresi:port 10.10.0.0/16 192.168.5.0/24
+        ssh -r kullanici@ip_adresi:port 0.0.0.0/0 --dns
+
+
+# SSH tunel
         Düz tünel. Bize bağlanabilen makineler, üzerimizden geçip bağlantığımız makine üzerinden bağlantı
         kurar.
 
@@ -195,7 +207,7 @@ SSH NOTLARI
                                         Bu bağlantının diğer ucu, host2'nin belirtilen portuna çıkacak. :1 vnc için display numarası.
 
 
-* Reverse SSH
+# Reverse SSH
         Ters tünel. Bağlandığımız makineye bağlanabilen makineler, üzerimizden geçip bağlantı kurarlar.
 
         Host2, host3'e bağlanmak istemektedir ama aradaki firewall blokladığından veya
@@ -232,7 +244,7 @@ SSH NOTLARI
                 curl host2:10001
 
 
-* SSH ile SOCK5 server
+# SSH ile SOCK5 server
         ssh -ND 8080 -p22 host2
 
                 -p22                    host2'deki SSH sunucuya 22. porttan bağlan. Default port
