@@ -155,8 +155,8 @@ SSH NOTLARI
         SSH Server ve Python kurulu olması gerekiyor.
 
         # VPN bağlantısı (root olarak)
-        ssh -r kullanici@ip_adresi:port 10.10.0.0/16 192.168.5.0/24
-        ssh -r kullanici@ip_adresi:port 0.0.0.0/0 --dns
+        sshuttle -r kullanici@ip_adresi:port 10.10.0.0/16 192.168.5.0/24
+        sshuttle -r kullanici@ip_adresi:port 0.0.0.0/0 --dns
 
 
 # SSH tunel
