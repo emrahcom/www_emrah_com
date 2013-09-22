@@ -67,6 +67,10 @@
         :set ic
         büyük-küçük harf ayırt etmeden arar (ic=ignore case)
 
+        :set relativenumber
+        Bulunulan satırı 0 kabul ederek aşağıya ve yukarıya doğru satırları
+        numaralandılır.
+
         :set smartcase
         arama yaparken büyük harf kullanılmışsa, büyük-küçük harfi dikkate alarak arama yapar.
 
@@ -155,6 +159,7 @@
 :syntax on
 :set is
 :set ic
+:set relativenumber
 :set smartcase
 :set mouse=a
 :nnoremap / /\v
