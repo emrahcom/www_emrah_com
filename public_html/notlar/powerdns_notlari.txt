@@ -59,8 +59,19 @@ Debian Wheezy i386 makinede denenmiştir
         launch=gpgsql,bind
         include=/etc/powerdns/pdns.d
 
+# master modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
+    master=yes
+
+# supermaster modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
+    allow-axfr-ips=11.22.33.4/32
+    disable-axfr=no
+
 # slave modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
     slave=yes
+
+# slave makineye supermaster makine eklenecekse
+    INSERT INTO supermasters (ip, nameserver, account)
+    VALUES ('55.66.77.88', 'pns1.domain.net', 'admin');
 
 # Servisin restart edilmesi.
     /etc/init.d/pdns restart
