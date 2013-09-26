@@ -1,0 +1,87 @@
+# -----------------------------------------------------------------------------
+# GSTREAMER NOTLARI
+# -----------------------------------------------------------------------------
+
+
+
+# -----------------------------------------------------------------------------
+# WHEEZY KURULUM
+# -----------------------------------------------------------------------------
+aptitude install libgstreamer0.10-0 gstreamer0.10-tools \
+libgstreamer-plugins-base0.10-0 gstreamer0.10-plugins-good \
+gstreamer0.10-plugins-ugly libgstreamer-plugins-bad0.10-0 \
+gstreamer0.10-ffmpeg gstreamer0.10-plugins-bad \
+gstreamer0.10-alsa
+
+aptitude install gir1.2-freedesktop gir1.2-gstreamer-0.10 gstreamer0.10-x
+
+
+
+# -----------------------------------------------------------------------------
+# RASPBIAN KURULUM
+# -----------------------------------------------------------------------------
+
+# vim /etc/apt/sources.list.d/vontaene.list
+    deb http://vontaene.de/raspbian-updates/ . main
+
+# Güncelleme
+    aptitude update
+
+# Kurulum
+    aptitude install libgstreamer1.0-0-dbg gstreamer1.0-tools \
+    libgstreamer-plugins-base1.0-0 gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad-dbg gstreamer1.0-omx gstreamer1.0-alsa
+
+
+
+# -----------------------------------------------------------------------------
+# PLUGINS
+# -----------------------------------------------------------------------------
+
+# Plugin listesi
+    gst-inspect-0.10
+
+# Bir pugin hakkında detaylı bilgi
+    gst-inspect-0.10 volume
+
+
+
+# -----------------------------------------------------------------------------
+# KOMUT ÖRNEKLERİ
+# -----------------------------------------------------------------------------
+
+# Test sinyali (ses)
+gst-launch-0.10 audiotestsrc ! audioconvert ! audioresample ! alsasink
+
+
+# Test sinyali (video)
+gst-launch-0.10 videotestsrc ! ffmpegcolorspace ! autovideosink
+gst-launch-0.10 videotestsrc pattern=1 ! ffmpegcolorspace ! autovideosink
+
+gst-launch-0.10 videotestsrc ! ffmpegcolorspace ! \
+tee name=p1 ! queue2 ! autovideosink p1. ! \
+tee name=p2 ! queue2 ! autovideosink p2. ! \
+queue2 ! autovideosink
+
+
+# ALSA üzerinden MP3 çalma
+gst-launch-0.10 -v filesrc location=muzik.mp3 ! mad ! alsasink
+gst-launch-0.10 -v filesrc location=muzik.mp3 ! decodebin ! alsasink
+
+
+# Video oynatma
+gst-launch-0.10 -v playbin2 uri=file:///path/to/test.mp4
+gst-launch-0.10 filesrc location="test.mp4" ! decodebin2 ! autovideosink
+
+
+
+gst-launch-0.10 v4l2src device=/dev/video0 !
+video/x-raw-yuv,width=640,height=480 ! avimux ! filesink location=rest0.avi
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://vontaene.de/raspbian-updates/dists/main/
+http://nginx-rtmp.blogspot.com/2013/07/gstreamer-and-raspberry-pi.html
+http://wiki.matthiasbock.net/index.php/Hardware-accelerated_video_playback_on_the_Raspberry_Pi
