@@ -74,9 +74,11 @@ gst-launch-0.10 -v playbin2 uri=file:///path/to/test.mp4
 gst-launch-0.10 filesrc location="test.mp4" ! decodebin2 ! autovideosink
 
 
+# v4l2 aygıtından dosyaya kayıt
+gst-launch-0.10 -e v4l2src device=/dev/video0 ! \
+'video/x-raw-yuv,framerate=20/1' ! \
+avimux ! filesink location=camera.avi
 
-gst-launch-0.10 v4l2src device=/dev/video0 !
-video/x-raw-yuv,width=640,height=480 ! avimux ! filesink location=rest0.avi
 
 
 # -----------------------------------------------------------------------------
