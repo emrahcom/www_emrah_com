@@ -230,6 +230,7 @@ aptitude install pulseaudio pulseaudio-utils mplayer
 # Programlama paketleri
 aptitude install vim-nox                                # script destekli vim
 aptitude install git                                    # versiyon kontrol sistemi
+aptitude install python-pudb                            # Python debugger
 aptitude install python-nose                            # unittest
 aptitude install python-pexpect                         # shell uygulamalarını interaktif çalıştırma
 aptitude install pychecker pylint pyflakes              # kod kalitesi ve hata kontrol
