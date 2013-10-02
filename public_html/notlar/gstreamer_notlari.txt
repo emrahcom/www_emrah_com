@@ -51,7 +51,8 @@ aptitude install gir1.2-freedesktop gir1.2-gstreamer-0.10 gstreamer0.10-x
 # -----------------------------------------------------------------------------
 
 # Test sinyali (ses)
-gst-launch-0.10 audiotestsrc ! audioconvert ! audioresample ! alsasink
+gst-launch-0.10 audiotestsrc volume=0.8 ! \
+audioconvert ! audioresample ! alsasink
 
 
 # Test sinyali (video)
