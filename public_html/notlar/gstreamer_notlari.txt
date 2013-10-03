@@ -70,6 +70,19 @@ gst-launch-0.10 -v filesrc location=muzik.mp3 ! mad ! alsasink
 gst-launch-0.10 -v filesrc location=muzik.mp3 ! decodebin ! alsasink
 
 
+# ALSA line-in girişini dinleme
+gst-launch-0.10 alsasrc device=plughw:0 ! audioconvert ! alsasink sync=false
+
+
+# ALSA line-in girişinden MP3 oluşturma
+gst-launch-0.10 alsasrc device=plughw:0 ! lame ! filesink location=capture.mp3
+
+
+# ALSA line-in girişinden FLV (AAC ses) oluşturma
+gst-launch-0.10 alsasrc device=plughw:0 ! ffenc_aac ! flvmux ! \
+filesink location=capture.flv
+
+
 # Video oynatma
 gst-launch-0.10 -v playbin2 uri=file:///path/to/test.mp4
 gst-launch-0.10 filesrc location="test.mp4" ! decodebin2 ! autovideosink
