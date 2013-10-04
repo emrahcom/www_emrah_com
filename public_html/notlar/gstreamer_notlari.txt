@@ -70,8 +70,19 @@ gst-launch-0.10 -v filesrc location=muzik.mp3 ! mad ! alsasink
 gst-launch-0.10 -v filesrc location=muzik.mp3 ! decodebin ! alsasink
 
 
+# ALSA aygıt listesi
+cat /proc/asound/cards
+ 0 [ALSA           ]: BRCM bcm2835 ALSbcm2835 ALSA - bcm2835 ALSA
+                      bcm2835 ALSA
+ 1 [EasyALSA1      ]: easycapdc60 - easycap_alsa
+                      easycap_alsa
+
+
 # ALSA line-in girişini dinleme
 gst-launch-0.10 alsasrc device=plughw:0 ! audioconvert ! alsasink sync=false
+
+gst-launch-0.10 alsasrc device=plughw:DEVICE_NAME ! \
+audioconvert ! alsasink sync=false
 
 
 # ALSA line-in girişinden MP3 oluşturma
