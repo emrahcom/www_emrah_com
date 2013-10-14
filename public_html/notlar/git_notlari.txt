@@ -24,6 +24,16 @@
         git config --list
         cat ~/.gitconfig
 
+# ~/.gitconfig
+[user]
+    name = emrah
+    email = emrah@mail.com
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+
+
 
 # Ana depo oluşturmak
         mkdir repositories
