@@ -156,7 +156,17 @@ SSH NOTLARI
 
         # VPN bağlantısı (root olarak)
         sshuttle -r kullanici@ip_adresi:port 10.10.0.0/16 192.168.5.0/24
-        sshuttle -r kullanici@ip_adresi:port 0.0.0.0/0 --dns
+        sshuttle -r kullanici@ip_adresi:port 0/0 --dns
+
+        # SSH key kullanılmak isteniyorsa /root/.ssh/config dosyasına host
+        tanımı gerekiyor.
+            Host host1
+                Hostname 11.22.33.44
+                User emrah
+                Port 22
+                IdentityFile /home/emrah/.ssh/privatekey
+
+        sshuttle -r host1 0/0 --dns
 
 
 # SSH tunel
