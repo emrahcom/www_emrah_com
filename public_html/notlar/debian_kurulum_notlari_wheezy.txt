@@ -87,7 +87,7 @@ aptitude purge ~c
 
 
 # İlk aşamada yüklenecek paketler
-aptitude install vim-nox tmux less zsh fish
+aptitude install vim-nox tmux less zsh
 
 
 # Default paketlerden silinecekler
@@ -248,8 +248,9 @@ aptitude install postgresql postgresql-contrib
 aptitude install phppgadmin
 
 # Masaüstü paketleri
-aptitude install xorg openbox menu xsel
+aptitude install xorg openbox
 aptitude install xterm xtrlock unclutter numlockx
+aptitude install xsel scrot
 aptitude install iceweasel
 aptitude install flashplugin-nonfree
 aptitude install chromium dwb
@@ -329,15 +330,30 @@ aptitude install dpkg-dev build-essential fakeroot
                         z $@ | head -10
                 }
 
-        - ~/.config/fish/config.fish
-                alias z='~/bin/zargan.py'
-                function zz
-                        z $argv | more
-                end
 
-                function zl
-                        z $argv | head -10
-                end
+
+# ~/bin/
+        - capture_screen
+        Ekran görüntüsünü alıp SimpleHTTPServer ile web'ten yayınlar.
+        Pencere yöneticisi için kısayol oluşturulsun.
+
+            #!/bin/bash
+
+            mkdir -p /tmp/screenshot
+            scrot /tmp/screenshot/screenshot.png
+            echo '<html><body><img src="screenshot.png" /></body></html>' >
+            /tmp/screenshot/index.html
+
+            x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow \
+            -fn "-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1" \
+            -T "Capture Screen" -e /bin/bash -c \
+            "/sbin/ifconfig eth | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1; \
+            echo -e '\n\n'; \
+            cd /tmp/screenshot && python -m SimpleHTTPServer 9999"
+
+        - zargan.py
+        Kod deposundan kopyalanacak.
+
 
 
 # iceweasel
