@@ -1,3 +1,19 @@
+# -----------------------------------------------------------------------------
+# YENİ EKLENENLER
+# -----------------------------------------------------------------------------
+
+- gi ile son yazma işlemi yapılan yerde yazma moduna geçme.
+- d/pattern y/pattern ile aranan lısma kadar silme/kopyalama.
+- J bulunulan satırla alt satırı birleştirme (join).
+- :r!komut komut çıktısını metne paste eder.
+- :r!cat ile OS clipboarddan :set paste yapmaya gerek kalmadan paste.
+- Daha sık mark kullan. mc, 'c, d'c, y'c
+
+http://stackoverflow.com/questions/1218390/what-is-your-most-productive-shortcut-with-vim/1220118#1220118/
+
+
+
+# -----------------------------------------------------------------------------
 * vim-nox kur.
   NERD_Tree kurulacak.
   pyflakes-vim kurulacak.
