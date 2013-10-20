@@ -315,6 +315,26 @@
 		</action>
 	</keybind>
 
+	<keybind key="C-W-A-d">
+		<action name="Execute">
+			<startupnotify>
+				<enabled>true</enabled>
+				<name>Redshift Day</name>
+			</startupnotify>
+			<command>redshift -O 5500</command>
+		</action>
+	</keybind>
+
+	<keybind key="C-W-A-n">
+		<action name="Execute">
+			<startupnotify>
+				<enabled>true</enabled>
+				<name>Redshift Day</name>
+			</startupnotify>
+			<command>redshift -O 3700</command>
+		</action>
+	</keybind>
+
 	<keybind key="W-c">
 		<action name="Execute">
 			<startupnotify>
