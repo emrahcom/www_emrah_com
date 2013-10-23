@@ -79,11 +79,11 @@ aptitude install pkg-mozilla-archive-keyring
 
 
 # Güncelleme
-aptitude update && \
-aptitude -dy full-upgrade && \
+apt-get update && \
+apt-get -dy dist-upgrade && \
 aptitude autoclean && \
 aptitude full-upgrade && \
-aptitude purge ~c
+aptitude purge "~c"
 
 
 # İlk aşamada yüklenecek paketler
