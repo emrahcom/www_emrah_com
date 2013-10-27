@@ -74,6 +74,7 @@ filetype plugin indent on
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
+Bundle 'Lokaltog/vim-easymotion'
 Bundle 'kevinw/pyflakes-vim'
 
 set is
