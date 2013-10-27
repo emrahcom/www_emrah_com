@@ -1,9 +1,10 @@
 # -----------------------------------------------------------------------------
-# YENİ EKLENENLER
+# KULLANIM ALIŞKANLIKLARINA BUNLARI DA EKLE
 # -----------------------------------------------------------------------------
 
+- easymotion
 - gi ile son yazma işlemi yapılan yerde yazma moduna geçme.
-- d/pattern y/pattern ile aranan lısma kadar silme/kopyalama.
+- d/pattern y/pattern ile aranan kısma kadar silme/kopyalama.
 - J bulunulan satırla alt satırı birleştirme (join).
 - :r!komut komut çıktısını metne paste eder.
 - :r!cat ile OS clipboarddan :set paste yapmaya gerek kalmadan paste.
@@ -14,196 +15,95 @@ http://stackoverflow.com/questions/1218390/what-is-your-most-productive-shortcut
 
 
 # -----------------------------------------------------------------------------
-* vim-nox kur.
-  NERD_Tree kurulacak.
-  pyflakes-vim kurulacak.
+# KURULUM NOTLARI
+# -----------------------------------------------------------------------------
 
+- vim veya vim-nox paketini kur.
+    aptitude install vim-nox
 
-* NERDTree
-        http://www.vim.org/scripts/script.php?script_id=1658
-        Download NERD_tree.zip -> ~/.vim/
-        curl -s http://www.vim.org/scripts/script.php?script_id=1658 | grep NERD_tree.zip | head -n1
+- Python kodu yazılacaksa pyflakes paketini kur.
+        aptitude install pyflakes
 
-        mkdir -p
-        cd ~/.vim/
-        wget http://www.vim.org/scripts/download_script.php?src_id=11834
-        mv download_script.php\?src_id\=11834 NERD_tree.zip
-        unzip NERD_tree.zip
+- Vim pluginlerini yönetmek için Vundle kur. Vundle'ın çalışması için Git
+  paketinin kurulu olması gerekiyor.
+        # http://www.emrah.com/notlar/git_notlari.txt
+        aptitude install git
 
+        # normal kullanıcı hesabı ile
+        cd
+        mkdir -p .vim/bundle
+        git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 
-* pyflakes-vim
-        $LANG, en_US.UTF-8 olsun. Türkçe seçili olunca problem çıkarıyor.
+        # .vimrc içine
+        set nocompatible
+        filetype off
+        filetype plugin indent on
 
-        aptitude install pyflakes  #root olarak
-        http://www.vim.org/scripts/script.php?script_id=2441
-        Download pyflakes-vim.zip -> ~/.vim/
-        curl -s http://www.vim.org/scripts/script.php?script_id=2441 | grep pyflakes-vim.zip | head -n1
+        set rtp+=~/.vim/bundle/vundle/
+        call vundle#rc()
+        Bundle 'gmarik/vundle'
+        Bundle 'kevinw/pyflakes-vim'
+        Bundle 'Lokaltog/vim-easymotion'
 
-        cd ~/.vim/
-        wget http://www.vim.org/scripts/download_script.php?src_id=14403
-        mv download_script.php\?src_id\=14403 pyflakes-vim.zip
-        unzip pyflakes-vim.zip
+        # Vundle ile vim pluginlerini yönetmek için vim içindeyken:
+            ## .vimrc içinde belirtilen pluginleri yükleme
+            :BundleInstall
 
-        vim ~/.vimrc
-                :filetype on
-                :filetype plugin on
-                let g:pyflakes_use_quickfix=0
+            ## .vimrc içinde belirtilen pluginleri güncelleme
+            :BundleUpdate
 
+            ## Plugin silme. Önce .vimrc içinden plugin satırı silinir.
+            :BundleClean
 
-* Pydiction kurulabilir (Python kodlarını tab ile tamamlaması için)
+            ## Plugin arama
+            :BundleSearch kelime
 
-        http://www.vim.org/scripts/script.php?script_id=850
-        adresinden en yeni paketi indirip aç
-
-        mkdir -p ~/.vim/after/ftplugin/pydiction/
-        cp python_pydiction.vim ~/.vim/after/ftplugin/
-        cp complete-dict ~/.vim/after/ftplugin/pydiction/
-
-        .vimrc dosyasına
-                :filetype plugin on
-                :let g:pydiction_location = '~/.vim/after/ftplugin/pydiction/complete-dict'
-
-
-* .vimrc
-        Başlangıç ayarları bu dosya içine yazılır.
-        Sıkca kullanılabilecek bazı ayarlar:
-
-        :syntax on
-        dosya tipine göre renklendirme/biçimlendirme yapar
-
-        :filetype on
-        dosya tipi tanıma açık
-
-        :filetype plugin on
-        dosya tipine göre plugin desteği
-
-        :set is
-        arama şablonu yazılırken bulmaya başlar (is= instant search)
-
-        :set ic
-        büyük-küçük harf ayırt etmeden arar (ic=ignore case)
-
-        :set relativenumber
-        Bulunulan satırı 0 kabul ederek aşağıya ve yukarıya doğru satırları
-        numaralandılır.
-
-        :set smartcase
-        arama yaparken büyük harf kullanılmışsa, büyük-küçük harfi dikkate alarak arama yapar.
-
-        :set mouse=a
-        Vim içinde mouse kullanmak için.
-
-        :nnoremap / /\v
-        :vnoremap / /\v
-        Perl/Python sentaksına uygun düzenli ifade (regular expression) kullanır.
-
-        :set hls
-        metin içinde arama şablonuna uyan bölümleri belirginleştirir (hls=highlighted search)
-
-        :set number
-        satır numaralarını gösterir.
-
-        :set hidden
-        bir tampon bellekten diğerine, değişiklikleri kaydetmeden geçmeye izin verir.
-
-        :set encoding=utf-8
-        default encoding'i utf-8 yapar
-
-        :set bg=dark
-        arkaplani koyulaştırır. Özellikle SSH ile bağlanılan makineler için iyi sonuç veriyor.
-
-        :set scrolloff=3
-        Cursor sayfanın altına veya üstüne getirildiğinde X satır üsten/alttan fazladan gösterilir.
-
-        :set textwidth=79
-        Satır uzunluğu. Satır uzunluğu bu kadar karakter olunca otomatik alt satira geçer.
-
-        :set tabstop=8
-        tab uzunluğu
-
-        :set shiftwidth=4
-        Görsel modda < ve > karakterlerine basıldığında bloğun ne kadar kaydırılacağı
-
-        :set softtabstop=4
-        boşluklardan oluşan feyk tabın uzunluğu
-
-        :set expandtab
-        tab tuşuna basıldığında boşluk karakterlerinden oluşan feyk tab kullanılmasını sağlar
-
-        :set autoindent
-        alt satıra geçirdiğinde, üst satırın girintisine uyulur
-
-        :set list
-        unprintable karakterleri gösterir
-
-        :set listchars==tab:»·,trail:·
-        tab karakteri için '»', tab boşlukları için '.', satır sonundaki fazlalık boşluklar için '.' gösterir
-
-        :autocmd InsertEnter * set cursorline cursorcolumn
-        Yazma moduna geçince imlecin bulunduğu satırın altı çizilir
-        Bulunulan kolon renklendirilir
-
-        :autocmd InsertLeave * set nocursorline
-        Komut moduna geçince cursorline ve cursorcolumn iptal edilir
-
-        :highlight cursorline cterm=none ctermfg=7 ctermbg=4
-        cursorline özelliği açıksa, bulunulan satırda mavi üzerine sarı yazı kullanılır
-
-        :highlight cursorcolumn cterm=none ctermfg=7 ctermbg=
-        cursorcolumn özelliği açıksa, bulunulan kolonda mavi üzerine sarı yazı kullanılır
-
-        :set foldmethod=indent
-        Girintilere göre bloklama yapar. Özellikle Python kodlarken kullanmakta fayda var.
-
-        :map <F8> :!python % <enter>
-        F8 tuşunu, "!python %" komutunu çalıştıracak şekilde ayarlar
-
-        :autocmd FileType python set omnifunc=pythoncomplete#Complete
-        :autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-        :autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-        :autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-        :autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
-        :autocmd FileType php set omnifunc=phpcomplete#CompletePHP
-        :autocmd FileType c set omnifunc=ccomplete#Complete
-
-        Çeşitli dosya biçimleri için kod tamamlar. Kod tamamlamak için yazma modundayken ctrl+X  ctrl+O
+            ## Vundle yardım için
+            :h vundle
 
 
 
+# -----------------------------------------------------------------------------
+# .vimrc
+# -----------------------------------------------------------------------------
+set nocompatible
+syntax on
+filetype off
+filetype plugin indent on
 
-* .vimrc örneği
-:syntax on
-:set is
-:set ic
-:set relativenumber
-:set smartcase
-:set mouse=a
-:nnoremap / /\v
-:vnoremap / /\v
-:set hidden
-:set encoding=utf-8
-:set bg=dark
-:set scrolloff=3
-:filetype on
-:filetype plugin on
-:autocmd InsertEnter * set cursorline cursorcolumn
-:autocmd InsertLeave * set nocursorline nocursorcolumn
-:highlight cursorline cterm=none ctermfg=7 ctermbg=4
-:highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
-:autocmd BufNewFile,BufRead *.py,*.tmpl call CodingSet0()
-:autocmd BufNewFile,BufRead OKUBENI,README,*.txt call CodingSet1()
-:autocmd BufNewFile,BufRead *.js,*.html,*.css call CodingSet2()
-:autocmd BufNewFile,BufRead *.sql call CodingSet3()
-:nnoremap <up> <nop>
-:nnoremap <down> <nop>
-:nnoremap <left> <nop>
-:nnoremap <right> <nop>
-:inoremap <up> <nop>
-:inoremap <down> <nop>
-:inoremap <left> <nop>
-:inoremap <right> <nop>
-:nnoremap j gj
-:nnoremap k gk
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+Bundle 'gmarik/vundle'
+Bundle 'kevinw/pyflakes-vim'
+
+set is
+set ic
+set relativenumber
+set smartcase
+nnoremap / /\v
+vnoremap / /\v
+set hidden
+set encoding=utf-8
+set bg=dark
+set scrolloff=3
+
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+nnoremap j gj
+nnoremap k gk
+
+autocmd InsertEnter * set cursorline cursorcolumn
+autocmd InsertLeave * set nocursorline nocursorcolumn
+highlight cursorline cterm=none ctermfg=7 ctermbg=4
+highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
+autocmd BufNewFile,BufRead *.py,*.tmpl call CodingSet0()
+autocmd BufNewFile,BufRead OKUBENI,README,*.txt call CodingSet1()
 
 function CodingSet0()
         setlocal
@@ -215,7 +115,6 @@ function CodingSet0()
         \ autoindent
         \ list
         \ listchars=tab:»·,trail:·
-        let g:pyflakes_use_quickfix=0
 endfunction
 
 function CodingSet1()
@@ -231,337 +130,536 @@ function CodingSet1()
         \ filetype=text
 endfunction
 
-function CodingSet2()
-        setlocal
-        \ textwidth=79
-        \ tabstop=4
-        \ shiftwidth=4
-        \ softtabstop=4
-        \ autoindent
-endfunction
-
-function CodingSet3()
-        setlocal
-        \ textwidth=79
-        \ tabstop=4
-        \ shiftwidth=4
-        \ softtabstop=4
-        \ autoindent
-endfunction
-
-
-* yazma moduna geçiş
-
-        i                       bulunulan yerde yazma moduna geçer (i=insert)
-        I                       satır başına gidip yazma moduna geçer (I=insert)
-        a                       bir sonraki yerden bir karakter sağa kayıp yazma moduna geçer (a=append)
-        A                       satır sonuna gidip yazma moduna geçer (A=append)
-        o                       aşağıya yeni bir satır ekleyip yazma moduna geçer
-        O                       yukarıya bir satır ekleyip yazma moduna geçer
-        <ESC>                   yazma modundan çıkar
-
-
-
-* dosya içinde hareket
-
-        h                       sola bir karakter
-        l                       sağa bir karakter
-        j                       aşağı satıra
-        k                       yukarı satıra
-        3j                      3 satır aşağıya
-        H                       imleç sayfa başına (high)
-        3H                      imleç sayfa başından 3 satır aşağıya
-        L                       imleç sayfa sonuna (low)
-        3L                      imleç sayfa sonundan 3 satır yukarıya
-        M                       imleç sayfa ortasına
-        gg                      dosya başına
-        GG                      dosya sonuna
-        3G                      3. satıra
-        :3                      3. satıra
-        <CTRL>o                 Çalışma yapılan bir önceki yere git.
-        <CTRL>i                 Çalışma yapılan bir sonraki yere git.
-        <CTRL>e                 dosyayı yukarı doğru kaydır (imlecin yeri değişmez)
-        <CTRL>y                 dosyayı aşağıya doğru kaydır (imlecin yeri değişmez)
-        zt                      bulunulan satırı, sayfanın başına getir (imlecin yeri değişmez) (t=top)
-        zb                      bulunulan satırı, sayfanın sonuna getir (imlecin yeri değişmez) (b=bottom)
-        zz                      bulunulan satırı, sayfanın ortasına getir (imlecin yeri değişmez)
-        %                       parantezin eşini bulur ve imleci oraya götürür
-        ''                      imlecin bir önceki konumuna geri döner
-        '.                      en son değişikliğin yapıldığı satıra geri döner
-        f<harf>                 satırda, sağa doğru harfin bulunduğu ilk konuma gider
-        F<harf>                 satırda, sola doğru harfin bulunduğu ilk konuma gider
-        ma                      imlecin bulunduğu yeri a noktası olarak işaretle (a..z, A..Z, 0..9) (m=mark)
-        'a                      a noktasının bulunduğu satıra git
-        `a                      a noktasına git
-        :marks                  işaretli noktaların listesini gösterir
-
-
-
-* silme, kopyalama ve yapıştırma (delete, copy, paste)
-
-        x veya dl               karakteri sil (d=delete) (l=letter)
-        X                       önceki karakteri sil
-        dw                      bir sonraki kelimeye kadar sil (w=word)
-        de                      kelimenin sonuna kadar sil (e=end)
-        db                      kelimenin başına kadar sil (b=beginning)
-        dd                      satırı sil
-        df<karakter>            karaktere kadar siler
-        dt<karakter>            karakterden önceki yere kadar siler
-        d'a                     a noktasının bulunduğu satıra kadar sil
-        d`a                     a noktasına kadar sil
-        d^                      bulunulan yerden, satır başına kadar sil (^=satır başı)
-        d$                      bulunulan yerden, satır sonuna kadar sil ($=satır sonu)
-        D                       bulunulan yerden, satır sonuna kadar sil ($=satır sonu)
-        3dd                     3 satır sil
-        yl                      harfi kopyala (y=yank) (l=letter)
-        yw                      bir sonraki kelimeye kadar kopyala (w=word)
-        ye                      kelimenin sonuna kadar kopyala (e=end)
-        yb                      kelimenin başına kadar kopyala (b=beginning)
-        yy                      satırı kopyala
-        y'a                     a noktasının bulunduğu satıra kadar kopyala
-        y`a                     a noktasına kadar kopyala
-        y^                      bulunulan yerden, satır başına kadar kopyala (^=satır sonu)
-        y$                      bulunulan yerden, satır sonuna kadar kopyala ($=satır sonu)
-        p                       bir sonraki pozisyona yapıştır (p=paste)
-        P                       bir önceki pozisyona yapıştır (P=paste)
-        3p                      3 kere yapıştır
-        set paste               formatlanmış bir metni vim'e yapıştırmadan önce otomatik girintileme yapmasın diye
-        set nopaste             yapıştırma işlemi bittikten sonra
-
-
-
-* dosya veya shell'den veri alma
-        :r dosya                dosyanın içeriğini imleçten sonraki kısma yazar
-        :r !komut               komutun çıktısını imleçten sonraki kısma yazar
 
 
+# -----------------------------------------------------------------------------
+# .vimrc İÇİNDE KULLANILANLAR İLE İLGİLİ NOT
+# -----------------------------------------------------------------------------
 
-* depo kullanarak kopyalama ve yapıştırma
+- set nocompatible
+Vi tarafından desteklenmeyen özellikleri de kullanabilmeyi sağlar.
 
-        "add                    silinen satırı 'a' kodlu depoya koy
-        "ayy                    kopyalanan satırı 'a' kodlu depoya koy
-        "ap                     'a' kodlu depodaki veriyi yapıştır
-        :reg a                  'a' kodlu depoda ne olduğunu gösterir (reg=register)
-        :reg abcd               a, b c, d depolarında ne olduğunu gösterir
-        :reg                    bütün depoları gösterir
+- syntax on
+dosya tipine göre renklendirme/biçimlendirme yapar.
 
-        a..z, A..Z, 0..9        depo kodu olarak bu karakterlerden biri kullanılabilir
-                                bütün kopyalama ve yapıştırma komutları, depolu biçimde de kullanılabilir
+- filetype off
+dosya tipi tanıma kapalı. Vundle için gerekli.
 
+- filetype plugin indent on
+dosya tipine göre girintileme açık. Vundle için gerekli.
 
+- Vundle ayarları
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+Bundle 'gmarik/vundle'
+Bundle 'kevinw/pyflakes-vim'
 
-* görsel modda kopyalama ve yapıştırma
+- set is
+arama şablonu yazılırken bulmaya başlar (is= instant search)
 
-        v                       görsel moda geç, karakter karakter seçme (v=visual)
-        V                       görsel moda geç, satır satır seçme
-        <CTRL>v                 görsel moda geç, blok seçme
-        d                       seçimi sil (d=delete)
-        c                       seçimi sil ve yazma moduna geç (c=cut)
-        y                       seçimi kopyala (y=yank)
-        p                       seçimi yapıştır (p=paste)
-
-
-
-* kesme ve değiştirme (cut, replace)
-
-        r<harf>                 imlecin bulunduğu harfi sil ve yerine, <harfi> yaz (r=replace)
-        R                       yazma moduna geç ve eski metnin üstüne yaz (R=replace)
-        cw                      bir sonraki kelimeye kadar olan kısmı sil ve yerine, yazılanları yaz (c=cut) (w=word)
-        ce                      kelimenin sonuna kadar olan kısmı sil ve yerine, yazılanları yaz (e=end)
-        cb                      kelimenin başına kadar olan kısmı sil ve yerine, yazılanları yaz (b=beginning)
-        cf<karakter>            karaktere kadar siler ve yazmaya başlar
-        ct<karakter>            karakterden önceki yere kadar siler ve yazmaya başlar
-        c'a                     a noktasının bulunduğu satıra kadar sil ve yerine, yazılanları yaz
-        c`a                     a noktasına kadar sil ve yerine, yazılanları yaz
-        c^                      satırın başına kadar olan kısmı sil ve yerine, yazılanları yaz (^=satır başı)
-        c$                      satırın sonuna kadar olan kısmı sil ve yerine, yazılanları yaz ($=satır sonu)
-        C                       satırın sonuna kadar olan kısmı sil ve yerine, yazılanları yaz ($=satır sonu)
-        3cw                     3 kelimeyi sil ve yerine, yazılanları yaz
-
-
-
-* arama ve otomatik değiştirme
-
-        *                       imlecin üzerinde bulunduğu kelimenin tekrarını sonra doğru arar
-        #                       imlecin üzerinde bulunduğu kelimenin tekrarını başa doğru arar
-        /sablon                 sablonu sona doğru ara
-        ?sablon                 sablonu başa doğru ara
-        n                       bir sonrakini bul
-        N                       bir öncekini bul
-        f<karakter>             satırda, ileri doğru karakterin ilk bulunduğu yere gider
-        F<karakter>             satırda, geri doğru karakterin ilk bulunduğu yere gider
-        t<karakter>             satırda, ileri doğru karakterin ilk bulunduğu yerden bir önceki karaktere gider
-        T<karakter>             satırda, geri doğru karakterin ilk bulunduğu yerden bir onceki karaktere gider
-        :s/sablon/yeni          sablona uyan ilk metni, yenisi ile değiştir
-        :s/sablon/yeni/g        satırda, sablona uyan metinleri, yeni ile değiştir (g=global)
-        :%s/sablon/yeni/g       dosyada, sablona uyan metinleri, yeni ile değiştir
-        :%s/sablon/yeni/gc      dosyada, sablona uyan metinleri, yeni ile değiştir ama önce onay al (c=confirm)
-        şablonda ^              satır başı
-        şablonda $              satır sonu
-        şablonda [abc]          bu karakterlerden biri...
-        şablonda [^abc]         bu karakterlerden hiçbiri...
-        şablonda .              herhangi bir karakter
-        şablonda *              herhangi bir karakter dizisi
-        q/ veya /<CTRL>f        ileriye doğru yapılmış aramaların listesini verir
-        q? veya ?<CTRL>f        geriye doğru yapılmış aramaların listesini verir
-        :set is                 sablon yazılırken aramaya başla (is=instant search)
-        :set hls                sablona uyanları belirginleştir (hls=highlighted search)
-        :set nohls              hls modunu kapat (nohls=no highlighted search)
-        :set ic                 büyük-küçük harf ayırt etmeden arar (ic=ignore case)
-
-
-
-* undo, redo
-
-        u                       yapılan işlemi geri al (u=undo)
-        U                       satırı, imlecin satıra geldiği andaki şekle geri döndür (U=undo)
-        <CTRL>r                 undo işlemini geri al (r=redo)
-        3u                      son 3 değişikliği geri al
-
-
-
-* biçimlendirme
-
-        :set expandtab          tab karakterlerini
-        :retab                  boşluk karakterine çevirir
-
-        :set noexpandtab        uygun sayıda boşluk karakterini
-        :retab                  tab karakterine çevirir
-
-        >>                      satırı bir kaydırma aralığı kadar sağa kaydırır
-        <<                      satırı, bir kaydırma aralığı kadar sola kaydırır
-        > <sağ ok tuşu>         bulunulan satırı kaydırır
-        > <yukarı ok tuşu>      bulunulan satır ve bir üst satırı kaydırır
-        > <aşağı ok tuşu>       bulunulan satır ve bir alt satırı kaydırır
-        3>>                     3 satırı birden bir kaydırma aralığı kadar kaydırır
-        3> <yukarı ok tuşu>     bulunulan satır dahil yukarı doğru 3 satırı sağa kaydırır
-        :set sw=4               kaydırma aralığının kaç karakter uzunluğunda olacağını belirtir (sw=shift width)
-        :set tabstop=8          tab ile kaç karakter gidileceğini belirler
-        :set nu                 satır numaralarını gösterir (nu=number)
-        :set nonu               satır numaralarını gizler (nonu=no number)
-        ~                       imlecin üstünde bulunduğu karakteri büyükse küçük, küçükse büyük yapar
-        :TOhtml                 metni üretecek HTML kodunu üretir, renklendirmeleri dikkate alır
-        :set fileformat=unix    UNIX formatına çevirme. Windows'dan gelen dosyalara gerekebilir.
-
-
-
-* yazma/işlem kolaylaştırıcılar
-
-        :x,y norm komut         x satırından, y satırına kadar normal mod komutunu çalıştır (örneğin dd).
-        <CTRL>l                 refresh
-        :set list/nolist        görünmeyen karakterleri göstermek veya göstermemek için...
-        ga veya :as             imlecin altındaki karakterin, karakter kodunu gösterir
-        <CTRL>n                 yazma modundayken kelimeyi, var olan kelimelere bakarak tamamlar (n=next)
-        <CTRL>p                 yazma modundayken kelimeyi, var olan kelimelere bakarak tamamlar (p=previous)
-        .                       son yapılan işlemi tekrarlar
-        q: veya :<CTRL>f        kullanılmış komutların listesini verir
-        q/ veya /<CTRL>f        ileriye doğru yapılmış aramaların listesini verir
-        q? veya ?<CTRL>f        geriye doğru yapılmış aramaların listesini verir
-        <CTRL>c <CTRL>c         komut/arama listesinden çıkmak için
-        <CTRL>x                 imleçin üstünde bulunduğu sayıyı bir azaltır
-        <CTRL>a                 imleçin üstünde bulunduğu sayıyı bir çoğaltır
-                                screen altındayken <CTRL>aa
-        :set foldmethod=indent  indent'lere göre blokları belirler (Python kodu için...)
-        zo                      bloğu açar
-        zO                      bütün blokları açar
-        zc                      bloğu kapatır
-        zC                      bütün blokları kapatır
-        za                      açıksa, kapalı; kapalıysa, açık hale getirir
-        zj                      sonraki bloğa geçer
-        zk                      önceki bloğa geçer
-        cib                     (), [], {} arasını silip insert moduna geçer.
-        ci( ci[ ci{             (), [], {} arasını silip insert moduna geçer.
-        cab                     (), [], {} arasını parantezler dahil silip insert moduna geçer.
-        ca( ca[ ca{             (), [], {} arasını parantezler dahil silip insert moduna geçer.
-        <CTRL> x o              omnifunc tanımlanmış dosya biçimleri için kod tamamlar
+- set ic
+büyük-küçük harf ayırt etmeden arar (ic=ignore case)
 
+- set relativenumber
+Bulunulan satırı 0 kabul ederek aşağıya ve yukarıya doğru satırları
+numaralandılır.
 
+- set number
+satır numaralarını gösterir. relativenumber ile birlikte kullanılamaz.
 
-* macro
-        q                       ilk seferde makro bloğuna gider
-                                bundan sonra girilen ilk harf makronun adı olur
-                                bundan sonra yapılan bütün işlemler makro bloğuna kaydedilir
-                                tekrar q'ye basıldığında makro kaydı sona erer
-        @<harf>                 makroyu çalıştırır
-        "<harf>p                makro içeriğini metin olarak sayfaya yazar
-                                ~/.viminfo dosyasından da makro kayıtları görünebilir
-        :2,$ norm @a            2. satırdan dosya sonuna kadar makro a çalıştırılır
+- set smartcase
+arama yaparken büyük harf kullanılmışsa, büyük-küçük harfi dikkate alarak arama
+yapar.
 
+- set mouse=a
+Vim içinde mouse kullanmak için.
 
+- nnoremap / /\v
+- vnoremap / /\v
+Perl/Python sentaksına uygun düzenli ifade (regular expression) kullanır.
 
-* dosya işlemleri
+- set hls
+metin içinde arama şablonuna uyan bölümleri belirginleştirir
+(hls=highlighted search)
 
-        :new                    yeni dosya oluştur
-        :S                      dosya tarayıcısını aç. Seçimler için <ENTER> kullan
-        :e dosya                var olan bir dosyayı aç (e=edit)
-        :w                      yapılan değişiklikleri kaydet (w=write)
-        :w dosya                yapılan değişiklikleri 'dosya' adı ile kaydet (w=write)
-        :wq                     yapılan değişiklikleri kaydedip çık (w=write) (q=quit)
-        :q!                     yapılan değişiklikleri kaydetmeden çık (q=quit)
-        :Nread scp://kullanici@12.12.12.12/klasor/dosya         dosyaya scp ile uzaktaki makineden açar (Nread=network read)
-        :Nwrite scp://kullanici@12.12.12.12/klasor/dosya        dosyayı scp ile uzaktaki makineye kaydeder (Nwrite=network write)
+- set hidden
+bir tampon bellekten diğerine, değişiklikleri kaydetmeden geçmeye izin verir.
 
+- set encoding=utf-8
+default encoding'i utf-8 yapar
 
+- set bg=dark
+arkaplani koyulaştırır. Özellikle SSH ile bağlanılan makineler için iyi sonuç
+veriyor.
 
-* birçok dosya ile aynı anda çalışma
+- set scrolloff=3
+Cursor sayfanın altına veya üstüne getirildiğinde X satır üsten/alttan fazladan
+gösterilir.
 
-        :e dosya                dosyayı aç (e=edit)
-        :bn                     bir sonraki tampon belleğe geç
-        :bp                     bir önceki tampon belleğe geç
-        :wn                     değişiklikleri kaydet ve bir sonraki tampon belleğe geç
-        :wp                     değişiklikleri kaydet ve bir önceki tampon belleğe geç
-        :bn!                    değişiklikleri kaydetmeden bir sonraki tampon belleğe geç
-        :b3                     3 numaralı tampon belleğe geç
-        :bd                     tampon bellegi siler
-        :bd3                    3 numaralı tampon belleği siler
-        :set hidden             bir tampon bellekten diğerine, değişiklikleri kaydetmeden geçmeye izin verir
-
-
-
-
-* Tab'lar ile çalışma
-        :tabedit                yeni tab oluşturur
-        :tabnew dosya_adi       yeni tab oluşturur ve dosyayı bu tab'da açar
-        :tabc                   tab'ı kapatır
-        :tabmove                tab'ı taşı
-        gt                      sonraki tab'a git
-        gT                      önceki tab'a git
-
-
-
-* birçok pencere ile aynı anda çalışma
-
-        :vsp                    ekranı dikeyde iki pencereye böl (vsp=vertical split)
-        :sp                     ekranı yatayda iki pencereye böl (sp=split)
-        <CTRL>w v               ekranı dikeyde iki pencereye böl
-        <CTRL>w<CTRL>w          diğer pencereye geç
-        <CTRL>w<ok tuşu>        ok yönündeki pencereye geç
-        <CTRL>w<hjkl>           yön karakterine göre pencereye geç
-        <CTRL>w +               pencereyi 1 satır uzat
-        <CTRL>w -               pencereyi 1 satır kısalt
-        <CTRL>w >               pencereyi genişlet
-        <CTRL>w <               pencereyi daralt
-        <CTRL>w c               pencereyi kapat
-        :q                      pencereyi kapat (q=quit)
-
-
-
-* shell
-
-        :!komut                 komutu çalıştır
-        :sh                     shell'i çalıştır. Shell'den çıkmak için "exit" komutunu kullan
-
-
-
-* vim'i açarken komut çalıştırma
-
-        vim +komut1 +komut2 ... +komutN dosya_adi
-
-
-* linkler
-        http://bullium.com/support/vim.html
-        http://www.rayninfo.co.uk/vimtips.html
-        http://www.vim.org/tips/index.php
-        http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html
-        http://vim.wikia.com/wiki/Best_Vim_Tips
-        http://stevelosh.com/blog/2010/09/coming-home-to-vim/?
+- set textwidth=79
+Satır uzunluğu. Satır uzunluğu bu kadar karakter olunca otomatik alt satira
+geçer.
+
+- set tabstop=8
+tab uzunluğu
+
+- set shiftwidth=4
+Görsel modda < ve > karakterlerine basıldığında bloğun ne kadar kaydırılacağı
+
+- set softtabstop=4
+boşluklardan oluşan feyk tabın uzunluğu
+
+- set expandtab
+tab tuşuna basıldığında boşluk karakterlerinden oluşan feyk tab kullanılmasını
+sağlar.
+
+- set autoindent
+alt satıra geçirdiğinde, üst satırın girintisine uyulur
+
+- set list
+unprintable karakterleri gösterir
+
+- set listchars==tab:»·,trail:·
+tab karakteri için '»', tab boşlukları için '.', satır sonundaki fazlalık
+boşluklar için '.' gösterir
+
+- autocmd InsertEnter * set cursorline cursorcolumn
+Yazma moduna geçince imlecin bulunduğu satırın altı çizilir. Bulunulan kolon
+renklendirilir
+
+- autocmd InsertLeave * set nocursorline
+Komut moduna geçince cursorline ve cursorcolumn iptal edilir.
+
+- highlight cursorline cterm=none ctermfg=7 ctermbg=4
+cursorline özelliği açıksa, bulunulan satırda mavi üzerine sarı yazı
+kullanılır.
+
+- highlight cursorcolumn cterm=none ctermfg=7 ctermbg=
+cursorcolumn özelliği açıksa, bulunulan kolonda mavi üzerine sarı yazı
+kullanılır.
+
+- set foldmethod=indent
+Girintilere göre bloklama yapar. Özellikle Python kodlarken kullanmakta fayda
+var.
+
+- map <F8> :!python % <enter>
+F8 tuşunu, "!python %" komutunu çalıştıracak şekilde ayarlar
+
+- autocmd FileType python set omnifunc=pythoncomplete#Complete
+- autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+- autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+- autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+- autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+- autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+- autocmd FileType c set omnifunc=ccomplete#Complete
+
+Çeşitli dosya biçimleri için kod tamamlar. Kod tamamlamak için yazma
+modundayken ctrl+X  ctrl+O
+
+
+# -----------------------------------------------------------------------------
+# YAZMA MODUNA GEÇİŞ
+# -----------------------------------------------------------------------------
+
+i                       bulunulan yerde yazma moduna geçer (i=insert)
+I                       satır başına gidip yazma moduna geçer (I=insert)
+gi                      son yazma işlemi yapılan yerde yazma moduna geçme.
+a                       bir sonraki yerden bir karakter sağa kayıp yazma moduna
+                        geçer (a=append)
+A                       satır sonuna gidip yazma moduna geçer (A=append)
+o                       aşağıya yeni bir satır ekleyip yazma moduna geçer
+O                       yukarıya bir satır ekleyip yazma moduna geçer
+<ESC>                   yazma modundan çıkar
+
+
+
+# -----------------------------------------------------------------------------
+# DOSYA İÇiNDE HAREKET
+# -----------------------------------------------------------------------------
+
+h                       sola bir karakter
+l                       sağa bir karakter
+j                       aşağı satıra
+k                       yukarı satıra
+3j                      3 satır aşağıya
+H                       imleç sayfa başına (high)
+3H                      imleç sayfa başından 3 satır aşağıya
+L                       imleç sayfa sonuna (low)
+3L                      imleç sayfa sonundan 3 satır yukarıya
+M                       imleç sayfa ortasına
+gg                      dosya başına
+GG                      dosya sonuna
+3G                      3. satıra
+:3                      3. satıra
+<CTRL>o                 Çalışma yapılan bir önceki yere git.
+<CTRL>i                 Çalışma yapılan bir sonraki yere git.
+<CTRL>e                 dosyayı yukarı doğru kaydır (imlecin yeri değişmez)
+<CTRL>y                 dosyayı aşağıya doğru kaydır (imlecin yeri değişmez)
+zt                      bulunulan satırı, sayfanın başına getir (imlecin yeri
+                        değişmez) (t=top)
+zb                      bulunulan satırı, sayfanın sonuna getir (imlecin yeri
+                        değişmez) (b=bottom)
+zz                      bulunulan satırı, sayfanın ortasına getir (imlecin
+                        yeri değişmez)
+%                       parantezin eşini bulur ve imleci oraya götürür
+''                      imlecin bir önceki konumuna geri döner
+'.                      en son değişikliğin yapıldığı satıra geri döner
+f<harf>                 satırda, sağa doğru harfin bulunduğu ilk konuma gider
+F<harf>                 satırda, sola doğru harfin bulunduğu ilk konuma gider
+ma                      imlecin bulunduğu yeri a noktası olarak işaretle
+                        (a..z, A..Z, 0..9) (m=mark)
+'a                      a noktasının bulunduğu satıra git
+`a                      a noktasına git
+:marks                  işaretli noktaların listesini gösterir
+
+
+
+# -----------------------------------------------------------------------------
+# SİLME, KOPYALAMA VE YAPIŞTIRMA (DELETE, COPY, PASTE)
+# -----------------------------------------------------------------------------
+
+x veya dl               karakteri sil (d=delete) (l=letter)
+X                       önceki karakteri sil
+dw                      bir sonraki kelimeye kadar sil (w=word)
+de                      kelimenin sonuna kadar sil (e=end)
+db                      kelimenin başına kadar sil (b=beginning)
+dd                      satırı sil
+d/pattern               aranan kelimeye kadar silme
+df<karakter>            karaktere kadar siler
+dt<karakter>            karakterden önceki yere kadar siler
+d'a                     a noktasının bulunduğu satıra kadar sil
+d`a                     a noktasına kadar sil
+d^                      bulunulan yerden, satır başına kadar sil (^=satır başı)
+d$                      bulunulan yerden, satır sonuna kadar sil ($=satır sonu)
+D                       bulunulan yerden, satır sonuna kadar sil ($=satır sonu)
+3dd                     3 satır sil
+yl                      harfi kopyala (y=yank) (l=letter)
+yw                      bir sonraki kelimeye kadar kopyala (w=word)
+ye                      kelimenin sonuna kadar kopyala (e=end)
+yb                      kelimenin başına kadar kopyala (b=beginning)
+yy                      satırı kopyala
+y/pattern               aranan kelimeye kadar kopyalama
+y'a                     a noktasının bulunduğu satıra kadar kopyala
+y`a                     a noktasına kadar kopyala
+y^                      bulunulan yerden, satır başına kadar kopyala
+                        (^=satır sonu)
+y$                      bulunulan yerden, satır sonuna kadar kopyala
+                        ($=satır sonu)
+p                       bir sonraki pozisyona yapıştır (p=paste)
+P                       bir önceki pozisyona yapıştır (P=paste)
+3p                      3 kere yapıştır
+set paste               formatlanmış bir metni vim'e yapıştırmadan önce
+                        otomatik girintileme yapmasın diye
+set nopaste             yapıştırma işlemi bittikten sonra
+
+
+
+# -----------------------------------------------------------------------------
+# DEPO KULLANARAK KOPYALAMA VE YAPIŞTIRMA
+# -----------------------------------------------------------------------------
+
+"add                    silinen satırı 'a' kodlu depoya koy
+"ayy                    kopyalanan satırı 'a' kodlu depoya koy
+"ap                     'a' kodlu depodaki veriyi yapıştır
+:reg a                  'a' kodlu depoda ne olduğunu gösterir (reg=register)
+:reg abcd               a, b c, d depolarında ne olduğunu gösterir
+:reg                    bütün depoları gösterir
+
+a..z, A..Z, 0..9        depo kodu olarak bu karakterlerden biri kullanılabilir
+                        bütün kopyalama ve yapıştırma komutları, depolu
+                        biçimde de kullanılabilir
+
+
+
+# -----------------------------------------------------------------------------
+# GÖRSEL MODDA KOPYALAMA VE YAPIŞTIRMA
+# -----------------------------------------------------------------------------
+
+v                       görsel moda geç, karakter karakter seçme (v=visual)
+V                       görsel moda geç, satır satır seçme
+<CTRL>v                 görsel moda geç, blok seçme
+d                       seçimi sil (d=delete)
+c                       seçimi sil ve yazma moduna geç (c=cut)
+y                       seçimi kopyala (y=yank)
+p                       seçimi yapıştır (p=paste)
+
+
+
+# -----------------------------------------------------------------------------
+# KESME VE DEĞIŞTIRME (CUT, REPLACE)
+# -----------------------------------------------------------------------------
+
+r<harf>                 imlecin bulunduğu harfi sil ve yerine, <harfi> yaz
+                        (r=replace)
+R                       yazma moduna geç ve eski metnin üstüne yaz (R=replace)
+cw                      bir sonraki kelimeye kadar olan kısmı sil ve yerine,
+                        yazılanları yaz (c=cut) (w=word)
+ce                      kelimenin sonuna kadar olan kısmı sil ve yerine,
+                        yazılanları yaz (e=end)
+cb                      kelimenin başına kadar olan kısmı sil ve yerine,
+                        yazılanları yaz (b=beginning)
+cf<karakter>            karaktere kadar siler ve yazmaya başlar
+ct<karakter>            karakterden önceki yere kadar siler ve yazmaya başlar
+c'a                     a noktasının bulunduğu satıra kadar sil ve yerine,
+                        yazılanları yaz
+c`a                     a noktasına kadar sil ve yerine, yazılanları yaz
+c^                      satırın başına kadar olan kısmı sil ve yerine,
+                        yazılanları yaz (^=satır başı)
+c$                      satırın sonuna kadar olan kısmı sil ve yerine,
+                        yazılanları yaz ($=satır sonu)
+C                       satırın sonuna kadar olan kısmı sil ve yerine,
+                        yazılanları yaz ($=satır sonu)
+3cw                     3 kelimeyi sil ve yerine, yazılanları yaz
+
+
+
+# -----------------------------------------------------------------------------
+# ARAMA VE OTOMATİK DEĞİŞTİRME
+# -----------------------------------------------------------------------------
+
+*                       imlecin üzerinde bulunduğu kelimenin tekrarını sonra
+                        doğru arar
+#                       imlecin üzerinde bulunduğu kelimenin tekrarını başa
+                        doğru arar
+/sablon                 sablonu sona doğru ara
+?sablon                 sablonu başa doğru ara
+n                       bir sonrakini bul
+N                       bir öncekini bul
+f<karakter>             satırda, ileri doğru karakterin ilk bulunduğu yere
+                        gider
+F<karakter>             satırda, geri doğru karakterin ilk bulunduğu yere gider
+t<karakter>             satırda, ileri doğru karakterin ilk bulunduğu yerden
+                        bir önceki karaktere gider
+T<karakter>             satırda, geri doğru karakterin ilk bulunduğu yerden bir
+                        onceki karaktere gider
+:s/sablon/yeni          sablona uyan ilk metni, yenisi ile değiştir
+:s/sablon/yeni/g        satırda, sablona uyan metinleri, yeni ile değiştir
+                        (g=global)
+:%s/sablon/yeni/g       dosyada, sablona uyan metinleri, yeni ile değiştir
+:%s/sablon/yeni/gc      dosyada, sablona uyan metinleri, yeni ile değiştir ama
+                        önce onay al (c=confirm)
+şablonda ^              satır başı
+şablonda $              satır sonu
+şablonda [abc]          bu karakterlerden biri...
+şablonda [^abc]         bu karakterlerden hiçbiri...
+şablonda .              herhangi bir karakter
+şablonda *              herhangi bir karakter dizisi
+q/ veya /<CTRL>f        ileriye doğru yapılmış aramaların listesini verir
+q? veya ?<CTRL>f        geriye doğru yapılmış aramaların listesini verir
+:set is                 sablon yazılırken aramaya başla (is=instant search)
+:set hls                sablona uyanları belirginleştir
+                        (hls=highlighted search)
+:set nohls              hls modunu kapat (nohls=no highlighted search)
+:set ic                 büyük-küçük harf ayırt etmeden arar (ic=ignore case)
+
+
+
+# -----------------------------------------------------------------------------
+* UNDO, REDO
+# -----------------------------------------------------------------------------
+
+u                       yapılan işlemi geri al (u=undo)
+U                       satırı, imlecin satıra geldiği andaki şekle geri döndür
+                        (U=undo)
+<CTRL>r                 undo işlemini geri al (r=redo)
+3u                      son 3 değişikliği geri al
+
+
+
+# -----------------------------------------------------------------------------
+# BİÇİMLENDİRME
+# -----------------------------------------------------------------------------
+
+:set expandtab          tab karakterlerini
+:retab                  boşluk karakterine çevirir
+
+:set noexpandtab        uygun sayıda boşluk karakterini
+:retab                  tab karakterine çevirir
+
+>>                      satırı bir kaydırma aralığı kadar sağa kaydırır
+<<                      satırı, bir kaydırma aralığı kadar sola kaydırır
+> <sağ ok tuşu>         bulunulan satırı kaydırır
+> <yukarı ok tuşu>      bulunulan satır ve bir üst satırı kaydırır
+> <aşağı ok tuşu>       bulunulan satır ve bir alt satırı kaydırır
+3>>                     3 satırı birden bir kaydırma aralığı kadar kaydırır
+3> <yukarı ok tuşu>     bulunulan satır dahil yukarı doğru 3 satırı sağa
+                        kaydırır
+:set sw=4               kaydırma aralığının kaç karakter uzunluğunda olacağını
+                        belirtir (sw=shift width)
+:set tabstop=8          tab ile kaç karakter gidileceğini belirler
+:set nu                 satır numaralarını gösterir (nu=number)
+:set nonu               satır numaralarını gizler (nonu=no number)
+~                       imlecin üstünde bulunduğu karakteri büyükse küçük,
+                        küçükse büyük yapar
+:TOhtml                 metni üretecek HTML kodunu üretir, renklendirmeleri
+                        dikkate alır
+:set fileformat=unix    UNIX formatına çevirme. Windows'dan gelen dosyalara
+                        gerekebilir.
+
+
+
+# -----------------------------------------------------------------------------
+# YAZMA/IŞLEM KOLAYLAŞTIRICILAR
+# -----------------------------------------------------------------------------
+
+:x,y norm komut         x satırından, y satırına kadar normal mod komutunu
+                        çalıştır (örneğin dd).
+<CTRL>l                 refresh
+:set list/nolist        görünmeyen karakterleri göstermek veya göstermemek
+                        için...
+ga veya :as             imlecin altındaki karakterin, karakter kodunu gösterir
+<CTRL>n                 yazma modundayken kelimeyi, var olan kelimelere bakarak
+                        tamamlar (n=next)
+<CTRL>p                 yazma modundayken kelimeyi, var olan kelimelere bakarak
+                        tamamlar (p=previous)
+.                       son yapılan işlemi tekrarlar
+q: veya :<CTRL>f        kullanılmış komutların listesini verir
+q/ veya /<CTRL>f        ileriye doğru yapılmış aramaların listesini verir
+q? veya ?<CTRL>f        geriye doğru yapılmış aramaların listesini verir
+<CTRL>c <CTRL>c         komut/arama listesinden çıkmak için
+<CTRL>x                 imleçin üstünde bulunduğu sayıyı bir azaltır
+<CTRL>a                 imleçin üstünde bulunduğu sayıyı bir çoğaltır
+                        screen altındayken <CTRL>aa
+J                       alt satır ile bulunulan satırı birleştir (join)
+:set foldmethod=indent  indent'lere göre blokları belirler (Python kodu
+                        için...)
+zo                      bloğu açar
+zO                      bütün blokları açar
+zc                      bloğu kapatır
+zC                      bütün blokları kapatır
+za                      açıksa, kapalı; kapalıysa, açık hale getirir
+zj                      sonraki bloğa geçer
+zk                      önceki bloğa geçer
+cib                     (), [], {} arasını silip insert moduna geçer.
+ci( ci[ ci{             (), [], {} arasını silip insert moduna geçer.
+cab                     (), [], {} arasını parantezler dahil silip insert
+                        moduna geçer.
+ca( ca[ ca{             (), [], {} arasını parantezler dahil silip insert
+                        moduna geçer.
+<CTRL> x o              omnifunc tanımlanmış dosya biçimleri için kod tamamlar
+
+
+
+# -----------------------------------------------------------------------------
+# MACRO
+# -----------------------------------------------------------------------------
+q                       ilk seferde makro bloğuna gider
+                        bundan sonra girilen ilk harf makronun adı olur
+                        bundan sonra yapılan bütün işlemler makro bloğuna
+                        kaydedilir
+                        tekrar q'ye basıldığında makro kaydı sona erer
+@<harf>                 makroyu çalıştırır
+"<harf>p                makro içeriğini metin olarak sayfaya yazar
+                        ~/.viminfo dosyasından da makro kayıtları görünebilir
+:2,$ norm @a            2. satırdan dosya sonuna kadar makro a çalıştırılır
+
+
+
+# -----------------------------------------------------------------------------
+# DOSYA İŞLEMLERİ
+# -----------------------------------------------------------------------------
+
+:new                    yeni dosya oluştur
+:S                      dosya tarayıcısını aç. Seçimler için <ENTER> kullan
+:e dosya                var olan bir dosyayı aç (e=edit)
+:w                      yapılan değişiklikleri kaydet (w=write)
+:w dosya                yapılan değişiklikleri 'dosya' adı ile kaydet (w=write)
+:wq                     yapılan değişiklikleri kaydedip çık (w=write) (q=quit)
+:q!                     yapılan değişiklikleri kaydetmeden çık (q=quit)
+:Nread scp://kullanici@12.12.12.12/klasor/dosya
+                        dosyaya scp ile uzaktaki makineden açar
+                        (Nread=network read)
+:Nwrite scp://kullanici@12.12.12.12/klasor/dosya
+                        dosyayı scp ile uzaktaki makineye kaydeder
+                        (Nwrite=network write)
+
+
+
+# -----------------------------------------------------------------------------
+# BİRÇOK DOSYA ILE AYNI ANDA ÇALIŞMA
+# -----------------------------------------------------------------------------
+
+:e dosya                dosyayı aç (e=edit)
+:bn                     bir sonraki tampon belleğe geç
+:bp                     bir önceki tampon belleğe geç
+:wn                     değişiklikleri kaydet ve bir sonraki tampon belleğe geç
+:wp                     değişiklikleri kaydet ve bir önceki tampon belleğe geç
+:bn!                    değişiklikleri kaydetmeden bir sonraki tampon belleğe
+                        geç
+:b3                     3 numaralı tampon belleğe geç
+:bd                     tampon bellegi siler
+:bd3                    3 numaralı tampon belleği siler
+:set hidden             bir tampon bellekten diğerine, değişiklikleri
+                        kaydetmeden geçmeye izin verir
+
+
+
+
+# -----------------------------------------------------------------------------
+# TAB'LAR İLE ÇALIŞMA
+# -----------------------------------------------------------------------------
+:tabedit                yeni tab oluşturur
+:tabnew dosya_adi       yeni tab oluşturur ve dosyayı bu tab'da açar
+:tabc                   tab'ı kapatır
+:tabmove                tab'ı taşı
+gt                      sonraki tab'a git
+gT                      önceki tab'a git
+
+
+
+# -----------------------------------------------------------------------------
+# BİRÇOK PENCERE İLE AYNI ANDA ÇALIŞMA
+# -----------------------------------------------------------------------------
+
+:vsp                    ekranı dikeyde iki pencereye böl (vsp=vertical split)
+:sp                     ekranı yatayda iki pencereye böl (sp=split)
+<CTRL>w v               ekranı dikeyde iki pencereye böl
+<CTRL>w<CTRL>w          diğer pencereye geç
+<CTRL>w<ok tuşu>        ok yönündeki pencereye geç
+<CTRL>w<hjkl>           yön karakterine göre pencereye geç
+<CTRL>w +               pencereyi 1 satır uzat
+<CTRL>w -               pencereyi 1 satır kısalt
+<CTRL>w >               pencereyi genişlet
+<CTRL>w <               pencereyi daralt
+<CTRL>w c               pencereyi kapat
+:q                      pencereyi kapat (q=quit)
+
+
+
+# -----------------------------------------------------------------------------
+# SHELL
+# -----------------------------------------------------------------------------
+
+:!komut                 komutu çalıştır
+:sh                     shell'i çalıştır. Shell'den çıkmak için "exit"
+                        komutunu kullan
+
+
+
+# -----------------------------------------------------------------------------
+# DOSYA VEYA SHELL'DEN VERİ ALMA
+# -----------------------------------------------------------------------------
+
+r dosya                 dosyanın içeriğini imleçten sonraki kısma yazar
+r !komut                komutun çıktısını imleçten sonraki kısma yazar
+r!cat                   shift+insert ile OS clipboarddan :set paste yapmaya
+                        gerek kalmadan paste.
+
+
+
+# -----------------------------------------------------------------------------
+# VIM AÇARKEN KOMUT ÇALIŞTIRMA
+# -----------------------------------------------------------------------------
+
+vim +komut1 +komut2 ... +komutN dosya_adi
+
+
+# -----------------------------------------------------------------------------
+# LİNKLER
+# -----------------------------------------------------------------------------
+http://bullium.com/support/vim.html
+http://www.rayninfo.co.uk/vimtips.html
+http://www.vim.org/tips/index.php
+http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html
+http://vim.wikia.com/wiki/Best_Vim_Tips
+http://stevelosh.com/blog/2010/09/coming-home-to-vim/?
