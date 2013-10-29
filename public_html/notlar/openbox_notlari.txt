@@ -441,7 +441,7 @@
 				<enabled>true</enabled>
 				<name>Zargan</name>
 			</startupnotify>
-			<command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1" -T "Zargan" -e /bin/bash -c "~/bin/zargan.py `xsel` | head -n 10; read -n1 -s -t 10"</command>
+			<command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1" -T "Zargan" -e /bin/bash -c "~/bin/zargan.py `xsel` 2>/dev/null | head -n 10; read -n1 -s -t 10"</command>
 		</action>
 	</keybind>
 

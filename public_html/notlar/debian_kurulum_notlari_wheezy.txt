@@ -309,7 +309,7 @@ aptitude install dpkg-dev build-essential fakeroot
                         z $@ | more
                 }
                 zl(){
-                        z $@ | head -10
+                        z $@ 2>/dev/null | head -10
                 }
 
         - ~/.zshrc (root için)
@@ -327,7 +327,7 @@ aptitude install dpkg-dev build-essential fakeroot
                         z $@ | more
                 }
                 zl(){
-                        z $@ | head -10
+                        z $@ 2>/dev/null | head -10
                 }
 
 
