@@ -101,8 +101,9 @@ aptitude install openssh-server
 
 
 # Grub ayarları
-        - /etc/default/grub
-        GRUB_TIMEOUT=1
+        - Sanal makinelerde ve sunucularda Grub süresini kısaltma.
+        /etc/default/grub
+        GRUB_TIMEOUT=5
 
         - Grub için parola
         # iki kere parola girilecek, görüntü gelmeyecek.
