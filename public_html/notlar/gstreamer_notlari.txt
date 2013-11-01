@@ -156,6 +156,15 @@ audioresample ! audio/x-raw-int,rate=48000 ! \
 queue ! voaacenc bitrate=64000 ! queue ! mux. mux. ! \
 rtmpsink location='rtmp://localhost/live/stream live=1'
 
+# RTSP (H264) stream + dummy sound -> RTMP
+gst-launch-0.10 rtspsrc \
+location=rtsp://localhost:8000/mystream.sdp latency=0 use-damage=0 ! \
+queue ! rtph264depay ! \
+queue ! flvmux name=mux audiotestsrc volume=0 ! \
+audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=22050 ! \
+queue ! mux. mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
+
 
 
 # -----------------------------------------------------------------------------
