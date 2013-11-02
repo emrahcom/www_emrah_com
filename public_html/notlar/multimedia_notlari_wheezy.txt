@@ -38,11 +38,11 @@ ffplay  -loglevel quiet -v quiet \
 # RTMP overlay
 ffmpeg -i rtmp://85.111.24.138:1935/tv/trtmuzik \
 -i rtmp://85.111.24.138:1935/tv/trthd \
--filter_complex "[1:0]scale=trunc(iw/3):-1 [win]; \
+-filter_complex "[1:0]scale=trunc(iw/3):-1,pad=5+iw:5+ih:3:3:orange [win]; \
 [0:0][win] overlay=(main_w-overlay_w):(main_h-overlay_h)" \
 -vprofile baseline -preset ultrafast \
 -c:v libx264 -c:a copy \
--map 0:v -map 0:a:0 \
+-map 0:v -map 1:a:0 \
 -f flv - \
 | ffplay -
 
