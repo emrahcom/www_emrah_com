@@ -232,6 +232,8 @@ aptitude hold nginx-common nginx-extras
         server {
             listen 1935;
             drop_idle_publisher 10s;
+            # Gstreamer ile push yapilacaksa...
+            publish_time_fix off;
 
             application live {
                 live on;
