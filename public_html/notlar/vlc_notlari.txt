@@ -1,0 +1,27 @@
+# -----------------------------------------------------------------------------
+# VLC NOTLARI
+# -----------------------------------------------------------------------------
+
+# Screen stream (RTSP - H264)
+VLC -I dummy screen:// \
+--no-drop-late-frames --no-skip-frames --mtu 8192 \
+--sout-x264-keyint=30 --sout-x264-bframes=0 \
+--sout-x264-profile=high --sout-x264-preset=ultrafast \
+--sout='#transcode{vcodec=h264,fps=25}:\
+rtp{dst=,port=8001,sdp=rtsp://:8000/mystream.sdp}'
+
+# İzleme
+ffplay -fflags nobuffer rtsp://localhost:8000/mystream.sdp
+
+
+# Mac OS X VLC path
+/Applications/VLC.app/Contents/MacOS/VLC
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://github.com/sparks/rter/blob/master/docs/live.md
+https://wiki.videolan.org/VLC-1-1-x_command-line_help/
+https://wiki.videolan.org/Documentation:Streaming_HowTo/Command_Line_Examples/
