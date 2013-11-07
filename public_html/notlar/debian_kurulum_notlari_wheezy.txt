@@ -74,8 +74,10 @@ APT::Default-Release "wheezy";
 
 
 # Anahtar yüklemeleri
-# Iceweasel release
+## Iceweasel release
 aptitude install pkg-mozilla-archive-keyring
+## Multimedia
+aptitude install deb-multimedia-keyring
 
 
 # Güncelleme
