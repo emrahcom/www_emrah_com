@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>icinga_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# ICINGA NOTLARI
+# -----------------------------------------------------------------------------
+Bu dökümanda, Debian Wheezy makineye Icinga sunucu kurulumu ve bu sunucu ile
+çeşitli makine ve servislerin takibi ile ilgili notlar yer alır. Web sunucu
+olarak Nginx kullanılıyor. Nagios ile uyumlu, aynı pluginler kullanılabilir.
+
+
+
+# -----------------------------------------------------------------------------
+# DEBIAN WHEEZY SUNUCU
+# -----------------------------------------------------------------------------
+Makineleri takip edecek olan Icinga sunucu makine.
+
+# Kurulum
+    aptitude install icinga nagios-images nagios-plugins icinga-doc
+
+
+# Yönetici parolası
+    htpasswd -c /etc/icinga/htpasswd.users icingaadmin
+
+
+# Nginx ayarları
+  /etc/nginx/sites-enabled/emrah.com
+
+server {
+    ...
+    ...
+
+    location /icinga {
+        alias           /usr/share/icinga/htdocs;
+        index           index.html;
+        auth_basic      &quot;...&quot;;
+        auth_basic_user_file    /etc/icinga/htpasswd.users;
+    }
+
+    location /icinga/stylesheets {
+        alias           /etc/icinga/stylesheets;
+    }
+
+    location /cgi-bin/icinga {
+        alias           /usr/lib/cgi-bin/icinga;
+        include         fastcgi_params;
+        gzip            off;
+
+        fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+        fastcgi_param   AUTH_USER       $remote_user;
+        fastcgi_param   REMOTE_USER     $remote_user;
+    }
+}
+
+
+# Standart dışı SSH portu kullanılıyorsa
+  /etc/icinga/objects/services_icinga.cfg
+
+        check_command   check_ssh_port!10022
+
+
+# Servislerin yeniden baslatılması
+    /etc/init.d/icinga restart
+    /etc/init.d/nginx restart
+
+
+# Exim4 ayarları. Internet'ten mail atabilecek şekilde ayarlansın.
+    dpkg-reconfigure exim4-config
+</code></pre>
+</body>
+</html>

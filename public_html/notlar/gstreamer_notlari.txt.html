@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>gstreamer_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# GSTREAMER NOTLARI
+# -----------------------------------------------------------------------------
+
+
+
+# -----------------------------------------------------------------------------
+# WHEEZY KURULUM
+# -----------------------------------------------------------------------------
+aptitude install libgstreamer0.10-0 gstreamer0.10-tools \
+libgstreamer-plugins-base0.10-0 gstreamer0.10-plugins-good \
+gstreamer0.10-plugins-ugly libgstreamer-plugins-bad0.10-0 \
+gstreamer0.10-ffmpeg gstreamer0.10-plugins-bad \
+gstreamer0.10-alsa
+
+aptitude install gir1.2-freedesktop gir1.2-gstreamer-0.10 gstreamer0.10-x
+
+
+
+# -----------------------------------------------------------------------------
+# RASPBIAN KURULUM
+# -----------------------------------------------------------------------------
+
+# vim /etc/apt/sources.list.d/vontaene.list
+    deb http://vontaene.de/raspbian-updates/ . main
+
+# Güncelleme
+    aptitude update
+
+# Kurulum
+    aptitude install libgstreamer1.0-0-dbg gstreamer1.0-tools \
+    libgstreamer-plugins-base1.0-0 gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad-dbg gstreamer1.0-omx gstreamer1.0-alsa
+
+
+
+# -----------------------------------------------------------------------------
+# PLUGINS
+# -----------------------------------------------------------------------------
+
+# Plugin listesi
+    gst-inspect-0.10
+
+# Bir pugin hakkında detaylı bilgi
+    gst-inspect-0.10 volume
+
+
+
+# -----------------------------------------------------------------------------
+# KOMUT ÖRNEKLERİ
+# -----------------------------------------------------------------------------
+
+# Test sinyali (ses)
+gst-launch-0.10 audiotestsrc volume=0.8 ! \
+audioconvert ! audioresample ! alsasink
+
+
+# Test sinyali (video)
+gst-launch-0.10 videotestsrc ! ffmpegcolorspace ! autovideosink
+gst-launch-0.10 videotestsrc pattern=1 ! ffmpegcolorspace ! autovideosink
+
+gst-launch-0.10 videotestsrc ! ffmpegcolorspace ! \
+tee name=p1 ! queue2 ! autovideosink p1. ! \
+tee name=p2 ! queue2 ! autovideosink p2. ! \
+queue2 ! autovideosink
+
+
+# ALSA üzerinden MP3 çalma
+gst-launch-0.10 -v filesrc location=muzik.mp3 ! mad ! alsasink
+gst-launch-0.10 -v filesrc location=muzik.mp3 ! decodebin ! alsasink
+
+
+# ALSA aygıt listesi
+cat /proc/asound/cards
+ 0 [ALSA           ]: BRCM bcm2835 ALSbcm2835 ALSA - bcm2835 ALSA
+                      bcm2835 ALSA
+ 1 [EasyALSA1      ]: easycapdc60 - easycap_alsa
+                      easycap_alsa
+
+
+# ALSA line-in girişini dinleme
+gst-launch-0.10 alsasrc device=plughw:0 ! audioconvert ! alsasink sync=false
+
+gst-launch-0.10 alsasrc device=plughw:DEVICE_NAME ! \
+audioconvert ! alsasink sync=false
+
+
+# ALSA line-in girişinden MP3 oluşturma
+gst-launch-0.10 alsasrc device=plughw:0 ! lame ! filesink location=capture.mp3
+
+
+# ALSA line-in girişinden FLV (AAC ses) oluşturma
+gst-launch-0.10 alsasrc device=plughw:0 ! ffenc_aac ! flvmux ! \
+filesink location=capture.flv
+
+
+# Video oynatma
+gst-launch-0.10 -v playbin2 uri=file:///path/to/test.mp4
+gst-launch-0.10 filesrc location=&quot;test.mp4&quot; ! decodebin2 ! autovideosink
+
+
+# v4l2 aygıtından dosyaya kayıt
+gst-launch-0.10 -e v4l2src device=/dev/video0 ! \
+'video/x-raw-yuv,framerate=20/1' ! \
+avimux ! filesink location=camera.avi
+
+
+# Streami UDP üzerinden aktarma
+# sunucu
+gst-launch-0.10 udpsrc port=5000 ! \
+&quot;application/x-rtp,media=(string)audio,clock-rate=(int)44100, width=16, \
+height=16, encoding-name=(string)L16,encoding-params=(string)1, \
+channels=(int)1, channel-positions=(int)1,payload=(int)96&quot; ! \
+rtpL16depay ! audioconvert ! alsasink sync=false
+
+# istemci
+gst-launch-0.10 audiotestsrc ! audioconvert ! \
+audio/x-raw-int,channels=1,depth=16,width=16,rate=44100 ! \
+rtpL16pay  ! udpsink host=localhost port=5000
+
+
+# Streami TCP üzerinden aktarma
+# sunucu
+gst-launch-0.10 tcpserversrc host=localhost port=3000 ! \
+audio/x-raw-int,endianness=&quot;(int)1234&quot;, signed=&quot;(boolean)true&quot;, \
+width=&quot;(int)16&quot;,depth=&quot;(int)16&quot;, rate=&quot;(int)44100&quot;, channels=&quot;(int)1&quot; ! \
+alsasink
+
+# istemci
+gst-launch-0.10 audiotestsrc ! tcpclientsink host=localhost port=3000
+
+# RTMP için test stream
+# Nginx RTMP için stream yapılacaksa &quot;publish_time_fix off&quot; olacak.
+gst-launch-0.10 videotestsrc ! \
+queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
+queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
+queue ! flvmux name=mux audiotestsrc volume=0 ! \
+audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=22050 ! \
+queue ! mux. mux. ! \
+rtmpsink location='rtmp://localhost/live/stream live=1'
+
+# Ekran görüntüsünü izleme
+gst-launch-0.10 ximagesrc use-damage=0 ! \
+queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
+queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
+queue ! flvmux name=mux alsasrc device=hw:0 ! \
+audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=64000 ! queue ! mux. mux. ! \
+decodebin2 ! autovideosink
+
+# Ekran görüntüsünü RTMP sunucuya aktarma (dummy audio)
+# Nginx RTMP için stream yapılacaksa &quot;publish_time_fix off&quot; olacak.
+gst-launch-0.10 ximagesrc use-damage=0 ! \
+queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
+queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
+queue ! flvmux name=mux audiotestsrc volume=0 ! \
+audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=22050 ! queue ! mux. mux. ! \
+rtmpsink location='rtmp://localhost/live/stream live=1'
+
+# Ekran görüntüsünü RTMP sunucuya aktarma (ALSA line-in)
+# Nginx RTMP için stream yapılacaksa &quot;publish_time_fix off&quot; olacak.
+gst-launch-0.10 ximagesrc use-damage=0 ! \
+queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
+queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
+queue ! flvmux name=mux alsasrc device=hw:0 ! \
+audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=64000 ! queue ! mux. mux. ! \
+rtmpsink location='rtmp://localhost/live/stream live=1'
+
+# RTSP (H264) stream + dummy sound -&gt; RTMP
+gst-launch-0.10 rtspsrc \
+location=rtsp://localhost:8000/mystream.sdp latency=0 use-damage=0 ! \
+queue ! rtph264depay ! \
+queue ! flvmux name=mux audiotestsrc volume=0 ! \
+audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=22050 ! \
+queue ! mux. mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://vontaene.de/raspbian-updates/dists/main/
+http://nginx-rtmp.blogspot.com/2013/07/gstreamer-and-raspberry-pi.html
+http://wiki.matthiasbock.net/index.php/Hardware-accelerated_video_playback_on_the_Raspberry_Pi
+</code></pre>
+</body>
+</html>
