@@ -131,52 +131,61 @@ gst-launch-0.10 audiotestsrc ! tcpclientsink host=localhost port=3000
 
 # RTMP için test stream
 # Nginx RTMP için stream yapılacaksa "publish_time_fix off" olacak.
-gst-launch-0.10 videotestsrc ! \
+gst-launch-0.10 \
+videotestsrc ! \
 queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
 queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
-queue ! flvmux name=mux audiotestsrc volume=0 ! \
-audioresample ! audio/x-raw-int,rate=48000 ! \
-queue ! voaacenc bitrate=22050 ! \
-queue ! mux. mux. ! \
-rtmpsink location='rtmp://localhost/live/stream live=1'
+queue ! flvmux name=mux \
+audiotestsrc volume=0 ! audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=22050 ! queue ! mux. \
+mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
 
 # Ekran görüntüsünü izleme
-gst-launch-0.10 ximagesrc use-damage=0 ! \
+gst-launch-0.10 \
+ximagesrc use-damage=0 ! \
 queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
-queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
-queue ! flvmux name=mux alsasrc device=hw:0 ! \
-audioresample ! audio/x-raw-int,rate=48000 ! \
-queue ! voaacenc bitrate=64000 ! queue ! mux. mux. ! \
-decodebin2 ! autovideosink
+queue ! ffmpegcolorspace ! x264enc bitrate=768 ! queue ! flvmux name=mux \
+alsasrc device=hw:0 ! audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=64000 ! queue ! mux. \
+mux. ! decodebin2 ! autovideosink
 
 # Ekran görüntüsünü RTMP sunucuya aktarma (dummy audio)
 # Nginx RTMP için stream yapılacaksa "publish_time_fix off" olacak.
-gst-launch-0.10 ximagesrc use-damage=0 ! \
+gst-launch-0.10 \
+ximagesrc use-damage=0 ! \
 queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
-queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
-queue ! flvmux name=mux audiotestsrc volume=0 ! \
-audioresample ! audio/x-raw-int,rate=48000 ! \
-queue ! voaacenc bitrate=22050 ! queue ! mux. mux. ! \
-rtmpsink location='rtmp://localhost/live/stream live=1'
+queue ! ffmpegcolorspace ! x264enc bitrate=768 ! queue ! flvmux name=mux \
+audiotestsrc volume=0 ! audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=22050 ! queue ! mux. \
+mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
 
 # Ekran görüntüsünü RTMP sunucuya aktarma (ALSA line-in)
 # Nginx RTMP için stream yapılacaksa "publish_time_fix off" olacak.
-gst-launch-0.10 ximagesrc use-damage=0 ! \
+gst-launch-0.10 \
+ximagesrc use-damage=0 ! \
 queue ! videoscale ! video/x-raw-rgb,framerate=25/1 ! \
 queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
-queue ! flvmux name=mux alsasrc device=hw:0 ! \
-audioresample ! audio/x-raw-int,rate=48000 ! \
-queue ! voaacenc bitrate=64000 ! queue ! mux. mux. ! \
-rtmpsink location='rtmp://localhost/live/stream live=1'
+queue ! flvmux name=mux \
+alsasrc device=hw:0 ! audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=64000 ! queue ! mux. \
+mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
 
 # RTSP (H264) stream + dummy sound -> RTMP
-gst-launch-0.10 rtspsrc \
-location=rtsp://localhost:8000/mystream.sdp latency=0 use-damage=0 ! \
-queue ! rtph264depay ! \
-queue ! flvmux name=mux audiotestsrc volume=0 ! \
-audioresample ! audio/x-raw-int,rate=48000 ! \
-queue ! voaacenc bitrate=22050 ! \
-queue ! mux. mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
+gst-launch-0.10 \
+rtspsrc location=rtsp://localhost:8000/mystream.sdp latency=0 use-damage=0 ! \
+queue ! rtph264depay ! queue ! flvmux name=mux \
+audiotestsrc volume=0 ! audioresample ! audio/x-raw-int,rate=48000 ! \
+queue ! voaacenc bitrate=22050 ! queue ! mux. \
+mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
+
+# RTSP to RTMP (H264 + AAC)
+gst-launch-0.10 \
+rtspsrc location=rtsp://localhost:8000/mystream.sdp \
+latency=0 use-damage=0 name=demux \
+demux. ! queue ! rtph264depay ! queue ! flvmux name=mux \
+demux. ! queue ! rtpmp4gdepay ! queue ! mux. \
+mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
+
 
 
 
