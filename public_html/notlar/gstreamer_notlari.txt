@@ -195,3 +195,4 @@ mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
 http://vontaene.de/raspbian-updates/dists/main/
 http://nginx-rtmp.blogspot.com/2013/07/gstreamer-and-raspberry-pi.html
 http://wiki.matthiasbock.net/index.php/Hardware-accelerated_video_playback_on_the_Raspberry_Pi
+http://www.oz9aec.net/index.php/gstreamer/347-more-gstreamer-tips-picture-in-picture-compositing
