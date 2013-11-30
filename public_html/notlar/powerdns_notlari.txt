@@ -59,6 +59,10 @@ Debian Wheezy i386 makinede denenmiştir
         launch=gpgsql,bind
         include=/etc/powerdns/pdns.d
 
+# DNS sec'i iptal etmek için (Poweradmin ile kullanımda sorun çıkıyor)
+    vim /etc/powerdns/pdns.d/pdns.local.gpgsql
+        gpgsql-dnssec=no
+
 # master modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
     master=yes
 
