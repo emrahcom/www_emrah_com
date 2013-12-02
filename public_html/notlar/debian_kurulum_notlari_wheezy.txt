@@ -253,7 +253,7 @@ aptitude install phppgadmin
 # Masaüstü paketleri
 aptitude install xorg openbox
 aptitude install xterm xtrlock unclutter numlockx
-aptitude install xsel scrot redshift
+aptitude install xsel scrot redshift tty-clock
 aptitude install iceweasel
 aptitude install flashplugin-nonfree
 aptitude install chromium dwb

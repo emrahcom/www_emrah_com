@@ -349,9 +349,9 @@
 		<action name="Execute">
 			<startupnotify>
 				<enabled>true</enabled>
-				<name>dwb</name>
+				<name>Date-Time</name>
 			</startupnotify>
-			<command>dwb</command>
+			<command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1" -T "Date-Time" -e "/usr/bin/tty-clock -s -c"</command>
 		</action>
 	</keybind>
 
@@ -422,16 +422,6 @@
 				<name>Weechat</name>
 			</startupnotify>
 			<command>x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow -fn "-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1" -xrm "*metaSendsEscape:true" -T "Weechat" -e tmux new-session /usr/bin/weechat-curses</command>
-		</action>
-	</keybind>
-
-	<keybind key="W-v">
-		<action name="Execute">
-			<startupnotify>
-				<enabled>true</enabled>
-				<name>VirtualBox</name>
-			</startupnotify>
-			<command>/usr/bin/VirtualBox</command>
 		</action>
 	</keybind>
 
