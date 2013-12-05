@@ -236,6 +236,7 @@ aptitude install git                                    # versiyon kontrol siste
 aptitude install python-pudb                            # Python debugger
 aptitude install python-nose                            # unittest
 aptitude install python-pexpect                         # shell uygulamalarını interaktif çalıştırma
+aptitude install python-psutil                          # cpu, memory, process vb takip için
 aptitude install pychecker pylint pyflakes              # kod kalitesi ve hata kontrol
 aptitude install python-pysqlite2 sqlite3               # SQLite kullanılacaksa
 aptitude install python-mysqldb                         # MySQL kullanılacaksa
