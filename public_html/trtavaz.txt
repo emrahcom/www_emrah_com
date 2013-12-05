@@ -1,2 +1,0 @@
-ffmpeg -i http://trt-i.mncdn.com/trtavaz/smil:trtavaz.smil/playlist.m3u8
--vcodec copy -acodec libmp3lame -ar 44100 -ab 64k -f flv trtavaz-`date +%H%M%S`.flv
