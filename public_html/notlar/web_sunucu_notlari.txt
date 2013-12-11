@@ -136,6 +136,21 @@ Bu dökümanda, web sunucu kurarken gerekli olabilecek notlar yer alır.
 
 
 # -----------------------------------------------------------------------------
+# APACHE SUBSTITUTE
+# -----------------------------------------------------------------------------
+Regex kullanılabilir.
+http://httpd.apache.org/docs/current/mod/mod_substitute.html
+
+    <Directory ...>
+    ...
+    ...
+    AddOutputFilterByType SUBSTITUTE text/html
+    Substitute s/foo/bar/
+    </Directory>
+
+
+
+# -----------------------------------------------------------------------------
 # APACHETOP
 # -----------------------------------------------------------------------------
 
