@@ -217,7 +217,7 @@ aptitude install firmware-realtek zd1211-firmware
 USB stick kurulumlarında wireless araçları olsun
 Diğer makinelerde wireless adaptör varsa olsun
 
-aptitude install wicd-curses wicd-cli
+aptitude install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
 aptitude install bzip2 zip unzip patch tree parted
