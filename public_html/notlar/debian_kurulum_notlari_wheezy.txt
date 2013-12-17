@@ -130,6 +130,8 @@ aptitude install openssh-server
 # CTRL-ALT-DEL ile sistem kapatilacaksa ('-t1' -> '-t5' ve '-r' -> '-h')
 ca:12345:ctrlaltdel:/sbin/shutdown -t5 -a -h now
 
+1:2345:respawn:/sbin/getty 38400 --noclear tty1
+2:23:respawn:/sbin/getty 38400 tty2
 #3:23:respawn:/sbin/getty 38400 tty3
 #4:23:respawn:/sbin/getty 38400 tty4
 #5:23:respawn:/sbin/getty 38400 tty5
