@@ -220,7 +220,7 @@ Diğer makinelerde wireless adaptör varsa olsun
 aptitude install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
-aptitude install bzip2 zip unzip patch tree parted
+aptitude install bzip2 zip unzip patch tree parted autojump
 aptitude install lftp ncftp sshfs rsync
 aptitude install cryptsetup
 aptitude install ntfsprogs ntfs-3g
@@ -318,15 +318,32 @@ aptitude install dpkg-dev build-essential fakeroot
                         z $@ 2>/dev/null | head -10
                 }
 
+
+
+# zsh
         - ~/.zshrc (root için)
                 binkey -v
-                alias ls='ls --color=auto'
                 export TMOUT=1200
+
+                alias ls='ls --color=auto'
+                alias ..="cd .."
+                alias ...="cd ../.."
+                alias ....="cd ../../.."
+                alias .....="cd ../../../.."
+                alias ......="cd ../../../../.."
+                . /usr/share/autojump/autojump.sh
 
         - ~/.zshrc (normal kullanıcı)
                 binkey -v
-                alias ls='ls --color=auto'
                 export TMOUT=1200
+
+                alias ls='ls --color=auto'
+                alias ..="cd .."
+                alias ...="cd ../.."
+                alias ....="cd ../../.."
+                alias .....="cd ../../../.."
+                alias ......="cd ../../../../.."
+                . /usr/share/autojump/autojump.sh
 
                 alias z='~/bin/zargan.py'
                 zz(){
