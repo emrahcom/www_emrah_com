@@ -349,7 +349,7 @@ aptitude install dpkg-dev build-essential fakeroot
 
 # zsh
         - ~/.zshrc (root için)
-                binkey -v
+                bindkey -v
                 export TMOUT=1200
 
                 alias ls='ls --color=auto'
@@ -358,10 +358,9 @@ aptitude install dpkg-dev build-essential fakeroot
                 alias ....="cd ../../.."
                 alias .....="cd ../../../.."
                 alias ......="cd ../../../../.."
-                . /usr/share/autojump/autojump.sh
 
         - ~/.zshrc (normal kullanıcı)
-                binkey -v
+                bindkey -v
                 export TMOUT=1200
 
                 alias ls='ls --color=auto'
