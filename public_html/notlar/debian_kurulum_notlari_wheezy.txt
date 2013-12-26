@@ -399,6 +399,19 @@ aptitude install dpkg-dev build-essential fakeroot
                 . TÜBİTAK
                 . TÜRKTRUST
 
+        - Default arama motoru Yandex olsun.
+                mkdir -p .mozilla/firefox/34wnkw8e.default/searchplugins
+                cd .mozilla/firefox/34wnkw8e.default/searchplugins
+                wget http://www.emrah.com/kodlar/yandex.xml
+
+                dialog searchengines
+                    . Edit Keyword -> yandex
+                    . Move Up (en başa)
+
+                about:config
+                    . browser.search.defaultenginename -> Yandex
+                    . browser.search.order.1 -> Yandex
+
 
 
 # bitlbee
