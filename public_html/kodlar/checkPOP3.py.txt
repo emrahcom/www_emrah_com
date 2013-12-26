@@ -79,9 +79,11 @@ def getMailInfo(username, password, pid):
 
 # -----------------------------------------------------------------------------
 def secureMessage(message):
+    message = message.replace('&','&amp;')
     message = message.replace('"','&quot;')
     message = message.replace('<','&lt;')
     message = message.replace('>','&gt;')
+    message = message.replace('\'','&#39;')
 
     return message
 
