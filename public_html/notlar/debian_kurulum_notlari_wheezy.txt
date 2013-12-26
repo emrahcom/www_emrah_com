@@ -168,6 +168,33 @@ blacklist pcspkr
         ServerAliveInterval 100                 # SSH baglantisi yaptigimizda, sunucudan kopmamamiz icin
                                                 # her 100 saniyede bir ping gonderir.
 
+# /etc/network/interfaces (Emrah özel kurulum için)
+        iface lo inet loopback
+
+        # The primary network interface
+        auto eth0
+        allow-hotplug eth0
+        iface eth0 inet dhcp
+
+        # Virtualbox
+        auto eth0:0
+        allow-hotplug eth0:0
+        iface eth0:0 inet static
+        address 172.20.20.1
+        netmask 255.255.255.0
+
+        # Videojet
+        auto eth0:1
+        allow-hotplug eth0:1
+        iface eth0:1 inet static
+        address 192.168.1.9
+        netmask 255.255.255.0
+
+        # The primary wireless interface
+        allow-hotplug wlan0
+        iface wlan0 inet dhcp
+
+
 # reboot
         - Normal kurulum
         reboot
