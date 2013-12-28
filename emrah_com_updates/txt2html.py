@@ -15,29 +15,29 @@ DIRECTORIES         = [ 'public_html/notlar',
 def getTxt(file):
     try:
         d = open(file, 'r')
-        str = d.read()
+        txt = d.read()
         d.close()
 
-        return str
+        return txt
     except:
         return ''
 
 
 
 # --------------------------------------------------------------------
-# html verisi icinde olmamasi gereken karakterleri duzenler
-def format(str):
+# HTML verisi icinde olmamasi gereken karakterleri duzenler
+def encode(txt):
     try:
-        str = str.replace('&', '&amp;')
-        str = str.replace('<', '&lt;')
-        str = str.replace('>', '&gt;')
-        str = str.replace('"', '&quot;')
-        str = str.replace('^', '&circ;')
-        str = str.replace('~', '&tilde;')
-        str = str.replace('–', '&ndash;')
-        str = str.replace('—', '&mdash;')
+        txt = txt.replace('&', '&amp;')
+        txt = txt.replace('<', '&lt;')
+        txt = txt.replace('>', '&gt;')
+        txt = txt.replace('"', '&quot;')
+        txt = txt.replace('^', '&circ;')
+        txt = txt.replace('~', '&tilde;')
+        txt = txt.replace('–', '&ndash;')
+        txt = txt.replace('—', '&mdash;')
 
-        return str
+        return txt
     except:
         return ''
 
@@ -60,7 +60,7 @@ def txt2html(filename, txt):
             cevap += '</code></pre>\n'
             cevap += '</body>\n'
             cevap += '</html>'
-            cevap = cevap % (filename, format(txt))
+            cevap = cevap % (filename, encode(txt))
 
             return cevap
         except:
@@ -76,9 +76,9 @@ def createHtmlFile(path, html):
 
         if exists(htmlfile):
             d = open(htmlfile, 'r')
-            str = d.read()
+            txt = d.read()
             d.close()
-            if str == html: return True
+            if txt == html: return True
 
         d = open(htmlfile, 'w')
         d.write(html)
