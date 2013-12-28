@@ -68,13 +68,8 @@ Bu dökümanda, www.emrah.com için yapılan işlemlerle ilgili notlar yer alır
 
     vim /etc/nginx/sites-enabled/emrah.com
         server {
-            listen      80;
-            server_name emrah.com
-                        www.emrah.com;
-            root        /home/emrah/proje/www_emrah_com/public_html;
-            index       index.html;
-            access_log  /var/log/nginx/access.emrah.com.log;
-
+            ...
+            ...
             location /gitweb {
                 alias       /usr/share/gitweb;
                 index       index.cgi;
@@ -84,11 +79,8 @@ Bu dökümanda, www.emrah.com için yapılan işlemlerle ilgili notlar yer alır
                     fastcgi_pass    unix:/var/run/fcgiwrap.socket;
                 }
             }
-
-            location /kuran {
-                autoindex on;
-            }
-        }
+            ...
+            ...
 
 
     /etc/init.d/fcgiwrap restart
@@ -106,3 +98,134 @@ vim /etc/crontab
 03 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/dilbert.py
 05 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/userfriendly.py
 07 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/txt2html.py
+
+
+
+# -----------------------------------------------------------------------------
+# ICINGA KURULUMU
+# -----------------------------------------------------------------------------
+http://www.emrah.com/notlar/icinga_notlari.txt sayfasında notlara göre Icinga
+kurulacak.
+
+
+
+# -----------------------------------------------------------------------------
+# /etc/nginx/sites-available/emrah.com
+# -----------------------------------------------------------------------------
+
+# HTTP emrah.com
+server {
+        listen          80;
+        server_name     emrah.com
+                        www.emrah.com;
+        root            /home/emrah/proje/www_emrah_com/public_html;
+        index           index.html;
+        access_log      /var/log/nginx/access.emrah.com.log;
+
+        location /gitweb {
+                alias           /usr/share/gitweb;
+                index           index.cgi;
+                include         fastcgi_params;
+                gzip            off;
+                if ($uri ~ "/gitweb/index.cgi") {
+                        fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+                }
+        }
+
+        location /icinga {
+                alias           /usr/share/icinga/htdocs;
+                index           index.html;
+                auth_basic      "...";
+                auth_basic_user_file    /etc/icinga/htpasswd.users;
+        }
+
+        location /icinga/stylesheets {
+                alias           /etc/icinga/stylesheets;
+        }
+
+        location /cgi-bin/icinga {
+                alias           /usr/lib/cgi-bin/icinga;
+                include         fastcgi_params;
+                gzip            off;
+
+                fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+                fastcgi_param   AUTH_USER       $remote_user;
+                fastcgi_param   REMOTE_USER     $remote_user;
+        }
+
+        location /kuran {
+                autoindex on;
+        }
+
+        location = / {
+                ssi on;
+        }
+
+        location = /index.html {
+                ssi on;
+        }
+}
+
+
+
+# -----------------------------------------------------------------------------
+# HTTPS emrah.com
+server {
+        listen          30443;
+        server_name     emrah.com
+                        www.emrah.com;
+        root            /home/emrah/proje/www_emrah_com/public_html;
+        index           index.html;
+        access_log      /var/log/nginx/access.emrah.com.log;
+
+        ssl on;
+        ssl_certificate keys/emrah.com.pem;
+        ssl_certificate_key keys/emrah.com.key;
+        ssl_session_timeout 5m;
+        ssl_protocols SSLv3 TLSv1;
+        ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
+        ssl_prefer_server_ciphers on;
+
+        location /gitweb {
+                alias           /usr/share/gitweb;
+                index           index.cgi;
+                include         fastcgi_params;
+                gzip            off;
+                if ($uri ~ "/gitweb/index.cgi") {
+                        fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+                }
+        }
+
+        location /icinga {
+                alias           /usr/share/icinga/htdocs;
+                index           index.html;
+                auth_basic      "...";
+                auth_basic_user_file    /etc/icinga/htpasswd.users;
+        }
+
+        location /icinga/stylesheets {
+                alias           /etc/icinga/stylesheets;
+        }
+
+        location /cgi-bin/icinga {
+                alias           /usr/lib/cgi-bin/icinga;
+                include         fastcgi_params;
+                gzip            off;
+
+                fastcgi_pass    unix:/var/run/fcgiwrap.socket;
+                fastcgi_param   AUTH_USER       $remote_user;
+                fastcgi_param   REMOTE_USER     $remote_user;
+        }
+
+        location /kuran {
+                autoindex on;
+        }
+
+        location = / {
+                ssi on;
+        }
+
+        location = /index.html {
+                ssi on;
+        }
+}
