@@ -1,14 +1,23 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import  os
+import sys
 import  subprocess
 
-INDEX   = '/home/emrah/proje/www_emrah_com/public_html/index.html'
-INDEX2  = '/home/emrah/proje/www_emrah_com/public_html/index2.html'
+BASEDIR = '/home/emrah/proje/www_emrah_com/public_html/inc'
+INCS = ['userfriendly', 'dilbert']
 
-# crontab tarafindan dun hazirlanmis olan index2.html dosyasini, 
-# index.html olarak kopyala
-p      = subprocess.Popen('cp %s %s' % (INDEX2, INDEX), shell=True)
-status = os.waitpid(p.pid, 0)[1]
+try:
+    # Guncellenmis herbir include dosyasini, gosterimde kullanilacak adiyla
+    # kopyala.
+    for inc in INCS:
+        command = ['cp',
+                   '%s/%s.new.html' % (BASEDIR, inc),
+                   '%s/%s.html' % (BASEDIR, inc)]
+        p = subprocess.Popen(command)
+        p.wait()
 
+    sys.exit(0)
+except Exception, err:
+    sys.stderr.write(str(err))
+    sys.exit(1)

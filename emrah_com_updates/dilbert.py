@@ -1,42 +1,47 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import  re
-import  urllib2
+import sys
+import re
+import urllib2
 
-INDEX   = '/home/emrah/proje/www_emrah_com/public_html/index2.html'
-
-istek   = urllib2.Request('http://www.dilbert.com')
+# Gunun resminin yolunu ve adini arayacak sablonu olustur
+PATTERN = '<img src="http://dilbert.com/(dyn/str_strip/.*?)"'
+PATTERN = re.compile(PATTERN, re.IGNORECASE)
+# Dilbert blogunu olusturan dosya.
+FILE = '/home/emrah/proje/www_emrah_com/public_html/inc/dilbert.new.html'
 
 try:
-        bag = urllib2.urlopen(istek)
-except IOError:
-        print u'siteye ba\011Flan\u0131lamad\u0131'
-else:
-        ham_metin = bag.read()
-        bag.close
+    # dilbert.com site icerigini al.
+    req = urllib2.Request('http://www.dilbert.com')
+    cnn = urllib2.urlopen(req)
+    res = cnn.read()
+    cnn.close
 
-        # gunun resminin yolunu ve adini arayacak sablonu olustur
-        sablon = re.compile('<img src="http://dilbert.com(/dyn/str_strip/.*?)"', re.IGNORECASE)
+    # Gunun resminin linkini tesbit et.
+    g = PATTERN.search(res)
+    if not g:
+        raise NameError('Resim tesbit edilemedi')
+    link = g.group(1)
 
-        # gunun resminin yolunu ve adini ara
-        gruplar = sablon.search(ham_metin)
+    # Dilbert blogunu olusturacak icerigi guncelle.
+    block = """
+		<a href="http://www.dilbert.com/"
+		title="Başka karikatürler de görmek istiyorsanız, tıklayınız">
+		<img src="http://www.dilbert.com/%s" alt="" />
+		</a>
+		<br />
+		<span class="h3">
+		<a href="http://www.dilbert.com">From Dilbert.com</a><br />
+		Copyright © Scott Adams, Inc./Dist. by UFS, Inc.
+		</span><br />""" % (link)
 
-        if gruplar:
-                # index2.html sayfasindaki linki degistir ve ...
-                dosya = open(INDEX, 'r')
-                icerik = dosya.read()
-                dosya.close()
+    # Dilbert blogunu olusturacak icerigi tasiyan dosyayi guncelle.
+    with open(FILE, 'w') as f:
+        f.write(block)
+        f.close()
 
-                icerik = re.sub('(<img src="http://www.dilbert.com)(/dyn/str_strip/.*?)(")', \
-                                '\\1' + gruplar.group(1) + '\\3', \
-                                icerik, \
-                                re.DOTALL | re.IGNORECASE)
-
-                # index2.html'in icerigi olarak kaydet
-                dosya = open(INDEX, 'w')
-                dosya.write(icerik)
-                dosya.close()
-        else:
-                print('resim tesbit edilemedi')
-
+    sys.exit(0)
+except Exception, err:
+    sys.stderr.write(str(err))
+    sys.exit(1)

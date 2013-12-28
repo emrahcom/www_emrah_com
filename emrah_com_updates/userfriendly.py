@@ -1,43 +1,47 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import  re
-import  urllib2
+import sys
+import re
+import urllib2
 
-INDEX   = '/home/emrah/proje/www_emrah_com/public_html/index2.html'
-
-istek   = urllib2.Request('http://www.userfriendly.org')
+# Gunun resminin yolunu ve adini arayacak sablonu olustur
+PATTERN = 'SRC="http://www.userfriendly.org/(cartoons/archives/.*?)">'
+PATTERN = re.compile(PATTERN, re.IGNORECASE)
+# UserFriendly blogunu olusturan dosya.
+FILE = '/home/emrah/proje/www_emrah_com/public_html/inc/userfriendly.new.html'
 
 try:
-        bag = urllib2.urlopen(istek)
-except IOError:
-        print u'siteye bağlanılamadı'
-else:
-        ham_metin = bag.read()
-        bag.close
+    # userfriendly.org site icerigini al.
+    req = urllib2.Request('http://www.userfriendly.org')
+    cnn = urllib2.urlopen(req)
+    res = cnn.read()
+    cnn.close
 
-        # gunun resminin yolunu ve adini arayacak sablonu olustur
-        sablon = re.compile('SRC="http://www.userfriendly.org/cartoons/archives/(.*?)">', re.IGNORECASE)
+    # Gunun resminin linkini tesbit et.
+    g = PATTERN.search(res)
+    if not g:
+        raise NameError('Resim tesbit edilemedi')
+    link = g.group(1)
 
-        # gunun resminin yolunu ve adini ara
-        gruplar = sablon.search(ham_metin)
+    # UserFriendly blogunu olusturacak icerigi guncelle.
+    block = """
+		<a href="http://www.userfriendly.org/"
+		title="Başka karikatürler de görmek istiyorsanız, tıklayınız">
+		<img src="http://www.userfriendly.org/%s" alt="" />
+		</a>
+		<br />
+		<span class="h3">
+		<a href="http://www.userfriendly.org">From UserFriendly.org</a><br />
+		Copyright © 2004 J.D. &quot;Illiad&quot; Frazer.
+		</span><br />""" % (link)
 
-        if gruplar:
-                # index2.html sayfasindaki linki degistir ve ...
-                dosya = open(INDEX, 'r')
-                icerik = dosya.read()
-                dosya.close()
+    # UserFriendly blogunu olusturacak icerigi tasiyan dosyayi guncelle.
+    with open(FILE, 'w') as f:
+        f.write(block)
+        f.close()
 
-                resim = '<img src="http://www.userfriendly.org/cartoons/archives/%s"' % gruplar.group(1)
-                icerik = re.sub('(<img src="http://www.userfriendly.org/cartoons/archives/)(.*?)(")', \
-                                resim, \
-                                icerik, \
-                                re.DOTALL | re.IGNORECASE)
-
-                # index2.html'in icerigi olarak kaydet
-                dosya = open(INDEX, 'w')
-                dosya.write(icerik)
-                dosya.close()
-        else:
-                print('Resim tesbit edilemedi')
-
+    sys.exit(0)
+except Exception, err:
+    sys.stderr.write(str(err))
+    sys.exit(1)
