@@ -162,7 +162,7 @@ try:
     # Include file icerigini hazirla.
     block = """
 		<span class="h3">
-		<a href="%s" alt="%s %s">
+		<a href="%s" title="%s %s">
 		%s
 		</a></span>""" % (surelink, encode(sure), ayetno,
                                   encode(ayet))
