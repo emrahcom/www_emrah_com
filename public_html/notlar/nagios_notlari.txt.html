@@ -78,6 +78,26 @@ Makineleri takip edecek olan Nagios sunucu makine.
             pager                           5553334455
         }
 
+# Nagios sunucu için swap kontrolü. Sunucu swap kullanmaya başlarsa uyarı
+verecek.
+    vim /etc/nagios3/conf.d/custom_commands.cfg
+        # 'check_swap' command definition
+        define command{
+                command_name    check_swap
+                command_line    /usr/lib/nagios/plugins/check_swap -w '$ARG1$' -c '$ARG2$'
+        }
+
+
+        vim /etc/nagios3/conf.d/localhost_nagios2.cfg
+        define service{
+                use                             generic-service
+                host_name                       localhost
+                service_description             Swap status
+                check_command                   check_swap!98%!80%
+                }
+
+
+
 
 
 # -----------------------------------------------------------------------------
@@ -94,7 +114,18 @@ Durumu takip edilecek bir Debian Wheezy makinede yapılacak işlemler.
         server_port=5666
         # Nagios sunucu IP'si. Sadece bu IP adresi Nagios bilgilerini alabilir.
         allowed_hosts=xxx.vvv.yyy.zzz
-        command[check_sda1]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/sda1
+        command[check_sda1]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/disk/by-uuid/ca223...
+        command[check_sdb1]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/sdb1
+        command[check_swap]=/usr/lib/nagios/plugins/check_swap -w 98% -c 80%
+        command[check_apt]=/usr/lib/nagios/plugins/check_apt
+
+
+# Notlar
+- check_apt kontrolünün sağlıklı çalışması için crontab içine 'apt-get update'
+  yapan bir satır eklemek gerekmekte.
+
+- / partition UUID ile mount ediliyorsa check_disk'de parametre olarak UUID
+  vermek gerekmekte.
 
 
 
@@ -109,6 +140,8 @@ Durumu takip edilecek bir Debian Wheezy makinede yapılacak işlemler.
         service_description             Disk Space /
         check_command                   check_nrpe_1arg!check_sda1 -p 5666
     }
+    ...
+    ...
 
 
 # vim /etc/nagios3/conf.d/host_hostadi.cfg

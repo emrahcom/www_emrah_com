@@ -68,8 +68,30 @@ Debian Wheezy i386 makinede denenmiştir
         launch=gpgsql,bind
         include=/etc/powerdns/pdns.d
 
+# DNS sec'i iptal etmek için (Poweradmin ile kullanımda sorun çıkıyor)
+    vim /etc/powerdns/pdns.d/pdns.local.gpgsql
+        gpgsql-dnssec=no
+
+# master modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
+    master=yes
+
+# supermaster modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
+    allow-axfr-ips=11.22.33.44/32   # slave IP
+    disable-axfr=no
+
 # slave modda çalışabilmesi için /etc/powerdns/pdns.conf dosyasında
     slave=yes
+
+# slave modda supermaster'a bağlanacaksa /etc/powerdns/pdns.conf dosyasında
+    allow-axfr-ips=55.66.77.88/32   # supermaster IP
+
+# slave makineye supermaster makine eklenecekse
+    INSERT INTO supermasters (ip, nameserver, account)
+    VALUES ('55.66.77.88', 'pns1.domain.net', 'admin');
+
+# supermaster makinede, domaini host eden bütün master ve slave makineler için
+NS kaydı girilmesi gerekiyor. Yoksa supermaster, bir değişiklik olduğunda slave
+makineyi haberdar etmiyor.
 
 # Servisin restart edilmesi.
     /etc/init.d/pdns restart

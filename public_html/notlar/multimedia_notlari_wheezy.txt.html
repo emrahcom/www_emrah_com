@@ -39,9 +39,28 @@ ffplay -f alsa -ac 2 -i default
 ffplay  -loglevel quiet -v quiet \
 -f video4linux2 -video_size 320x240 -vb 1024k -i /dev/video0
 
+# Ses çevrimi sırasında native AAC kullanılacaksa...
+    -c:a libfdk_aac -vbr 1 \
+ yerine
+    -strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 64k \
+
+# RTMP overlay
+ffmpeg -i rtmp://85.111.24.138:1935/tv/trtmuzik \
+-i rtmp://85.111.24.138:1935/tv/trthd \
+-filter_complex &quot;[1:0]scale=trunc(iw/3):-1,pad=5+iw:5+ih:3:3:orange [win]; \
+[0:0][win] overlay=(main_w-overlay_w):(main_h-overlay_h)&quot; \
+-vprofile baseline -preset ultrafast \
+-c:v libx264 -c:a copy \
+-map 0:v -map 1:a:0 \
+-f flv - \
+| ffplay -
+
 
 # Kaynaklar
 http://ffmpeg.org/trac/ffmpeg/wiki/x264EncodingGuide
+http://ffmpeg.org/trac/ffmpeg/wiki/AACEncodingGuide
+https://sites.google.com/site/linuxencoding/x264-ffmpeg-mapping
+http://sonnati.wordpress.com/2011/08/19/ffmpeg-&ndash;-the-swiss-army-knife-of-internet-streaming-&ndash;-part-iii/
 
 
 
@@ -158,8 +177,9 @@ aptitude install avidemux avidemux-cli
 aptitude install mjpegtools lame twolame
 
 
+
 # -----------------------------------------------------------------------------
-# NGINX RTMP
+# NGINX RTMP MODULE
 # -----------------------------------------------------------------------------
 
 # Derleme icin gerekli paketler.
@@ -209,49 +229,160 @@ aptitude hold nginx-common nginx-extras
 
 
 # Nginx ayarları
+/etc/nginx/nginx.conf
+    # worker_process degeri, core sayisi kadar olsun.
+    worker_processes 4;
 
-        - /etc/nginx/nginx.conf
-                rtmp {
-                        server {
-                                listen 1935;
+    rtmp_auto_push on;
+    rtmp_auto_push_reconnect 1s;
+    rtmp_socket_dir /tmp;
 
-                                application live {
-                                        live on;
-                                        allow publish 127.0.0.1;
-                                        deny publish all;
-                                        allow play all;
+    rtmp {
+        server {
+            listen 1935;
+            drop_idle_publisher 10s;
+            # Gstreamer ile push yapilacaksa...
+            publish_time_fix off;
 
-                                        hls on;
-                                        hls_path /tmp/live;
-                                        hls_fragment 5s;
+            application live {
+                live on;
 
-                                        wait_video on;
-                                        wait_key on;
-                                }
-                        }
-                }
+                # Bir sunucudaki butun streamler cekilecekse...
+                # pull rtmp://xxx.www.yyy.zzz:1935;
+                # Bir sunucudaki sadece bir stream cekilecekse...
+                # pull rtmp://xxx.www.yyy.zzz:1935/live/stream name=stream1 static;
 
-        - /etc/nginx/sites-available/default
-                location /hls {
-                        alias /tmp/live;
-                }
+                # Yayin gonderebilecek IP adresleri.
+                allow publish 127.0.0.1;
+                allow publish X.Y.W.Z;
+                deny publish all;
+                # Yayini izleyebilecek IP adresleri.
+                allow play all;
 
-        - tmpfs altında hls path
-                mkdir /tmp/live
-                chown www-data: /tmp/live
+                # HLS formatinda da yayin yapilacaksa...
+                hls on;
+                hls_path /var/tmp/hls;
+                hls_fragment 10s;
+                hls_playlist_length 60s;
+                hls_sync 300ms;
+                hls_continuous on;
+                hls_cleanup on;
 
-        - restart
-                /etc/init.d/nginx configtest
-                /etc/init.d/nginx restart
+                # Yayina baslamak icin key-frame beklenecekse...
+                wait_video on;
+                wait_key on;
+
+                # Yayini kaydilecekse...
+                record all;
+                record_path /var/tmp/record;
+                record_unique on;
+                record_interval 30m;
+                record_suffix -%Y%m%d-%T.flv;
+
+                # exec ile push (ffmpeg yuklu olmasi gerekiyor)
+                allow play 127.0.0.1;
+                exec /home/kullanici/scripts/push.sh
+            }
+        }
+    }
+
+
+/etc/nginx/sites-available/default
+    location /hls {
+        alias /var/tmp/hls;
+    }
+
+    location /video {
+        alias /var/tmp/record;
+        autoindex on;
+    }
+
+    location /rtmp_stat {
+        rtmp_stat all;
+        rtmp_stat_stylesheet rtmp_stat.xsl;
+    }
+
+    location /rtmp_stat.xsl {
+        root /var/tmp/;
+    }
+
+    location /rtmp_control {
+        rtmp_control all;
+
+        auth_basic &quot;Restricted&quot;;
+        auth_basic_user_file /home/kullanici/nginx/htpasswd;
+    }
+
+
+- rtmp_stat.xsl
+    cp /home/kullanici/source/nginx/nginx-1.2.1/debian/modules/nginx-rtmp-module/stat.xsl /var/tmp/rtmp_stat.xsl
+    chown www-data: /var/tmp/rtmp_stat.xsl
+
+    RTMP durumunu takip etmek için:
+    http://ip_adresi/rtmp_stat
+
+
+- rtmp_control
+    # Bir izleyiciyi drop etme.
+        curl -u user:passwd &quot;http://ip_adresi/rtmp_control/drop/client?app=uygulama_adi&amp;name=yayin_adi&amp;addr=X.Y.W.Z&quot;
+
+    # Bütün izleyicileri drop etme.
+        curl -u user:passwd &quot;http://ip_adresi/rtmp_control/drop/client?app=uygulama_adi&amp;name=yayin_adi&quot;
+
+    # Bir yayıncıyı drop etme.
+        curl -u user:passwd &quot;http://ip_adresi/rtmp_control/drop/publisher?app=uygulama_adi&amp;name=yayin_adi&quot;
+
+
+- tmpfs altında hls path
+    mkdir /var/tmp/hls
+    chown www-data: /var/tmp/hls
+    mkdir /var/tmp/record
+    chown www-data: /var/tmp/record
+
+
+- push.sh
+    mkdir -p /home/kullanici/scripts
+    touch /home/kullanici/scripts/push.sh
+    chown www-data: /home/kullanici/scripts/push.sh
+    chmod u+x /home/kullanici/scripts/push.sh
+    vim /home/kullanici/scripts/push.sh
+        #!/bin/bash
+
+        app=$1
+        name=$2
+
+        ps aux | egrep ffmpeg | egrep &quot;/$app/&quot; | egrep &quot;/$name &quot; | awk '{ print $2; }' | xargs -iX kill X
+        sleep 2
+        ffmpeg -i rtmp://localhost:1935/$app/$name -vcodec copy -acodec copy -f flv rtmp://X.Y.V.Z:1935/$app/$name
+
+
+- restart
+    /etc/init.d/nginx configtest
+    /etc/init.d/nginx restart
+
+
+- HLS klasörü ramdisk olacaksa /etc/fstab icinde
+tmpfs  /var/tmp/hls  tmpfs  noatime,size=512M,nr_inodes=10k,mode=1777  0  0
+
+
+- Belli aralıklarla eski video segmentleri temizlenecekse
+    /root/scripts/cleanup.sh
+    #!/bin/bash
+    find /var/tmp/hls/ -type f -name &quot;*.ts&quot; -cmin +5 | xargs -iX rm X
+
+    /etc/crontab
+    *  *    * * *   root    /root/scripts/cleanup.sh &gt;/dev/null 2&gt;&amp;1
 
 
 
+# -----------------------------------------------------------------------------
 # Stream gönderme
+# -----------------------------------------------------------------------------
 
 ffmpeg -i mmsh://85.111.3.55/ntv \
 -threads 0 -vprofile baseline -preset medium \
--c:v libx264 -b:v 256k -maxrate 256k -bufsize 512k \
--strict experimental -c:a aac -r:a 48000 -b:a 64k \
+-c:v libx264 -b:v 256k -maxrate 256k -bufsize 512k -g 1 \
+-c:a libfdk_aac -vbr 1 \
 -f flv rtmp://localhost:1935/live/yayin1
 
 
@@ -289,8 +420,8 @@ alsa:adevice=hw.0:forceaudio:audiorate=48000:amode=1:immediatemode=0 \
 -o - -really-quiet | \
 ffmpeg  -re -i - -threads 0 \
 -c:v libx264 -profile:v baseline -preset slow \
--b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT \
--strict experimental -c:a aac -ac 2 -ar 48000 -ab 64k \
+-b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT -g 1 \
+-c:a libfdk_aac -vbr 1 \
 -f flv rtmp://localhost:1935/live/yayin1
 
 
@@ -311,8 +442,8 @@ alsa:adevice=hw.0:forceaudio:audiorate=48000:amode=1:immediatemode=0 \
 -oac copy \
 -o - -really-quiet | \
 ffmpeg  -re -i - -threads 0 \
--c:v libx264 -profile:v baseline -preset ultrafast \
--strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 96k \
+-c:v libx264 -profile:v baseline -preset ultrafast -g 1 \
+-c:a libfdk_aac -vbr 1 \
 -f flv pipe:1 | \
 ffplay -f flv -i -
 
@@ -336,8 +467,8 @@ ffmpeg  -re -i - \
 -f alsa -i default \
 -threads 0 \
 -vcodec libx264 -vprofile baseline -preset medium \
--b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT \
--strict experimental -c:a aac -ac 2 -r:a 48000 -b:a 64k \
+-b:v 512k -maxrate 512k -bufsize 1024k -aspect $ASPECT -g 1 \
+-c:a libfdk_aac -vbr 1 \
 -f flv rtmp://localhost:1935/live/yayin1
 
 
@@ -351,6 +482,118 @@ ffmpeg  -re -i - \
         ami-d81b12ac
         379101102735/debian-wheezy-amd64-20130208
         Default user: admin
+
+
+
+# -----------------------------------------------------------------------------
+# NGINX İLE ŞARTLI STREAM İZLEME
+# -----------------------------------------------------------------------------
+
+# Kurulumlar
+    aptitude install python-geoip
+    aptitude install uwsgi uwsgi-plugin-python
+
+
+# Python kontrol kodu
+/home/kullanici/wsgi/geocheck.py
+    #!/usr/bin/python
+    #-*- coding: utf-8 -*-
+
+    import re
+    import GeoIP
+    from cgi import parse_qs
+
+    # Bolgesel erisim denetimi aktif mi? Aktif ise sadece izinli bolgeden gelen
+    # izleyiciler yayini izleyebilir.
+    ENABLE_GEOIP = False
+    # Izinli bolgeler.
+    ALLOWED_COUNTRIES = ['TR', 'US']
+    # pageurl icin regex.
+    RE_PAGEURL = re.compile('http://([a-zA-Z0-9._-]+)')
+    # Izinli sitelerin listesi.
+    ALLOWED_SITES = ['emrah.com',
+                     'www.emrah.com']
+
+    def application(env, start_response):
+        # Default olarak izleyiciye izin verilir.
+        status = '200 OK'
+        output = 'OK'
+
+        # Izleyici bilgilerini al.
+        args = parse_qs(env['wsgi.input'].read())
+        addr = args.get('addr', [''])[0]
+        pageurl = args.get('pageurl', [''])[0]
+
+        # Referer adresi al.
+        site = ''
+        g = RE_PAGEURL.search(pageurl)
+        if g:
+            site = g.group(1)
+
+        # Izleyici bolge kodunu al.
+        g = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', GeoIP.GEOIP_STANDARD)
+        country = g.country_code_by_addr(addr)
+
+        # Bolge denetimi varsa ve izleyici, izin verilen bolgeden degilse, yayini
+        # izleyemez.
+        if (ENABLE_GEOIP is True) and (country not in ALLOWED_COUNTRIES):
+            status = '500 ERROR'
+            output = 'error'
+        # Ziyaretci bir web sitesinden geldiyse ve bu site, izinli siteler
+        # listesinde yoksa, yayini izleyemez.
+        elif len(pageurl) and (site not in ALLOWED_SITES):
+            status = '500 ERROR'
+            output = 'error'
+
+        # Cevabi dondur. '200 OK' donerse stream baslar, '500 ERROR' donerse stream
+        # baslamaz.
+        response_headers = [('Content-type', 'text/plain'),
+                            ('Content-Length', str(len(output)))]
+        start_response(status, response_headers)
+        return [output]
+
+
+# UWSGI ayarları
+/etc/uwsgi/apps-available/geocheck.ini
+    [uwsgi]
+    plugins = python
+    uid = www-data
+    gid = www-data
+    master = true
+    socket=/var/run/uwsgi/app/geocheck/socket
+    wsgi-file = /home/kullanici/wsgi/geocheck.py
+
+cd /etc/uwsgi/apps-enabled
+ln -s ../apps-available/geocheck.ini .
+/etc/init.d/uwsgi restart
+
+
+# Stream'i izlemek isteyenlerin kontrol sayfasına yönlendirilmesi
+/etc/nginx/nginx.conf
+    rtmp {
+        server {
+            listen 1935;
+
+            application live {
+                live on;
+                on_play http://localhost/geocheck;
+        ...
+        ...
+    }
+
+
+/etc/nginx/sites-enabled/default
+    location /geocheck {
+        include uwsgi_params;
+        uwsgi_pass unix:/var/run/uwsgi/app/geocheck/socket;
+    }
+
+
+
+# Kaynaklar
+https://github.com/arut/nginx-rtmp-module/wiki/Directives
+# RTMP/RTSP/MMS/M3U8 adresleri
+http://radyodelisi.blogspot.com/
 </code></pre>
 </body>
 </html>

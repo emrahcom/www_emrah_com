@@ -8,43 +8,62 @@
 <body>
 <pre><code>
 #!/usr/bin/python
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
+
+&quot;&quot;&quot;
+    file    : zargan.py
+    author      : emrah
+    usage       : zargan.py word
+
+    This script is a console based Zargan interface. Zargan is a
+    Turkish-English dictionary web site: www.zargan.com
+&quot;&quot;&quot;
 
 import re
 import sys
 import httplib
 import urllib
 import socket
+import HTMLParser
 
-SERVER = &quot;old.zargan.com&quot;
-PAGE = &quot;/sozluk.asp&quot;
-PATTERN = '&lt;span class=&quot;dblClickSpan&quot;.*?&gt;(.+?)&lt;/span&gt;.*?'
-PATTERN += '&lt;span class=&quot;dblClickSpan&quot;.*?&gt;(.+?)&lt;/span&gt;(.*)'
-PATTERN = re.compile(PATTERN, re.DOTALL)
-COLORED = True
+# Debug mode. 0 for production, 1 for testing.
 DEBUG = 0
+# Color mode for print out. 0 for no color, 1 for colored print out.
+COLORED = 1
+# Server address and web page.
+SERVER = 'www.zargan.com'
+PAGE = '/mobil/sozluk.asp'
+# Regex pattern to parse word list block.
+P_WORD_BLOCK = re.compile('&lt;div id=&quot;listResults&quot;&gt;(.*?)&lt;/div&gt;', re.DOTALL)
+# Regex pattern to parse (word, meaning) pair.
+P_WORD_PAIR  = '.*?&lt;span class=&quot;listString&quot;&gt;(.*?)&lt;/span&gt;'
+P_WORD_PAIR += '.*?&lt;a href=&quot;.*?&quot;&gt;(.*?)&lt;/a&gt;(.*)'
+P_WORD_PAIR  = re.compile(P_WORD_PAIR, re.DOTALL)
 
 
 
 # -----------------------------------------------------------------------------
 def get_response_from_zargan(word):
+    &quot;&quot;&quot;
+    Get response from Zargan web site for the given word(s). This is
+    an unparsed HTML text.
+    &quot;&quot;&quot;
     try:
-        header = { 'Content-type': 'application/x-www-form-urlencoded',
-                   'Accept': 'text:plain' }
-        param = urllib.urlencode({'Sozcuk': word})
+        header = {'Content-type'   : 'application/x-www-form-urlencoded',
+                  'Accept'         : 'text:plain' }
+        param = urllib.urlencode({'sozcuk': word})
         cnn = httplib.HTTPConnection(SERVER)
         socket.setdefaulttimeout(5)
         cnn.request('GET', PAGE, param, header)
-        res = cnn.getresponse()
-        res = res.read().decode('iso-8859-9')
+        res = cnn.getresponse().read().decode('utf-8')
         cnn.close()
 
-        result = res
+        result = HTMLParser.HTMLParser().unescape(res)
     except Exception, err:
         if DEBUG:
             raise
         else:
-            print(str(err))
+            sys.stderr.write('%s\n' % err)
 
         result = None
 
@@ -53,50 +72,62 @@ def get_response_from_zargan(word):
 
 
 # -----------------------------------------------------------------------------
-def parse_response(raw):
+def get_dict_pairs(html):
+    &quot;&quot;&quot;
+    Parse the unparsed HTML text to get (word, meaning) pairs.
+    &quot;&quot;&quot;
     try:
-        if not raw:
-            raise NameError('No response')
+        result = []
 
-        parsed = []
+        # Parse word list block.
+        g = P_WORD_BLOCK.search(html)
+        if not g:
+            raise NameError('Word list block not found')
+        html = g.group(1)
+
+        # Parse (word, meaning) pairs
         while True:
-            g = PATTERN.search(raw)
+            g = P_WORD_PAIR.search(html)
             if not g:
                 break
-            parsed.append((g.group(1), g.group(2)))
-            raw = g.group(3)
-
-        result = parsed
+            result.append((g.group(1).strip(), g.group(2).strip()))
+            html = g.group(3)
     except Exception, err:
         if DEBUG:
             raise
         else:
-            print(str(err))
-
-        result = None
+            sys.stderr.write('%s\n' % err)
 
     return result
 
 
 
 # -----------------------------------------------------------------------------
-def print_response(parsed):
+def print_dict_pairs(pairs):
+    &quot;&quot;&quot;
+    Print out the (word, meaning) pairs.
+    &quot;&quot;&quot;
     try:
-        for key, value in parsed:
+        # If no result found, print out :(
+        if not pairs:
+            sys.stderr.write(':(\n')
+
+        for key, value in pairs:
             if COLORED:
                 out =  &quot;\033[35m%s\033[0m : &quot; % (key.strip().encode('utf-8'))
-                out += &quot;%s&quot; % (value.strip().encode('utf-8'))
+                out += &quot;%s\n&quot; % (value.strip().encode('utf-8'))
             else:
                 out =  &quot;%s : &quot; % (key.strip().encode('utf-8'))
-                out += &quot;%s&quot;    % (value.strip().encode('utf-8'))
-            print(out)
+                out += &quot;%s\n&quot;    % (value.strip().encode('utf-8'))
+
+            sys.stdout.write(out)
 
         result = True
     except Exception, err:
         if DEBUG:
             raise
         else:
-            print(str(err))
+            sys.stderr.write('%s\n' % err)
 
         result = False
 
@@ -107,19 +138,28 @@ def print_response(parsed):
 
 # -----------------------------------------------------------------------------
 if __name__ == '__main__':
-    if len(sys.argv) &lt; 2:
-        print('Usage: %s word [word...]' % sys.argv[0])
+    try:
+        # Get words as argument.
+        if len(sys.argv) &lt; 2:
+            sys.stderr.write('Usage: %s word [word...]\n' % sys.argv[0])
+            sys.exit(1)
+        word = ' '.join(sys.argv[1:])
+
+        # Get unparsed html response from zargan.com
+        html = get_response_from_zargan(word)
+        # Parse and get (word, meaning) pairs from html output.
+        pairs = get_dict_pairs(html)
+        # Print (word, meaning) pairs.
+        print_dict_pairs(pairs)
+
+        sys.exit(0)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write('%s\n' % err)
+
         sys.exit(1)
-
-    word = ' '.join(sys.argv[1:])
-    raw = get_response_from_zargan(word)
-    parsed = parse_response(raw)
-    if parsed:
-        print_response(parsed)
-    else:
-        print(&quot;:(&quot;)
-
-    sys.exit(0)
 </code></pre>
 </body>
 </html>

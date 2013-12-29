@@ -33,6 +33,16 @@
         git config --list
         cat &tilde;/.gitconfig
 
+# &tilde;/.gitconfig
+[user]
+    name = emrah
+    email = emrah@mail.com
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+
+
 
 # Ana depo oluşturmak
         mkdir repositories
@@ -97,6 +107,7 @@
 # git diff (farkları görmek)
         git diff            # calisma alani ve indeks arasindaki farklar
         git diff HEAD       # calisma alani ve yerel depo arasindaki farklar
+        git diff --name-status  # merge'den etkilenen dosyaların listesi
 
 
 # git status (calisma alaninin indeks ve yerel depoya gore durumu)
