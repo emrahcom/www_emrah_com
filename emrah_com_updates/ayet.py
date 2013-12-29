@@ -162,9 +162,10 @@ try:
     # Include file icerigini hazirla.
     block = """
 		<span class="h3">
-		<a href="%s">
+		<a href="%s" alt="%s %s">
 		%s
-		</a></span>""" % (surelink, encode(ayet))
+		</a></span>""" % (surelink, encode(sure), ayetno,
+                                  encode(ayet))
 
     # Include file icerigini kaydet.
     with open(INC, 'w') as f:
