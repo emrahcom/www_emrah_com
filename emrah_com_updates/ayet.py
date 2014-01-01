@@ -191,7 +191,7 @@ try:
     # Include file icerigini kaydet.
     with open(INC, 'w') as f:
         f.write(block1)
-        f.write('\n\n		<br /><br />\n')
+        f.write('\n\n		<br />\n')
         f.write(block2)
 
     sys.exit(0)
