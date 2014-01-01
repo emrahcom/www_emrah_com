@@ -116,7 +116,15 @@ Bu dökümanda, web sunucu kurarken gerekli olabilecek notlar yer alır.
 # Custom sertifika
     mkdir /etc/apache2/ssl
     cd /etc/apache2/ssl
+
     openssl req -x509 -days 1800 -newkey rsa:1024 -keyout hostkey.key -nodes -out hostcert.pem
+        - &quot;Organization Name&quot; bölümün uniq bir firma adı girilecek. Böylece,
+          web tarayıcıda bu sertifika için ayrı bir authority tanımlamak mümkün
+          olacak.
+        - &quot;Common Name&quot; bölümüne, siteye girerken kullanılan alan adı veya IP
+          adresi girilecek. Yoksa web tarayıcıda, otomatik tanınan self-signed
+          sertifika kaydı oluşturulamıyor.
+
     chmod 600 *
 
 # /etc/apache2/sites-enabled/default-ssl
@@ -141,6 +149,24 @@ Bu dökümanda, web sunucu kurarken gerekli olabilecek notlar yer alır.
 
         # İzleme
             http://ip_adresi/server-status
+
+
+
+# -----------------------------------------------------------------------------
+# FIREFOX'DA SELF-SIGNED SERTİFİKAYA OTOMATİK ONAY
+# -----------------------------------------------------------------------------
+
+# Siteye girilip sertifikaya onay verilir, web sayfası açılır.
+
+# Preferences -&gt; View Certificates -&gt; Servers bölümünden sertifika seçilip
+&quot;export&quot; edilir. Dosya uzantısı olarak &quot;.pem&quot; kullanılsın.
+
+# Seçili sertifika, Servers bölümünden &quot;Delete&quot; düğmesine tıklanarak silinir.
+
+# Preferences -&gt; View Certificates -&gt; Authorities bölümüne geçilir. &quot;Import&quot;
+ile bir önceki adımda oluşturulan &quot;.pem&quot; uzantılı dosya alınır.
+
+# Açılan pencerede &quot;Trust this CA to identify websites&quot; seçeneği işaretlenir.
 
 
 
