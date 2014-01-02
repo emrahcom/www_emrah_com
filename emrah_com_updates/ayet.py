@@ -9,6 +9,10 @@ BASEDIR = '/home/emrah/proje/www_emrah_com/public_html'
 # Ayet blogunun yer aldigi include dosya.
 INC = '/home/emrah/proje/www_emrah_com/public_html/inc/kuran.html'
 
+# Meal listesi.
+mealler = { 1: 'Muhammed Esed',
+            2: 'Edip Yüksel' }
+
 # Sure listesi.
 sureler = {
     1: (7,   ('Fâtiha', 'fatiha'),
@@ -280,9 +284,10 @@ def get_block(mealno, sure, ayetno):
         block = """
 		<span class="h3">
 		&gt;&gt;&gt;
-		<a href="%s" title="%s %s">
+                <a href="%s" title="%s meali: %s %s">
 		%s
-		</a></span>""" % (surelink, encode(suread), ayetno,
+		</a></span>""" % (surelink, mealler[mealno],
+                                  encode(suread), ayetno,
                                   encode(ayet))
 
         return block
