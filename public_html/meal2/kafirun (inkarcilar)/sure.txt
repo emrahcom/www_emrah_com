@@ -1,0 +1,8 @@
+       KAFİRUN (İNKARCILAR) SURESI
+   0 - Rahman, Rahim Allah’ın ismiyle
+   1 - De ki: “Ey inkârcılar.”
+   2 - “Ben, sizin hizmet ettiklerinize hizmet etmem.“
+   3 - “Siz de benim hizmet ettiğime hizmet etmezsiniz.“
+   4 - “Ben asla sizin hizmet ettiğinize hizmet edecek değilim.”
+   5 - “Siz de benim hizmet ettiğime hizmet edecek değilsiniz.”
+   6 - “Sizin dininiz size, benim dinim bana.”

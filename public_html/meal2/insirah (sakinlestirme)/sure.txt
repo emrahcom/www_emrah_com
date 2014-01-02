@@ -1,0 +1,10 @@
+       İNŞİRAH (SAKİNLEŞTİRME) SURESI
+   0 - Rahman, Rahim Allah’ın ismiyle
+   1 - Göğsünü genişletip seni sakinleştirmedik mi?
+   2 - Üzerindeki yükünü indirmedik mi?
+   3 - Ki belini bükmüştü.
+   4 - Senin şanını yükseltmedik mi?
+   5 - Elbette, kolaylık zorlukla birliktedir.
+   6 - Evet, kolaylık zorlukla birliktedir.
+   7 - Ne zaman fırsat bulursan uğraş ver.
+   8 - Ve sadece Efendini arzula.

@@ -1,7 +1,0 @@
-       KÂFİRÛN SURESI
-   1 - De ki, "Ey inkarcılar."
-   2 - "Ben, sizin taptıklarınıza tapmam."
-   3 - "Siz de benim taptığıma tapmazsınız."
-   4 - "Ben asla sizin taptığınıza tapacak değilim."
-   5 - "Siz de benim taptığıma tapacak değilsiniz."
-   6 - "Sizin dininiz size, benim dinim bana."
