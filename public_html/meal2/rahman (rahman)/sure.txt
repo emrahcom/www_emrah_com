@@ -1,0 +1,80 @@
+       RAHMAN (RAHMAN) SURESI
+   0 - Rahman, Rahim Allah’ın ismiyle
+   1 - Rahman,
+   2 - Kuran’ı öğretti.
+   3 - İnsanı yarattı.
+   4 - Ona beyanı (açıklama yeteneğini) öğretti.
+   5 - Güneş ve ay bir hesap ile (hareket etmekte) dir.
+   6 - Yıldızlar ve ağaçlar secde etmektedirler.
+   7 - Göğü yükseltti ve ölçüyü/dengeyi koydu.
+   8 - Ki ölçüyü aşmayasınız.
+   9 - Ölçüyü adaletle gözetiniz; ölçüyü kaybetmeyiniz.
+  10 - Yeryüzünü tüm yaratıklar için yarattı.
+  11 - Orada meyveler, salkımlı hurma ağaçları vardır.
+  12 - Kabuklu taneler ve baharatlar.
+  13 - (Ey insanlar ve cinler), Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  14 - İnsanı, çömlek gibi kuru bir çamurdan yarattı.
+  15 - Cinleri de dumansız ateşten yarattı.
+  16 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  17 - İki doğunun ve iki batının Rabbi.
+  18 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  19 - İki denizi salmıştır; birbirlerine kavuşuyorlar.
+  20 - Aralarında bir engel vardır; birbirinin sınırını aşıp karışmazlar.
+  21 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  22 - İkisinden de inci ve mercan çıkar.
+  23 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  24 - Denizde dağlar gibi akıp giden gemiler O’nundur.
+  25 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  26 - Üzerinde bulunan herkes ölümlüdür.
+  27 - Sadece Görkemli ve Onurlu Efendinin varlığı kalıcıdır.
+  28 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  29 - Göklerde ve yerde olan herkes O’na yalvarır. O her gün kesintisiz kontrol etmektedir.
+  30 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  31 - Ey sorumlu iki topluluk, sizi elbette sorguya çekeceğiz.
+  32 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  33 - Ey insanlar ve cinler topluluğu, göklerin ve yerin çaplarını aşmaya gücünüz yetiyorsa, aşıp geçin. Bir yetkiye sahip olmadan geçemezsiniz.
+  34 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  35 - Üzerinize ateşten toplar ve ışınlar gönderilir; yardım görmezsiniz.
+  36 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  37 - Gök parçalanıp da, yağ gibi eridiği ve kırmızı bir güle dönüştüğü zaman…
+  38 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  39 - O gün ne insana ne de cine günahından sorulmaz.
+  40 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  41 - Suçlular yüzlerinden tanınır ve yaka paça götürülürler.
+  42 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  43 - İşte bu, suçluların yalanlayıp durduğu cehennemdir.
+  44 - Onunla kaynar su arasında dönüp dolaşırlar.
+  45 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  46 - Efendisinin görkeminden korkan (cin ve insan) lar için iki bahçe vardır.
+  47 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  48 - Türlü besinlerle doludur her ikisi.
+  49 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  50 - İçlerinde akan pınarlar vardır.
+  51 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  52 - İkisinde de her meyveden iki çeşit vardır.
+  53 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  54 - Astarları atlastan yataklara yaslanırlar, her iki bahçenin meyveleri pek yakındır.
+  55 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  56 - Oralarda sarkan meyveler vardır; daha önce ne bir insan ne de bir cin tarafından dokunulmamış.
+  57 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  58 - Onlar yakut ve mercan gibidirler.
+  59 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  60 - İyiliğin karşılığı, yalnız iyilik değil midir?
+  61 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  62 - O ikisinin ötesinde iki bahçe daha var.
+  63 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  64 - Yemyeşildirler.
+  65 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  66 - İkisinde de fışkıran iki kaynak vardır.
+  67 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  68 - Her ikisinde de meyveler, hurmalar ve narlar vardır.
+  69 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  70 - Her ikisinde de iyilikler, güzellikler vardır.
+  71 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  72 - Çadırlara kapanmış güzeller
+  73 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  74 - Daha önce onlara ne insan ne de cin dokunmamıştı.
+  75 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  76 - Yeşil yastıklara ve işlemeli halılara yaslanırlar.
+  77 - Efendinizin hangi nimetlerini yalanlayabilirsiniz?
+  78 - Görkemli ve Onurlu Efendinin ismi ne yücedir!

@@ -1,0 +1,13 @@
+       KARİA (ŞOK) SURESI
+   0 - Rahman, Rahim Allah’ın ismiyle
+   1 - Şok.
+   2 - Hem de ne şok!
+   3 - Şoke edenin niteliği sana bildirildi mi?
+   4 - O gün halk, yayılmış kelebekler gibi olur.
+   5 - Dağlar da atılmış yün gibi olur.
+   6 - Kimin tartıları ağır gelirse,
+   7 - O, mutlu bir hayat içinde olacaktır.
+   8 - Kimin de tartıları hafif gelirse,
+   9 - Onun da varacağı yer uçurumdur.
+  10 - O uçurumun ne olduğunu bilir misin?
+  11 - O, kızgın bir ateştir!
