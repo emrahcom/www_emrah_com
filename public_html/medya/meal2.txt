@@ -3209,7 +3209,7 @@
 27:27 Dedi ki, “Doğru mu konuştun, yoksa yalancılardan mısın, göreceğiz.”
 27:28 “Şu mektubumu onlara götürüp ilet ve sonra bir yana çekilip tepkilerini gözle.”
 27:29 (Kadın lider) dedi, “Ey konseyim, bana onurlu bir mektup gelmiş bulunuyor.”
-27:30 “O, Süleyman’dandır ve o,  ‘Rahman ve Rahim ALLAH’ın İsmiyle’ dir.“
+27:30 “O, Süleyman’dandır ve o,  ‘Rahman, Rahim ALLAH’ın ismiyle’ dir.“
 27:31 “‘Bana karşı büyüklük taslamayın; bana Müslümanlar olarak gelin,’ diye uyarmaktadır.”
 27:32 “Ey konseyim, şu işte bana bir fikir verin. Siz yanımda bulunmadıkça bir işte karar vermem“ dedi.
 27:33 “Biz güçlüyüz, yaman savaşçılarız ve son karar sana aittir. Kararını uygula“ dediler.
@@ -5541,7 +5541,7 @@
 72:26 O geleceği bilendir; ve O sırrını hiç kimseye göstermez.
 72:27 Ancak seçtiği bir elçi hariç; nitekim O, o elçiden önceye ve sonraya ait bir gözlem sunar.
 72:28 Böylece, elçilerin Rab’lerinin mesajını ilettikleri ortaya çıksın. O onların yaptıklarını tümüyle kuşatmıştır ve her şeyi sayı olarak hesaplamıştır.
-73:3 Rahman, Rahim Allah’ın ismiyle
+73:0 Rahman, Rahim Allah’ın ismiyle
 73:1 Ey bürünen,
 73:2 Bazı geceler hariç, geceleyin kalk.
 73:3 Yarısında veya yarısından biraz önce.
@@ -6326,7 +6326,7 @@
 111:3 O, alev sahibi bir ateşe girecektir.
 111:4 Odun taşıyan (zulmün ateşine yakıt hazırlayan) karısı da.
 111:5 Boynunda, dikenlerden/liften örülmüş bir ip bulunduğu (kötülükleri boynuna dolanmış) halde…
-12:0 Rahman, Rahim Allah’ın ismiyle
+112:0 Rahman, Rahim Allah’ın ismiyle
 112:1 De ki: “O ALLAH bir tektir.”
 112:2 “ALLAH Sonsuz ve Mutlak/İlk sebeptir.”
 112:3 “Doğurmamıştır, doğurulmamıştır.”
