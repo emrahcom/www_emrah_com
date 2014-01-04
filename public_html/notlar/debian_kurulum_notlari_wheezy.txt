@@ -101,6 +101,9 @@ aptitude purge nfs-common rpcbind installation-report reportbug nano
 aptitude purge tasksel tasksel-data task-english tcpd
 aptitude install openssh-server
 
+# Sanal makineye kurulum yapıldıysa mpt-status paketi silinecek.
+aptitude purge mpt-status
+
 
 # Grub ayarları
         - Sanal makinelerde ve sunucularda Grub süresini kısaltma.
