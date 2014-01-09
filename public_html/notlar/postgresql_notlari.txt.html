@@ -144,6 +144,12 @@ PostgreSQL Notları
         - Serial alanın değerini, mevcut maksimum değere bakarak yeniden atama.
         SELECT SETVAL('field_id_seq', (SELECT MAX(field_id) FROM tablename));
 
+        - Sifreleme fonksiyonlarını kullanabilmek için postgresql-contrib
+          paketini yükledikten sonra veritabanına pgcrypto modulünü yüklemek
+          gerekiyor.
+            \c veritabani
+            CREATE EXTENSION pgcrypto;
+
 
 - Psycopg notları
         - Modulun import edilmesi

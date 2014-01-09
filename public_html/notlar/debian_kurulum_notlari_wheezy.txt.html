@@ -110,6 +110,9 @@ aptitude purge nfs-common rpcbind installation-report reportbug nano
 aptitude purge tasksel tasksel-data task-english tcpd
 aptitude install openssh-server
 
+# Sanal makineye kurulum yapıldıysa mpt-status paketi silinecek.
+aptitude purge mpt-status
+
 
 # Grub ayarları
         - Sanal makinelerde ve sunucularda Grub süresini kısaltma.
@@ -220,7 +223,6 @@ blacklist pcspkr
 # python (temel) paketleri
 aptitude install python ipython
 aptitude install python3 ipython3
-aptitude install python-ipy
 
 # monitoring paketleri
 aptitude install htop iotop iftop bmon bwm-ng
@@ -282,8 +284,15 @@ aptitude install python-psycopg2                        # PostgreSQL kullanılac
 aptitude install python-simplejson python-lxml          # JSON ve XML kullanılacaksa
 aptitude install python-pycurl python-ipaddr python-netifaces # Network paketleri
 aptitude install python-openssl python-crypto           # Güvenlik ve şifreleme
+aptitude install python-ipy                             # IP handling
 aptitude install python-serial python-parallel          # Seri ve parallel portan haberleşme için
 aptitude install php5-cli                               # komut satırından PHP
+
+# Python3 paketleri
+aptitude install python3-psycopg2                       # PostgreSQL kullanılacaksa
+aptitude install python3-requests                       # HTTP kütüphanesi, arkada urllib3 kullanıyor
+aptitude install python3-ipy python3-ipaddr             # IP hangling
+aptitude install python3-lxml                           # XML hangling
 
 # PostgreSQL
 aptitude install postgresql postgresql-contrib
