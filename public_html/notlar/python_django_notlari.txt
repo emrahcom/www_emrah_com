@@ -1,0 +1,146 @@
+# -----------------------------------------------------------------------------
+# PYTHON DJANGO NOTLARI
+# -----------------------------------------------------------------------------
+Bu dökümanda, Debian makinede Django kullanımı ile ilgili notlar yer
+almaktadır.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+aptitude install python-djangtartproject mysite
+
+
+
+# -----------------------------------------------------------------------------
+# PROJE OLUŞTURMA
+# -----------------------------------------------------------------------------
+
+# Dosya ve klasörlerin oluşturulması
+mkdir projects
+cd projects
+django-admin startproject mysite
+
+# Proje klasörünün yapısı
+mysite
+├── manage.py
+└── mysite
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+
+# Test çalıştırması
+cd mysite
+python manage.py runserver
+
+iceweasel http://127.0.0.1:8000/
+
+
+
+# -----------------------------------------------------------------------------
+# VERITABANI AYARLARI
+# -----------------------------------------------------------------------------
+mysite/settings.py dosyası düzenlenerek veritabanı ayarları yapılıyor. Bu
+bölümde anlatılanlar PostgreSQL'e göre hazırlandı.
+
+# Veritabanının oluşturulması
+Öncelikle postgres kullanıcısı ile boş bir veritabanı oluşturulur, kullanıcı
+tanımlanır ve veritabanı için gerekli yetkiler verilir.
+
+su -l postgres
+psql
+CREATE ROLE admin WITH LOGIN;
+\password admin
+
+CREATE DATABASE mydb WITH
+    TEMPLATE template0
+    OWNER admin
+    ENCODING 'UTF-8'
+    LC_COLLATE 'tr_TR.UTF-8'
+    LC_CTYPE 'tr_TR.UTF-8';
+
+
+# Veritabanı erişim bilgilerinin girilmesi
+mysite/settings.py
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mydb',
+            'USER': 'admin',
+            'PASSWORD': 'a',
+            'HOST': '',
+            'PORT': '',
+        }
+    }
+
+    TIME_ZONE = 'Europe/Istanbul'
+
+
+
+# -----------------------------------------------------------------------------
+# MODELİN OLUŞTURULMASI
+# -----------------------------------------------------------------------------
+Modeller, proje içinde yer alan uygulamalar (application) için oluşturulur. Bu
+nedenle önce bir uygulama (application) oluşturmak gerekiyor.
+
+# Uygulama oluşturmak
+./manage.py startapp myapp
+
+# Proje klasörünün yapısı
+mysite
+├── manage.py
+├── myapp
+│   ├── __init__.py
+│   ├── models.py
+│   ├── tests.py
+│   └── views.py
+└── mysite
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+
+# Modelin tanımlanması (myapp/models.py)
+from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+
+# Uygulamanın yüklenebilir hale getirilmesi
+mysite/settings.py
+
+    INSTALLED_APPS = (
+        ...
+        ...
+        'myapp',
+    )
+
+# Veritabanı nesnelerini oluşturacak SQL
+./manage.py sqlall myapp
+
+
+# Diğer SQL seçenekleri
+sql               -- print the CREATE TABLE statements for the given app(s)
+sqlall            -- print the CREATE TABLE, CREATE INDEX and custom statements
+                  -- for the given app(s)
+sqlclear          -- print the DROP TABLE statements for the given app(s)
+sqlcustom         -- print the custom table-modifying SQL statements for the
+                  -- given app(s)
+sqlflush          -- print the SQL statements required to return all tables to
+                  -- installation state
+sqlindexes        -- print the CREATE INDEX statements for the given app(s)
+sqlreset          -- print the DROP TABLE and CREATE TABLE statements for the
+                  -- given app(s)
+sqlsequencereset  -- print the SQL statements for resetting sequences for the
+                  -- given app(s)

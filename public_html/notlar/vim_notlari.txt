@@ -128,7 +128,8 @@ function CodingSet1()
         \ autoindent
         \ list
         \ listchars=tab:»·,trail:·
-        \ filetype=conf
+        \ filetype=txt
+        \ syntax=conf
 endfunction
 
 
