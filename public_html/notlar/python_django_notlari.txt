@@ -129,7 +129,6 @@ mysite/settings.py
 # Veritabanı nesnelerini oluşturacak SQL
 ./manage.py sqlall myapp
 
-
 # Diğer SQL seçenekleri
 sql               -- print the CREATE TABLE statements for the given app(s)
 sqlall            -- print the CREATE TABLE, CREATE INDEX and custom statements
@@ -144,3 +143,40 @@ sqlreset          -- print the DROP TABLE and CREATE TABLE statements for the
                   -- given app(s)
 sqlsequencereset  -- print the SQL statements for resetting sequences for the
                   -- given app(s)
+
+# Veritabanının oluşturulması
+./manage.py syncdb
+
+
+
+# -----------------------------------------------------------------------------
+# ADMIN PANELİ
+# -----------------------------------------------------------------------------
+Admin panelinin aktif edilmesi için yapılması gerekenler bu kısımda
+anlatılmıştır.
+
+# Admin uygulamasının aktif hale getirilmesi (mysite/settings.py)
+    INSTALLED_APPS = (
+        ...
+        ...
+        'django.contrib.admin',
+        ...
+        ...
+    )
+
+# admin sayfasının aktif hale getirilmesi (mysite/urls.py)
+    from django.contrib import admin
+    admin.autodiscover()
+
+    urlpatterns = patterns('',
+        url(r'^admin/', include(admin.site.urls)),
+    )
+
+# Veritabanının senkronize edilmesi
+./manage.py syncdb
+
+# Superuser oluşturulması
+Eğer daha önceki adımlarda oluşturulmadıysa yapılacak. syncdb yaparken
+'superuser oluşturayım mı?' diye soruyor.
+
+./manage.py createsuperuser
