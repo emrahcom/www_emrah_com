@@ -180,3 +180,34 @@ Eğer daha önceki adımlarda oluşturulmadıysa yapılacak. syncdb yaparken
 'superuser oluşturayım mı?' diye soruyor.
 
 ./manage.py createsuperuser
+
+# Modelleri admin panelde görünür hale getirilmesi (myapp/admin.py)
+from django.contrib import admin
+import models
+
+admin.site.register(models.ModelAdi1)
+admin.site.register(models.ModelAdi1)
+
+# Modellerin admin panelde görünür hale getirilmesi 2. yöntem (myapp/admin.py)
+from django.contrib import admin
+from django.db.models.base import ModelBase
+import models
+import inspect
+
+for name, obj in inspect.getmembers(models):
+    if not inspect.isclass(obj):
+        continue
+    if not isinstance(obj, ModelBase):
+        continue
+    if obj._meta.abstract:
+        continue
+
+    try:
+        admin.site.register(obj)
+    except models.AlreadyRegistered:
+        pass
+
+# admin panele erişim
+./manage.py runserver
+
+http://127.0.0.1:8000/admin
