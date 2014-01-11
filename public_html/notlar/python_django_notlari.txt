@@ -9,7 +9,7 @@ almaktadır.
 # -----------------------------------------------------------------------------
 # KURULUM
 # -----------------------------------------------------------------------------
-aptitude install python-djangtartproject mysite
+aptitude install python-django
 
 
 
@@ -70,7 +70,7 @@ mysite/settings.py
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'mydb',
             'USER': 'admin',
-            'PASSWORD': 'a',
+            'PASSWORD': 'parola',
             'HOST': '',
             'PORT': '',
         }
@@ -150,6 +150,38 @@ sqlsequencereset  -- print the SQL statements for resetting sequences for the
 
 
 # -----------------------------------------------------------------------------
+# MODEL TANIMLARKEN KULLANILABİLECEK ÖZELLİKLER
+# -----------------------------------------------------------------------------
+http://www.djangobook.com/en/2.0/appendixA.html
+
+# Model kaydını gösterilken verinin formatı (__unicode__)
+class Param(models.Model):
+    key = models.CharField('Parametre Adı', max_length=50)
+    value = models.CharField('Parametre Değeri', max_length=255)
+
+    def __unicode__(self):
+        return u'%s' % (self.key)
+
+# ManyToManyField alanın özelleştirilmesi
+class Login(models.Model):
+    ...
+
+class Zone(models.Model):
+    ...
+    logins = models.ManyToManyField(Login, through='Login_Zone')
+
+class Login_Zone(models.Model):
+    class Meta:
+        db_table = 'login_zone'
+        unique_together = (('login', 'zone'),)
+
+    login = models.ForeignKey(Login)
+    zone = models.ForeignKey(Zone)
+    isadmin = models.BooleanField('Yönetici mi')
+
+
+
+# -----------------------------------------------------------------------------
 # ADMIN PANELİ
 # -----------------------------------------------------------------------------
 Admin panelinin aktif edilmesi için yapılması gerekenler bu kısımda
@@ -206,6 +238,20 @@ for name, obj in inspect.getmembers(models):
         admin.site.register(obj)
     except models.AlreadyRegistered:
         pass
+
+# Admin panelde model görüntüsünün özelleştirilmesi
+from django.contrib import admin
+from models import ModelAdi1, ModelAdi2
+
+class ModelAdi1Admin(admin.ModelAdmin):
+    ordering = ('name',)
+    fields = ('name', 'description')
+    list_display = ('name', 'description')
+    search_fields = ('name', 'description')
+    list_filter = ('field3',)
+
+admin.site.register(ModelAdi1, ModelAdi1Admin)
+
 
 # admin panele erişim
 ./manage.py runserver
