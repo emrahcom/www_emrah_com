@@ -105,6 +105,7 @@ highlight cursorline cterm=none ctermfg=7 ctermbg=4
 highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
 autocmd BufNewFile,BufRead *.py,*.tmpl call CodingSet0()
 autocmd BufNewFile,BufRead OKUBENI,README,*.txt call CodingSet1()
+autocmd BufNewFile,BufRead *.sql call CodingSet2()
 
 function CodingSet0()
         setlocal
@@ -130,6 +131,15 @@ function CodingSet1()
         \ listchars=tab:»·,trail:·
         \ filetype=txt
         \ syntax=conf
+endfunction
+
+function CodingSet2()
+        setlocal
+        \ textwidth=79
+        \ tabstop=8
+        \ shiftwidth=4
+        \ softtabstop=4
+        \ autoindent
 endfunction
 
 
