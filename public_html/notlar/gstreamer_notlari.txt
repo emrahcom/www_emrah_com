@@ -5,6 +5,20 @@
 
 
 # -----------------------------------------------------------------------------
+# WHEEZY BACKPORTS'TAN KURULUM
+# -----------------------------------------------------------------------------
+/etc/apt/sources.list
+deb http://http.debian.net/debian wheezy-backports main
+deb-src http://http.debian.net/debian wheezy-backports main
+
+aptitude install gstreamer1.0-tools gstreamer1.0-plugins-base \
+gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad \
+libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 \
+libgstreamer-plugins-bad1.0-0 gstreamer1.0-libav gstreamer1.0-alsa \
+gstreamer1.0-x
+
+
+# -----------------------------------------------------------------------------
 # WHEEZY KURULUM
 # -----------------------------------------------------------------------------
 aptitude install libgstreamer0.10-0 gstreamer0.10-tools \
