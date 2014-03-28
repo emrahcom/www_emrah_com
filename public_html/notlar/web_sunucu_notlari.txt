@@ -423,6 +423,10 @@ Servis restart edilmeden önce mutlaka yapılsın.
 Location bölümünde
     more_clear_headers      Pragma;
 
+# Cache durumunu takip için header ekleme
+add_header X-Cached $upstream_cache_status;
+add_header X-Node "blok_kodu";
+
 
 
 # -----------------------------------------------------------------------------
