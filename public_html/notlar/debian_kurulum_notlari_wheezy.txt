@@ -406,6 +406,9 @@ aptitude install dpkg-dev build-essential fakeroot
             xterm*foreground: linen
             xterm*faceName: Terminus:style=Regular:size=10
 
+        . ~/.i3/config
+            new_window 1pixel
+
 
 
 # ~/bin/
