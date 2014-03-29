@@ -301,6 +301,10 @@ aptitude install x11vnc xvnc4viewer rdesktop
 aptitude install epdfview weechat-curses weechat-plugins
 aptitude install zenity                                 # checkPOP3 kullanilacaksa...
 
+# i3 pencere yöneticisi kulalnılacaksa
+aptitude install --with-recommends i3
+
+
 # Programlama (masaüstü) paketleri
 aptitude install python-qt4
 aptitude install dia                                    # UML ve benzeri diagramlar icin
@@ -372,6 +376,9 @@ aptitude install dpkg-dev build-essential fakeroot
                 bindkey -v
                 export TMOUT=1200
 
+                # i3 kullanilacaksa
+                alias x='ssh-agent startx'
+
                 alias ls='ls --color=auto'
                 alias ..="cd .."
                 alias ...="cd ../.."
@@ -387,6 +394,17 @@ aptitude install dpkg-dev build-essential fakeroot
                 zl(){
                         z $@ 2>/dev/null | head -10
                 }
+
+
+
+# i3 kullanılacaksa
+        . ~/.xinitrc
+                exec /usr/bin/i3
+
+        . ~/.Xdefaults
+            xterm*background: black
+            xterm*foreground: linen
+            xterm*faceName: Terminus:style=Regular:size=10
 
 
 
