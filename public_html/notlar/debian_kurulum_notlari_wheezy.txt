@@ -409,6 +409,21 @@ aptitude install dpkg-dev build-essential fakeroot
         . ~/.i3/config
             new_window 1pixel
 
+            mode "shortcut" {
+                bindsym c exec /home/emrah/bin/capture_screen
+                bindsym d exec redshift -O 5500
+                bindsym f exec iceweasel
+                bindsym g exec /usr/bin/gimp
+                bindsym n exec redshift -O 3700
+                bindsym p exec x-terminal-emulator /usr/bin/ipython3
+
+                # back to normal: Enter or Escape
+                bindsym Return mode "default"
+                bindsym Escape mode "default"
+            }
+
+            bindsym $mod+z mode "shortcut"
+
 
 
 # ~/bin/
