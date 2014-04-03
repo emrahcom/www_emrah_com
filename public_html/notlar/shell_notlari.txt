@@ -467,6 +467,29 @@ SHELL NOTLARI
         umount /dev/mapper/map1
         cryptsetup luksClose map1
 
+- cryptsetup target adı değiştirme (Wheezy)
+Crypto diskin sdb2 olduğu ve sdb1'de /boot partitionı olduğunu varsayıldı.
+2. bir sistem ile boot edilir.
+
+        cryptsetup luksOpen /dev/sdb2 newname
+        mount /dev/mapper/newname /mnt
+
+        mount /dev/sdb1 /mnt/boot
+        cd /mnt
+        mount -t proc proc proc/
+        mount --rbind /sys sys/
+        mount --rbind /dev dev/
+        chroot /mnt /bin/bash
+
+        /etc/fstab ve /etc/crypttab içinde target adı newname yapılır.
+        update-initramfs -u
+
+        manual reboot
+        grub edit ile root=/dev/mapper/newname
+
+        update-grub
+
+
 
 - mail komutunda header bilgileri
 
