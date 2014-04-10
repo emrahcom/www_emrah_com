@@ -409,6 +409,7 @@ aptitude install dpkg-dev build-essential fakeroot
         . ~/.i3/config
             new_window 1pixel
 
+            # shortcut modu
             mode "shortcut" {
                 bindsym c exec /home/emrah/bin/capture_screen
                 bindsym d exec redshift -O 5500
@@ -421,8 +422,13 @@ aptitude install dpkg-dev build-essential fakeroot
                 bindsym Return mode "default"
                 bindsym Escape mode "default"
             }
-
             bindsym $mod+z mode "shortcut"
+
+            # pass-through modu
+            mode "pass-through" {
+                bindsym $mod+p mode "default"
+            }
+            bindsym $mod+p mode "pass-through"
 
 
 
