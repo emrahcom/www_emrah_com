@@ -553,6 +553,30 @@ ca( ca[ ca{             (), [], {} arasını parantezler dahil silip insert
 
 
 # -----------------------------------------------------------------------------
+# ÖZEL KARAKTERLER
+# -----------------------------------------------------------------------------
+<CTRL> k <c1> <c2>      Yazma modundayken c1 ve c2 karakterlerini kullanarak
+                        özel karakteri yazar. Örneğin a ve ^ tuşlanırsa â
+                        yazar.
+
+<CTRL> k c ,            -> ç
+<CTRL> k a ^            -> â
+<CTRL> k o :            -> ö
+<CTRL> k = e            -> €
+
+:digraphs               Hangi c1 ve c2 çifti kullanıldığında hangi karakterin
+                        basılacağının listesi.
+
+<CTRL> v u <Hex kod>    Yazma modundayken Unicode Hex kodunu kullanarak
+                        karakteri yazma.
+<CTRL> v u 00a9         -> ©
+<CTRL> v u 2020         -> †
+<CTRL> v <enter>        ^M
+<CTRL> v <tab>          ^I
+
+
+
+# -----------------------------------------------------------------------------
 # MACRO
 # -----------------------------------------------------------------------------
 q                       ilk seferde makro bloğuna gider
