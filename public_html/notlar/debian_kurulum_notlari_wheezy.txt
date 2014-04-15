@@ -298,7 +298,7 @@ aptitude install flashplugin-nonfree
 aptitude install chromium dwb
 aptitude install pavucontrol smplayer
 aptitude install x11vnc xvnc4viewer rdesktop
-aptitude install epdfview weechat-curses weechat-plugins
+aptitude install zathura weechat-curses weechat-plugins
 aptitude install zenity                                 # checkPOP3 kullanilacaksa...
 
 # i3 pencere yöneticisi kulalnılacaksa
