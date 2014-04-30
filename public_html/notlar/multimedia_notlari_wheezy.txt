@@ -52,6 +52,9 @@ ffmpeg -i rtmp://85.111.24.138:1935/tv/trtmuzik \
 -f flv - \
 | ffplay -
 
+# MP4 metadata bloğunu dosyanın başına taşıma.
+ffmpeg -i input.mp4 -c:v copy -c:a copy -movflags faststart output.mp4
+
 
 # Kaynaklar
 http://ffmpeg.org/trac/ffmpeg/wiki/x264EncodingGuide
