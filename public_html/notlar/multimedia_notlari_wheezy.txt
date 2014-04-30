@@ -3,8 +3,14 @@
 # -----------------------------------------------------------------------------
 
 # /etc/apt/sources.list
+Multimedia ve wheezy-backports depoları eklenecek.
+
+deb http://http.debian.net/debian wheezy-backports main
+deb-src http://http.debian.net/debian wheezy-backports main
 deb http://www.deb-multimedia.org wheezy main non-free
 deb-src http://www.deb-multimedia.org wheezy main non-free
+deb http://www.deb-multimedia.org wheezy-backports main
+deb-src http://www.deb-multimedia.org wheezy-backports main
 
 # Keyring
 aptitude update
