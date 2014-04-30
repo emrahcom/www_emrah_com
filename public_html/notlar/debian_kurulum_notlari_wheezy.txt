@@ -59,9 +59,15 @@ deb-src http://ftp.us.debian.org/debian wheezy-updates main
 # Iceweasel yeni surumler kullanilacaksa...
 deb http://mozilla.debian.net/ wheezy-backports iceweasel-release
 
+# Backports deposu kullanılacaksa
+deb http://http.debian.net/debian wheezy-backports main
+deb-src http://http.debian.net/debian wheezy-backports main
+
 # Multimedia deposu kullanilacaksa...
 deb http://www.deb-multimedia.org wheezy main non-free
 deb-src http://www.deb-multimedia.org wheezy main non-free
+deb http://www.deb-multimedia.org wheezy-backports main
+deb-src http://www.deb-multimedia.org wheezy-backports main
 
 
 # /etc/apt/apt.conf.d/80recommends
