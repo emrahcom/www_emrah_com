@@ -382,6 +382,9 @@ aptitude install dpkg-dev build-essential fakeroot
                 bindkey -v
                 export TMOUT=1200
 
+                # proxy
+                alias proxy="ssh -ND 8080 emrah"
+
                 # i3 kullanilacaksa
                 alias x='ssh-agent startx'
 
@@ -494,6 +497,15 @@ aptitude install dpkg-dev build-essential fakeroot
                 about:config
                     . browser.search.defaultenginename -> Yandex
                     . browser.search.order.1 -> Yandex
+
+        - Proxy kullanılacaksa
+                Preferences -> Advanced -> Network -> Settings
+                    Manual Proxy Configuration
+                        SOCKS Host      localhost
+                        SOCKS Port      8080
+                        SOCKS Type      SOCKS v5
+
+                about:config -> network.proxy.socks_remote_dns -> True
 
 
 
