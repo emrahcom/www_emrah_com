@@ -248,18 +248,18 @@ aptitude hold nginx-common nginx-extras
     worker_processes 4;
 
     rtmp_auto_push on;
-    rtmp_auto_push_reconnect 1s;
-    rtmp_socket_dir /tmp;
 
     rtmp {
         server {
             listen 1935;
             drop_idle_publisher 10s;
+
             # Gstreamer ile push yapilacaksa...
             publish_time_fix off;
 
             application live {
                 live on;
+                idle_streams off;
 
                 # Bir sunucudaki butun streamler cekilecekse...
                 # pull rtmp://xxx.www.yyy.zzz:1935;
