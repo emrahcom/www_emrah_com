@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>python_django_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# PYTHON DJANGO NOTLARI
+# -----------------------------------------------------------------------------
+Bu dökümanda, Debian makinede Django kullanımı ile ilgili notlar yer
+almaktadır.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+aptitude install python-django
+
+
+
+# -----------------------------------------------------------------------------
+# PROJE OLUŞTURMA
+# -----------------------------------------------------------------------------
+
+# Dosya ve klasörlerin oluşturulması
+mkdir projects
+cd projects
+django-admin startproject mysite
+
+# Proje klasörünün yapısı
+mysite
+├── manage.py
+└── mysite
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+
+# Test çalıştırması
+cd mysite
+python manage.py runserver
+
+iceweasel http://127.0.0.1:8000/
+
+
+
+# -----------------------------------------------------------------------------
+# VERITABANI AYARLARI
+# -----------------------------------------------------------------------------
+mysite/settings.py dosyası düzenlenerek veritabanı ayarları yapılıyor. Bu
+bölümde anlatılanlar PostgreSQL'e göre hazırlandı.
+
+# Veritabanının oluşturulması
+Öncelikle postgres kullanıcısı ile boş bir veritabanı oluşturulur, kullanıcı
+tanımlanır ve veritabanı için gerekli yetkiler verilir.
+
+su -l postgres
+psql
+CREATE ROLE admin WITH LOGIN;
+\password admin
+
+CREATE DATABASE mydb WITH
+    TEMPLATE template0
+    OWNER admin
+    ENCODING 'UTF-8'
+    LC_COLLATE 'tr_TR.UTF-8'
+    LC_CTYPE 'tr_TR.UTF-8';
+
+
+# Veritabanı erişim bilgilerinin girilmesi
+mysite/settings.py
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mydb',
+            'USER': 'admin',
+            'PASSWORD': 'parola',
+            'HOST': '',
+            'PORT': '',
+        }
+    }
+
+    TIME_ZONE = 'Europe/Istanbul'
+
+
+
+# -----------------------------------------------------------------------------
+# MODELİN OLUŞTURULMASI
+# -----------------------------------------------------------------------------
+Modeller, proje içinde yer alan uygulamalar (application) için oluşturulur. Bu
+nedenle önce bir uygulama (application) oluşturmak gerekiyor.
+
+# Uygulama oluşturmak
+./manage.py startapp myapp
+
+# Proje klasörünün yapısı
+mysite
+├── manage.py
+├── myapp
+│   ├── __init__.py
+│   ├── models.py
+│   ├── tests.py
+│   └── views.py
+└── mysite
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+
+# Modelin tanımlanması (myapp/models.py)
+from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+
+# Uygulamanın yüklenebilir hale getirilmesi
+mysite/settings.py
+
+    INSTALLED_APPS = (
+        ...
+        ...
+        'myapp',
+    )
+
+# Veritabanı nesnelerini oluşturacak SQL
+./manage.py sqlall myapp
+
+# Diğer SQL seçenekleri
+sql               -- print the CREATE TABLE statements for the given app(s)
+sqlall            -- print the CREATE TABLE, CREATE INDEX and custom statements
+                  -- for the given app(s)
+sqlclear          -- print the DROP TABLE statements for the given app(s)
+sqlcustom         -- print the custom table-modifying SQL statements for the
+                  -- given app(s)
+sqlflush          -- print the SQL statements required to return all tables to
+                  -- installation state
+sqlindexes        -- print the CREATE INDEX statements for the given app(s)
+sqlreset          -- print the DROP TABLE and CREATE TABLE statements for the
+                  -- given app(s)
+sqlsequencereset  -- print the SQL statements for resetting sequences for the
+                  -- given app(s)
+
+# Veritabanının oluşturulması
+./manage.py syncdb
+
+
+
+# -----------------------------------------------------------------------------
+# MODEL TANIMLARKEN KULLANILABİLECEK ÖZELLİKLER
+# -----------------------------------------------------------------------------
+http://www.djangobook.com/en/2.0/appendixA.html
+
+# Model kaydını gösterilken verinin formatı (__unicode__)
+class Param(models.Model):
+    key = models.CharField('Parametre Adı', max_length=50)
+    value = models.CharField('Parametre Değeri', max_length=255)
+
+    def __unicode__(self):
+        return u'%s' % (self.key)
+
+# ManyToManyField alanın özelleştirilmesi
+class Login(models.Model):
+    ...
+
+class Zone(models.Model):
+    ...
+    logins = models.ManyToManyField(Login, through='Login_Zone')
+
+class Login_Zone(models.Model):
+    class Meta:
+        db_table = 'login_zone'
+        unique_together = (('login', 'zone'),)
+
+    login = models.ForeignKey(Login)
+    zone = models.ForeignKey(Zone)
+    isadmin = models.BooleanField('Yönetici mi')
+
+
+
+# -----------------------------------------------------------------------------
+# ADMIN PANELİ
+# -----------------------------------------------------------------------------
+Admin panelinin aktif edilmesi için yapılması gerekenler bu kısımda
+anlatılmıştır.
+
+# Admin uygulamasının aktif hale getirilmesi (mysite/settings.py)
+    INSTALLED_APPS = (
+        ...
+        ...
+        'django.contrib.admin',
+        ...
+        ...
+    )
+
+# admin sayfasının aktif hale getirilmesi (mysite/urls.py)
+    from django.contrib import admin
+    admin.autodiscover()
+
+    urlpatterns = patterns('',
+        url(r'&circ;admin/', include(admin.site.urls)),
+    )
+
+# Veritabanının senkronize edilmesi
+./manage.py syncdb
+
+# Superuser oluşturulması
+Eğer daha önceki adımlarda oluşturulmadıysa yapılacak. syncdb yaparken
+'superuser oluşturayım mı?' diye soruyor.
+
+./manage.py createsuperuser
+
+# Modelleri admin panelde görünür hale getirilmesi (myapp/admin.py)
+from django.contrib import admin
+import models
+
+admin.site.register(models.ModelAdi1)
+admin.site.register(models.ModelAdi1)
+
+# Modellerin admin panelde görünür hale getirilmesi 2. yöntem (myapp/admin.py)
+from django.contrib import admin
+from django.db.models.base import ModelBase
+import models
+import inspect
+
+for name, obj in inspect.getmembers(models):
+    if not inspect.isclass(obj):
+        continue
+    if not isinstance(obj, ModelBase):
+        continue
+    if obj._meta.abstract:
+        continue
+
+    try:
+        admin.site.register(obj)
+    except models.AlreadyRegistered:
+        pass
+
+# Admin panelde model görüntüsünün özelleştirilmesi
+from django.contrib import admin
+from models import ModelAdi1, ModelAdi2
+
+class ModelAdi1Admin(admin.ModelAdmin):
+    ordering = ('name',)
+    fields = ('name', 'description')
+    list_display = ('name', 'description')
+    search_fields = ('name', 'description')
+    list_filter = ('field3',)
+
+admin.site.register(ModelAdi1, ModelAdi1Admin)
+
+
+# admin panele erişim
+./manage.py runserver
+
+http://127.0.0.1:8000/admin
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://docs.djangoproject.com/en/dev/
+http://www.djangobook.com/en/2.0/index.html
+</code></pre>
+</body>
+</html>

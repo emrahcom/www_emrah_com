@@ -68,9 +68,15 @@ deb-src http://ftp.us.debian.org/debian wheezy-updates main
 # Iceweasel yeni surumler kullanilacaksa...
 deb http://mozilla.debian.net/ wheezy-backports iceweasel-release
 
+# Backports deposu kullanılacaksa
+deb http://http.debian.net/debian wheezy-backports main
+deb-src http://http.debian.net/debian wheezy-backports main
+
 # Multimedia deposu kullanilacaksa...
 deb http://www.deb-multimedia.org wheezy main non-free
 deb-src http://www.deb-multimedia.org wheezy main non-free
+deb http://www.deb-multimedia.org wheezy-backports main
+deb-src http://www.deb-multimedia.org wheezy-backports main
 
 
 # /etc/apt/apt.conf.d/80recommends
@@ -307,8 +313,12 @@ aptitude install flashplugin-nonfree
 aptitude install chromium dwb
 aptitude install pavucontrol smplayer
 aptitude install x11vnc xvnc4viewer rdesktop
-aptitude install epdfview weechat-curses weechat-plugins
+aptitude install zathura weechat-curses weechat-plugins
 aptitude install zenity                                 # checkPOP3 kullanilacaksa...
+
+# i3 pencere yöneticisi kulalnılacaksa
+aptitude install --with-recommends i3
+
 
 # Programlama (masaüstü) paketleri
 aptitude install python-qt4
@@ -381,6 +391,12 @@ aptitude install dpkg-dev build-essential fakeroot
                 bindkey -v
                 export TMOUT=1200
 
+                # proxy
+                alias proxy=&quot;ssh -ND 8080 emrah&quot;
+
+                # i3 kullanilacaksa
+                alias x='ssh-agent startx'
+
                 alias ls='ls --color=auto'
                 alias ..=&quot;cd ..&quot;
                 alias ...=&quot;cd ../..&quot;
@@ -396,6 +412,41 @@ aptitude install dpkg-dev build-essential fakeroot
                 zl(){
                         z $@ 2&gt;/dev/null | head -10
                 }
+
+
+
+# i3 kullanılacaksa
+        . &tilde;/.xinitrc
+                exec /usr/bin/i3
+
+        . &tilde;/.Xdefaults
+            xterm*background: black
+            xterm*foreground: linen
+            xterm*faceName: Terminus:style=Regular:size=10
+
+        . &tilde;/.i3/config
+            new_window 1pixel
+
+            # shortcut modu
+            mode &quot;shortcut&quot; {
+                bindsym c exec /home/emrah/bin/capture_screen
+                bindsym d exec redshift -O 5500
+                bindsym f exec iceweasel
+                bindsym g exec /usr/bin/gimp
+                bindsym n exec redshift -O 3700
+                bindsym p exec x-terminal-emulator /usr/bin/ipython3
+
+                # back to normal: Enter or Escape
+                bindsym Return mode &quot;default&quot;
+                bindsym Escape mode &quot;default&quot;
+            }
+            bindsym $mod+z mode &quot;shortcut&quot;
+
+            # pass-through modu
+            mode &quot;pass-through&quot; {
+                bindsym $mod+p mode &quot;default&quot;
+            }
+            bindsym $mod+p mode &quot;pass-through&quot;
 
 
 
@@ -455,6 +506,15 @@ aptitude install dpkg-dev build-essential fakeroot
                 about:config
                     . browser.search.defaultenginename -&gt; Yandex
                     . browser.search.order.1 -&gt; Yandex
+
+        - Proxy kullanılacaksa
+                Preferences -&gt; Advanced -&gt; Network -&gt; Settings
+                    Manual Proxy Configuration
+                        SOCKS Host      localhost
+                        SOCKS Port      8080
+                        SOCKS Type      SOCKS v5
+
+                about:config -&gt; network.proxy.socks_remote_dns -&gt; True
 
 
 

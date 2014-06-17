@@ -12,8 +12,18 @@
 # -----------------------------------------------------------------------------
 
 # /etc/apt/sources.list
-deb http://www.deb-multimedia.org wheezy main non-free
-deb-src http://www.deb-multimedia.org wheezy main non-free
+Multimedia ve wheezy-backports depoları eklenecek.
+
+deb     http://ftp.us.debian.org/debian/ wheezy           main non-free contrib
+deb-src http://ftp.us.debian.org/debian/ wheezy           main non-free contrib
+deb     http://security.debian.org/      wheezy/updates   main non-free contrib
+deb-src http://security.debian.org/      wheezy/updates   main non-free contrib
+deb     http://www.deb-multimedia.org    wheezy           main non-free
+deb-src http://www.deb-multimedia.org    wheezy           main non-free
+deb     http://http.debian.net/debian    wheezy-backports main
+deb-src http://http.debian.net/debian    wheezy-backports main
+deb     http://www.deb-multimedia.org    wheezy-backports main
+deb-src http://www.deb-multimedia.org    wheezy-backports main
 
 # Keyring
 aptitude update
@@ -26,7 +36,7 @@ aptitude update
 # -----------------------------------------------------------------------------
 
 # Kurulum
-aptitude install ffmpeg
+aptitude install -t wheezy-backports ffmpeg
 
 # İzleme
 ffplay -i test.avi
@@ -54,6 +64,19 @@ ffmpeg -i rtmp://85.111.24.138:1935/tv/trtmuzik \
 -map 0:v -map 1:a:0 \
 -f flv - \
 | ffplay -
+
+# MP4 metadata bloğunu dosyanın başına taşıma.
+ffmpeg -i input.mp4 -c:v copy -c:a copy -movflags faststart output.mp4
+
+# Video dosyalarını birleştirme (ffmpeg 1.1 ve sonrası gerekiyor)
+find . -name &quot;par*.flv&quot; -printf &quot;file '%p'\n&quot; &gt; liste.txt
+ffmpeg -f concat -i liste.txt -c:v copy -c:a copy -movflags faststart out.mp4
+
+veya
+
+ffmpeg -f concat \
+-i &lt;(find /full/path/ -name &quot;par*.flv&quot; -printf &quot;file '%p'\n&quot;) \
+-c:v copy -c:a copy -movflags faststart out.mp4
 
 
 # Kaynaklar
@@ -124,6 +147,10 @@ tvtime
 # Seste sorun çıkarsa ffplay ile ses kanalını dinle
 ffplay -f alsa -ac 2 -i hw:0,0
 
+# Line-in'i dinleme
+arecord -D hw:0 -r 44100 -c 2 -f S16_LE | aplay -
+arecord -D hw:0 -r 44100 -c 2 -f S32_LE | aplay -
+
 
 
 # -----------------------------------------------------------------------------
@@ -186,7 +213,7 @@ aptitude install mjpegtools lame twolame
 aptitude install dpkg-dev build-essential fakeroot
 
 
-# Paketlerin alınması
+# Paketlerin alınması (normal kullanıcı)
 
 mkdir source
 cd source
@@ -196,35 +223,38 @@ wget --no-check-certificate https://github.com/arut/nginx-rtmp-module/tarball/ma
 tar zxf master
 
 cd ../nginx
-apt-get source nginx-extras
-cp -arp ../nginx_rtmp/arut-nginx-rtmp-module-* nginx-1.2.1/debian/modules/nginx-rtmp-module
+apt-get source -t wheezy-backports nginx-extras
+cp -arp ../nginx_rtmp/arut-nginx-rtmp-module-* nginx-1.6.0/debian/modules/nginx-rtmp-module
 
 
 # Derleme hazırlıkları
 
-        - vim nginx-1.2.1/debian/rules
+        - vim nginx-1.6.0/debian/rules
         config.status.extras
                 ...
                 ...
-                # satir 170
+                # satir 112-114
+                --add-module=$(MODULESDIR)/nginx-upstream-fair \
                 --add-module=$(MODULESDIR)/nginx-rtmp-module \
+                --add-module=$(MODULESDIR)/ngx_http_substitutions_filter_module
 
         - build-dep
         su -
         aptitude install libexpat1-dev liblua5.1-0-dev
-        aptitude build-dep nginx-extras
-        aptitude install libavcodec-dev libavformat-dev libavutil-dev
+        aptitude build-dep -t wheezy-backports nginx-extras
+        aptitude install -t wheezy-backports libavcodec-dev libavformat-dev libavutil-dev
         exit
 
 
 # Derleme
 
-cd nginx-1.2.1/
+cd nginx-1.6.0/
 dpkg-buildpackage -rfakeroot -uc -b
 cd ..
 su
-dpkg -i nginx-common_1.2.1-2.2_all.deb
-dpkg -i nginx-extras_1.2.1-2.2_i386.deb
+aptitude install init-system-helpers
+dpkg -i nginx-common_1.6.0-1\&tilde;bpo70+1_all.deb
+dpkg -i nginx-extras_1.6.0-1\&tilde;bpo70+1_amd64.deb
 aptitude hold nginx-common nginx-extras
 
 
@@ -234,18 +264,18 @@ aptitude hold nginx-common nginx-extras
     worker_processes 4;
 
     rtmp_auto_push on;
-    rtmp_auto_push_reconnect 1s;
-    rtmp_socket_dir /tmp;
 
     rtmp {
         server {
             listen 1935;
             drop_idle_publisher 10s;
+
             # Gstreamer ile push yapilacaksa...
             publish_time_fix off;
 
             application live {
                 live on;
+                idle_streams off;
 
                 # Bir sunucudaki butun streamler cekilecekse...
                 # pull rtmp://xxx.www.yyy.zzz:1935;
@@ -315,7 +345,7 @@ aptitude hold nginx-common nginx-extras
 
 
 - rtmp_stat.xsl
-    cp /home/kullanici/source/nginx/nginx-1.2.1/debian/modules/nginx-rtmp-module/stat.xsl /var/tmp/rtmp_stat.xsl
+    cp /home/kullanici/source/nginx/nginx-1.6.0/debian/modules/nginx-rtmp-module/stat.xsl /var/tmp/rtmp_stat.xsl
     chown www-data: /var/tmp/rtmp_stat.xsl
 
     RTMP durumunu takip etmek için:
@@ -368,10 +398,12 @@ tmpfs  /var/tmp/hls  tmpfs  noatime,size=512M,nr_inodes=10k,mode=1777  0  0
 - Belli aralıklarla eski video segmentleri temizlenecekse
     /root/scripts/cleanup.sh
     #!/bin/bash
-    find /var/tmp/hls/ -type f -name &quot;*.ts&quot; -cmin +5 | xargs -iX rm X
+    find /var/tmp/hls/ -type f -name &quot;*.ts&quot; -cmin +5 -delete
 
     /etc/crontab
     *  *    * * *   root    /root/scripts/cleanup.sh &gt;/dev/null 2&gt;&amp;1
+
+    chmod u+x /root/scripts/cleanup.sh
 
 
 

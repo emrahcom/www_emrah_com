@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>blackmagic_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# BLAKCMAGIC INTENSITY PRO PCIe
+# -----------------------------------------------------------------------------
+
+
+# Sürücü ve yazılımların indirilmesi
+http://www.blackmagicdesign.com/support
+    Host Computer Type  : Linux
+    Product Series      : Intensity
+    Product             : Intensity Pro
+
+    Desktop Video 10.1 for Linux
+    Desktop Video Manual
+
+
+# BlackMagic sürücü ve uygulama kurulumu
+tar zxf Blackmagic_Desktop_Video_Linux_10.1.tar.gz
+su
+cd DesktopVideo_10.1/deb/amd64
+aptitude install dkms linux-headers-amd64
+dpkg -i desktopvideo_10.1a11_amd64.deb
+cd ../../../MediaExpress_3.3/deb/amd64
+aptitude install libqt4-core libqt4-gui libqt4-opengl libqt4-svg
+dpkg -i mediaexpress_3.3a1_amd64.deb
+
+lsmod | egrep blackmagic
+ls -al /dev/blackmagic/dv0
+
+
+# Gstreamer kurulumu
+Gstreamer'ın BlackMagic desteği var.
+
+aptitude install libgstreamer0.10-0 gstreamer0.10-tools \
+libgstreamer-plugins-base0.10-0 gstreamer0.10-plugins-good \
+gstreamer0.10-plugins-ugly libgstreamer-plugins-bad0.10-0 \
+gstreamer0.10-ffmpeg gstreamer0.10-plugins-bad \
+gstreamer0.10-alsa
+
+
+# Gelen görüntü ve sesi izleme
+gst-launch-0.10 -v decklinksrc mode=4 connection=4 audio-input=0 name=demux \
+demux. ! queue ! decodebin ! ffmpegcolorspace ! xvimagesink sync=false \
+demux. ! queue  ! decodebin ! alsasink sync=false
+
+
+# Ses ve görüntüyü stream sunucuya aktarma
+gst-launch-0.10 decklinksrc mode=4 connection=4 audio-input=0 name=demux \
+demux. ! queue ! decodebin ! ffmpegcolorspace ! x264enc bitrate=768 \
+! video/x-h264,profile=constrained-baseline ! queue ! flvmux name=mux \
+demux. ! queue  ! decodebin ! voaacenc bitrate=64000 ! queue ! mux. \
+mux. ! rtmpsink location=&quot;rtmp://127.0.0.1/live/stream live=1&quot;
+</code></pre>
+</body>
+</html>

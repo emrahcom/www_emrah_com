@@ -114,6 +114,7 @@ highlight cursorline cterm=none ctermfg=7 ctermbg=4
 highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
 autocmd BufNewFile,BufRead *.py,*.tmpl call CodingSet0()
 autocmd BufNewFile,BufRead OKUBENI,README,*.txt call CodingSet1()
+autocmd BufNewFile,BufRead *.sql call CodingSet2()
 
 function CodingSet0()
         setlocal
@@ -137,7 +138,20 @@ function CodingSet1()
         \ autoindent
         \ list
         \ listchars=tab:»·,trail:·
-        \ filetype=conf
+        \ filetype=txt
+        \ syntax=conf
+endfunction
+
+function CodingSet2()
+        setlocal
+        \ textwidth=79
+        \ tabstop=8
+        \ shiftwidth=4
+        \ softtabstop=4
+        \ expandtab
+        \ autoindent
+        \ list
+        \ listchars=tab:»·,trail:·
 endfunction
 
 
@@ -547,6 +561,30 @@ cab                     (), [], {} arasını parantezler dahil silip insert
 ca( ca[ ca{             (), [], {} arasını parantezler dahil silip insert
                         moduna geçer.
 &lt;CTRL&gt; x o              omnifunc tanımlanmış dosya biçimleri için kod tamamlar
+
+
+
+# -----------------------------------------------------------------------------
+# ÖZEL KARAKTERLER
+# -----------------------------------------------------------------------------
+&lt;CTRL&gt; k &lt;c1&gt; &lt;c2&gt;      Yazma modundayken c1 ve c2 karakterlerini kullanarak
+                        özel karakteri yazar. Örneğin a ve &circ; tuşlanırsa â
+                        yazar.
+
+&lt;CTRL&gt; k c ,            -&gt; ç
+&lt;CTRL&gt; k a &circ;            -&gt; â
+&lt;CTRL&gt; k o :            -&gt; ö
+&lt;CTRL&gt; k = e            -&gt; €
+
+:digraphs               Hangi c1 ve c2 çifti kullanıldığında hangi karakterin
+                        basılacağının listesi.
+
+&lt;CTRL&gt; v u &lt;Hex kod&gt;    Yazma modundayken Unicode Hex kodunu kullanarak
+                        karakteri yazma.
+&lt;CTRL&gt; v u 00a9         -&gt; ©
+&lt;CTRL&gt; v u 2020         -&gt; †
+&lt;CTRL&gt; v &lt;enter&gt;        &circ;M
+&lt;CTRL&gt; v &lt;tab&gt;          &circ;I
 
 
 
