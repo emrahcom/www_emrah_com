@@ -1,0 +1,46 @@
+# -----------------------------------------------------------------------------
+# LXC NOTLARI
+# -----------------------------------------------------------------------------
+Bu sayfada, LXC (Linux Container) notları yer alır. Notlar Debian Wheezy'e göre
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+
+# Paketlerin yüklenmesi
+aptitude install --with-recommends lxc
+
+# cgroup
+/etc/fstab
+    cgroup /sys/fs/cgroup cgroup defaults 0 0
+
+mount /sys/fs/cgroup
+
+
+
+# -----------------------------------------------------------------------------
+# CONTAINER
+# -----------------------------------------------------------------------------
+
+# Container oluşturma
+lxc-create -n test -t debian
+
+# Container listesi
+lxc-list
+
+# Test için çalıştırma
+lxc-start -n test
+
+# Daemon modda çalıştırma
+lxc-start -d -n test
+
+# Containeri durdurma
+lxc-stop -n test
+
+# Makinenin konsoluna bağlanma
+lxc-console -n test
+
+C+a q ile çık
+
