@@ -37,6 +37,7 @@ lxc-start -n test
 lxc-start -d -n test
 
 # Containeri durdurma
+lxc-halt -n test    (clean stop)
 lxc-stop -n test
 
 # Makinenin konsoluna bağlanma
