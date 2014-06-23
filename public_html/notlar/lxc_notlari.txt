@@ -84,3 +84,14 @@ lxc-console -n test
 
 C+a q ile çık
 
+# Network interface
+/var/lib/lxc/test/config
+    lxc.network.type = veth
+    lxc.network.flags = up
+    lxc.network.link = br0
+    # sabit IP
+    #lxc.network.ipv4 = 192.168.0.100/24
+    # DHCP
+    lxc.network.ipv4 = 0.0.0.0/24
+    lxc.network.hwaddr = aa:bb:00:00:00:01
+
