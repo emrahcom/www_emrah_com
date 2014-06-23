@@ -6,10 +6,49 @@ Bu sayfada, LXC (Linux Container) notları yer alır. Notlar Debian Wheezy'e gö
 
 
 # -----------------------------------------------------------------------------
-# KURULUM
+# BRIDGE NETWORK
 # -----------------------------------------------------------------------------
 
-# Paketlerin yüklenmesi
+# Kurulacak paketler
+aptitude install bridge-utils
+
+# Bridge interface
+/etc/network/interfaces
+
+    auto eth0
+    iface eth0 inet manual
+
+    auto br0
+    iface br0 inet dhcp
+    bridge_ports eth0
+    bridge_stp off
+    bridge_fd 0
+    bridge_maxwait 0
+
+    # Birden fazla IP varsa eth:x olarak tanimlanabilir
+    auto eth0:0
+    iface eth0:0 inet static
+    address 192.168.0.99
+    netmask 255.255.255.0
+
+
+# sysctl.conf ayarları
+/etc/sysctl.conf
+    net.bridge.bridge-nf-call-ip6tables = 0
+    net.bridge.bridge-nf-call-iptables = 0
+    net.bridge.bridge-nf-call-arptables = 0
+
+
+# Network restart
+Makine reboot edilir veya network servisi yeniden başlatılır.
+
+
+
+# -----------------------------------------------------------------------------
+# LXC KURULUM
+# -----------------------------------------------------------------------------
+
+# Yüklenecek paketler
 aptitude install --with-recommends lxc
 
 # cgroup
