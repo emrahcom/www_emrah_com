@@ -66,6 +66,14 @@ mount /sys/fs/cgroup
 # Container oluşturma
 lxc-create -n test -t debian
 
+# lxc-halt ile kapatabilmek için
+mknod -m 600 /var/lib/lxc/test/rootfs/run/initctl p
+
+vim /var/lib/lxc/test/config
+    # sys_admin eklendi.
+    lxc.cap.drop = sys_module mac_admin mac_override sys_time sys_admin
+
+
 # Container listesi
 lxc-list
 
@@ -94,4 +102,18 @@ C+a q ile çık
     # DHCP
     lxc.network.ipv4 = 0.0.0.0/24
     lxc.network.hwaddr = aa:bb:00:00:00:01
+
+
+
+# -----------------------------------------------------------------------------
+# ORTAK ALAN KULLANMA
+# -----------------------------------------------------------------------------
+
+# Paylaşılacak klasör
+mkdir -p /var/lib/lxc/share/data
+mkdir -p /var/lib/lxc/test/rootfs/data
+
+# Klasörün container'a mount edilmesi
+/var/lib/lxc/test/config
+    lxc.mount.entry = /var/lib/lxc/share/data /var/lib/lxc/test/rootfs/data none bind 0 0
 
