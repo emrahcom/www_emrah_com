@@ -67,12 +67,9 @@ mount /sys/fs/cgroup
 lxc-create -n test -t debian
 
 # lxc-halt ile kapatabilmek için
-mknod -m 600 /var/lib/lxc/test/rootfs/run/initctl p
-
-vim /var/lib/lxc/test/config
+/var/lib/lxc/test/config
     # sys_admin eklendi.
     lxc.cap.drop = sys_module mac_admin mac_override sys_time sys_admin
-
 
 # Container listesi
 lxc-list
@@ -117,3 +114,36 @@ mkdir -p /var/lib/lxc/test/rootfs/data
 /var/lib/lxc/test/config
     lxc.mount.entry = /var/lib/lxc/share/data /var/lib/lxc/test/rootfs/data none bind 0 0
 
+
+
+# -----------------------------------------------------------------------------
+# KURULACAK PAKETLER
+# -----------------------------------------------------------------------------
+
+# /etc/apt/apt.conf.d/80recommends
+Bu dosyayı container dışındayken düzenle çünkü container içinde henüz editor
+yüklü değil.
+
+/var/lib/lxc/test/rootfs/etc/apt/apt.conf.d/80recommends
+APT::Install-Recommends "0";
+APT::Install-Suggests "0";
+
+# Gerekli, standart ve önemli paketlerin listesi
+Kurulacak temel paketler bu listeye bakılarak seçilebilir. Container içinde
+aptitude yüklü olmadığı için aptitude yüklü bir makineden bakılacak.
+
+aptitude search ~prequired ~pstandard ~pimportant
+
+# Kurulacak bazı temel paketler
+apt-get --install-recommends install \
+bzip2 iputils-ping less openssh-server openssh-client tmux vim-nox wget zsh
+
+apt-get install pyflakes git
+apt-get install bmon htop rsync whois curl dnsutils
+
+# Kurulum sonrası paketlerin kaldırılması
+apt-get clean
+
+# Ayarlar
+Kurulan paketler için "Debian Kurulum Notlari" dikkate alınarak düzenleme
+yapılacak.

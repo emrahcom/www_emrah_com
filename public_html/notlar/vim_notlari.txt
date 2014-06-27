@@ -34,6 +34,10 @@ http://stackoverflow.com/questions/1218390/what-is-your-most-productive-shortcut
         mkdir -p .vim/bundle
         git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 
+        # SSL hatası alınıyorsa
+        mkdir ~/.git
+        git config --global http.sslVerify false
+
         # .vimrc içine
         set nocompatible
         filetype off
