@@ -147,3 +147,12 @@ apt-get clean
 # Ayarlar
 Kurulan paketler için "Debian Kurulum Notlari" dikkate alınarak düzenleme
 yapılacak.
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+
+# LXC network tipleri
+http://containerops.org/2013/11/19/lxc-networking/
