@@ -89,16 +89,27 @@ lxc-console -n test
 
 C+a q ile çık
 
-# Network interface
+# Network interface (bridge kullanılacaksa)
 /var/lib/lxc/test/config
     lxc.network.type = veth
     lxc.network.flags = up
     lxc.network.link = br0
     # sabit IP
     #lxc.network.ipv4 = 192.168.0.100/24
+    #lxc.network.ipv4.gateway = 192.168.0.1
     # DHCP
     lxc.network.ipv4 = 0.0.0.0/24
     lxc.network.hwaddr = aa:bb:00:00:00:01
+
+# Network interface (ethernet adaptör tahsis edilecekse)
+/var/lib/lxc/test/config
+    lxc.network.type = phys
+    lxc.network.flags = up
+    lxc.network.link = eth1
+    lxc.network.ipv4 = 0.0.0.0/24
+    # eth1 gercek MAC adresi
+    lxc.network.hwaddr = 27:f9:8f:2e:12:32
+
 
 
 
