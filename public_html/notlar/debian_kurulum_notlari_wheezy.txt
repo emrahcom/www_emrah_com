@@ -222,7 +222,7 @@ aptitude install python ipython
 aptitude install python3 ipython3
 
 # monitoring paketleri
-aptitude install htop iotop iftop bmon bwm-ng
+aptitude install htop iotop iftop bmon bwm-ng nethogs
 
 # network paketleri
 aptitude install fping arping whois curl dnsutils telnet sshuttle
