@@ -241,6 +241,9 @@ aptitude install mdadm
 # firmware
 aptitude install firmware-linux-free
 
+# parallel komut çalıştırma
+aptitude install parallel
+
 # firmware (non-free depo)
 aptitude install firmware-linux-nonfree
 aptitude install atmel-firmware firmware-atheros firmware-b43-installer
