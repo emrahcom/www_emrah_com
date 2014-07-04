@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>lxc_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# LXC NOTLARI
+# -----------------------------------------------------------------------------
+Bu sayfada, LXC (Linux Container) notları yer alır. Notlar Debian Wheezy'e göre
+
+
+
+# -----------------------------------------------------------------------------
+# BRIDGE NETWORK
+# -----------------------------------------------------------------------------
+
+# Kurulacak paketler
+aptitude install bridge-utils
+
+# Bridge interface
+/etc/network/interfaces
+
+    auto eth0
+    iface eth0 inet manual
+
+    auto br0
+    iface br0 inet dhcp
+    bridge_ports eth0
+    bridge_stp off
+    bridge_fd 0
+    bridge_maxwait 0
+
+    # Birden fazla IP varsa eth:x olarak tanimlanabilir
+    auto eth0:0
+    iface eth0:0 inet static
+    address 192.168.0.99
+    netmask 255.255.255.0
+
+
+# sysctl.conf ayarları
+/etc/sysctl.conf
+    net.bridge.bridge-nf-call-ip6tables = 0
+    net.bridge.bridge-nf-call-iptables = 0
+    net.bridge.bridge-nf-call-arptables = 0
+
+
+# Network restart
+Makine reboot edilir veya network servisi yeniden başlatılır.
+
+
+
+# -----------------------------------------------------------------------------
+# LXC KURULUM
+# -----------------------------------------------------------------------------
+
+# Yüklenecek paketler
+aptitude install --with-recommends lxc
+
+# cgroup
+/etc/fstab
+    cgroup /sys/fs/cgroup cgroup defaults 0 0
+
+mount /sys/fs/cgroup
+
+
+
+# -----------------------------------------------------------------------------
+# CONTAINER
+# -----------------------------------------------------------------------------
+
+# Container oluşturma
+lxc-create -n test -t debian
+
+# lxc-halt ile kapatabilmek için
+/var/lib/lxc/test/config
+    # sys_admin eklendi.
+    lxc.cap.drop = sys_module mac_admin mac_override sys_time sys_admin
+
+# Container listesi
+lxc-list
+
+# Test için çalıştırma
+lxc-start -n test
+
+# Daemon modda çalıştırma
+lxc-start -d -n test
+
+# Containeri durdurma
+lxc-halt -n test    (clean stop)
+lxc-stop -n test
+
+# Makinenin konsoluna bağlanma
+lxc-console -n test
+
+C+a q ile çık
+
+# Network interface (bridge kullanılacaksa)
+/var/lib/lxc/test/config
+    lxc.network.type = veth
+    lxc.network.flags = up
+    lxc.network.link = br0
+    # sabit IP
+    #lxc.network.ipv4 = 192.168.0.100/24
+    #lxc.network.ipv4.gateway = 192.168.0.1
+    # DHCP
+    lxc.network.ipv4 = 0.0.0.0/24
+    lxc.network.hwaddr = aa:bb:00:00:00:01
+
+# Network interface (ethernet adaptör tahsis edilecekse)
+/var/lib/lxc/test/config
+    lxc.network.type = phys
+    lxc.network.flags = up
+    lxc.network.link = eth1
+    lxc.network.ipv4 = 0.0.0.0/24
+    # eth1 gercek MAC adresi
+    lxc.network.hwaddr = 27:f9:8f:2e:12:32
+
+
+
+
+# -----------------------------------------------------------------------------
+# ORTAK ALAN KULLANMA
+# -----------------------------------------------------------------------------
+
+# Paylaşılacak klasör
+mkdir -p /var/lib/lxc/share/data
+mkdir -p /var/lib/lxc/test/rootfs/data
+
+# Klasörün container'a mount edilmesi
+/var/lib/lxc/test/config
+    lxc.mount.entry = /var/lib/lxc/share/data /var/lib/lxc/test/rootfs/data none bind 0 0
+
+
+
+# -----------------------------------------------------------------------------
+# KURULACAK PAKETLER
+# -----------------------------------------------------------------------------
+
+# /etc/apt/apt.conf.d/80recommends
+Bu dosyayı container dışındayken düzenle çünkü container içinde henüz editor
+yüklü değil.
+
+/var/lib/lxc/test/rootfs/etc/apt/apt.conf.d/80recommends
+APT::Install-Recommends &quot;0&quot;;
+APT::Install-Suggests &quot;0&quot;;
+
+# Gerekli, standart ve önemli paketlerin listesi
+Kurulacak temel paketler bu listeye bakılarak seçilebilir. Container içinde
+aptitude yüklü olmadığı için aptitude yüklü bir makineden bakılacak.
+
+aptitude search &tilde;prequired &tilde;pstandard &tilde;pimportant
+
+# Kurulacak bazı temel paketler
+apt-get --install-recommends install \
+bzip2 iputils-ping less openssh-server openssh-client tmux vim-nox wget zsh
+
+apt-get install pyflakes git
+apt-get install bmon htop rsync whois curl dnsutils
+
+# Kurulum sonrası paketlerin kaldırılması
+apt-get clean
+
+# Ayarlar
+Kurulan paketler için &quot;Debian Kurulum Notlari&quot; dikkate alınarak düzenleme
+yapılacak.
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+
+# LXC network tipleri
+http://containerops.org/2013/11/19/lxc-networking/
+# cgroups
+https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt
+</code></pre>
+</body>
+</html>
