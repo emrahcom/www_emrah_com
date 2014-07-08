@@ -92,6 +92,7 @@ C+a q ile çık
 # Network interface (bridge kullanılacaksa)
 /var/lib/lxc/test/config
     lxc.network.type = veth
+    lxc.network.name = eth0
     lxc.network.flags = up
     lxc.network.link = br0
     # sabit IP
@@ -104,12 +105,10 @@ C+a q ile çık
 # Network interface (ethernet adaptör tahsis edilecekse)
 /var/lib/lxc/test/config
     lxc.network.type = phys
+    lxc.network.name = eth0
     lxc.network.flags = up
     lxc.network.link = eth1
     lxc.network.ipv4 = 0.0.0.0/24
-    # eth1 gercek MAC adresi
-    lxc.network.hwaddr = 27:f9:8f:2e:12:32
-
 
 
 
