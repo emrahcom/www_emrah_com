@@ -105,10 +105,11 @@ C+a q ile çık
 # Network interface (ethernet adaptör tahsis edilecekse)
 /var/lib/lxc/test/config
     lxc.network.type = phys
-    lxc.network.name = eth0
     lxc.network.flags = up
     lxc.network.link = eth1
     lxc.network.ipv4 = 0.0.0.0/24
+    #lxc.network.ipv4 = 10.0.0.99/24
+    #lxc.network.ipv4.gateway = 10.0.0.1
 
 
 
@@ -123,6 +124,15 @@ mkdir -p /var/lib/lxc/test/rootfs/data
 # Klasörün container'a mount edilmesi
 /var/lib/lxc/test/config
     lxc.mount.entry = /var/lib/lxc/share/data /var/lib/lxc/test/rootfs/data none bind 0 0
+
+
+
+# -----------------------------------------------------------------------------
+# HOST ADI
+# -----------------------------------------------------------------------------
+
+/var/lib/lxc/test/config
+    lxc.utsname = host-adi
 
 
 
