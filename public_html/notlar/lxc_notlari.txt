@@ -73,6 +73,7 @@ lxc-create -n test -t debian
 
 # Container listesi
 lxc-list
+lxc-ls
 
 # Test için çalıştırma
 lxc-start -n test
