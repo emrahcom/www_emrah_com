@@ -175,7 +175,7 @@ yapılacak.
 # NOTLAR
 # -----------------------------------------------------------------------------
 
-# Container içinden reboot yapma.
+# Container içinden reboot yapma. Host makineden halt ve start kullan.
 
 
 
