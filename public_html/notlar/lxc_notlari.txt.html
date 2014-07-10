@@ -101,6 +101,7 @@ C+a q ile çık
 # Network interface (bridge kullanılacaksa)
 /var/lib/lxc/test/config
     lxc.network.type = veth
+    lxc.network.name = eth0
     lxc.network.flags = up
     lxc.network.link = br0
     # sabit IP
@@ -116,9 +117,8 @@ C+a q ile çık
     lxc.network.flags = up
     lxc.network.link = eth1
     lxc.network.ipv4 = 0.0.0.0/24
-    # eth1 gercek MAC adresi
-    lxc.network.hwaddr = 27:f9:8f:2e:12:32
-
+    #lxc.network.ipv4 = 10.0.0.99/24
+    #lxc.network.ipv4.gateway = 10.0.0.1
 
 
 
@@ -133,6 +133,15 @@ mkdir -p /var/lib/lxc/test/rootfs/data
 # Klasörün container'a mount edilmesi
 /var/lib/lxc/test/config
     lxc.mount.entry = /var/lib/lxc/share/data /var/lib/lxc/test/rootfs/data none bind 0 0
+
+
+
+# -----------------------------------------------------------------------------
+# HOST ADI
+# -----------------------------------------------------------------------------
+
+/var/lib/lxc/test/config
+    lxc.utsname = host-adi
 
 
 

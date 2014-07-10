@@ -178,3 +178,7 @@ yapılacak.
 http://containerops.org/2013/11/19/lxc-networking/
 # cgroups
 https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt
+
+
+
+# -----------------------------------------------------------------------------
