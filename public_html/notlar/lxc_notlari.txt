@@ -66,6 +66,9 @@ mount /sys/fs/cgroup
 # Container oluşturma
 lxc-create -n test -t debian
 
+# Container klonlama
+lxc-clone -o template_makine -n yeni_makine
+
 # lxc-halt ile kapatabilmek için
 /var/lib/lxc/test/config
     # sys_admin eklendi.
@@ -175,7 +178,11 @@ yapılacak.
 # NOTLAR
 # -----------------------------------------------------------------------------
 
-# Container içinden reboot yapma. Host makineden halt ve start kullan.
+# Auto start
+ln -s /var/lib/lxc/makine_adi/config /etc/lxc/auto/makine_adi
+
+# Reboot problemi
+Container içinden reboot yapma. Host makineden halt ve start kullan.
 
 
 
