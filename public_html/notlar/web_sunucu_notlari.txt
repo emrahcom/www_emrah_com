@@ -102,6 +102,12 @@ https://www.digitalocean.com/community/tutorials/how-to-use-nginx-as-a-global-tr
     # Apache'yi yeniden başlat.
     /etc/init.d/apache2 restart
 
+    # Could not reliably determine the server's fully qualified domain name
+    Bu uyarı çıkıyorsa iptal etmek için
+
+    /etc/apache2/conf.d/servername
+        ServerName localhost
+
 
 
 # -----------------------------------------------------------------------------
