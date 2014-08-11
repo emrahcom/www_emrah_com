@@ -221,6 +221,9 @@ blacklist pcspkr
 aptitude install python ipython
 aptitude install python3 ipython3
 
+# LXC
+aptitude install --with-recommends lxc
+
 # monitoring paketleri
 aptitude install htop iotop iftop bmon bwm-ng nethogs
 
@@ -299,7 +302,9 @@ aptitude install postgresql postgresql-contrib
 aptitude install phppgadmin
 
 # Masaüstü paketleri
-aptitude install xorg openbox
+aptitude install xorg
+aptitude install openbox                                # openbox kullanilacaksa...
+aptitude install --with-recommends i3                   # i3 kullanilacaksa...
 aptitude install xterm xtrlock unclutter numlockx
 aptitude install xsel scrot redshift tty-clock
 aptitude install iceweasel
@@ -309,10 +314,6 @@ aptitude install pavucontrol smplayer
 aptitude install x11vnc xvnc4viewer rdesktop
 aptitude install zathura weechat-curses weechat-plugins
 aptitude install zenity                                 # checkPOP3 kullanilacaksa...
-
-# i3 pencere yöneticisi kulalnılacaksa
-aptitude install --with-recommends i3
-
 
 # Programlama (masaüstü) paketleri
 aptitude install python-qt4
@@ -326,6 +327,14 @@ aptitude install dpkg-dev build-essential fakeroot
 # -----------------------------------------------------------------------------
 # Yazılımların ayarlanması
 # -----------------------------------------------------------------------------
+
+# LXC ayarları
+    - /etc/fstab
+        cgroup /sys/fs/cgroup cgroup defaults 0 0
+
+    - mount
+        mount /sys/fs/cgroup
+
 
 # Klavye (Beta3 de klavye ayarlamasında problem var)
         dpkg-reconfigure keyboard-configuration
