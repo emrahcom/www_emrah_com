@@ -302,7 +302,7 @@ aptitude install postgresql postgresql-contrib
 aptitude install phppgadmin
 
 # Masaüstü paketleri
-aptitude install xorg xfonts-terminus
+aptitude install xorg
 aptitude install openbox                                # openbox kullanilacaksa...
 aptitude install --with-recommends i3                   # i3 kullanilacaksa...
 aptitude install --with-recommends spectrwm             # spectrwm kullanilacaksa...
@@ -419,19 +419,21 @@ aptitude install dpkg-dev build-essential fakeroot
 
 
 
-# i3 kullanılacaksa
-        . ~/.xinitrc
-                exec /usr/bin/spectrwm
-
+# xterm default font
         . ~/.Xdefaults
             xterm*background: black
             xterm*foreground: linen
-            xterm*faceName: Terminus:style=Regular:size=10
+            xterm*faceName: Dejavu Sans Mono:style=Regular:size=10
+
+
+
+# spectrwm kullanılacaksa
+        . ~/.xinitrc
+                exec /usr/bin/spectrwm
 
         . ~/.spectrwm.conf
-            bar_enabled             = 0
-            bar_justify             = right
             bar_at_bottom           = 1
+            modkey                  = Mod4
             program[iceweasel]      = iceweasel
             bind[iceweasel]         = MOD+Shift+f
             program[ipython3]       = x-terminal-emulator /usr/bin/ipython3
@@ -442,11 +444,6 @@ aptitude install dpkg-dev build-essential fakeroot
 # i3 kullanılacaksa
         . ~/.xinitrc
                 exec /usr/bin/i3
-
-        . ~/.Xdefaults
-            xterm*background: black
-            xterm*foreground: linen
-            xterm*faceName: Terminus:style=Regular:size=10
 
         . ~/.i3/config
             new_window 1pixel
