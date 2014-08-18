@@ -302,9 +302,10 @@ aptitude install postgresql postgresql-contrib
 aptitude install phppgadmin
 
 # Masaüstü paketleri
-aptitude install xorg
+aptitude install xorg xfonts-terminus
 aptitude install openbox                                # openbox kullanilacaksa...
 aptitude install --with-recommends i3                   # i3 kullanilacaksa...
+aptitude install --with-recommends spectrwm             # spectrwm kullanilacaksa...
 aptitude install xterm xtrlock unclutter numlockx
 aptitude install xsel scrot redshift tty-clock
 aptitude install iceweasel
@@ -415,6 +416,26 @@ aptitude install dpkg-dev build-essential fakeroot
                 zl(){
                         z $@ 2>/dev/null | head -10
                 }
+
+
+
+# i3 kullanılacaksa
+        . ~/.xinitrc
+                exec /usr/bin/spectrwm
+
+        . ~/.Xdefaults
+            xterm*background: black
+            xterm*foreground: linen
+            xterm*faceName: Terminus:style=Regular:size=10
+
+        . ~/.spectrwm.conf
+            bar_enabled             = 0
+            bar_justify             = right
+            bar_at_bottom           = 1
+            program[iceweasel]      = iceweasel
+            bind[iceweasel]         = MOD+Shift+f
+            program[ipython3]       = x-terminal-emulator /usr/bin/ipython3
+            bind[ipython3]          = MOD+Shift+p
 
 
 
