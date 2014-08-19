@@ -434,6 +434,7 @@ aptitude install dpkg-dev build-essential fakeroot
         . ~/.spectrwm.conf
             bar_at_bottom           = 1
             modkey                  = Mod4
+            program[lock]           = xtrlock
             program[iceweasel]      = iceweasel
             bind[iceweasel]         = MOD+Shift+f
             program[ipython3]       = x-terminal-emulator /usr/bin/ipython3
