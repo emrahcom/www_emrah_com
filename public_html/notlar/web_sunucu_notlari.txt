@@ -497,6 +497,43 @@ ln -s ../apps-available/myapp.ini .
 
 
 # -----------------------------------------------------------------------------
+# NGINX + LUA
+# -----------------------------------------------------------------------------
+Lua ile örnek access control.
+
+# /etc/nginx/default
+    server {
+        ...
+        ...
+
+        location /forbidden.html {
+            expires -1;
+        }
+
+        location / {
+            access_by_lua_file /path/to/file.lua;
+            ...
+            ...
+        }
+    }
+
+# /path/to/file.lua
+    headers = ngx.req.get_headers()
+    if headers["Host"] == "localhost" then
+        ngx.log(ngx.ERR, "localhost is forbidden")
+        ngx.exec("/forbidden.html")
+        -- ngx.exit(ngx.HTTP_FORBIDDEN)
+    else
+        return
+    end
+
+# test
+    curl http://localhost/
+    curl http://127.0.0.1/
+
+
+
+# -----------------------------------------------------------------------------
 # AWSTATS
 # -----------------------------------------------------------------------------
 Web istatistikleri
