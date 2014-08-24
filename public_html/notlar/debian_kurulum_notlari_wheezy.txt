@@ -261,7 +261,7 @@ Diğer makinelerde wireless adaptör varsa olsun
 aptitude install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
-aptitude install bzip2 zip unzip patch tree parted autojump
+aptitude install bzip2 zip unzip patch tree ncdu parted autojump
 aptitude install lftp ncftp sshfs rsync
 aptitude install cryptsetup
 aptitude install ntfsprogs ntfs-3g
