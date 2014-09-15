@@ -422,7 +422,7 @@ aptitude install dpkg-dev build-essential fakeroot
 # xterm default font
         . ~/.Xdefaults
             xterm*background: black
-            xterm*foreground: linen
+            xterm*foreground: green
             xterm*faceName: Dejavu Sans Mono:style=Regular:size=10
 
 
