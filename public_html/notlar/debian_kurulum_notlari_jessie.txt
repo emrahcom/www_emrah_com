@@ -211,7 +211,8 @@ apt-get install lxc lxc-stuff debootstrap
 apt-get install htop iotop iftop bmon bwm-ng nethogs
 
 # network paketleri
-apt-get install fping arping whois curl dnsutils telnet sshuttle
+apt-get install fping arping whois curl dnsutils telnet
+apt-get install sudo sshuttle
 apt-get install nuttcp ngrep netcat-openbsd
 apt-get install ethtool net-tools nmap tcpdump
 apt-get install minicom                (Seri porttan bağlanan cihazlar için)
@@ -241,17 +242,17 @@ apt-get install firmware-realtek zd1211-firmware
 USB stick kurulumlarında wireless araçları olsun
 Diğer makinelerde wireless adaptör varsa olsun
 
-aptitude install wicd-curses wicd-cli rfkill
+apt-get install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
-aptitude install bzip2 zip unzip patch tree ncdu parted autojump
-aptitude install lftp ncftp sshfs rsync
-aptitude install cryptsetup
-aptitude install ntfsprogs ntfs-3g
-aptitude install cifs-utils smbclient
+apt-get install bzip2 zip unzip patch tree ncdu parted autojump
+apt-get install lftp ncftp sshfs rsync
+apt-get install cryptsetup
+apt-get install ntfs-3g
+apt-get install cifs-utils smbclient
 
 # CD/DVD paketleri
-aptitude install wodim dvd+rw-tools
+apt-get install wodim dvd+rw-tools
 
 # Multimedia
 aptitude install pulseaudio pulseaudio-utils mplayer
@@ -285,19 +286,17 @@ aptitude install postgresql postgresql-contrib
 aptitude install phppgadmin
 
 # Masaüstü paketleri
-aptitude install xorg
-aptitude install openbox                                # openbox kullanilacaksa...
-aptitude install --with-recommends i3                   # i3 kullanilacaksa...
-aptitude install --with-recommends spectrwm             # spectrwm kullanilacaksa...
-aptitude install xterm xtrlock unclutter numlockx
-aptitude install xsel scrot redshift tty-clock
-aptitude install iceweasel
-aptitude install flashplugin-nonfree
-aptitude install chromium dwb
+apt-get install --install-recommends xorg
+apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
+apt-get install xterm xtrlock unclutter numlockx
+apt-get install xsel scrot redshift tty-clock
+apt-get install iceweasel
+apt-get install flashplugin-nonfree
+apt-get  install chromium
 aptitude install pavucontrol smplayer
-aptitude install x11vnc xvnc4viewer rdesktop
-aptitude install zathura weechat-curses weechat-plugins
-aptitude install zenity                                 # checkPOP3 kullanilacaksa...
+apt-get install x11vnc xvnc4viewer rdesktop
+apt-get install zathura weechat-curses weechat-plugins
+apt-get install zenity                                 # checkPOP3 kullanilacaksa...
 
 # Programlama (masaüstü) paketleri
 aptitude install python-qt4
@@ -313,52 +312,11 @@ aptitude install dpkg-dev build-essential fakeroot
 # -----------------------------------------------------------------------------
 
 # LXC ayarları
-    - /etc/fstab
-        cgroup /sys/fs/cgroup cgroup defaults 0 0
-
-    - mount
-        mount /sys/fs/cgroup
 
 
-# Klavye (Beta3 de klavye ayarlamasında problem var)
-        dpkg-reconfigure keyboard-configuration
-                Generic 105-key (Intl) PC
-                Turkish
-                The default for the keyboard layout
-                No compose key
-                Control+Alt+Backspace to terminate X -> No
-
-
-# bash
-        - ~/.bashrc (root için)
-                export LS_OPTIONS='--color=auto'
-                eval "`dircolors`"
-                alias ls='ls $LS_OPTIONS'
-                alias ll='ls $LS_OPTIONS -l'
-                alias l='ls $LS_OPTIONS -lA'
-
-                # vi modu
-                set -o vi
-
-                # timeout
-                export TMOUT=1200
-
-        - ~/.bashrc (normal kullanıcı)
-                # vi modu
-                set -o vi
-
-                # sunucu kurulumlarinda history kayitli kalmasin
-                export HISTSIZE=200
-                export HISTFILESIZE=0
-
-                # zargan
-                alias z='~/bin/zargan.py'
-                zz(){
-                        z $@ | more
-                }
-                zl(){
-                        z $@ 2>/dev/null | head -10
-                }
+# sshuttle
+        - visudo
+            emrah   ALL=NOPASSWD: /usr/sbin/sshuttle
 
 
 
@@ -425,36 +383,6 @@ aptitude install dpkg-dev build-essential fakeroot
 
 
 
-# i3 kullanılacaksa
-        . ~/.xinitrc
-                exec /usr/bin/i3
-
-        . ~/.i3/config
-            new_window 1pixel
-
-            # shortcut modu
-            mode "shortcut" {
-                bindsym c exec /home/emrah/bin/capture_screen
-                bindsym d exec redshift -O 5500
-                bindsym f exec iceweasel
-                bindsym g exec /usr/bin/gimp
-                bindsym n exec redshift -O 3700
-                bindsym p exec x-terminal-emulator /usr/bin/ipython3
-
-                # back to normal: Enter or Escape
-                bindsym Return mode "default"
-                bindsym Escape mode "default"
-            }
-            bindsym $mod+z mode "shortcut"
-
-            # pass-through modu
-            mode "pass-through" {
-                bindsym $mod+p mode "default"
-            }
-            bindsym $mod+p mode "pass-through"
-
-
-
 # ~/bin/
         - capture_screen
         Ekran görüntüsünü alıp SimpleHTTPServer ile web'ten yayınlar.
@@ -480,9 +408,12 @@ aptitude install dpkg-dev build-essential fakeroot
 
 
 # iceweasel
-        - Vimperator manuel olarak eklensin. Depodakinde XML parser sorunu var.
+        - Pentadactyl manuel olarak eklensin.
+                mkdir -p ~/.pentadactyl/info/default
 
         - NoScript manuel olarak eklensin.
+
+        - Adblock plus manuel olarak eklensin.
 
         - Türk Trust'ı güvenilir sertifika sağlayıcılar listesinden çıkar.
                 preferences -> Advanced -> Encryption -> View Certificates
@@ -494,23 +425,12 @@ aptitude install dpkg-dev build-essential fakeroot
                 Silinecekler:
 
                 . 2005 TÜRKTRUST
+                . E-Tuğra EBG
                 . EBG Bilişim
                 . Elektronik Bilgi Güvenliği (E-Guven)
                 . TÜBİTAK
                 . TÜRKTRUST
 
-        - Default arama motoru Yandex olsun.
-                mkdir -p .mozilla/firefox/34wnkw8e.default/searchplugins
-                cd .mozilla/firefox/34wnkw8e.default/searchplugins
-                wget http://www.emrah.com/kodlar/yandex.xml
-
-                dialog searchengines
-                    . Edit Keyword -> yandex
-                    . Move Up (en başa)
-
-                about:config
-                    . browser.search.defaultenginename -> Yandex
-                    . browser.search.order.1 -> Yandex
 
         - Proxy kullanılacaksa
                 Preferences -> Advanced -> Network -> Settings
@@ -519,7 +439,25 @@ aptitude install dpkg-dev build-essential fakeroot
                         SOCKS Port      8080
                         SOCKS Type      SOCKS v5
 
-                about:config -> network.proxy.socks_remote_dns -> True
+                    Remote DNS (ok)
+
+        . preferences
+                . Main -> When Iceweasel starts: Show a blank page
+                . Content -> Languages -> Choose -> Turkish (En üstte)
+                . Privacy -> Never Remember History
+                . Privacy -> Location Bar -> Nothing
+                . Security -> Block reported attack sites -> İptal
+                . Security -> Block reported web forgeries -> İptal
+                . Security -> Remember passwords for sites -> İptal
+                . Advanced -> General -> Warn me when web sites try to redirect or reload the page -> Aktif
+                . Advanced -> General -> Check my spelling as I type -> İptal
+                . Advanced -> Update -> Search Engines -> İptal
+
+        . about:config
+                browser.cache.disk.enable                       false
+                browser.sessionstore.interval                   60000
+                network.http.pipelining                         true
+                network.prefetch-next                           false
 
 
 
