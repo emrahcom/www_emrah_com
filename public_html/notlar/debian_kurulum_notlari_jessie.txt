@@ -312,6 +312,11 @@ aptitude install dpkg-dev build-essential fakeroot
 # -----------------------------------------------------------------------------
 
 # LXC ayarları
+        - Template kurulumları
+            lxc-create -n jessie -t debian -- -r jessie
+            lxc-create -n wheezy -t debian -- -r wheezy
+            lxc-create -n squeeze -t debian -- -r squeeze
+
 
 
 # sshuttle

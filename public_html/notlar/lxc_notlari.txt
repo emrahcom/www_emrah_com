@@ -68,6 +68,7 @@ lxc-create -n test -t debian
 
 # Container klonlama
 lxc-clone -o template_makine -n yeni_makine
+lxc-clone -o template_makine -n yeni_makine -- -r surum_adi
 
 # lxc-halt ile kapatabilmek için
 /var/lib/lxc/test/config
