@@ -255,7 +255,8 @@ apt-get install cifs-utils smbclient
 apt-get install wodim dvd+rw-tools
 
 # Multimedia
-aptitude install pulseaudio pulseaudio-utils mplayer
+apt-get install alsa-base alsa-utils
+apt-get install pulseaudio pulseaudio-utils mplayer ffmpeg
 
 # Programlama paketleri
 aptitude install vim-nox                                # script destekli vim
@@ -292,8 +293,8 @@ apt-get install xterm xtrlock unclutter numlockx
 apt-get install xsel scrot redshift tty-clock
 apt-get install iceweasel
 apt-get install flashplugin-nonfree
-apt-get  install chromium
-aptitude install pavucontrol smplayer
+apt-get install chromium
+apt-get install pavucontrol smplayer
 apt-get install x11vnc xvnc4viewer rdesktop
 apt-get install zathura weechat-curses weechat-plugins
 apt-get install zenity                                 # checkPOP3 kullanilacaksa...
