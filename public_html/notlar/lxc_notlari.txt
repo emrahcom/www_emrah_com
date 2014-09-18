@@ -65,10 +65,10 @@ mount /sys/fs/cgroup
 
 # Container oluşturma
 lxc-create -n test -t debian
+lxc-create -n test -t debian -- -r surum_adi
 
 # Container klonlama
 lxc-clone -o template_makine -n yeni_makine
-lxc-clone -o template_makine -n yeni_makine -- -r surum_adi
 
 # lxc-halt ile kapatabilmek için
 /var/lib/lxc/test/config
