@@ -100,18 +100,11 @@ apt-get autoremove
         update-grub
 
 
-# /etc/inittab
-
-# CTRL-ALT-DEL ile sistem kapatilacaksa ('-r' -> '-h')
-ca:12345:ctrlaltdel:/sbin/shutdown -t1 -a -h now
-
-1:2345:respawn:/sbin/getty 38400 --noclear tty1
-2:23:respawn:/sbin/getty 38400 tty2
-#3:23:respawn:/sbin/getty 38400 tty3
-#4:23:respawn:/sbin/getty 38400 tty4
-#5:23:respawn:/sbin/getty 38400 tty5
-#6:23:respawn:/sbin/getty 38400 tty6
-
+# CTRL-ALT-DEL ile sistem kapatilacaksa
+rm /lib/systemd/system/ctrl-alt-del.target
+ln -s /lib/systemd/system/poweroff.target \
+      /lib/systemd/system/ctrl-alt-del.target
+systemctl daemon-reload
 
 # /etc/fstab
 noatime eklenecek.
