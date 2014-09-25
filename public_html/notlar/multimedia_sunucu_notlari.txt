@@ -1,0 +1,8 @@
+# -----------------------------------------------------------------------------
+# MULTIMEDIA SUNUCU NOTLARI
+# -----------------------------------------------------------------------------
+Çoğunlukla Wowza Streaming Engine notlarından oluşmaktadır.
+
+
+# Lisans dosyası
+[install-dir]/conf/Server.license
