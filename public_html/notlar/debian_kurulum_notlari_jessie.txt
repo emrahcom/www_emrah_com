@@ -204,6 +204,7 @@ apt-get install lxc lxc-stuff debootstrap
 
 # monitoring paketleri
 apt-get install htop iotop iftop bmon bwm-ng nethogs
+apt-get install sysdig
 
 # network paketleri
 apt-get install fping arping whois curl dnsutils telnet
