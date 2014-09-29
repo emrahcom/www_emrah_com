@@ -4,5 +4,35 @@
 Çoğunlukla Wowza Streaming Engine notlarından oluşmaktadır.
 
 
+
+# -----------------------------------------------------------------------------
+# WOWZA 4.X
+# -----------------------------------------------------------------------------
+
+# Kurulum
+apt-get install openjdk-7-jre-headless
+
+chmod +x WowzaStreamingEngine-4.1.0.deb.bin
+./WowzaStreamingEngine-4.1.0.deb.bin
+
+Dosyaların kurulacağı klasör /usr/local/WowzaStreamingEngine-4.1.0
+
+# Silme
+dpkg –-purge WowzaStreamingEngine-4.1.0
+
+# Servisi başlatma/durdurma
+/etc/init.d/WowzaStreamingEngine start
+/etc/init.d/WowzaStreamingEngine stop
+
+# Standalone modda başlatma/durdurma
+cd /usr/local/WowzaStreamingEngine/bin
+./startup.sh
+./shutdown.sh
+
 # Lisans dosyası
-[install-dir]/conf/Server.license
+/usr/local/WowzaStreamingEngine/conf/Server.license
+
+# Kaynaklar
+http://www.wowza.com/forums/content.php?625
+http://www.wowza.com/products/streaming-engine/documentation
+http://www.wowza.com/resources/WowzaStreamingEngine_UsersGuide.pdf
