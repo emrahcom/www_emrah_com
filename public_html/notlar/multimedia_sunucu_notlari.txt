@@ -1,13 +1,22 @@
 # -----------------------------------------------------------------------------
 # MULTIMEDIA SUNUCU NOTLARI
 # -----------------------------------------------------------------------------
-Çoğunlukla Wowza Streaming Engine notlarından oluşmaktadır.
+Çoğunlukla Wowza Streaming Engine 4.1 notlarından oluşmaktadır.
 
 
 
 # -----------------------------------------------------------------------------
-# WOWZA 4.X
+# WOWZA 4.1
 # -----------------------------------------------------------------------------
+
+# Port
+TCP 8086-8088   - Administration
+TCP 80          - Adobe HDS, Apple HLS, Microsoft Smooth Streaming, MPEG-DASH
+                  RTMPT
+TCP 443         - RTMPS, HTTPS
+TCP 554         - RTSP
+TCP 1935        - RTMP / RTMPE
+UDP 6970-9999   - RTP UDP streaming
 
 # Kurulum
 apt-get install openjdk-7-jre-headless
@@ -32,7 +41,50 @@ cd /usr/local/WowzaStreamingEngine/bin
 # Lisans dosyası
 /usr/local/WowzaStreamingEngine/conf/Server.license
 
+# -----------------------------------------------------------------------------
+
+# Application (uygulama)
+[install-dir]/conf/[application]/Application.xml
+[install-dir]/conf/Application.xml
+
+# URL
+[proto]://[address]:[port]/[application]/[appInstance]/[streamName]/[post-fix]
+[proto]://[address]:[port]/[application]/[streamName]
+
+Çoğunlukla, kısa olan ikinci format tercih ediliyor.
+
+[proto]         : protokol (http, rtmp, rtsp vb.)
+[address]       : sunucu adresi
+[port]          : stream portu (default olarak bütün protokoller için 1935)
+[application]   : application (uygulama) adı
+[appInstance]   : application instance adı (default _definst_)
+[streamName]    : stream (yayın) adı
+[post-fix]      : player'a özel seçenekler
+
+# URL örnekleri
+    # Adobe HDS
+    http://mydomain.com:1935/live/myStream/manifest.f4m
+
+    # Apple HLS
+    http://mydomain.com:1935/live/myStream/playlist.m3u8
+
+    # Microsoft Smooth Streaming
+    http://mydomain.com:1935/live/myStream/Manifest
+
+    # MPEG-DASH
+    http://mydomain.com:1935/live/myStream/manifest.mpd
+
+    # Adobe RTMP
+    Server: rtmp://mydomain.com/live
+    Stream: myStream
+
+    # RTSP/RTP
+    rtsp://mydomain.com:1935/live/myStream
+
+
+
 # Kaynaklar
 http://www.wowza.com/forums/content.php?625
 http://www.wowza.com/products/streaming-engine/documentation
 http://www.wowza.com/resources/WowzaStreamingEngine_UsersGuide.pdf
+http://www.wowza.com/resources/WowzaStreamingEngine_ConfigurationReference.pdf
