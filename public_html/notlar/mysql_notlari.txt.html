@@ -14,6 +14,88 @@
 
 
 # -----------------------------------------------------------------------------
+# REPLICATION
+# -----------------------------------------------------------------------------
+Master-Slave olarak çalışan MySQL makinelerinin ayarlanması.
+
+# Master: replication kullanıcısının oluşturulması
+CREATE USER replica@'%' IDENTIFIED BY 'PAROLA';
+GRANT REPLICATION SLAVE ON *.* TO 'replica'@'%';
+FLUSH PRIVILEGES;
+
+# Master: /etc/mysql/my.cnf ayarları
+    server-id=1
+    log-bin=/var/log/mysql/replication
+    binlog-do-db=VERITABANI
+    innodb_flush_log_at_trx_commit=1
+    sync_binlog=1
+
+/etc/init.d mysql restart
+
+
+# Master: MASTER STATUS ve veritabani dump
+Dump ve STATUS bilgileri aynı ana ait olmalı.
+
+mysqldump -u root -pPAROLA --master-data VERITABANI &gt; veritabani.sql
+
+
+# Master: MASTER STATUS ve veritabani dump (Manuel LOCK ile)
+Bir önceki madde uygulandı ise buna gerek yok. Burada aynı işlem, manuel LOCK
+yapılarak tekrarlanıyor.
+
+mysql -u root -p
+    FLUSH TABLES WITH READ LOCK;
+    SHOW MASTER STATUS;
+    +--------------------+----------+--------------+------------------+
+    | File               | Position | Binlog_Do_DB | Binlog_Ignore_DB |
+    +--------------------+----------+--------------+------------------+
+    | replication.000011 | 17055299 | VERITABANI   |                  |
+    +--------------------+----------+--------------+------------------+
+
+mysqldump -u root -pPAROLA --opt VERITABANI &gt; veritabani.sql
+
+mysql -u root -p
+    UNLOCK TABLES;
+
+
+# Slave: /etc/mysql/my.cnf ayarları
+    server-id=2
+    read_only=TRUE
+
+/etc/init.d mysql restart
+
+
+# Slave: Verilerin kopyalanması
+mysql -u root -p
+    STOP SLAVE;
+    RESET SLAVE;
+
+mysql -u root -p VERITABANI &lt; veritabani.sql
+
+mysql -u root -p
+    -- dump alinirken --master-data kullanildi ise dump icinde bu satir oluyor
+    CHANGE MASTER TO MASTER_HOST='10.0.0.23',
+        MASTER_USER='replica',
+        MASTER_PASSWORD='PAROLA',
+        MASTER_LOG_FILE='replication.000001',
+        MASTER_LOG_POS=5674108;
+    START SLAVE;
+
+
+# Replication durumu
+    SHOW MASTER STATUS\G
+    SHOW SLAVE STATUS\G
+
+
+# Kaynaklar
+http://dev.mysql.com/doc/refman/5.0/en/replication-howto.html
+http://aciddrop.com/2008/01/10/step-by-step-how-to-setup-mysql-database-replication/
+http://www.howtoforge.com/mysql_database_replication
+http://www.percona.com/doc/percona-xtrabackup/2.2/howtos/setting_up_replication.html
+
+
+
+# -----------------------------------------------------------------------------
 # /etc/mysql/my.cnf
 # -----------------------------------------------------------------------------
 Buradaki değerler örnektir, her sistem için ayrı ayralamak gerekmekte.

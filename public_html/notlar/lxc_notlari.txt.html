@@ -74,6 +74,10 @@ mount /sys/fs/cgroup
 
 # Container oluşturma
 lxc-create -n test -t debian
+lxc-create -n test -t debian -- -r surum_adi
+
+# Container klonlama
+lxc-clone -o template_makine -n yeni_makine
 
 # lxc-halt ile kapatabilmek için
 /var/lib/lxc/test/config
@@ -82,6 +86,7 @@ lxc-create -n test -t debian
 
 # Container listesi
 lxc-list
+lxc-ls
 
 # Test için çalıştırma
 lxc-start -n test
@@ -176,6 +181,18 @@ apt-get clean
 # Ayarlar
 Kurulan paketler için &quot;Debian Kurulum Notlari&quot; dikkate alınarak düzenleme
 yapılacak.
+
+
+
+# -----------------------------------------------------------------------------
+# NOTLAR
+# -----------------------------------------------------------------------------
+
+# Auto start
+ln -s /var/lib/lxc/makine_adi/config /etc/lxc/auto/makine_adi
+
+# Reboot problemi
+Container içinden reboot yapma. Host makineden halt ve start kullan.
 
 
 

@@ -111,6 +111,12 @@ https://www.digitalocean.com/community/tutorials/how-to-use-nginx-as-a-global-tr
     # Apache'yi yeniden başlat.
     /etc/init.d/apache2 restart
 
+    # Could not reliably determine the server's fully qualified domain name
+    Bu uyarı çıkıyorsa iptal etmek için
+
+    /etc/apache2/conf.d/servername
+        ServerName localhost
+
 
 
 # -----------------------------------------------------------------------------
@@ -126,7 +132,8 @@ https://www.digitalocean.com/community/tutorials/how-to-use-nginx-as-a-global-tr
     mkdir /etc/apache2/ssl
     cd /etc/apache2/ssl
 
-    openssl req -x509 -days 1800 -newkey rsa:1024 -keyout hostkey.key -nodes -out hostcert.pem
+    openssl req -x509 -nodes -sha256 -days 1826 -newkey rsa:2048 \
+    -keyout hostkey.key -out hostcert.pem
         - &quot;Organization Name&quot; bölümün uniq bir firma adı girilecek. Böylece,
           web tarayıcıda bu sertifika için ayrı bir authority tanımlamak mümkün
           olacak.
@@ -135,6 +142,9 @@ https://www.digitalocean.com/community/tutorials/how-to-use-nginx-as-a-global-tr
           sertifika kaydı oluşturulamıyor.
 
     chmod 600 *
+
+    # Oluşan sertifikayı incelemek için
+    openssl x509 -in hostcert.pem -text -noout
 
 # /etc/apache2/sites-enabled/default-ssl
     #SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
@@ -496,6 +506,43 @@ ln -s ../apps-available/myapp.ini .
     }
 
 /etc/init.d/nginx restart
+
+
+
+# -----------------------------------------------------------------------------
+# NGINX + LUA
+# -----------------------------------------------------------------------------
+Lua ile örnek access control.
+
+# /etc/nginx/default
+    server {
+        ...
+        ...
+
+        location /forbidden.html {
+            expires -1;
+        }
+
+        location / {
+            access_by_lua_file /path/to/file.lua;
+            ...
+            ...
+        }
+    }
+
+# /path/to/file.lua
+    headers = ngx.req.get_headers()
+    if headers[&quot;Host&quot;] == &quot;localhost&quot; then
+        ngx.log(ngx.ERR, &quot;localhost is forbidden&quot;)
+        ngx.exec(&quot;/forbidden.html&quot;)
+        -- ngx.exit(ngx.HTTP_FORBIDDEN)
+    else
+        return
+    end
+
+# test
+    curl http://localhost/
+    curl http://127.0.0.1/
 
 
 

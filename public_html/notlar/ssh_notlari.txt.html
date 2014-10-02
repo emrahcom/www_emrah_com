@@ -187,13 +187,6 @@ SSH Server ve Python kurulu olması gerekiyor.
 sshuttle -r kullanici@ip_adresi:port 10.10.0.0/16 192.168.5.0/24
 sshuttle -r kullanici@ip_adresi:port 0/0 --dns
 
-# Ağdaki makinelerin de VPN bağlatısını kullanması isteniyorsa router makinede:
-sshuttle --daemon --pidfile=/tmp/sshuttle.pid --listen 0.0.0.0:0 \
---remote kullanici@ip_adresi:port 10.10.0.0/16 192.168.5.0/24
-
-# sshuttle daemon'ı kapatmak için
-[[ -f /tmp/sshuttle.pid ]] && kill `cat /tmp/sshuttle.pid`
-
 # SSH key kullanılmak isteniyorsa /root/.ssh/config dosyasına host
 tanımı gerekiyor.
     Host host1
