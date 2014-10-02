@@ -200,7 +200,7 @@ apt-get install python ipython
 apt-get install python3 ipython3
 
 # LXC
-apt-get install lxc lxc-stuff debootstrap
+apt-get install lxc debootstrap
 
 # monitoring paketleri
 apt-get install htop iotop iftop bmon bwm-ng nethogs
