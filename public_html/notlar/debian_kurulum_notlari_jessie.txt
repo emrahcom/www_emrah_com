@@ -53,8 +53,8 @@ deb http://security.debian.org/ jessie/updates main
 deb-src http://security.debian.org/ jessie/updates main
 
 # Multimedia deposu kullanilacaksa...
-deb http://www.deb-multimedia.org wheezy main non-free
-deb-src http://www.deb-multimedia.org wheezy main non-free
+deb http://www.deb-multimedia.org jessie main non-free
+deb-src http://www.deb-multimedia.org jessie main non-free
 
 # /etc/apt/apt.conf.d/80recommends
 APT::Install-Recommends "0";
@@ -243,7 +243,7 @@ apt-get install wicd-curses wicd-cli rfkill
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
 apt-get install bzip2 zip unzip patch tree ncdu parted autojump
 apt-get install lftp ncftp sshfs rsync
-apt-get install cryptsetup
+apt-get install ccrypt cryptsetup
 apt-get install ntfs-3g
 apt-get install cifs-utils smbclient
 
@@ -382,8 +382,10 @@ apt-get install dpkg-dev build-essential fakeroot
             program[lock]           = xtrlock
             program[iceweasel]      = iceweasel
             bind[iceweasel]         = MOD+Shift+f
-            program[ipython3]       = x-terminal-emulator /usr/bin/ipython3
+            program[ipython3]       = x-terminal-emulator -T "ipython" /usr/bin/ipython3
             bind[ipython3]          = MOD+Shift+p
+            program[weechat]        = x-terminal-emulator -T "Weechat" -xrm "*metaSendsEscape:true" -e tmux new-session /usr/bin/weechat
+            bind[weechat]           = MOD+Shift+w
 
 
 
@@ -507,17 +509,6 @@ apt-get install dpkg-dev build-essential fakeroot
                 freenode.autojoin = "#gnu,#debian"
                 freenode.autorejoin = on
                 freenode.autorejoin_delay = 1
-                bitlbee.addresses = "im.bitlbee.org/6667"
-                bitlbee.ssl = off
-                bitlbee.password = "parola"
-                bitlbee.autoconnect = on
-                bitlbee.autoreconnect = on
-                bitlbee.autoreconnect_delay = 10
-                bitlbee.nicks = "emrah,emrah_,emrah__"
-                bitlbee.username = "emrah"
-                bitlbee.realname = "emrah"
-                bitlbee.autorejoin = on
-                bitlbee.autorejoin_delay = 1
                 bitlbee_loc.addresses = "127.0.0.1/6667"
                 bitlbee_loc.ssl = off
                 bitlbee_loc.password = "parola1"
