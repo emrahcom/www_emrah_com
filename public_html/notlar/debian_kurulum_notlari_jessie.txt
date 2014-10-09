@@ -171,8 +171,15 @@ blacklist pcspkr
         # eth0:2
         auto eth0:2
         allow-hotplug eth0:2
-        iface eth0:1 inet static
+        iface eth0:2 inet static
         address 192.168.2.9
+        netmask 255.255.255.0
+
+        # eth0:3 (talia)
+        auto eth0:3
+        allow-hotplug eth0:3
+        iface eth0:3 inet static
+        address 172.16.244.9
         netmask 255.255.255.0
 
         # The primary wireless interface
