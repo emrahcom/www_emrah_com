@@ -76,7 +76,7 @@ apt-get install zsh tmux git vim-nox pyflakes autojump bridge-utils
 
 # Default paketlerden silinecekler
 apt-get purge nfs-common rpcbind installation-report reportbug nano
-apt-get purge tasksel tasksel-data task-english
+apt-get purge tasksel tasksel-data task-english os-prober
 # autoremove ile silinmemesi icin bu komut gerekli.
 apt-get install openssh-server openssh-sftp-server
 apt-get autoremove
@@ -142,43 +142,38 @@ blacklist pcspkr
         iface lo inet loopback
 
         # The primary network interface
-        auto eth0
+        allow-hotplug eth0
         iface eth0 inet manual
 
         # bridge
         auto br0
-        allow-hotplug br0
         iface br0 inet dhcp
         bridge_ports eth0
         bridge_stp off
         bridge_fd 0
         bridge_maxwait 0
 
-        # eth0:0
-        auto eth0:0
-        allow-hotplug eth0:0
-        iface eth0:0 inet static
+        # br0:0
+        auto br0:0
+        iface br0:0 inet static
         address 192.168.0.9
         netmask 255.255.255.0
 
-        # eth0:1 (videojet)
-        auto eth0:1
-        allow-hotplug eth0:1
-        iface eth0:1 inet static
+        # br0:1 (videojet)
+        auto br0:1
+        iface br0:1 inet static
         address 192.168.1.9
         netmask 255.255.255.0
 
-        # eth0:2
-        auto eth0:2
-        allow-hotplug eth0:2
-        iface eth0:2 inet static
+        # br0:2
+        auto br0:2
+        iface br0:2 inet static
         address 192.168.2.9
         netmask 255.255.255.0
 
-        # eth0:3 (talia)
-        auto eth0:3
-        allow-hotplug eth0:3
-        iface eth0:3 inet static
+        # br0:3 (talia)
+        auto br0:3
+        iface br0:3 inet static
         address 172.16.244.9
         netmask 255.255.255.0
 
