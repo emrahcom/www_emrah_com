@@ -152,6 +152,7 @@ blacklist pcspkr
         bridge_stp off
         bridge_fd 0
         bridge_maxwait 0
+        bridge_hw aa:bb:cc:dd:ee:ff
 
         # br0:0
         auto br0:0

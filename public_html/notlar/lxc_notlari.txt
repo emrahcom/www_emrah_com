@@ -1,7 +1,8 @@
 # -----------------------------------------------------------------------------
 # LXC NOTLARI
 # -----------------------------------------------------------------------------
-Bu sayfada, LXC (Linux Container) notları yer alır. Notlar Debian Wheezy'e göre
+Bu sayfada, LXC (Linux Container) notları yer alır. Notlar Debian Jessie'ye
+göre...
 
 
 
@@ -15,29 +16,24 @@ aptitude install bridge-utils
 # Bridge interface
 /etc/network/interfaces
 
-    auto eth0
+    # eth0
+    allow-hotplug eth0
     iface eth0 inet manual
 
+    # bridge
     auto br0
     iface br0 inet dhcp
     bridge_ports eth0
     bridge_stp off
     bridge_fd 0
     bridge_maxwait 0
+    bridge_hw aa:bb:cc:dd:ee:ff
 
-    # Birden fazla IP varsa eth:x olarak tanimlanabilir
-    auto eth0:0
-    iface eth0:0 inet static
+    # Birden fazla IP varsa br0:x olarak tanimlanabilir
+    auto br0:0
+    iface br0:0 inet static
     address 192.168.0.99
     netmask 255.255.255.0
-
-
-# sysctl.conf ayarları
-/etc/sysctl.conf
-    net.bridge.bridge-nf-call-ip6tables = 0
-    net.bridge.bridge-nf-call-iptables = 0
-    net.bridge.bridge-nf-call-arptables = 0
-
 
 # Network restart
 Makine reboot edilir veya network servisi yeniden başlatılır.
@@ -76,8 +72,8 @@ lxc-clone -o template_makine -n yeni_makine
     lxc.cap.drop = sys_module mac_admin mac_override sys_time sys_admin
 
 # Container listesi
-lxc-list
 lxc-ls
+lxc-ls -f
 
 # Test için çalıştırma
 lxc-start -n test
@@ -90,22 +86,29 @@ lxc-halt -n test    (clean stop)
 lxc-stop -n test
 
 # Makinenin konsoluna bağlanma
+lxc-attach -n test
 lxc-console -n test
 
 C+a q ile çık
 
 # Network interface (bridge kullanılacaksa)
 /var/lib/lxc/test/config
+    # eth0 (DHCP)
     lxc.network.type = veth
     lxc.network.name = eth0
     lxc.network.flags = up
     lxc.network.link = br0
-    # sabit IP
-    #lxc.network.ipv4 = 192.168.0.100/24
-    #lxc.network.ipv4.gateway = 192.168.0.1
-    # DHCP
-    lxc.network.ipv4 = 0.0.0.0/24
     lxc.network.hwaddr = aa:bb:00:00:00:01
+    lxc.network.ipv4 = 0.0.0.0/24
+
+    # eth1 (sabit IP)
+    lxc.network.type = veth
+    lxc.network.name = eth1
+    lxc.network.flags = up
+    lxc.network.link = br0
+    lxc.network.hwaddr = aa:bb:00:00:00:02
+    lxc.network.ipv4 = 192.168.0.100/24
+    lxc.network.ipv4.gateway = 192.168.0.1
 
 # Network interface (ethernet adaptör tahsis edilecekse)
 /var/lib/lxc/test/config
@@ -180,9 +183,10 @@ yapılacak.
 # -----------------------------------------------------------------------------
 
 # Auto start
-ln -s /var/lib/lxc/makine_adi/config /etc/lxc/auto/makine_adi
+Container config dosyasına
+    lxc.start.auto = 1
 
-# Reboot problemi
+# Reboot problemi (jessie'de düzelmiş)
 Container içinden reboot yapma. Host makineden halt ve start kullan.
 
 
