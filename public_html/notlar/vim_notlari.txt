@@ -108,6 +108,7 @@ autocmd InsertLeave * set nocursorline nocursorcolumn
 highlight cursorline cterm=none ctermfg=7 ctermbg=4
 highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
 autocmd BufNewFile,BufRead *.py,*.tmpl call CodingSet0()
+autocmd BufNewFile,BufRead *.php call CodingSet0()
 autocmd BufNewFile,BufRead OKUBENI,README,*.txt call CodingSet1()
 autocmd BufNewFile,BufRead *.sql call CodingSet2()
 
