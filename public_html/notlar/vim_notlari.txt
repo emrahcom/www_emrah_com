@@ -235,7 +235,7 @@ alt satıra geçirdiğinde, üst satırın girintisine uyulur
 - set list
 unprintable karakterleri gösterir
 
-- set listchars==tab:»·,trail:·
+- set listchars=tab:»·,trail:·
 tab karakteri için '»', tab boşlukları için '.', satır sonundaki fazlalık
 boşluklar için '.' gösterir
 
