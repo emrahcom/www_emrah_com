@@ -108,13 +108,15 @@ autocmd InsertLeave * set nocursorline nocursorcolumn
 highlight cursorline cterm=none ctermfg=7 ctermbg=4
 highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
 autocmd BufNewFile,BufRead *.py,*.tmpl call CodingSet0()
+autocmd BufNewFile,BufRead *.php call CodingSet0()
+autocmd BufNewFile,BufRead *.sql call CodingSet0()
 autocmd BufNewFile,BufRead OKUBENI,README,*.txt call CodingSet1()
-autocmd BufNewFile,BufRead *.sql call CodingSet2()
+autocmd BufNewFile,BufRead *.html,*.css,*.js call CodingSet2()
 
 function CodingSet0()
         setlocal
         \ textwidth=79
-        \ tabstop=8
+        \ tabstop=4
         \ shiftwidth=4
         \ softtabstop=4
         \ expandtab
@@ -126,7 +128,7 @@ endfunction
 function CodingSet1()
         setlocal
         \ textwidth=79
-        \ tabstop=8
+        \ tabstop=4
         \ shiftwidth=4
         \ softtabstop=4
         \ expandtab
@@ -140,13 +142,8 @@ endfunction
 function CodingSet2()
         setlocal
         \ textwidth=79
-        \ tabstop=8
-        \ shiftwidth=4
-        \ softtabstop=4
-        \ expandtab
+        \ tabstop=4
         \ autoindent
-        \ list
-        \ listchars=tab:»·,trail:·
 endfunction
 
 
@@ -219,7 +216,7 @@ gösterilir.
 Satır uzunluğu. Satır uzunluğu bu kadar karakter olunca otomatik alt satira
 geçer.
 
-- set tabstop=8
+- set tabstop=4
 tab uzunluğu
 
 - set shiftwidth=4
