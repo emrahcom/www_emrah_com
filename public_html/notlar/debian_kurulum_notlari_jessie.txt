@@ -291,7 +291,9 @@ apt-get install phppgadmin                              # PostrgreSQL icin web U
 # Masaüstü paketleri
 apt-get install --install-recommends xorg
 apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
-apt-get install xterm xtrlock unclutter numlockx
+apt-get install rxvt-unicode-256color
+apt-get install ttf-dejavu-core ttf-dejavu-extra
+apt-get install xtrlock unclutter numlockx
 apt-get install scrot                                   # screen capture
 apt-get install redshift                                # gün ışığına göre monitor ayari...
 apt-get install iceweasel
@@ -374,9 +376,10 @@ apt-get install dpkg-dev build-essential fakeroot
 
 # xterm default font
 . ~/.Xdefaults
-    xterm*background: black
-    xterm*foreground: green
-    xterm*faceName: Dejavu Sans Mono:style=Regular:size=10
+    URxvt.background: black
+    URxvt.foreground: green
+    URxvt.font: xft:DejaVu Sans Mono:size=10
+    URxvt.scrollBar: false
 
 
 
