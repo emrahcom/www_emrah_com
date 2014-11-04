@@ -353,8 +353,15 @@ apt-get install dpkg-dev build-essential fakeroot
     # proxy
     alias proxy="ssh -ND 8080 emrah"
 
-    # i3 kullanilacaksa
+    # spectrwm kullanilacaksa
     alias x='ssh-agent startx'
+
+    # rxvt-unicode-256color kullanilacaksa
+    case "$TERM" in
+        rxvt-unicode-256color)
+        TERM=rxvt-unicode
+        ;;
+    esac
 
     alias ls='ls --color=auto'
     alias ..="cd .."
