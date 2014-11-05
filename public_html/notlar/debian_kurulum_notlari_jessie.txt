@@ -432,7 +432,15 @@ apt-get install dpkg-dev build-essential fakeroot
 
 
 # iceweasel
+- Vimperator manuel olarak eklensin.
+    Menu çubuğuna mouse sağ tuş, açılan menuden:
+        Liberator Statusline Toolbar iptal
+
+    ~/.vimperatorrc
+     :set gui=nonavigation
+
 - Pentadactyl manuel olarak eklensin.
+  Şu an için vimperator kullan.
     mkdir -p ~/.pentadactyl/info/default
 
 - NoScript manuel olarak eklensin.
