@@ -339,6 +339,8 @@ apt-get install dpkg-dev build-essential fakeroot
 - ~/.zshrc (root için)
     bindkey -v
     export TMOUT=1200
+    setopt autocd
+    setopt hist_ignore_space
 
     alias ls='ls --color=auto'
     alias ..="cd .."
@@ -350,6 +352,8 @@ apt-get install dpkg-dev build-essential fakeroot
 - ~/.zshrc (normal kullanıcı)
     bindkey -v
     export TMOUT=1200
+    setopt autocd
+    setopt hist_ignore_space
 
     # proxy
     alias proxy="ssh -ND 8080 emrah"
