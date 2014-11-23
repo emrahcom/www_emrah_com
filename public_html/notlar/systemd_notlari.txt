@@ -1,0 +1,94 @@
+# -----------------------------------------------------------------------------
+# SYSTEMD NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edilmiştir.
+
+
+# -----------------------------------------------------------------------------
+# SERVİSLERİN YÖNETİLMESİ
+# -----------------------------------------------------------------------------
+
+# Status
+systemctl status ssh.service
+systemctl is-active ssh.service
+
+# Başlatma
+systemctl start ssh.service
+
+# Durdurma
+systemctl stop ssh.service
+
+# Yeniden başlatma
+systemctl restart ssh.service
+
+# Açılıştan kaldırma
+systemctl disable ssh.service
+
+# Açılışa ekleme
+systemctl enable ssh.service
+
+# Açılışta başlayacak mı
+systemctl is-enabled ssh.service
+
+# mask
+Başlatılmasını yasaklama. Manuel olarak da başlatılamaz
+systemctl mask ssh.service
+
+# unmask
+systemctl unmask ssh.service
+
+# daemon-reload
+systemd servisini yeniden yükleme. Yeni unit tanımlandığında gerekiyor.
+systemctl daemon-reload
+
+
+# -----------------------------------------------------------------------------
+# UNIT
+# -----------------------------------------------------------------------------
+Unit dosyasının '/lib/systemd/system' klasörüne konulması gerekiyor. Sembolik
+link olursa çalışmıyor.
+
+# /lib/systemd/system/ornek.service
+[Unit]
+Description=Servis aciklama
+Requires=network.target
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/tmp/myservice.pid
+User=emrah
+Group=emrah
+ExecStart=/home/emrah/services/myservice.py start
+ExecStop=/home/emrah/services/myservice.py stop
+
+[Install]
+WantedBy=multi-user.target
+
+# Unit satırları hakkında
+    Requires : Bu servisin çalışabilmesi için ihtiyaç duyulan servisler.
+    After : Hangi servislerden sonra başlatılması gerektiği. After bölümünde,
+            yer alan servise ihtiyaç duyulduğu anlamına gelmiyor. Sadece o
+            servisten sonra başlaması gerektiği anlamına geliyor.
+    Type : Servis tipi. Double-fork magic ile başlatılan servisler için forking
+            seçilecek.
+
+    Satırlar, farklı parametrelerle birden fazla tekrarlanabilir.
+
+
+# -----------------------------------------------------------------------------
+# JOURNALCTL
+# -----------------------------------------------------------------------------
+
+# Boot logu
+journalctl --boot
+
+# Sadece bir servise ait loglar
+journalctl --unit ssh.service
+
+
+# -----------------------------------------------------------------------------
+# KLASÖRLER
+# -----------------------------------------------------------------------------
+/etc/systemd
+/lib/systemd

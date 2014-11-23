@@ -1,0 +1,201 @@
+# -----------------------------------------------------------------------------
+# NGINX NOTLARI
+# -----------------------------------------------------------------------------
+Notların çoğu Debian Jessie ve nginx-extras paketi kullanıldığı düşünülerek
+hazırlandı. Eski sürümlerde bazı özellikler mevcut değil.
+
+# Kurulum
+    apt-get install nginx-extras
+
+# Config test
+    /etc/init.d/nginx configtest
+
+
+# -----------------------------------------------------------------------------
+# NGINX + PHP
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    apt-get install php5-fpm
+
+# conf.d/custom.conf
+     large_client_header_buffers 8 128k;
+     proxy_hide_header X-Powered-By;
+     server_tokens off;
+
+# conf.d/cache.conf
+    fastcgi_cache_path /var/cache/nginx_fastcgi levels=1:2 keys_zone=fcache:64m inactive=60m;
+    fastcgi_temp_path /var/cache/nginx_fastcgi/tmp;
+    fastcgi_cache_key "$host$request_uri";
+    fastcgi_cache_lock on; 
+    fastcgi_cache_use_stale error timeout invalid_header updating http_500 http_503
+
+# sites-available/site.conf
+    set $skip_cache 0;
+
+    # Cachelenmeyecek bolumler.
+    if ($request_uri ~* "/(path1|path2)") {
+        set $skip_cache 1; }
+
+    # Fiziksel olarak var olan dosyalar static dosya olarak sunulacak.
+    location / {
+        try_files $uri $uri/ /index.php?$request_uri;
+
+        add_header Pragma public;
+        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+
+        add_header X-Powered-By "www.emrah.com";
+        add_header X-Host $host;
+        add_header X-Node "default";
+        expires max; }
+
+    # PHP dosyalari ve framework pathleri bu bloktan sunulacak.
+    location ~ \.php {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_buffer_size 64k;
+        fastcgi_buffers 8 64k;
+        fastcgi_busy_buffers_size 64k;
+
+        fastcgi_cache fcache;
+        fastcgi_cache_bypass $skip_cache;
+        fastcgi_no_cache $skip_cache;
+        fastcgi_cache_valid 60s;
+        fastcgi_cache_valid any 30s;
+        fastcgi_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
+        add_header X-Cache $upstream_cache_status;
+        expires 300;
+
+        add_header X-Powered-By "www.emrah.com";
+        add_header X-Upstream $hostname;
+        add_header X-Node "php";
+        add_header X-Worker $pid; }
+
+
+# -----------------------------------------------------------------------------
+# NGINX + UWSGI
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    apt-get install uwsgi uwsgi-plugin-python
+
+# Basit bir Python Uygulaması
+/home/kullanici/wsgi/myapp.py
+    #!/usr/bin/python
+    #-*- coding: utf-8 -*-
+
+    from cgi import parse_qs
+
+    def application(environ, start_response):
+        args = parse_qs(env['wsgi.input'].read())
+        status = '200 OK'
+        output = 'Hello World'
+
+        response_headers = [('Content-type', 'text/plain'),
+                            ('Content-Length', str(len(output)))]
+        start_response(status, response_headers)
+        return [output]
+
+
+# UWSGI ayarları
+/etc/uwsgi/apps-available/myapp.ini
+    [uwsgi]
+    plugins = python
+    uid = emrah
+    gid = www-data
+    socket = /var/run/uwsgi/app/myapp.socket
+    wsgi-file = /home/kullanici/wsgi/myapp.py
+
+
+cd /etc/uwsgi/apps-enabled
+ln -s ../apps-available/myapp.ini .
+/etc/init.d/uwsgi restart
+
+
+# Nginx ayarları
+/etc/nginx/sites-enabled/default
+    location /myapp {
+        include uwsgi_params;
+        uwsgi_pass unix:/var/run/uwsgi/app/myapp.socket;
+    }
+
+/etc/init.d/nginx restart
+
+
+# -----------------------------------------------------------------------------
+# NGINX + LUA
+# -----------------------------------------------------------------------------
+Lua ile örnek access control.
+
+# /etc/nginx/default
+    server {
+        ...
+        ...
+
+        location /forbidden.html {
+            expires -1;
+        }
+
+        location / {
+            access_by_lua_file /path/to/file.lua;
+            ...
+            ...
+        }
+    }
+
+# /path/to/file.lua
+    headers = ngx.req.get_headers()
+    if headers["Host"] == "localhost" then
+        ngx.log(ngx.ERR, "localhost is forbidden")
+        ngx.exec("/forbidden.html")
+        -- ngx.exit(ngx.HTTP_FORBIDDEN)
+    else
+        return
+    end
+
+# test
+    curl http://localhost/
+    curl http://127.0.0.1/
+
+
+# -----------------------------------------------------------------------------
+# CACHE PURGE
+# -----------------------------------------------------------------------------
+Key olarak "$host/$1" kullanıldığı farzedildi.
+
+# sites-available/site.conf
+    location ~ /purge/(.*) {
+        fastcgi_cache_purge fcache "$host/$1"; }
+
+
+# -----------------------------------------------------------------------------
+# TALEBİ BEKLETME
+# -----------------------------------------------------------------------------
+Talep edilen dosya henüz yoksa bir müddet bekleme yapıp dosyayı yeniden isteme.
+Talep anında dinamik olarak oluşturulan dosyalar için kullanılabilir.
+
+location /temp/images {
+    try_files $uri @delay;
+
+    add_header Pragma public;
+    add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+
+    add_header X-Powered-By "www.emrah.com";
+    add_header X-Host $host;
+    add_header X-Node "png";
+    expires max; }
+
+location @delay {
+    echo_sleep 5;
+    echo_exec /delay$uri; }
+
+location /delay {
+    alias /var/www;
+
+    add_header Pragma public;
+    add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+
+    add_header X-Powered-By "www.emrah.com";
+    add_header X-Host $host;
+    add_header X-Node "delay";
+    expires max; }
