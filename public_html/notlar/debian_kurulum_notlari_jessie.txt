@@ -213,7 +213,7 @@ apt-get install htop iotop nethogs iftop bmon bwm-ng
 apt-get install --install-recommends sysdig     # Sistem cagrilarini analiz
 
 # network paketleri
-apt-get install fping arping curl dnsutils whois
+apt-get install fping arping mtr curl dnsutils whois
 apt-get install sshuttle sudo                   # VPN over SSH
 apt-get install nmap tcpdump
 apt-get install ngrep netcat-openbsd telnet
