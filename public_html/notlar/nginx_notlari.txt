@@ -199,3 +199,56 @@ location /delay {
     add_header X-Host $host;
     add_header X-Node "delay";
     expires max; }
+
+
+# -----------------------------------------------------------------------------
+# TALEBİ BEKLETME (LUA İLE)
+# -----------------------------------------------------------------------------
+Talep edilen dosya oluşana kadar redirect yapılıyor. Her redirect öncesi bir
+müddet bekletiliyor. 10 kere istendikten sonra hala dosya oluşmamışsa 404
+döndürülüyor.
+
+# Bu location'da HTML'den uretilen resimler yer alir. Ilk talep geldigi esnada
+# resim dosyasi henuz hazirlanmamis olabilir. Bu nedenle resim dosyasi henuz
+# yoksa talep, @delay bloguna gonderilip bir muddet bekletiliyor ve daha sonra
+# resim tekrar web sunucudan isteniyor.
+location /temp/images {
+        try_files $uri @delay;
+
+        add_header Pragma public;
+        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+
+        add_header X-Powered-By "www.emrah.com";
+        add_header X-Host $host;
+        add_header X-Node "png";
+        expires max; }
+
+# Beklemeyi yaptiran blok. Bekleme sonunda resim, sunucudan tekrar isteniyor.
+# Eger resim 10 kere istenmis olmasina ragmen hala olusmadiysa "404 NOT FOUND"
+# donduruluyor.
+location @delay {
+        set $step "$arg_step";
+
+        rewrite_by_lua '
+                local res = ngx.location.capture("/delay")
+                local uri = "http://" .. ngx.var.host .. ngx.var.uri
+
+                if ngx.var.step == "" then
+                        ngx.var.step = 0
+                else
+                        ngx.var.step = tonumber(ngx.var.step) + 1
+                end
+
+                if tonumber(ngx.var.step) < 10 then
+                        uri = uri .. "?step=" .. ngx.var.step
+                        return ngx.redirect(uri, 302)
+                else
+                        return ngx.HTTP_NOT_FOUND
+                end
+        '; }
+
+# Bu sanal location, sadece @delay blogundan yapilan sunucu ici yonlendirmeler
+# ile kullanilir. 302 redirectten once bir muddet bekleme yaptirmak icin
+# kullaniliyor.
+location /delay {
+        echo_sleep 0.8; }
