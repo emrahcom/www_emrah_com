@@ -259,6 +259,7 @@ apt-get install cifs-utils smbclient
 apt-get install postgresql-client
 apt-get install mysql-client
 apt-get install sqlite3
+apt-get install sqsh                                    # MS SQL ve Sybase shell
 
 # CD/DVD paketleri
 apt-get install wodim dvd+rw-tools
