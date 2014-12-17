@@ -386,6 +386,29 @@ apt-get install dpkg-dev build-essential fakeroot
             z $@ 2>/dev/null | head -10
     }
 
+    update_hosts{
+        HOSTS=`cat <<EOF
+            host1
+            host2
+            host3
+    EOF
+
+        while read h; do
+            echo update $h
+            ssh $h "apt-get update" < /dev/null
+            ssh $h "apt-get autoclean" < /dev/null
+            ssh $h "apt-get -dy dist-upgrade" < /dev/null
+            echo
+        done <<< $HOSTS
+
+        while read h; do
+            echo upgrade $h
+            ssh $h "apt-get dist-upgrade" < /dev/null
+            ssh $h "apt-get autoremove" < /dev/null
+            echo
+        done <<< $HOSTS
+    }
+
 
 
 # xterm default font
