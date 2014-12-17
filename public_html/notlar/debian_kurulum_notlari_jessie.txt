@@ -386,7 +386,7 @@ apt-get install dpkg-dev build-essential fakeroot
             z $@ 2>/dev/null | head -10
     }
 
-    update_hosts{
+    update_hosts(){
         HOSTS=`cat <<EOF
             host1
             host2
