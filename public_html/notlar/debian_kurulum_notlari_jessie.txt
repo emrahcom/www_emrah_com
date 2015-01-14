@@ -209,7 +209,7 @@ apt-get install pypy
 apt-get install lxc debootstrap
 
 # monitoring paketleri
-apt-get install htop iotop nethogs iftop bmon bwm-ng powertop
+apt-get install htop iotop sysstat nethogs iftop bmon bwm-ng powertop
 apt-get install --install-recommends sysdig     # Sistem cagrilarini analiz
 
 # network paketleri
