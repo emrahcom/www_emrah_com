@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>nginx_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# NGINX NOTLARI
+# -----------------------------------------------------------------------------
+Notların çoğu Debian Jessie ve nginx-extras paketi kullanıldığı düşünülerek
+hazırlandı. Eski sürümlerde bazı özellikler mevcut değil.
+
+# Kurulum
+    apt-get install nginx-extras
+
+# Config test
+    /etc/init.d/nginx configtest
+
+
+# -----------------------------------------------------------------------------
+# NGINX + PHP
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    apt-get install php5-fpm
+
+# conf.d/custom.conf
+     large_client_header_buffers 8 128k;
+     proxy_hide_header X-Powered-By;
+     server_tokens off;
+
+# conf.d/cache.conf
+    fastcgi_cache_path /var/cache/nginx_fastcgi levels=1:2 keys_zone=fcache:64m inactive=60m;
+    fastcgi_temp_path /var/cache/nginx_fastcgi/tmp;
+    fastcgi_cache_key &quot;$host$request_uri&quot;;
+    fastcgi_cache_lock on; 
+    fastcgi_cache_use_stale error timeout invalid_header updating http_500 http_503
+
+# sites-available/site.conf
+    set $skip_cache 0;
+
+    # Cachelenmeyecek bolumler.
+    if ($request_uri &tilde;* &quot;/(path1|path2)&quot;) {
+        set $skip_cache 1; }
+
+    # Fiziksel olarak var olan dosyalar static dosya olarak sunulacak.
+    location / {
+        try_files $uri $uri/ /index.php?$request_uri;
+
+        add_header Pragma public;
+        add_header Cache-Control &quot;public, must-revalidate, proxy-revalidate&quot;;
+
+        add_header X-Powered-By &quot;www.emrah.com&quot;;
+        add_header X-Host $host;
+        add_header X-Node &quot;default&quot;;
+        expires max; }
+
+    # PHP dosyalari ve framework pathleri bu bloktan sunulacak.
+    location &tilde; \.php {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_buffer_size 64k;
+        fastcgi_buffers 8 64k;
+        fastcgi_busy_buffers_size 64k;
+
+        fastcgi_cache fcache;
+        fastcgi_cache_bypass $skip_cache;
+        fastcgi_no_cache $skip_cache;
+        fastcgi_cache_valid 60s;
+        fastcgi_cache_valid any 30s;
+        fastcgi_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
+        add_header X-Cache $upstream_cache_status;
+        expires 300;
+
+        add_header X-Powered-By &quot;www.emrah.com&quot;;
+        add_header X-Upstream $hostname;
+        add_header X-Node &quot;php&quot;;
+        add_header X-Worker $pid; }
+
+
+# -----------------------------------------------------------------------------
+# NGINX + UWSGI
+# -----------------------------------------------------------------------------
+
+# Kurulum
+    apt-get install uwsgi uwsgi-plugin-python
+
+# Basit bir Python Uygulaması
+/home/kullanici/wsgi/myapp.py
+    #!/usr/bin/python
+    #-*- coding: utf-8 -*-
+
+    from cgi import parse_qs
+
+    def application(environ, start_response):
+        args = parse_qs(env['wsgi.input'].read())
+        status = '200 OK'
+        output = 'Hello World'
+
+        response_headers = [('Content-type', 'text/plain'),
+                            ('Content-Length', str(len(output)))]
+        start_response(status, response_headers)
+        return [output]
+
+
+# UWSGI ayarları
+/etc/uwsgi/apps-available/myapp.ini
+    [uwsgi]
+    plugins = python
+    uid = emrah
+    gid = www-data
+    socket = /var/run/uwsgi/app/myapp.socket
+    wsgi-file = /home/kullanici/wsgi/myapp.py
+
+
+cd /etc/uwsgi/apps-enabled
+ln -s ../apps-available/myapp.ini .
+/etc/init.d/uwsgi restart
+
+
+# Nginx ayarları
+/etc/nginx/sites-enabled/default
+    location /myapp {
+        include uwsgi_params;
+        uwsgi_pass unix:/var/run/uwsgi/app/myapp.socket;
+    }
+
+/etc/init.d/nginx restart
+
+
+# -----------------------------------------------------------------------------
+# NGINX + LUA
+# -----------------------------------------------------------------------------
+Lua ile örnek access control.
+
+# /etc/nginx/default
+    server {
+        ...
+        ...
+
+        location /forbidden.html {
+            expires -1;
+        }
+
+        location / {
+            access_by_lua_file /path/to/file.lua;
+            ...
+            ...
+        }
+    }
+
+# /path/to/file.lua
+    headers = ngx.req.get_headers()
+    if headers[&quot;Host&quot;] == &quot;localhost&quot; then
+        ngx.log(ngx.ERR, &quot;localhost is forbidden&quot;)
+        ngx.exec(&quot;/forbidden.html&quot;)
+        -- ngx.exit(ngx.HTTP_FORBIDDEN)
+    else
+        return
+    end
+
+# test
+    curl http://localhost/
+    curl http://127.0.0.1/
+
+
+# -----------------------------------------------------------------------------
+# CACHE PURGE
+# -----------------------------------------------------------------------------
+Key olarak &quot;$host/$1&quot; kullanıldığı farzedildi.
+
+# sites-available/site.conf
+    location &tilde; /purge/(.*) {
+        fastcgi_cache_purge fcache &quot;$host/$1&quot;; }
+
+
+# -----------------------------------------------------------------------------
+# TALEBİ BEKLETME
+# -----------------------------------------------------------------------------
+Talep edilen dosya henüz yoksa bir müddet bekleme yapıp dosyayı yeniden isteme.
+Talep anında dinamik olarak oluşturulan dosyalar için kullanılabilir.
+
+location /temp/images {
+    try_files $uri @delay;
+
+    add_header Pragma public;
+    add_header Cache-Control &quot;public, must-revalidate, proxy-revalidate&quot;;
+
+    add_header X-Powered-By &quot;www.emrah.com&quot;;
+    add_header X-Host $host;
+    add_header X-Node &quot;png&quot;;
+    expires max; }
+
+location @delay {
+    echo_sleep 5;
+    echo_exec /delay$uri; }
+
+location /delay {
+    alias /var/www;
+
+    add_header Pragma public;
+    add_header Cache-Control &quot;public, must-revalidate, proxy-revalidate&quot;;
+
+    add_header X-Powered-By &quot;www.emrah.com&quot;;
+    add_header X-Host $host;
+    add_header X-Node &quot;delay&quot;;
+    expires max; }
+
+
+# -----------------------------------------------------------------------------
+# TALEBİ BEKLETME (LUA İLE)
+# -----------------------------------------------------------------------------
+Talep edilen dosya oluşana kadar redirect yapılıyor. Her redirect öncesi bir
+müddet bekletiliyor. 10 kere istendikten sonra hala dosya oluşmamışsa 404
+döndürülüyor.
+
+# Bu location'da HTML'den uretilen resimler yer alir. Ilk talep geldigi esnada
+# resim dosyasi henuz hazirlanmamis olabilir. Bu nedenle resim dosyasi henuz
+# yoksa talep, @delay bloguna gonderilip bir muddet bekletiliyor ve daha sonra
+# resim tekrar web sunucudan isteniyor.
+location /temp/images {
+        try_files $uri @delay;
+
+        add_header Pragma public;
+        add_header Cache-Control &quot;public, must-revalidate, proxy-revalidate&quot;;
+
+        add_header X-Powered-By &quot;www.emrah.com&quot;;
+        add_header X-Host $host;
+        add_header X-Node &quot;png&quot;;
+        expires max; }
+
+# Beklemeyi yaptiran blok. Bekleme sonunda resim, sunucudan tekrar isteniyor.
+# Eger resim 10 kere istenmis olmasina ragmen hala olusmadiysa &quot;404 NOT FOUND&quot;
+# donduruluyor.
+location @delay {
+        set $step &quot;$arg_step&quot;;
+
+        rewrite_by_lua '
+                local res = ngx.location.capture(&quot;/delay&quot;)
+                local uri = &quot;http://&quot; .. ngx.var.host .. ngx.var.uri
+
+                if ngx.var.step == &quot;&quot; then
+                        ngx.var.step = 0
+                else
+                        ngx.var.step = tonumber(ngx.var.step) + 1
+                end
+
+                if tonumber(ngx.var.step) &lt; 10 then
+                        uri = uri .. &quot;?step=&quot; .. ngx.var.step
+                        return ngx.redirect(uri, 302)
+                else
+                        return ngx.HTTP_NOT_FOUND
+                end
+        '; }
+
+# Bu sanal location, sadece @delay blogundan yapilan sunucu ici yonlendirmeler
+# ile kullanilir. 302 redirectten once bir muddet bekleme yaptirmak icin
+# kullaniliyor.
+location /delay {
+        echo_sleep 0.8; }
+</code></pre>
+</body>
+</html>

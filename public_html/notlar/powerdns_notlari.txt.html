@@ -172,61 +172,71 @@ göstermesi gerekmekte.
 # -----------------------------------------------------------------------------
 
 # Gerekli Debian paketlerinin kurulumu
-    aptitude install php5 php5-mcrypt
-    aptitude install php-pear php-mdb2 php-mdb2-driver-pgsql php5-pgsql
+aptitude install php5 php5-mcrypt
+aptitude install php-pear php-mdb2 php-mdb2-driver-pgsql php5-pgsql
 
 # Poweradmin dosyalarının indirilmesi
-http://poweradmin.github.io/poweradmin/ adresinden son sürüm görülebilir.
+http://www.poweradmin.org/ adresinden son sürüm görülebilir.
+https://github.com/poweradmin/poweradmin/releases
 
-    cd
-    wget https://github.com/downloads/poweradmin/poweradmin/poweradmin-2.1.6.tgz
-    tar xzfv poweradmin-2.1.6.tgz
-    mv poweradmin-2.1.6 /var/www/poweradmin
-    touch /var/www/poweradmin/inc/config.inc.php
-    cd /var/www
-    chown www-data: poweradmin -R
+# 2.1.7
+cd
+wget https://github.com/poweradmin/poweradmin/archive/v2.1.7.tar.gz -O poweradmin-2.1.7.tar.gz
+tar xzvf poweradmin-2.1.7.tar.gz
+mv poweradmin-2.1.7 /var/www/poweradmin
+touch /var/www/poweradmin/inc/config.inc.php
+chown www-data: /var/www/poweradmin -R
+
+# 2.1.6
+cd
+wget https://github.com/downloads/poweradmin/poweradmin/poweradmin-2.1.6.tgz
+tar xzfv poweradmin-2.1.6.tgz
+mv poweradmin-2.1.6 /var/www/poweradmin
+touch /var/www/poweradmin/inc/config.inc.php
+cd /var/www
+chown www-data: poweradmin -R
 
 
 # PowerAdmin arayüzünden yüklemenin yapılması
 
-    - Web tarayıcı ile Install sayfasina girilir.
-        https://ip_adresi/poweradmin/install/
+- Web tarayıcı ile Install sayfasina girilir.
+    https://ip_adresi/poweradmin/install/
 
-    - Installation step 3
-    Gerekli bilgiler /etc/powerdns/pdns.d/pdns.local.gpgsql dosyasında.
-        Username                    : pdns
-        Password                    : (veritabanı kullanıcısı parolası)
-        Database type               : PostgreSQL
-        Hostname                    : 127.0.0.1
-        DB Port                     : 5432
-        Database                    : pdns
-        Poweradmin administrator    : (PowerAdmin web panel admin parolası)
+- Installation step 3
+Gerekli bilgiler /etc/powerdns/pdns.d/pdns.local.gpgsql dosyasında.
+    Username                    : pdns
+    Password                    : (veritabanı kullanıcısı parolası)
+    Database type               : PostgreSQL
+    Hostname                    : 127.0.0.1
+    DB Port                     : 5432
+    Database                    : pdns
+    Poweradmin administrator    : (PowerAdmin web panel admin parolası)
 
-    - Installation step 4
-        Username                    : poweradmin
-        Password                    : (poweradmin için veritabanı parolası)
-        Hostmaster                  : hostmaster.domain.net
-        Primary nameserver          : pns1.domain.net
-        Secondary nameserver        : pns2.domain.net
+- Installation step 4
+    Username                    : poweradmin
+    Password                    : (poweradmin için veritabanı parolası)
+    Hostmaster                  : hostmaster.domain.net
+    Primary nameserver          : pns1.domain.net
+    Secondary nameserver        : pns2.domain.net
 
-    - Installation step 5
-    Bu adımda verilen komutları postgres kullanıcısı olarak çalıştır.
+- Installation step 5
+Bu adımda verilen komutları postgres kullanıcısı olarak çalıştır.
 
-        su -l postgres
-        createuser -E -P poweradmin
-            ...
-            ...
-        psql pdns
-            ...
-            ...
-        (postgres kullanıcı hesabından çıkılacak)
+    su -l postgres
+    createuser -E -P poweradmin
+        ...
+        ...
+    psql pdns
+        ...
+        ...
+    (postgres kullanıcı hesabından çıkılacak)
 
-    - Installation step 7
-    Bu adıma kadar ilerlenecek.
+- Installation step 7
+Bu adıma kadar ilerlenecek.
 
-    - Install klasörünün silinmesi
-        (root olunacak)
-        rm -rf /var/www/poweradmin/install/
+- Install klasörünün silinmesi
+(root olunacak)
+    rm -rf /var/www/poweradmin/install/
 
 
 # PowerAdmin arayüzüne girilmesi

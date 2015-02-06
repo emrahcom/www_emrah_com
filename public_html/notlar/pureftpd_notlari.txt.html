@@ -39,7 +39,10 @@ Pure-ftpd Notları
         echo &quot;1021&quot; &gt; /etc/pure-ftpd/conf/Bind
 
         . Passive mode FTP portları için aralık tanımlama
-        echo &quot;40000 40100&quot; &gt; /etc/pure-ftpd/conf/PassivePortRange
+        echo &quot;49152 65534&quot; &gt; /etc/pure-ftpd/conf/PassivePortRange
+
+        . Router arkasında ise passive mode icin dış IP adresi
+        echo &quot;dis_IP&quot; &gt; /etc/pure-ftpd/conf/ForcePassiveIP
 
         . Anonymous FTP erişimi olmayacaksa
         echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/NoAnonymous
@@ -123,6 +126,9 @@ Pure-ftpd Notları
 
                 - Kullanıcı bilgisini görme
                 pure-pw show kullanici1
+
+                - IP kısıtlaması
+                 pure-pw usermod kullanici -r 10.0.0.0/8,212.22.33.22
 
 
 - Notlar
