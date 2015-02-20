@@ -1,0 +1,114 @@
+# -----------------------------------------------------------------------------
+# FLASK NOTLARI
+# -----------------------------------------------------------------------------
+Notlar, Debian Jessie ve Python 2.7 için hazırlanmıştır. Python 3.x ile
+çalışıyor olmasına karşın bazı extentionların (örneğin flask-spyne) 3.x desteği
+henüz tamamlanmış değil.
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK KURULUM
+# -----------------------------------------------------------------------------
+Recommended paketlerin default olarak kurulmadığı varsayıldı. Nginx ve UWSGI
+ile birlikte çalışacak şekilde yapılandırılıyor.
+
+# Paketler
+apt-get install python-flask
+apt-get install uwsgi uwsgi-plugin-python
+apt-get install nginx-extras
+
+# Flask proje klasörü
+mkdir /home/emrah/myproject
+
+# /home/emrah/myproject/myapp.ini
+[uwsgi]
+plugins = python
+uid = emrah
+gid = emrah
+master = true
+processes = 8
+enable-threads = true
+max-requests = 100
+harakiri = 300
+post-buffering = 8192
+vacuum = true
+socket = 127.0.0.1:8000
+callable = app
+wsgi-file = /home/emrah/myproject/myapp.py
+chdir = /home/emrah/myproject/
+
+# /home/emrah/myproject/myapp.py
+from flask import Flask
+app= Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+
+if __name__ == '__main__':
+    app.run()
+
+# UWSGI link ve restart
+cd /etc/uwsgi/apps-enabled
+ln -s /home/emrah/myproject/myapp.ini
+systemctl restart uwsgi
+
+# /etc/nginx/sites-available/mysite
+server {
+        listen 80; 
+        server_name _;
+        access_log /var/log/nginx/access.mysite.log;
+        error_log /var/log/nginx/error.mysite.log;
+
+        root /var/www/html;
+
+        location / {
+                try_files $uri @myproject;
+        }
+
+        location @myproject {
+                include uwsgi_params;
+                uwsgi_pass 127.0.0.1:8000;
+        }
+}
+
+# Nginx link ve restart
+cd /etc/nginx/sites-enabled
+ln -s ../sites-available/mysite
+systemctl restart nginx
+
+# Test
+curl http://127.0.0.1/
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK-SPYNE KURULUM
+# -----------------------------------------------------------------------------
+
+# Paketler
+apt-get install python-spyne python-simplejson python-yaml
+apt-get install python-pip
+pip install flask-spyne
+    (sec-wall paketi de bağımlılık nedeniyle kuruluyor. Debian deposunda yok.)
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+
+# Flask
+http://flask.pocoo.org/
+http://flask.pocoo.org/docs/0.10/
+http://www.fullstackpython.com/flask.html
+
+# UWSGI
+http://uwsgi-docs.readthedocs.org/en/latest/
+http://flask.pocoo.org/docs/0.10/deploying/uwsgi/
+
+# Spyne
+http://spyne.io/
+https://github.com/rayrapetyan/flask-spyne
+https://pypi.python.org/pypi/Flask-Spyne
