@@ -201,8 +201,8 @@ aptitude ile başlayanlar henüz test edilmedi, Wheezy kurulum dökümanından
 kopyalandı. apt-get ile test edilince komut değiştirilecek.
 
 # python (temel) paketleri
-apt-get install python ipython
-apt-get install python3 ipython3
+apt-get install python ipython bpython
+apt-get install python3 ipython3 bpython3
 apt-get install pypy
 
 # LXC
