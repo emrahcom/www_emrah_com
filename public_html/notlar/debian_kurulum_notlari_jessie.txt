@@ -429,8 +429,10 @@ apt-get install dpkg-dev build-essential fakeroot
     program[lock]           = xtrlock
     program[iceweasel]      = iceweasel
     bind[iceweasel]         = MOD+Shift+f
-    program[ipython3]       = x-terminal-emulator -T "ipython" /usr/bin/ipython3
-    bind[ipython3]          = MOD+Shift+p
+    program[bpython3]       = x-terminal-emulator -T "bpython3" -e /usr/bin/bpython3
+    bind[bpython3]          = MOD+Shift+p
+    program[bpython]        = x-terminal-emulator -T "bpython" -e /usr/bin/bpython
+    bind[bpython]           = MOD+Shift+o
     program[weechat]        = x-terminal-emulator -T "Weechat" -xrm "*metaSendsEscape:true" -e tmux new-session /usr/bin/weechat
     bind[weechat]           = MOD+Shift+w
 
