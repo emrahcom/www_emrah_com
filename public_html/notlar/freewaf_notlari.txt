@@ -56,3 +56,4 @@ curl --head "http://127.0.0.1/?a=1' union"
 # -----------------------------------------------------------------------------
 https://github.com/p0pr0ck5/FreeWAF
 https://www.cryptobells.com/
+http://cdn.cryptobells.com/written_thesis.pdf
