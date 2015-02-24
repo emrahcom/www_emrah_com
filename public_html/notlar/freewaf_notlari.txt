@@ -1,0 +1,53 @@
+# -----------------------------------------------------------------------------
+# FREEWAF NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie'de uygulanmıştır.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+
+# Paketlerin kurulması
+apt-get install nginx-extra
+apt-get install lua-cjson
+
+# FreeWAF deposunun klonlanması
+git clone https://github.com/p0pr0ck5/FreeWAF.git
+
+# FreeWAF'ın kurulumu
+mkdir -p /usr/local/share/lua/5.1/
+sed -i 's/require("inc./require("FreeWAF.inc./g' \
+    /usr/local/share/lua/5.1/FreeWAF/fw.lua
+
+mkdir -p /usr/local/lib/lua/5.1/FreeWAF/inc/
+cp FreeWAF/inc/libac.so /usr/local/lib/lua/5.1/FreeWAF/inc/
+
+# WAF'ın aktif hale getirilmesi
+context: http, server, location, location if
+
+access_by_lua '
+    FreeWAF = require "FreeWAF.fw"
+    local fw = FreeWAF:new()
+    fw:set_option("mode", "ACTIVE")
+    -- fw:set_option("whitelist", "127.0.0.1")
+    fw:set_option("blacklist", "1.2.3.4")
+    fw:set_option("ignore_rule", 42094)
+    fw:exec()
+';
+
+# Nginx restart
+systemctl restart nginx
+
+# Test
+curl --head "http://127.0.0.1/?a=1'"
+curl --head "http://127.0.0.1/?a=1' union"
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://github.com/p0pr0ck5/FreeWAF
+https://www.cryptobells.com/
