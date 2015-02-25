@@ -2,323 +2,342 @@
 # GIT NOTLARI
 # -----------------------------------------------------------------------------
 
-# kaynaklar
-
-        http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
-        https://we.riseup.net/debian/git-development-howto
-        http://sitaramc.github.com/gitolite/doc/1-INSTALL.html (gitolite kurulum)
-        http://sitaramc.github.com/gitolite/doc/2-admin.html  (gitolite yönetim)
-        http://marklodato.github.com/visual-git-guide/index-en.html
-        http://gitready.com/
-
-
-# yükleme
-
-        aptitude install git
+# Paketlerin yüklenmesi
+aptitude install git
 
 
 # kullanıcı bilgileri
-
-        git config --global user.name "emrah"
-        git config --global user.email "emrah@mail.com"
-        git config --list
-        cat ~/.gitconfig
+git config --global user.name "emrah"
+git config --global user.email "emrah@mail.com"
+git config --list
+cat ~/.gitconfig
 
 # ~/.gitconfig
 [user]
     name = emrah
     email = emrah@mail.com
+[push]
+    default = simple
 [color]
     branch = auto
     diff = auto
     status = auto
 
-
-
 # Ana depo oluşturmak
-        mkdir repositories
-        cd repositories
-        mkdir repo1.git
-        cd repo1.git
-        git init --bare
-
+mkdir repositories
+cd repositories
+mkdir repo1.git
+cd repo1.git
+git init --bare
 
 # Yerel depoyu, ana depodan klonlayarak oluşturmak
-        # Aynı makinedelerse
-        mkdir repositories
-        cd repositories
-        git clone --no-hardlinks ~/repositories/repo1.git
+- Aynı makinedelerse
+    mkdir repositories
+    cd repositories
+    git clone --no-hardlinks ~/repositories/repo1.git
 
-        # SSH ile bağlanılacaksa
-        mkdir repositories
-        cd repositories
-        git clone ssh://kullanici@sunucu.adresi:22/~/repositories/repo1.git
+- SSH ile bağlanılacaksa
+    mkdir repositories
+    cd repositories
+    git clone ssh://kullanici@sunucu.adresi:22/~/repositories/repo1.git
 
 
 # Yerel depo oluşturmak (ana depo kullanılmayacak)
-        mkdir repositories
-        cd repositories
-        mkdir repo1.git
-        cd repo1.git
-        git init
-
+mkdir repositories
+cd repositories
+mkdir repo1.git
+cd repo1.git
+git init
 
 # Yerel depoda yapılabilecek ilk işlemler (depo henüz boş)
-        cd repositories/repo1.git
-        vim .gitignore
-            (sürüm kontrolü yapılmayacak dosyalar/klasörler yazılır)
+cd repositories/repo1.git
+vim .gitignore
+(sürüm kontrolü yapılmayacak dosyalar/klasörler yazılır)
 
-        (Dosyalar ve klasörler oluşturulur)
-        git add -A
-        git commit -m "depo ilk hal"
+(Dosyalar ve klasörler oluşturulur)
+git add -A
+git commit -m "depo ilk hal"
 
-        # Ana depo varsa, ana depo güncellenir
-        git push origin master
-
+# Ana depo varsa, ana depo güncellenir
+git push origin master
 
 # git add (calisma alanindaki degisiklikleri indekse ekleme)
-        git add file(s)     # belirtilen dosyalari eklemek
-        git add .           # degisen ve yeni eklenen dosyalari eklemek
-        git add -u          # degisen ve silinen dosyalari eklemek
-        git add -A          # degisen, yeni eklenen ve silinen dosyalari eklemek
+git add file(s)     # belirtilen dosyalari eklemek
+git add .           # degisen ve yeni eklenen dosyalari eklemek
+git add -u          # degisen ve silinen dosyalari eklemek
+git add -A          # degisen, yeni eklenen ve silinen dosyalari eklemek
 
 
 # git commit (indeks durumunu, yerel depoya kaydetmek)
-        git commit -m "aciklama notu"
-
+git commit -m "aciklama notu"
 
 # git push (yerel depodaki değişiklikleri, ana depoya aktarmak)
-        git push
-
+git push
 
 # git pull (ana deponun son halini, çalışma alanına almak)
-        git pull
-
+git pull
 
 # git diff (farkları görmek)
-        git diff            # calisma alani ve indeks arasindaki farklar
-        git diff HEAD       # calisma alani ve yerel depo arasindaki farklar
-        git diff --name-status  # merge'den etkilenen dosyaların listesi
+- calisma alani ve indeks arasindaki farklar
+    git diff
+- calisma alani ve yerel depo arasindaki farklar
+    git diff HEAD
+- merge'den etkilenen dosyaların listesi
+    git diff --name-status
 
 
 # git status (calisma alaninin indeks ve yerel depoya gore durumu)
-        git status
-
+git status
 
 # git log (commit loglarini gosterme)
-        git log
-
+git log
 
 # Çalışma alanında yapılan değişikliği geri almak
-        # henüz add yapılmamışsa...
-        git checkout file(s)    # indeksteki kopyaya donme
-        git checkout .          # indeksteki kopyaya donme
+- henüz add yapılmamışsa...
+    git checkout file(s)    # indeksteki kopyaya donme
+    git checkout .          # indeksteki kopyaya donme
 
-        # add yapılmışsa, dolayısı ile indeksteki kopya da değişmiş...
-        git checkout HEAD file(s)   # yerel depodaki kopyaya donme
-        git checkout HEAD .         # yerel depodaki kopyaya donme
-
+- add yapılmışsa, dolayısı ile indeksteki kopya da değişmiş...
+    git checkout HEAD file(s)   # yerel depodaki kopyaya donme
+    git checkout HEAD .         # yerel depodaki kopyaya donme
 
 # git reset (yapılan commit'i iptal etmek)
-        git reset --hard HEAD~1     # 1 commit geri dönülür.
-                                    # indeks eski haline gelir.
-                                    # calisma alani eski haline gelir.
+git reset --hard HEAD~1     # 1 commit geri dönülür.
+                            # indeks eski haline gelir.
+                            # calisma alani eski haline gelir.
 
-        git reset HEAD~1            # 1 commit geri dönülür.
-                                    # indeks eski haline gelir.
-                                    # calisma alanindaki degisiklikler korunur.
+git reset HEAD~1            # 1 commit geri dönülür.
+                            # indeks eski haline gelir.
+                            # calisma alanindaki degisiklikler korunur.
 
-        git reset --soft HEAD~1     # 1 commit geri dönülür.
-                                    # indeksteki degisiklikler korunur.
-                                    # calisma alanindaki degisiklikler korunur.
+git reset --soft HEAD~1     # 1 commit geri dönülür.
+                            # indeksteki degisiklikler korunur.
+                            # calisma alanindaki degisiklikler korunur.
 
 
 # git revert (yapılan commit'i iptal eden patch ekleme)
-        git revert <commit_id>
-
+git revert <commit_id>
 
 # eski surumlere ulaşmak
+git log file1
+git show 0323e5918144ec29a069c7ab23cac40ed921d31d:file1
+git show HEAD:file1
+git show HEAD~2:file1
 
-        git log file1
-        git show 0323e5918144ec29a069c7ab23cac40ed921d31d:file1
-        git show HEAD:file1
-        git show HEAD~2:file1
+git tag v0.1 0323e5918144ec29a069c7ab23cac40ed921d31d
+git show v0.1:file1
+git show v0.1:file2
 
-        git tag v0.1 0323e5918144ec29a069c7ab23cac40ed921d31d
-        git show v0.1:file1
-        git show v0.1:file2
-
-        vim file1
-        git reset file1
-        rm file1
-        git checkout -f file1
-
+vim file1
+git reset file1
+rm file1
+git checkout -f file1
 
 # Güncelleme çakışmalarını çözmek.
-        - push aşamasında aynı anda güncellenmiş dosyaların listesi yer alır.
-        - Dosya içinde eklenen ve çıkan satırlar işaretlidir. Bu kısımlar
-          düzeltilir.
-        - Düzeltilmiş değişklikler commit edilir.
-            git add .
-            git commit -m "merged"
-            git push
+- push aşamasında aynı anda güncellenmiş dosyaların listesi yer alır.
+- Dosya içinde eklenen ve çıkan satırlar işaretlidir. Bu kısımlar
+  düzeltilir.
+- Düzeltilmiş değişklikler commit edilir.
+    git add .
+    git commit -m "merged"
+    git push
 
 
 # branch ile çalışma
-        - branch oluşturma
-                git branch test
+- branch oluşturma
+    git branch test
 
-        - branc listesi
-                git branch
+- branch listesi
+    git branch
 
-        - branch değiştirme
-                git checkout test
-                git checkout master
+- branch değiştirme
+    git checkout test
+    git checkout master
 
-        - branch merge
-                git checkout test
-                git commit -a
-                git checkout master
-                git commit -a
-                git merge test
+- branch merge
+    git checkout test
+    git commit -a
+    git checkout master
+    git commit -a
+    git merge test
 
-        - branch silme
-                git branch -d test
-
+- branch silme
+    git branch -d test
 
 # depoyu klonlamak (klasör henuz yok, emc2-dev adıyla oluşacak)
-        git clone git://git.linuxcnc.org/git/emc2.git emc2-dev
-
+    git clone git://git.linuxcnc.org/git/emc2.git emc2-dev
 
 # henüz yayınlanmaya hazır değişikliklerimiz varken depodan güncelleme
-        git stash save
-        git pull
-        git stash apply
+    git stash save
+    git pull
+    git stash apply
 
+# Birden fazla remote depo ile çalışmak
+- remote listesi
+    git remote -v
 
-# Gitolite sunucu ayarları
-        - Kurulum
-        aptitude install gitolite
-        dpkg-reconfigure gitolite
+- remote ekleme
+    git remote add github git@github.com:emrahcom/www_emrah_com.git
 
-        - Gitolite home klasörünü değiştirmek (normalde /var/lib/gitolite)
-        mkdir /home/gitolite
-        chown gitolite: /home/gitolite
-        vim /etc/passwd
-                gitolite home klasörü -> /home/gitolite
+- remote silme
+    git remote rm github
 
-        - Gitolite kullanıcısı için ssh erişim izni.
-        vim /etc/ssh/sshd_config
-                AllowUsers emrah gitolite
-
-        - Gitolite admin kullanıcısı ve admin deposu
-        cp emrah.pub /tmp/
-        chmod a+r /tmp/emrah.pub
-        su -l gitolite
-        gl-setup /tmp/emrah.pub
+- remote push
+    git push origin master
+    git push github master
 
 
 
-- Gitolite admin ayarları (admin makinesi)
-        - Anahtarı yükleme
-        ssh-add .ssh/emrah
+# -----------------------------------------------------------------------------
+# GITOLITE SUNUCU
+# -----------------------------------------------------------------------------
 
-        - Gitolite admin deposunu klonlama (SSH 22. port ile)
-        git clone ssh://gitolite@10.10.10.10:22/gitolite-admin
-        cd gitolite-admin
-        git pull
+# Paketlerin kurulumu
+aptitude install gitolite
+dpkg-reconfigure gitolite
 
-        - Kullanıcı ve depo ekleme
-        Kullanıcının public anahtari alınır ve kullanıcının adı ile kaydedilir.
-        depo1 adlı depoda kullanici1'in yazma/okuma, kullanici2'nin sadece okuma hakkı
-        olacaksa:
+# Gitolite home klasörünü değiştirme
+normalde /var/lib/gitolite kullanılıyor. Gerekmiyorsa değiştirme.
 
-        cp kullanici1.pub gitolite-admin/keydir/
-        cp kullanici2.pub gitolite-admin/keydir/
-        vim gitolite-admin/conf/gitolite.conf
-                repo    depo1
-                        RW+ = kullanici1
-                        R = kullanici2
+mkdir /home/gitolite
+chown gitolite: /home/gitolite
+vim /etc/passwd
+        gitolite home klasörü -> /home/gitolite
 
-        git status
-        git add .
-        git commit -m 'depo1, kullanici1 ve kullanici2 eklendi'
-        git push
+# Gitolite kullanıcısı için ssh erişim izni.
+vim /etc/ssh/sshd_config
+        AllowUsers emrah gitolite
 
-
-# Kullanıcı
-        - Anahtarı yükleme
-        ssh-add .ssh/kullanici1
-
-        - Depo boşken ilk kullanıldığında
-        git clone ssh://gitolite@10.10.10.10:22/depo1
-        cd depo1
-        touch OKUBENI
-        git add .
-        git commit -m "depo1 olusturuldu"
-        git push origin master
-
-        - Depoyu klonlama
-        git clone ssh://gitolite@10.10.10.10:22/depo1
-        cd depo1
-        git pull
-
-        - Depodan son değişiklikleri alma
-        git pull
-
-        - Yapılan değişikliklerin depoya yüklenmesi
-        git status      # degisen dosyalar
-        git diff        # farkliliklari gormek icin
-        git add .       # commit listesine ekleme
-        git commit -m 'aciklama'   # yerel depoyu guncelleme
-        git push        # ana depoyu guncelleme
-
-        - Yapılan değişiklikleri yerel depomuzda saklayıp ana depodaki
-        son hale dönme
-        git stash save
-        git stash list
-        git stash drop stash@{0}  # Sakladığımız değişikliği silme
-        git stash clear           # Sakladığımız bütün değişiklikleri silme
-        git stash apply stash@{0} # Sakladığımız değişikliği tekrardan uygulama
-        git stash pop             # Sakladığımız son değişikliği uygulama
+# Gitolite admin kullanıcısının public anahtarı
+cp emrah.pub /tmp/
+chmod a+r /tmp/emrah.pub
+su -l gitolite
+gl-setup /tmp/emrah.pub
 
 
 
-- Gitweb
-Sadece parolayı bilen kullanıcılar gitweb arayüzünü kullanbilecek.
+# -----------------------------------------------------------------------------
+# GITOLIE CLIENT (ADMIN)
+# -----------------------------------------------------------------------------
+Bu işlemler, admin kullanıcısının makinesinde yapılır.
 
-        - Kurulum
-        aptitude install gitweb
+# Anahtarı yükleme
+ssh-add .ssh/emrah
 
-        - Ayarlar
-                . /etc/gitweb.conf
-                        #$projectroot = "/var/cache/git";
-                        $projectroot = "/home/gitolite/repositories";
+# Gitolite admin deposunu klonlama (SSH 22. port ile)
+git clone ssh://gitolite@10.10.10.10:22/gitolite-admin
+cd gitolite-admin
+git pull
 
-                . www-data kullanıcısı gitolite grubuna
-                        adduser www-data gitolite
+# Kullanıcı ve depo ekleme
+Kullanıcının public anahtari alınır ve kullanıcının adı ile kaydedilir.
+depo1 adlı depoda kullanici1'in yazma/okuma, kullanici2'nin sadece okuma hakkı
+olacaksa:
 
-                . Group için gitolite depolarını okuma hakkı
-                        /home/gitolite/.gitolite.rc
-                                $REPO_UMASK = 0027;
+cp kullanici1.pub gitolite-admin/keydir/
+cp kullanici2.pub gitolite-admin/keydir/
+vim gitolite-admin/conf/gitolite.conf
+    repo    depo1
+        RW+ = kullanici1
+        R = kullanici2
 
-                . Gitweb için .htaccess düzenleme izni
-                        /etc/apache2/conf.d/gitweb
-                                AllowOverride AuthConfig Options
+git status
+git add -A
+git commit -m 'depo1, kullanici1 ve kullanici2 eklendi'
+git push
 
-                . .htaccess dosyasının oluşturulması
-                        /usr/share/gitweb/.htaccess
-                                AuthUserFile    /home/gitolite/htaccess/htpasswd
-                                AuthType        Basic
-                                AuthName        "..."
-                                Require         valid-user
 
-                . htpasswd dosyasının oluşturulması
-                        su -l gitolite
-                        mkdir /home/gitolite/htaccess
-                        cd /home/gitolite/htaccess
-                        htpasswd -sc htpasswd kullanici1        # ilk kullanici icin
-                        htpasswd -s htpasswd kullanici2
-                        chmod 750 /home/gitolite/htaccess
-                        chmod 640 /home/gitolite/htaccess/htpasswd
 
+# -----------------------------------------------------------------------------
+# GITOLIE CLIENT (USER)
+# -----------------------------------------------------------------------------
+Bu işlemler, Gitolite depolarını kullanacak kullanıcıların makinelerinde
+yapılır.
+
+# Anahtarı yükleme
+ssh-add .ssh/kullanici1
+
+# Depo boşken ilk kullanıldığında
+git clone ssh://gitolite@10.10.10.10:22/depo1
+cd depo1
+touch OKUBENI
+git add -A
+git commit -m "depo1 olusturuldu"
+git push origin master
+
+# Depoyu klonlama
+git clone ssh://gitolite@10.10.10.10:22/depo1
+cd depo1
+git pull
+
+# Depodan son değişiklikleri alma
+git pull
+
+# Yapılan değişikliklerin depoya yüklenmesi
+git status      # degisen dosyalar
+git diff        # farkliliklari gormek icin
+git add -A      # commit listesine ekleme
+git commit -m 'aciklama'   # yerel depoyu guncelleme
+git push        # ana depoyu guncelleme
+
+# Yapılan değişiklikleri yerel depomuzda saklayıp ana depodaki son hale dönme
+git stash save
+git stash list
+git stash drop stash@{0}  # Sakladığımız değişikliği silme
+git stash clear           # Sakladığımız bütün değişiklikleri silme
+git stash apply stash@{0} # Sakladığımız değişikliği tekrardan uygulama
+git stash pop             # Sakladığımız son değişikliği uygulama
+
+
+
+# -----------------------------------------------------------------------------
+# GITWEB
+# -----------------------------------------------------------------------------
+Sadece parolayı bilen kullanıcılar gitweb arayüzünü kullanabilecek.
+
+# Paketlerin kurulumu
+aptitude install gitweb
+
+# Ayarlar
+- /etc/gitweb.conf
+    #$projectroot = "/var/cache/git";
+    $projectroot = "/home/gitolite/repositories";
+
+- www-data kullanıcısı gitolite grubuna
+    adduser www-data gitolite
+
+- Group için gitolite depolarını okuma hakkı
+    /home/gitolite/.gitolite.rc
+        $REPO_UMASK = 0027;
+
+- Gitweb için .htaccess düzenleme izni
+    /etc/apache2/conf.d/gitweb
+        AllowOverride AuthConfig Options
+
+- .htaccess dosyasının oluşturulması
+    /usr/share/gitweb/.htaccess
+        AuthUserFile    /home/gitolite/htaccess/htpasswd
+        AuthType        Basic
+        AuthName        "..."
+        Require         valid-user
+
+- htpasswd dosyasının oluşturulması
+su -l gitolite
+mkdir /home/gitolite/htaccess
+cd /home/gitolite/htaccess
+htpasswd -sc htpasswd kullanici1        # ilk kullanici icin
+htpasswd -s htpasswd kullanici2
+chmod 750 /home/gitolite/htaccess
+chmod 640 /home/gitolite/htaccess/htpasswd
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
+https://we.riseup.net/debian/git-development-howto
+http://sitaramc.github.com/gitolite/doc/1-INSTALL.html (gitolite kurulum)
+http://sitaramc.github.com/gitolite/doc/2-admin.html  (gitolite yönetim)
+http://marklodato.github.com/visual-git-guide/index-en.html
+http://gitready.com/
