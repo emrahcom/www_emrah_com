@@ -32,13 +32,14 @@ access_by_lua '
     FreeWAF = require "FreeWAF.fw"
     local fw = FreeWAF:new()
     fw:set_option("mode", "ACTIVE")
+    fw:set_option("score_threshold", 5)
 
     fw:set_option("event_log_target", "file")
     fw:set_option("event_log_target_path", "/var/log/nginx/freewaf.log")
     fw:set_option("event_log_buffer_size", 8192)
     fw:set_option("event_log_verbosity", 3)
 
-    -- fw:set_option("whitelist", "127.0.0.1")
+    fw:set_option("whitelist", "127.0.0.1")
     fw:set_option("blacklist", "1.2.3.4")
     fw:set_option("ignore_rule", 42094)
     fw:exec()
