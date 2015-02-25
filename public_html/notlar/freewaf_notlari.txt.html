@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>freewaf_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# FREEWAF NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie'de uygulanmıştır.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+
+# Paketlerin kurulması
+apt-get install nginx-extra
+apt-get install lua-cjson
+
+# FreeWAF deposunun klonlanması
+git clone https://github.com/p0pr0ck5/FreeWAF.git
+
+# FreeWAF'ın kurulumu
+mkdir -p /usr/local/share/lua/5.1/
+sed -i 's/require(&quot;inc./require(&quot;FreeWAF.inc./g' \
+    /usr/local/share/lua/5.1/FreeWAF/fw.lua
+
+mkdir -p /usr/local/lib/lua/5.1/FreeWAF/inc/
+cp FreeWAF/inc/libac.so /usr/local/lib/lua/5.1/FreeWAF/inc/
+
+# WAF'ın aktif hale getirilmesi
+context: http, server, location, location if
+
+access_by_lua '
+    FreeWAF = require &quot;FreeWAF.fw&quot;
+    local fw = FreeWAF:new()
+    fw:set_option(&quot;mode&quot;, &quot;ACTIVE&quot;)
+
+    fw:set_option(&quot;event_log_target&quot;, &quot;file&quot;)
+    fw:set_option(&quot;event_log_target_path&quot;, &quot;/var/log/nginx/freewaf.log&quot;)
+    fw:set_option(&quot;event_log_buffer_size&quot;, 8192)
+
+    -- fw:set_option(&quot;whitelist&quot;, &quot;127.0.0.1&quot;)
+    fw:set_option(&quot;blacklist&quot;, &quot;1.2.3.4&quot;)
+    fw:set_option(&quot;ignore_rule&quot;, 42094)
+    fw:exec()
+';
+
+# Nginx restart
+systemctl restart nginx
+
+# Test
+curl --head &quot;http://127.0.0.1/?a=1'&quot;
+curl --head &quot;http://127.0.0.1/?a=1' union&quot;
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://github.com/p0pr0ck5/FreeWAF
+https://www.cryptobells.com/
+http://cdn.cryptobells.com/written_thesis.pdf
+</code></pre>
+</body>
+</html>

@@ -50,6 +50,9 @@ Pure-ftpd Notları
         . Nokta ile başlayan dosyalar (örneğin .htaccess) gösterilecekse
         echo &quot;yes&quot; &gt; /etc/pure-ftpd/conf/DisplayDotFiles
 
+        . Listelenecek dosya adedi (default 10000)
+        echo &quot;20000 100&quot; &gt; /etc/pure-ftpd/conf/LimitRecursion
+
         . Read-Only anonymous FTP erişimi olacaksa
         adduser --system --group ftp
         echo &quot;no&quot; &gt; /etc/pure-ftpd/conf/NoAnonymous

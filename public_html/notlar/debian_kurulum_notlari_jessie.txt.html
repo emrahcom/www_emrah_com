@@ -210,8 +210,8 @@ aptitude ile başlayanlar henüz test edilmedi, Wheezy kurulum dökümanından
 kopyalandı. apt-get ile test edilince komut değiştirilecek.
 
 # python (temel) paketleri
-apt-get install python ipython
-apt-get install python3 ipython3
+apt-get install python ipython bpython
+apt-get install python3 ipython3 bpython3
 apt-get install pypy
 
 # LXC
@@ -438,8 +438,10 @@ apt-get install dpkg-dev build-essential fakeroot
     program[lock]           = xtrlock
     program[iceweasel]      = iceweasel
     bind[iceweasel]         = MOD+Shift+f
-    program[ipython3]       = x-terminal-emulator -T &quot;ipython&quot; /usr/bin/ipython3
-    bind[ipython3]          = MOD+Shift+p
+    program[bpython3]       = x-terminal-emulator -T &quot;bpython3&quot; -e /usr/bin/bpython3
+    bind[bpython3]          = MOD+Shift+p
+    program[bpython]        = x-terminal-emulator -T &quot;bpython&quot; -e /usr/bin/bpython
+    bind[bpython]           = MOD+Shift+o
     program[weechat]        = x-terminal-emulator -T &quot;Weechat&quot; -xrm &quot;*metaSendsEscape:true&quot; -e tmux new-session /usr/bin/weechat
     bind[weechat]           = MOD+Shift+w
 
