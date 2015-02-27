@@ -1,0 +1,398 @@
+#0  0x00007f6fc612ba5a in ?? ()
+No symbol table info available.
+#1  0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#2  0x00007f6fc6135306 in ?? ()
+No symbol table info available.
+#3  0x0000000000000001 in ?? ()
+No symbol table info available.
+#4  0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#5  0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#6  0x0000000000989680 in ?? ()
+No symbol table info available.
+#7  0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#8  0x0000000041e109c2 in ?? ()
+No symbol table info available.
+#9  0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#10 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#11 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#12 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#13 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#14 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#15 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#16 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#17 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#18 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#19 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#20 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#21 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#22 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#23 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#24 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#25 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#26 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#27 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#28 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#29 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#30 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#31 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#32 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#33 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#34 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#35 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#36 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#37 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#38 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#39 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#40 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#41 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#42 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#43 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#44 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#45 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#46 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#47 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#48 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#49 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#50 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#51 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#52 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#53 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#54 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#55 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#56 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#57 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#58 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#59 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#60 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#61 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#62 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#63 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#64 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#65 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#66 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#67 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#68 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#69 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#70 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#71 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#72 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#73 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#74 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#75 0x0000000041e109b7 in ?? ()
+No symbol table info available.
+#76 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#77 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#78 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#79 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#80 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#81 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#82 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#83 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#84 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#85 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#86 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#87 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#88 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#89 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#90 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#91 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#92 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#93 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#94 0x00007f6fc61683bd in ?? ()
+No symbol table info available.
+#95 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#96 0x00007f6fc61683bd in ?? ()
+No symbol table info available.
+#97 0x0000000000000001 in ?? ()
+No symbol table info available.
+#98 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#99 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#100 0x0000000000989680 in ?? ()
+No symbol table info available.
+#101 0x0000000041df4df7 in ?? ()
+No symbol table info available.
+#102 0x0000000041e10c66 in ?? ()
+No symbol table info available.
+#103 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#104 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#105 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#106 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#107 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#108 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#109 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#110 0x0000000041e109c7 in ?? ()
+No symbol table info available.
+#111 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#112 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#113 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#114 0x00007f6fc6166b9b in ?? ()
+No symbol table info available.
+#115 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#116 0x00007f6fc6166b9b in ?? ()
+No symbol table info available.
+#117 0x0000000000000001 in ?? ()
+No symbol table info available.
+#118 0x0000000000989680 in ?? ()
+No symbol table info available.
+#119 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#120 0x0000000000989680 in ?? ()
+No symbol table info available.
+#121 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#122 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#123 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#124 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#125 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#126 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#127 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#128 0x0000000041e10c65 in ?? ()
+No symbol table info available.
+#129 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#130 0x00007f6fc616468d in ?? ()
+No symbol table info available.
+#131 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#132 0x00007f6fc616468d in ?? ()
+No symbol table info available.
+#133 0x0000000000000001 in ?? ()
+No symbol table info available.
+#134 0x0000000041e10c74 in ?? ()
+No symbol table info available.
+#135 0x0000000040ff33d7 in ?? ()
+No symbol table info available.
+#136 0x0000000000989680 in ?? ()
+No symbol table info available.
+#137 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#138 0x0000000040ff33a9 in ?? ()
+No symbol table info available.
+#139 0x0000000041e10c4f in ?? ()
+No symbol table info available.
+#140 0x0000000040ff33cf in ?? ()
+No symbol table info available.
+#141 0x0000000000ad9fa0 in ?? ()
+No symbol table info available.
+#142 0x0000000041e109b8 in ?? ()
+No symbol table info available.
+#143 0x0000000000000015 in ?? ()
+No symbol table info available.
+#144 0x0000000000000044 in ?? ()
+No symbol table info available.
+#145 0x0000000000ada8f0 in ?? ()
+No symbol table info available.
+#146 0x00007f6fc4f5385f in ?? () from /lib/x86_64-linux-gnu/libpcre.so.3
+No symbol table info available.
+#147 0x00007f6fc4f791d8 in ?? () from /lib/x86_64-linux-gnu/libpcre.so.3
+No symbol table info available.
+#148 0x00007f6fc4f52339 in pcre_exec () from /lib/x86_64-linux-gnu/libpcre.so.3
+No symbol table info available.
+#149 0x00000000004d856d in ngx_http_lua_ngx_re_match_helper (L=0x409d12a0, wantcaps=-445762040) at /tmp/buildd/nginx-1.6.2/debian/modules/nginx-lua/src/ngx_http_lua_regex.c:518
+        r = 0xa40130
+        subj = {len = 21, data = 0x41e109b8 "HTML_VisitCountCookie"}
+        pat = {len = 2938, 
+          data = 0x40d24020 "(?:(?:(?:s(?:t(?:d(?:dev(_pop|_samp)?)?|r(?:_to_date|cmp))|u(?:b(?:str(?:ing(_index)?)?|(?:dat|tim)e)|m)|e(?:c(?:_to_time|ond)|ssion_user)|ys(?:tem_user|date)|ha(1|2)?|oundex|chema|ig?n|pace|qrt)|i(?:"...}
+        opts = {len = 3, data = 0x419c2c50 "oij"}
+        msg = 0x7fffe56eba50 "ȼn\345\377\177"
+        i = 3
+        nargs = 3
+        cap = 0xada950
+        flags = 5
+        errstr = '\000' <repeats 48 times>, "\350\377\377\377\377\377\377\377\001", '\000' <repeats 39 times>, "\360\377\377\377\377\377\377\377\001", '\000' <repeats 119 times>...
+        sd = 0xad9fa0
+        name_entry_size = 0
+        name_count = 0
+        name_table = 0x0
+        exec_opts = -990302656
+        re_comp = {pattern = {len = 0, data = 0x0}, pool = 0x0, options = 1, regex = 0xaddc40, captures = 33, err = {len = 0, data = 0x0}}
+#150 0x00007f6fc51a3a88 in ?? () from /usr/lib/x86_64-linux-gnu/libluajit-5.1.so.2
+No symbol table info available.
+#151 0x00000000004e1062 in ngx_http_lua_run_thread (L=0x7fffe56eb630, L@entry=0x419b0378, r=0x7fffe56e3608, r@entry=0xa40130, ctx=0x8, ctx@entry=0xa414d0, nrets=0)
+    at /tmp/buildd/nginx-1.6.2/debian/modules/nginx-lua/src/ngx_http_lua_util.c:980
+        orig_coctx = 0xa414f8
+        rv = 1
+        success = 10753272
+        old_co = 0x1
+        trace = 0xa414f8 ""
+        old_pool = 0x0
+#152 0x00000000004e5579 in ngx_http_lua_access_by_chunk (L=0x419b0378, r=0xa40130) at /tmp/buildd/nginx-1.6.2/debian/modules/nginx-lua/src/ngx_http_lua_accessby.c:313
+        co_ref = 1
+        rc = <optimized out>
+        co = 0x409d12a0
+        c = <optimized out>
+        ctx = 0xa414d0
+        cln = <optimized out>
+        llcf = <optimized out>
+#153 0x00000000004e57a8 in ngx_http_lua_access_handler (r=0xa40130) at /tmp/buildd/nginx-1.6.2/debian/modules/nginx-lua/src/ngx_http_lua_accessby.c:163
+        rc = <optimized out>
+        ctx = 0xa414d0
+        llcf = 0xb1a308
+        lmcf = <optimized out>
+        tmp = <optimized out>
+        ph = <optimized out>
+        cur_ph = <optimized out>
+        last_ph = <optimized out>
+        cmcf = <optimized out>
+#154 0x000000000044cb24 in ngx_http_core_access_phase (r=<optimized out>, ph=0xbe19d8) at src/http/ngx_http_core_module.c:1114
+        rc = <optimized out>
+        clcf = <optimized out>
+#155 0x0000000000448145 in ngx_http_core_run_phases (r=r@entry=0xa40130) at src/http/ngx_http_core_module.c:888
+        rc = <optimized out>
+        ph = 0xbe18a0
+        cmcf = <optimized out>
+#156 0x000000000044822d in ngx_http_handler (r=r@entry=0xa40130) at src/http/ngx_http_core_module.c:871
+        cmcf = <optimized out>
+#157 0x0000000000453d03 in ngx_http_process_request (r=0xa40130) at src/http/ngx_http_request.c:1902
+        c = 0xa91f80
+#158 0x000000000045470e in ngx_http_process_request_line (rev=0xac2380) at src/http/ngx_http_request.c:1012
+        n = <optimized out>
+        rc = <optimized out>
+        rv = <optimized out>
+        host = {len = 11412760, data = 0x454872 <ngx_http_wait_request_handler+274> "H\205\300H\211\003\017\204\027\377\377\377H\307E\020pCE"}
+        c = 0xa91f80
+        r = 0xa40130
+#159 0x0000000000434cb8 in ngx_event_process_posted (cycle=cycle@entry=0xa053c0, posted=0x767b40 <ngx_posted_events>) at src/event/ngx_event_posted.c:40
+        ev = 0xac2380
+#160 0x0000000000434802 in ngx_process_events_and_timers (cycle=cycle@entry=0xa053c0) at src/event/ngx_event.c:275
+        flags = <optimized out>
+        timer = <optimized out>
+        delta = <optimized out>
+#161 0x000000000043ba7a in ngx_worker_process_cycle (cycle=cycle@entry=0xa053c0, data=data@entry=0x1) at src/os/unix/ngx_process_cycle.c:816
+        worker = 1
+        i = <optimized out>
+        c = <optimized out>
+#162 0x000000000043a42a in ngx_spawn_process (cycle=0xa053c0, proc=0x43b9c0 <ngx_worker_process_cycle>, data=0x1, name=0x50458e "worker process", respawn=5) at src/os/unix/ngx_process.c:198
+        on = 1
+        pid = 0
+        s = 5
+#163 0x000000000043cf8e in ngx_reap_children (cycle=<optimized out>) at src/os/unix/ngx_process_cycle.c:627
+        i = 5
+        n = 8
+        ch = {command = 2, pid = 6041, slot = 5, fd = -1}
+        ccf = 0x8
+#164 ngx_master_process_cycle (cycle=0xa053c0) at src/os/unix/ngx_process_cycle.c:180
+        title = 0x5 <error: Cannot access memory at address 0x5>
+        size = 7765176
+        n = 7765176
+        set = {__val = {0 <repeats 16 times>}}
+        itv = {it_interval = {tv_sec = 17, tv_usec = 14}, it_value = {tv_sec = 10495778, tv_usec = 0}}
+        live = 1
+#165 0x000000000041add3 in main (argc=<optimized out>, argv=<optimized out>) at src/core/nginx.c:407
+        i = <optimized out>
+        log = 0x760ce0 <ngx_log>
+        cycle = 0xa013b0
+        init_cycle = {conf_ctx = 0x0, pool = 0xa00e40, log = 0x760ce0 <ngx_log>, new_log = {log_level = 0, file = 0x0, connection = 0, handler = 0x0, data = 0x0, action = 0x0, next = 0x0}, log_use_stderr = 0, files = 0x0, 
+          free_connections = 0x0, free_connection_n = 0, reusable_connections_queue = {prev = 0x0, next = 0x0}, listening = {elts = 0x0, nelts = 0, size = 0, nalloc = 0, pool = 0x0}, paths = {elts = 0x0, nelts = 0, size = 0, nalloc = 0, 
+            pool = 0x0}, open_files = {last = 0x0, part = {elts = 0x0, nelts = 0, next = 0x0}, size = 0, nalloc = 0, pool = 0x0}, shared_memory = {last = 0x0, part = {elts = 0x0, nelts = 0, next = 0x0}, size = 0, nalloc = 0, pool = 0x0}, 
+          connection_n = 0, files_n = 0, connections = 0x0, read_events = 0x0, write_events = 0x0, old_cycle = 0x0, conf_file = {len = 21, data = 0x500945 "/etc/nginx/nginx.conf"}, conf_param = {len = 29, data = 0x7fffe56ecf65 "ss"}, 
+          conf_prefix = {len = 11, data = 0x500945 "/etc/nginx/nginx.conf"}, prefix = {len = 17, data = 0x500933 "/usr/share/nginx/"}, lock_file = {len = 0, data = 0x0}, hostname = {len = 0, data = 0x0}}
+        ccf = <optimized out>
