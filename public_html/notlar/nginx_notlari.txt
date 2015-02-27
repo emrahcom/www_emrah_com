@@ -252,3 +252,39 @@ location @delay {
 # kullaniliyor.
 location /delay {
         echo_sleep 0.8; }
+
+
+
+# -----------------------------------------------------------------------------
+# NGINX DEBUG
+# -----------------------------------------------------------------------------
+
+# Kurulum
+Debug için derlenmiş paket kurulacak. Örneğin nginx-extras yerine
+nginx-extras-dbg paketi...
+
+apt-get install nginx-extras-dbg
+
+# Debug ile ilgili ayarlar
+/etc/nginx/nginx
+    worker_rlimit_core  500M;
+    working_directory /var/tmp/cores/;
+
+    error_log /var/log/nginx/error.log debug;
+
+mkdir /var/tmp/cores
+chown www-data: /var/tmp/cores
+systemctl restart nginx
+
+# coredump inceleme
+dmesg çıktısında Nginx tarafından oluşturulmuş segfault satırı varsa
+
+gdb /usr/sbin/nginx /var/tmp/cores/core
+    set logging on backtrace1.log
+    backtrace full
+
+# Debug logları
+error.log dosyasından görülebilir.
+
+# Kaynak
+http://wiki.nginx.org/Debugging
