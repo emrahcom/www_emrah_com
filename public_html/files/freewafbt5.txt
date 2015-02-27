@@ -1,0 +1,98 @@
+#0  0x00007f891d3efbd1 in ?? () from /usr/lib/x86_64-linux-gnu/libluajit-5.1.so.2
+No symbol table info available.
+#1  0x00007f891d405e59 in ?? () from /usr/lib/x86_64-linux-gnu/libluajit-5.1.so.2
+No symbol table info available.
+#2  0x00007f891d40652c in ?? () from /usr/lib/x86_64-linux-gnu/libluajit-5.1.so.2
+No symbol table info available.
+#3  0x00007f891d4115a0 in ?? () from /usr/lib/x86_64-linux-gnu/libluajit-5.1.so.2
+No symbol table info available.
+#4  0x00007f891d3e8dad in ?? () from /usr/lib/x86_64-linux-gnu/libluajit-5.1.so.2
+No symbol table info available.
+#5  0x00000000004e1062 in ngx_http_lua_run_thread (L=0xfffff000, L@entry=0x41003378, r=0x41003108, r@entry=0x26b53d0, ctx=0xfffff000, 
+    ctx@entry=0x26fffc0, nrets=0) at /tmp/buildd/nginx-1.6.2/debian/modules/nginx-lua/src/ngx_http_lua_util.c:980
+        orig_coctx = 0x26fffe8
+        rv = 40894400
+        success = 40894440
+        old_co = 0x26fffc0
+        trace = 0x26fffe8 ""
+        old_pool = 0x0
+#6  0x00000000004e5579 in ngx_http_lua_access_by_chunk (L=0x41003378, r=0x26b53d0)
+    at /tmp/buildd/nginx-1.6.2/debian/modules/nginx-lua/src/ngx_http_lua_accessby.c:313
+        co_ref = 4
+        rc = <optimized out>
+        co = 0x41f45398
+        c = <optimized out>
+        ctx = 0x26fffc0
+        cln = <optimized out>
+        llcf = <optimized out>
+#7  0x00000000004e57a8 in ngx_http_lua_access_handler (r=0x26b53d0)
+    at /tmp/buildd/nginx-1.6.2/debian/modules/nginx-lua/src/ngx_http_lua_accessby.c:163
+        rc = <optimized out>
+        ctx = 0x26fffc0
+        llcf = 0x249dd60
+        lmcf = <optimized out>
+        tmp = <optimized out>
+        ph = <optimized out>
+        cur_ph = <optimized out>
+        last_ph = <optimized out>
+        cmcf = <optimized out>
+#8  0x000000000044cb24 in ngx_http_core_access_phase (r=<optimized out>, ph=0x24aea18) at src/http/ngx_http_core_module.c:1114
+        rc = <optimized out>
+        clcf = <optimized out>
+#9  0x0000000000448145 in ngx_http_core_run_phases (r=r@entry=0x26b53d0) at src/http/ngx_http_core_module.c:888
+        rc = <optimized out>
+        ph = 0x24ae8e0
+        cmcf = <optimized out>
+#10 0x000000000044822d in ngx_http_handler (r=r@entry=0x26b53d0) at src/http/ngx_http_core_module.c:871
+        cmcf = <optimized out>
+#11 0x0000000000453d03 in ngx_http_process_request (r=0x26b53d0) at src/http/ngx_http_request.c:1902
+        c = 0x256d248
+#12 0x000000000045470e in ngx_http_process_request_line (rev=0x2593d08) at src/http/ngx_http_request.c:1012
+        n = <optimized out>
+        rc = <optimized out>
+        rv = <optimized out>
+        host = {len = 1024, data = 0x45521f <ngx_http_keepalive_handler+415> "H\307E0"}
+        c = 0x256d248
+        r = 0x26b53d0
+#13 0x0000000000434cb8 in ngx_event_process_posted (cycle=cycle@entry=0x24713b0, posted=0x767b40 <ngx_posted_events>)
+    at src/event/ngx_event_posted.c:40
+        ev = 0x2593d08
+#14 0x0000000000434802 in ngx_process_events_and_timers (cycle=cycle@entry=0x24713b0) at src/event/ngx_event.c:275
+        flags = <optimized out>
+        timer = <optimized out>
+        delta = <optimized out>
+#15 0x000000000043ba7a in ngx_worker_process_cycle (cycle=cycle@entry=0x24713b0, data=data@entry=0x0) at src/os/unix/ngx_process_cycle.c:816
+        worker = 0
+        i = <optimized out>
+        c = <optimized out>
+#16 0x000000000043a42a in ngx_spawn_process (cycle=0x24713b0, proc=0x43b9c0 <ngx_worker_process_cycle>, data=0x0, name=0x50458e "worker process", 
+    respawn=0) at src/os/unix/ngx_process.c:198
+        on = 1
+        pid = 0
+        s = 0
+#17 0x000000000043cf8e in ngx_reap_children (cycle=<optimized out>) at src/os/unix/ngx_process_cycle.c:627
+        i = 0
+        n = 4
+        ch = {command = 2, pid = 9565, slot = 0, fd = -1}
+        ccf = 0x4
+#18 ngx_master_process_cycle (cycle=0x24713b0) at src/os/unix/ngx_process_cycle.c:180
+        title = 0x0
+        size = 7764936
+        n = 7764936
+        set = {__val = {0 <repeats 16 times>}}
+        itv = {it_interval = {tv_sec = 17, tv_usec = 14}, it_value = {tv_sec = 38217506, tv_usec = 0}}
+        live = 0
+#19 0x000000000041add3 in main (argc=<optimized out>, argv=<optimized out>) at src/core/nginx.c:407
+        i = <optimized out>
+        log = 0x760ce0 <ngx_log>
+        cycle = 0x24713b0
+        init_cycle = {conf_ctx = 0x0, pool = 0x2470e40, log = 0x760ce0 <ngx_log>, new_log = {log_level = 0, file = 0x0, connection = 0, 
+            handler = 0x0, data = 0x0, action = 0x0, next = 0x0}, log_use_stderr = 0, files = 0x0, free_connections = 0x0, free_connection_n = 0, 
+          reusable_connections_queue = {prev = 0x0, next = 0x0}, listening = {elts = 0x0, nelts = 0, size = 0, nalloc = 0, pool = 0x0}, paths = {
+            elts = 0x0, nelts = 0, size = 0, nalloc = 0, pool = 0x0}, open_files = {last = 0x0, part = {elts = 0x0, nelts = 0, next = 0x0}, size = 0, 
+            nalloc = 0, pool = 0x0}, shared_memory = {last = 0x0, part = {elts = 0x0, nelts = 0, next = 0x0}, size = 0, nalloc = 0, pool = 0x0}, 
+          connection_n = 0, files_n = 0, connections = 0x0, read_events = 0x0, write_events = 0x0, old_cycle = 0x0, conf_file = {len = 21, 
+            data = 0x500945 "/etc/nginx/nginx.conf"}, conf_param = {len = 29, data = 0x7fff4a13df65 "ss"}, conf_prefix = {len = 11, 
+            data = 0x500945 "/etc/nginx/nginx.conf"}, prefix = {len = 17, data = 0x500933 "/usr/share/nginx/"}, lock_file = {len = 0, data = 0x0}, 
+          hostname = {len = 0, data = 0x0}}
+        ccf = <optimized out>
