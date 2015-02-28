@@ -11,7 +11,7 @@ göre...
 # -----------------------------------------------------------------------------
 
 # Kurulacak paketler
-aptitude install bridge-utils
+apt-get install bridge-utils
 
 # Bridge interface
 /etc/network/interfaces
@@ -45,9 +45,9 @@ Makine reboot edilir veya network servisi yeniden başlatılır.
 # -----------------------------------------------------------------------------
 
 # Yüklenecek paketler
-aptitude install --with-recommends lxc
+apt-get install --install-recommends lxc
 
-# cgroup
+# cgroup (Jessie için bu kısma gerek yok)
 /etc/fstab
     cgroup /sys/fs/cgroup cgroup defaults 0 0
 
@@ -66,7 +66,7 @@ lxc-create -n test -t debian -- -r surum_adi
 # Container klonlama
 lxc-clone -o template_makine -n yeni_makine
 
-# lxc-halt ile kapatabilmek için
+# lxc-halt ile kapatabilmek için (Jessie için bu kısma gerek yok)
 /var/lib/lxc/test/config
     # sys_admin eklendi.
     lxc.cap.drop = sys_module mac_admin mac_override sys_time sys_admin
@@ -132,6 +132,30 @@ mkdir -p /var/lib/lxc/test/rootfs/data
 # Klasörün container'a mount edilmesi
 /var/lib/lxc/test/config
     lxc.mount.entry = /var/lib/lxc/share/data /var/lib/lxc/test/rootfs/data none bind 0 0
+
+
+
+# -----------------------------------------------------------------------------
+# DEB DEPOSUNUN ORTAK KULLANIMI
+# -----------------------------------------------------------------------------
+
+# Container içindeki archives klasörü boş olacak
+rm -rf /var/lib/lxc/<CONTAINER>/rootfs/var/cache/apt/archives/*
+
+# Container archives klasörünün mount edilmesi
+/var/lib/lxc/<CONTAINER>/config
+    lxc.mount.entry = /var/cache/apt/archives
+         /var/lib/lxc/<CONTAINER>/rootfs/var/cache/apt/archives none bind 0 0
+
+# /var/lib/lxc/<CONTAINER>/rootfs/root/.zshrc
+apt-get() {
+    if [[ $1 == "clean" ]]
+    then
+        echo "'apt-get clean' kullanmayın. Depo alani ortak kullaniliyor"
+    else
+        command apt-get $@
+    fi
+}
 
 
 
