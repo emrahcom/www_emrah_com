@@ -6,6 +6,19 @@ Bu bölümde sunucu ve web güvenlik taramaları ile ilgili notlar yer alır.
 
 
 # -----------------------------------------------------------------------------
+# Nikto
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install nikto
+
+# Kullanım
+nikto -h http://www.google.com/
+
+
+
+# -----------------------------------------------------------------------------
 # OpenVAS
 # -----------------------------------------------------------------------------
 Debian Wheezy ile test edildi.
