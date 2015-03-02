@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 Bu bölümde sunucu ve web güvenlik taramaları ile ilgili notlar yer alır.
 
-
+W3af, Skipfish, Ratproxy incelenecek.
 
 # -----------------------------------------------------------------------------
 # Nikto
