@@ -13,8 +13,26 @@ Debian Jessie ile test edildi.
 # Kurulum
 apt-get install nikto
 
+# Veritabanını güncelleme
+Komut root olarak çalıştırılacak ama artık güncelleme gelmiyor.
+
+nikto -update
+
 # Kullanım
 nikto -h http://www.google.com/
+
+
+
+# -----------------------------------------------------------------------------
+# Wapiti
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install wapiti
+
+# Kullanımı
+wapiti http://url/path/
 
 
 
