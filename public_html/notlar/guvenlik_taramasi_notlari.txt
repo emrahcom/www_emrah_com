@@ -1,0 +1,63 @@
+# -----------------------------------------------------------------------------
+# GÜVENLİK TARAMASI NOTLARI
+# -----------------------------------------------------------------------------
+Bu bölümde sunucu ve web güvenlik taramaları ile ilgili notlar yer alır.
+
+
+
+# -----------------------------------------------------------------------------
+# OpenVAS
+# -----------------------------------------------------------------------------
+Debian Wheezy ile test edildi.
+
+# /etc/apt/sources.list
+deb http://download.opensuse.org/repositories/security:/OpenVAS:/UNSTABLE:/v6/Debian_7.0/ ./
+
+# apt key
+wget http://download.opensuse.org/repositories/security:/OpenVAS:/UNSTABLE:/v6/Debian_7.0/Release.key
+apt-key add ./Release.key
+apt-get update
+
+# Kurulacak paketler
+apt-get install --install-recommends greenbone-security-assistant openvas-cli \
+    openvas-manager openvas-scanner openvas-administrator sqlite3 xsltproc \
+    rsync nmap
+apt-get install texlive-latex-base texlive-latex-extra \
+    texlive-latex-recommended htmldoc
+apt-get install alien rpm nsis fakeroot
+
+# /etc/default/greenbone-security-assistant
+    GSA_ADDRESS=127.0.0.1  -> GSA_ADDRESS=0.0.0.0
+
+# Verilerin güncellenmesi ve servislerin başlatılması
+test -e /var/lib/openvas/CA/cacert.pem  || openvas-mkcert -q
+openvas-nvt-sync
+test -e /var/lib/openvas/users/om || openvas-mkcert-client -n om -i
+/etc/init.d/openvas-manager stop
+/etc/init.d/openvas-scanner stop
+openvassd
+openvasmd --rebuild
+openvas-scapdata-sync
+openvas-certdata-sync
+test -e /var/lib/openvas/users/admin || openvasad -c add_user -n admin -r Admin
+pkill -f openvassd
+/etc/init.d/openvas-scanner start
+/etc/init.d/openvas-manager start
+/etc/init.d/openvas-administrator restart
+/etc/init.d/greenbone-security-assistant restart
+
+# Tarama
+https://ip_adresi:9392/
+
+
+
+# -----------------------------------------------------------------------------
+# Kaynaklar
+# -----------------------------------------------------------------------------
+
+# OpenVAS
+http://www.openvas.org/install-packages-v6.html#openvas_debian_obs
+https://it-nuggets.net/2014/08/23/openvas-installation-debian-wheezy
+
+# Scanner
+http://resources.infosecinstitute.com/14-popular-web-application-vulnerability-scanners/
