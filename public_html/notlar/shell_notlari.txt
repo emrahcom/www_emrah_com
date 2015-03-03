@@ -65,6 +65,11 @@ SHELL NOTLARI
 - Bulunulan klasörü webe açmak
         python -m SimpleHTTPServer 8000
 
+- Random parola üretmek için
+        apt-get install pwgen
+
+        pwgen -s 20
+
 
 - Netcat ile bir web sayfasını yayınlamak.
         while true; do nc -l -p 8080 -q 1 < sayfa.html; done
