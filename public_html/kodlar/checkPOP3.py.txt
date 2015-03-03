@@ -13,9 +13,9 @@ logging.basicConfig(filename='/tmp/check_gmail.log',level=logging.DEBUG)
 
 
 INITIAL_WAIT    = 10
-PERIOD          = 300
+PERIOD          = 120
 HOST            = 'pop.gmail.com'
-DEBUG           = 2
+DEBUG           = 0
 
 
 
@@ -40,28 +40,36 @@ def getMailInfo(username, password, pid):
 
         num = len(pop.list()[1])
         for n in range(num):
+            # Aranacak bolumler ve adedi.
+            items = 5
             mTo = mCc = mDate = mFrom = mSubject = ''
 
             for satir in pop.retr(n+1)[1]:
                 try:
                     data = [row[0].decode(row[1] or 'iso-8859-1')
                              for row in decode_header(satir)]
+                    data = ' '.join(data)
 
-                    if data[0].lower() == 'from:':
-                        mFrom = ' '.join(data)
-                    elif data[0].lower() == 'to:':
-                        mTo = ' '.join(data)
-                    elif data[0].lower() == 'cc:':
-                        mCc = ' '.join(data)
-                    elif data[0].lower() == 'date:':
-                        mDate = ' '.join(data)
-                    elif data[0].lower() == 'subject:':
-                        mSubject = ' '.join(data).strip()
+                    if data.lower()[0:5] == 'from:':
+                        mFrom = data[5:].strip()
+                        items = items - 1
+                    elif data.lower()[0:3] == 'to:':
+                        mTo = data[3:].strip()
+                        items = items - 1
+                    elif data.lower()[0:3] == 'cc:':
+                        mCc = data[3:].strip()
+                        items = items - 1
+                    elif data.lower()[0:5] == 'date:':
+                        mDate = data[5:].strip()
+                        items = items - 1
+                    elif data.lower()[0:8] == 'subject:':
+                        mSubject = data[8:].strip()
+                        items = items - 1
                 except Exception, err:
                     pass
 
-                # Gerekli kisimlar alindiysa, bu emaili gec.
-                if (mTo and mDate and mFrom and mSubject) :
+                # Aranacak butun bolumler icin deger bulunduysa bu emaili gec.
+                if (not items) :
                     break
 
             if mSubject[0:6] == 'rapor:': continue
