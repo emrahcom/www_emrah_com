@@ -8,12 +8,14 @@ import poplib
 import time
 import os
 from email.header import decode_header
+import logging
+logging.basicConfig(filename='/tmp/check_gmail.log',level=logging.DEBUG)
 
 
 INITIAL_WAIT    = 10
 PERIOD          = 300
 HOST            = 'pop.gmail.com'
-DEBUG           = 0
+DEBUG           = 2
 
 
 
@@ -21,6 +23,8 @@ DEBUG           = 0
 def getLoginInfo():
     username = raw_input('Username : ')
     password = getpass.getpass('Pasword  : ')
+
+    logging.debug('username : %s' % username)
     return (username, password)
 
 
@@ -36,21 +40,34 @@ def getMailInfo(username, password, pid):
 
         num = len(pop.list()[1])
         for n in range(num):
-            mTo = mDate = mFrom = mSubject = ''
+            mTo = mCc = mDate = mFrom = mSubject = ''
 
             for satir in pop.retr(n+1)[1]:
-                satir = decode_header(satir)
-                if satir[0][0][0:6].upper() == "FROM: ":
-                    mFrom = satir[0][0][6:]
-                elif satir[0][0][0:4].upper() == "TO: ":
-                    mTo = satir[0][0][4:]
-                elif satir[0][0][0:6].upper() == "DATE: ":
-                    mDate = satir[0][0][6:]
-                elif satir[0][0][0:8].upper() == "SUBJECT:":
-                    mSubject = satir[-1:][0][0]
+                try:
+                    data = [row[0].decode(row[1] or 'iso-8859-1')
+                             for row in decode_header(satir)]
+
+                    if data[0].lower() == 'from:':
+                        mFrom = ' '.join(data)
+                    elif data[0].lower() == 'to:':
+                        mTo = ' '.join(data)
+                    elif data[0].lower() == 'cc:':
+                        mCc = ' '.join(data)
+                    elif data[0].lower() == 'date:':
+                        mDate = ' '.join(data)
+                    elif data[0].lower() == 'subject:':
+                        mSubject = ' '.join(data).strip()
+                except Exception, err:
+                    pass
+
+                # Gerekli kisimlar alindiysa, bu emaili gec.
+                if (mTo and mDate and mFrom and mSubject) :
+                    break
 
             if mSubject[0:6] == 'rapor:': continue
-            maillist.append([n+1, mFrom, mTo, mDate, mSubject])
+            if mSubject[0:13] == 'Twitter Trend': continue
+            if mSubject[0:23] == '=?utf-8?q?Twitter Trend': continue
+            maillist.append([n+1, mFrom, mTo, mCc, mDate, mSubject])
 
         pop.quit()
     except poplib.error_proto:
@@ -61,6 +78,8 @@ def getMailInfo(username, password, pid):
             command += "Connection failed for <b>%s</b>\n" % (username)
             command += "Pid... [%s]" % (pid)
             command += "' &"
+
+            logging.debug('getMailInfo1 : %s' % command)
             os.system(command)
     except Exception, err:
         if DEBUG:
@@ -71,6 +90,8 @@ def getMailInfo(username, password, pid):
             command += "Pid... [%s]\n" % (pid)
             command += "%s" % (str(err))
             command += "' &"
+
+            logging.debug('getMailInfo2 : %s' % command)
             os.system(command)
 
     return maillist
@@ -79,11 +100,9 @@ def getMailInfo(username, password, pid):
 
 # -----------------------------------------------------------------------------
 def secureMessage(message):
-    message = message.replace('&','&amp;')
     message = message.replace('"','&quot;')
     message = message.replace('<','&lt;')
     message = message.replace('>','&gt;')
-    message = message.replace('\'','&#39;')
 
     return message
 
@@ -96,18 +115,22 @@ def showDialog(username, maillist, pid):
 
         msg = ''
         for mail in maillist:
-            msg += '<b>From   :</b> %s\n' % \
+            msg += u'<b>From   :</b> %s\n' % \
                 secureMessage(mail[1])
             msg += '<b>To     :</b> %s\n' % \
                 secureMessage(mail[2])
-            msg += '<b>Date   :</b> %s\n' % \
+            msg += '<b>CC     :</b> %s\n' % \
                 secureMessage(mail[3])
-            msg += '<b>Subject:</b> %s\n' % \
+            msg += '<b>Date   :</b> %s\n' % \
                 secureMessage(mail[4])
+            msg += '<b>Subject:</b> %s\n' % \
+                secureMessage(mail[5])
             msg += '-------------------------------\n'
         msg += '%s... [%s]' % (username, pid)
+        command = 'zenity --info --text "%s" &' % msg
 
-        os.system('zenity --info --text "%s" &' % msg)
+        logging.debug('showDialog1 : %s' % command)
+        os.system(command.encode('utf-8'))
     except Exception, err:
         if DEBUG:
             raise
@@ -117,6 +140,8 @@ def showDialog(username, maillist, pid):
             command += "Pid... [%s]\n" % (pid)
             command += "%s" % (str(err))
             command += "' &"
+
+            logging.debug('showDialog2 : %s' % command)
             os.system(command)
 
 
