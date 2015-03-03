@@ -19,7 +19,7 @@ Bu işlemler esnasında klonlanacak makine ve yeni makine kapalı olmalı.
 
     - Eski makinedeki diskleri, yeni makineye kopyala. Dİski kopyalarken, yeni
       makinedeki disk adı, bir önceki komutla siline disk adı ile aynı olmalı.
-        vmkfstools –i /vmfs/volumes/DatastoreX/eski_makine/eski_makine.vmdk \
+        vmkfstools -i /vmfs/volumes/DatastoreX/eski_makine/eski_makine.vmdk \
         /vmfs/volumes/DatastoreX/yeni_makine/yeni_makine.vmdk
 
     - Yeni makineyi çalıştır.
