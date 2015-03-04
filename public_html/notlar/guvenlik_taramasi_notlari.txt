@@ -8,7 +8,7 @@ W3af, Skipfish, Ratproxy incelenecek.
 # -----------------------------------------------------------------------------
 # Nikto
 # -----------------------------------------------------------------------------
-Debian Jessie ile test edildi.
+Web güvenlik taraması. Debian Jessie ile test edildi.
 
 # Kurulum
 apt-get install nikto
@@ -26,13 +26,47 @@ nikto -h http://www.google.com/
 # -----------------------------------------------------------------------------
 # Wapiti
 # -----------------------------------------------------------------------------
-Debian Jessie ile test edildi.
+Web güvenlik taraması. Debian Jessie ile test edildi.
 
 # Kurulum
 apt-get install wapiti
 
 # Kullanımı
 wapiti http://url/path/
+
+
+
+# -----------------------------------------------------------------------------
+# Skipfish
+# -----------------------------------------------------------------------------
+Web güvenlik taraması. Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install skipfish
+
+# Kullanımı
+skipfish -o skipfish http://www.google.com/
+
+# Rapor
+Tarayıcı ile skipfish/index.html sayfası açılacak.
+
+
+
+# -----------------------------------------------------------------------------
+# Ratproxy
+# -----------------------------------------------------------------------------
+Web güvenlik taraması için proxy... Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install ratproxy
+
+# Kullanımı
+ratproxy -v <outdir> -w <outfile> -d <domain> -lfscmr
+
+Tarayıcıyı açıp "HTTP proxy" olarak ratproxy gösterilir ve ilgili site gezilir.
+
+# Raporun oluşturulması
+ratproxy-report <outfile> > rapor.html
 
 
 
@@ -68,7 +102,7 @@ w3af>>> start
 # -----------------------------------------------------------------------------
 # OpenVAS
 # -----------------------------------------------------------------------------
-Debian Wheezy ile test edildi.
+Genel güvenlik taraması... Debian Wheezy ile test edildi.
 
 # /etc/apt/sources.list
 deb http://download.opensuse.org/repositories/security:/OpenVAS:/UNSTABLE:/v6/Debian_7.0/ ./
@@ -121,3 +155,5 @@ https://it-nuggets.net/2014/08/23/openvas-installation-debian-wheezy
 
 # Scanner
 http://resources.infosecinstitute.com/14-popular-web-application-vulnerability-scanners/
+http://n0where.net/best-web-application-vulnerability-scanners/
+https://code.google.com/p/ratproxy/wiki/RatproxyDoc
