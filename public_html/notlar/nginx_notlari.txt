@@ -169,6 +169,27 @@ Key olarak "$host/$1" kullanıldığı farzedildi.
 
 
 # -----------------------------------------------------------------------------
+# REQUEST LIMIT
+# -----------------------------------------------------------------------------
+Belli bir IP adresinden gelen talep sayısı sınırlandırılabilir.
+
+# /etc/nginx/conf.d/limit.conf
+limit_req_zone $http_x_real_ip zone=limited:10m rate=1r/s;
+
+Proxy arkasında ise key yerine $binary_remote_addr yerine $http_x_real_ip
+değeri kullanılabilir. Duruma göre IP adresi yerine başka bir key de
+kullanılabilir.
+
+r/s yerine r/m de kullanılabilir.
+
+# Limitlenecek server/location için
+limit_req zone=limited burst=5;
+
+limit_req için "nodelay" parametresine bak.
+
+
+
+# -----------------------------------------------------------------------------
 # TALEBİ BEKLETME
 # -----------------------------------------------------------------------------
 Talep edilen dosya henüz yoksa bir müddet bekleme yapıp dosyayı yeniden isteme.
