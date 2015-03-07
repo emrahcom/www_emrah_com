@@ -9,12 +9,12 @@ göre...
 # -----------------------------------------------------------------------------
 # BRIDGE NETWORK
 # -----------------------------------------------------------------------------
+Host makine bridge ayarları.
 
 # Kurulacak paketler
 apt-get install bridge-utils
 
-# Bridge interface
-/etc/network/interfaces
+# /etc/network/interfaces
 
     # eth0
     allow-hotplug eth0
@@ -27,12 +27,12 @@ apt-get install bridge-utils
     bridge_stp off
     bridge_fd 0
     bridge_maxwait 0
-    bridge_hw aa:bb:cc:dd:ee:ff
 
-    # Birden fazla IP varsa br0:x olarak tanimlanabilir
+    # Container makineler ayrı IP blogunda olacaksa host makineye de aynı
+    # bloktan bir IP ver.
     auto br0:0
     iface br0:0 inet static
-    address 192.168.0.99
+    address 172.16.244.100
     netmask 255.255.255.0
 
 # Network restart
@@ -47,12 +47,6 @@ Makine reboot edilir veya network servisi yeniden başlatılır.
 # Yüklenecek paketler
 apt-get install --install-recommends lxc
 
-# cgroup (Jessie için bu kısma gerek yok)
-/etc/fstab
-    cgroup /sys/fs/cgroup cgroup defaults 0 0
-
-mount /sys/fs/cgroup
-
 
 
 # -----------------------------------------------------------------------------
@@ -62,14 +56,10 @@ mount /sys/fs/cgroup
 # Container oluşturma
 lxc-create -n test -t debian
 lxc-create -n test -t debian -- -r surum_adi
+lxc-create -n jessie -t debian -- -r jessie
 
 # Container klonlama
 lxc-clone -o template_makine -n yeni_makine
-
-# lxc-halt ile kapatabilmek için (Jessie için bu kısma gerek yok)
-/var/lib/lxc/test/config
-    # sys_admin eklendi.
-    lxc.cap.drop = sys_module mac_admin mac_override sys_time sys_admin
 
 # Container listesi
 lxc-ls
@@ -82,7 +72,6 @@ lxc-start -n test
 lxc-start -d -n test
 
 # Containeri durdurma
-lxc-halt -n test    (clean stop)
 lxc-stop -n test
 
 # Makinenin konsoluna bağlanma
@@ -91,6 +80,62 @@ lxc-console -n test
 
 C+a q ile çık
 
+
+
+# -----------------------------------------------------------------------------
+# CONTAINER NETWORK
+# -----------------------------------------------------------------------------
+
+# Network interface (bridge ile container makineler ayrı networkte)
+Bazı durumlarda "lxc.network.ipv4" kullanmamak ve IP ayarlarını, container
+makine içinden yapmak daha iyi sonuç veriyor. Örneğin container içinde bir
+uygulama, containerın network ayarlarını değiştirecekse...
+
+/var/lib/lxc/test/config
+    # eth0
+    lxc.network.type = veth
+    lxc.network.flags = up
+    lxc.network.link = br0
+    lxc.network.name = eth0
+
+/var/lib/lxc/test/rootfs/etc/network/interfaces
+    # lo
+    auto lo
+    iface lo inet loopback
+
+    # eth0
+    auto eth0
+    iface eth0 inet static
+    address 172.16.244.101
+    netmask 255.255.255.0
+    gateway 172.16.244.100
+
+# Host makine iptables ayarları
+Henüz iptables kuralı yokken başla. Kural varsa -F ile temizle.
+iptables -L
+iptables -L -t nat
+
+iptables -t nat -A POSTROUTING -s 172.16.244.0/24 -o br0 -j MASQUERADE
+iptables -t nat -A PREROUTING -i br0 -p tcp ! -s 172.16.244.0/24 \
+    --dport 22101 -j DNAT --to 172.16.244.100:22
+
+iptables -L -t nat
+iptables-save > /etc/iptables.up.rules
+touch /etc/network/if-pre-up.d/iptables
+chmod +x /etc/network/if-pre-up.d/iptables
+
+vim /etc/network/if-pre-up.d/iptables
+    #!/bin/sh
+    /sbin/iptables-restore < /etc/iptables.up.rules
+
+# /etc/sysctl.conf
+net.ipv4.ip_forward=1
+
+# sysctl ayarlarını aktif hale getir.
+sysctl -p
+
+
+# -----------------------------------------------------------------------------
 # Network interface (bridge kullanılacaksa)
 /var/lib/lxc/test/config
     # eth0 (DHCP)
@@ -110,6 +155,8 @@ C+a q ile çık
     lxc.network.ipv4 = 192.168.0.100/24
     lxc.network.ipv4.gateway = 192.168.0.1
 
+
+# -----------------------------------------------------------------------------
 # Network interface (ethernet adaptör tahsis edilecekse)
 /var/lib/lxc/test/config
     lxc.network.type = phys
@@ -171,34 +218,27 @@ apt-get() {
 # -----------------------------------------------------------------------------
 # KURULACAK PAKETLER
 # -----------------------------------------------------------------------------
+Depo ayarlarını host makineden yap çünkü container içinde henüz editor yok.
 
-# /etc/apt/apt.conf.d/80recommends
-Bu dosyayı container dışındayken düzenle çünkü container içinde henüz editor
-yüklü değil.
-
-/var/lib/lxc/test/rootfs/etc/apt/apt.conf.d/80recommends
+# /var/lib/lxc/test/rootfs/etc/apt/apt.conf.d/80recommends
 APT::Install-Recommends "0";
 APT::Install-Suggests "0";
 
-# Gerekli, standart ve önemli paketlerin listesi
-Kurulacak temel paketler bu listeye bakılarak seçilebilir. Container içinde
-aptitude yüklü olmadığı için aptitude yüklü bir makineden bakılacak.
+# /var/lib/lxc/test/rootfs/etc/apt/sources.list
+deb http://ftp.tr.debian.org/debian/ jessie main non-free contrib
+deb-src http://ftp.tr.debian.org/debian/ jessie main non-free contrib
+deb http://security.debian.org/ jessie/updates main contrib non-free
+deb-src http://security.debian.org/ jessie/updates main contrib non-free
 
-aptitude search ~prequired ~pstandard ~pimportant
-
-# Kurulacak bazı temel paketler
-apt-get --install-recommends install \
-bzip2 iputils-ping less openssh-server openssh-client tmux vim-nox wget zsh
-
+# Kurulacak sıkca kullanılan bazı paketler
+apt-get install --install-recommends iputils-ping less tmux vim-nox wget zsh
+apt-get install openssh-server openssh-client
+apt-get install dnsutils curl htop iotop nethogs iftop bmon
+apt-get install cron logrotate rsync bzip2 man
 apt-get install pyflakes git
-apt-get install bmon htop rsync whois curl dnsutils
 
-# Kurulum sonrası paketlerin kaldırılması
+# Kurulum sonrası deb paketlerinin kaldırılması
 apt-get clean
-
-# Ayarlar
-Kurulan paketler için "Debian Kurulum Notlari" dikkate alınarak düzenleme
-yapılacak.
 
 
 
@@ -210,8 +250,9 @@ yapılacak.
 Container config dosyasına
     lxc.start.auto = 1
 
-# Reboot problemi (jessie'de düzelmiş)
-Container içinden reboot yapma. Host makineden halt ve start kullan.
+# Reboot problemi
+Wheezy sunucu içinde yer alan container makinelerde reboot yapma.
+Host makineden halt ve start kullan.
 
 
 
