@@ -117,7 +117,7 @@ iptables -L -t nat
 
 iptables -t nat -A POSTROUTING -s 172.16.244.0/24 -o br0 -j MASQUERADE
 iptables -t nat -A PREROUTING -i br0 -p tcp ! -s 172.16.244.0/24 \
-    --dport 22101 -j DNAT --to 172.16.244.100:22
+    --dport 22101 -j DNAT --to 172.16.244.101:22
 
 iptables -L -t nat
 iptables-save > /etc/iptables.up.rules
