@@ -2,3 +2,44 @@
 # ASTERISK NOTLARI
 # -----------------------------------------------------------------------------
 Debian Jessie üzerine Asterisk kurulumu ve kullanımı.
+
+
+
+# -----------------------------------------------------------------------------
+# Kurulum
+# -----------------------------------------------------------------------------
+
+# Paketler
+apt-get install --install-recommends asterisk
+
+# SIP client tanımlama ( /etc/asterisk/sip.conf )
+[2001]
+    type=friend
+    secret=sec2001
+    host=dynamic
+    context=office
+
+[2002]
+    type=friend
+    secret=sec2002
+    host=dynamic
+    context=office
+
+# Arama planı ( /etc/asterisk/extensions.conf )
+[office]
+exten=>2001,1,Dial(SIP/2001)
+exten=>2002,1,Dial(SIP/2002)
+
+# Asterisk console
+asterisk -r
+    >>> help            # help
+    >>> reload          # reload Asterisk
+
+
+
+# -----------------------------------------------------------------------------
+# SIP client
+# -----------------------------------------------------------------------------
+
+# Paketler
+apt-get install --install-recommends sflphone-gnome
