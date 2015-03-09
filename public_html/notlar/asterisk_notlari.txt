@@ -6,7 +6,7 @@ Debian Jessie üzerine Asterisk kurulumu ve kullanımı.
 
 
 # -----------------------------------------------------------------------------
-# Kurulum
+# Asterisk Kurulum
 # -----------------------------------------------------------------------------
 
 # Paketler
@@ -27,8 +27,8 @@ apt-get install --install-recommends asterisk
 
 # Arama planı ( /etc/asterisk/extensions.conf )
 [office]
-exten=>2001,1,Dial(SIP/2001)
-exten=>2002,1,Dial(SIP/2002)
+exten =>2001,1,Dial(SIP/2001)
+exten =>2002,1,Dial(SIP/2002)
 
 # Asterisk console
 asterisk -r
@@ -38,7 +38,7 @@ asterisk -r
 
 
 # -----------------------------------------------------------------------------
-# XMPP
+# Ejabberd Kurulum
 # -----------------------------------------------------------------------------
 
 # Paketler
@@ -61,6 +61,65 @@ http://<ip_adresi>/admin
 tcp/5222
 tcp/5223
 tcp/5280
+
+
+
+# -----------------------------------------------------------------------------
+# Asterisk ve EJabberd Entegrasyonu
+# -----------------------------------------------------------------------------
+
+# Ejabberd kullanıcılarının eklenmesi.
+Kontrol paneli açılır: http://<ip_adresi>/admin
+
+Virtual Hosts > localhost > Users bölümünden kullanıcılar eklenir.
+    asterisk@localhost
+    2001@localhost
+    2002@localhost
+
+# /etc/asterisk/xmpp.conf
+[general]
+autoregister=yes
+autoprune=no
+
+[ejabberd]
+        type=client
+        serverhost=localhost
+        username=asterisk@localhost
+        secret=asterisk
+        priority=1
+        port=5222
+        usetls=no
+        usesasl=yes
+        status=available
+        statusmessage="Asterisk is online"
+        timeout=5
+
+# Asterisk res_xmpp modulünün aktif hale getirilmesi
+asterisk -r
+    >>> module reload res_xmpp
+    >>> xmpp show connections
+            [ejabberd] asterisk@localhost     - Connected
+
+"Connected" görünüyorsa veya Ejabberd panelinden "online" kullanıcılar
+listesinde "asterisk@localhost" görünüyorsa Asterisk, Ejabberd'ye
+bağlanabiliyor demektir.
+
+# Arama planı ( /etc/asterisk/extensions.conf )
+[office]
+exten => 2001,1, Set(JSTATUS=${JABBER_STATUS(ejabberd,2001@localhost/location1)})
+        same => n, GotoIf($[0${JSTATUS} = 1]?available:unavailable)
+        same => n(available), JabberSend(ejabberd,2001@localhost,${CALLERID(num) ariyor!})
+        same => n, Dial(SIP/2001)
+        same => n, Hangup()
+        same => n(unavailable), JabberSend(ejabberd,2001@localhost,"${CALLERID(num)} aradi!")
+        same => n, Goto(2001,s,1)
+exten => 2002,1, Set(JSTATUS=${JABBER_STATUS(ejabberd,2002@localhost/location1)})
+        same => n, GotoIf($[0${JSTATUS} = 1]?available:unavailable)
+        same => n(available), JabberSend(ejabberd,2002@localhost,${CALLERID(num) ariyor!})
+        same => n, Dial(SIP/2002)
+        same => n, Hangup()
+        same => n(unavailable), JabberSend(ejabberd,2002@localhost,"${CALLERID(num)} aradi!")
+        same => n, Goto(2002,s,1)
 
 
 
