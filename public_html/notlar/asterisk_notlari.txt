@@ -38,8 +38,42 @@ asterisk -r
 
 
 # -----------------------------------------------------------------------------
+# XMPP
+# -----------------------------------------------------------------------------
+
+# Paketler
+apt-get install --install-recommends ejabberd
+
+# admin kullanıcı ekleme
+dpkg-reconfigure ejabberd
+    hostname    : localhost
+    kullanıcı   : admin
+    parola      : <parola>
+
+systemctl restart ejabberd
+
+# Admin paneline bağlanma
+http://<ip_adresi>/admin
+    kullanıcı   : admin@localhost    (sadece admin değil)
+    parola      : <parola>
+
+# Firewall'dan açık olması gereken portlar
+tcp/5222
+tcp/5223
+tcp/5280
+
+
+
+# -----------------------------------------------------------------------------
 # SIP client
 # -----------------------------------------------------------------------------
 
 # Paketler
 apt-get install --install-recommends sflphone-gnome
+
+
+
+# -----------------------------------------------------------------------------
+# Kaynaklar
+# -----------------------------------------------------------------------------
+https://www.acritelli.com/voice-and-xmpp-integrating-asterisk-with-ejabberd/
