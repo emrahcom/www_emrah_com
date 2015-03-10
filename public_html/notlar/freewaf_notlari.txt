@@ -31,7 +31,10 @@ mkdir -p /usr/local/lib/lua/5.1/FreeWAF/inc/
 cp FreeWAF/inc/libac.so /usr/local/lib/lua/5.1/FreeWAF/inc/
 
 # WAF'ın aktif hale getirilmesi
-context: http, server, location, location if
+context: server, location, location if
+
+"event_log_target_path" bütün ayarlarda aynı log dosyasını göstermeli. Aynı
+anda farklı log dosyalarının kullanılması henüz desteklenmiyor.
 
 access_by_lua '
     FreeWAF = require "FreeWAF.fw"
