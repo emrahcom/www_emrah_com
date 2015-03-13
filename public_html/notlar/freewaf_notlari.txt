@@ -50,7 +50,8 @@ access_by_lua '
 
     -- fw:set_option("whitelist", "127.0.0.1")
     -- fw:set_option("blacklist", "1.2.3.4")
-    -- fw:set_option("ignore_rule", 42094)
+    fw:set_option("ignore_rule", 90002)
+
     fw:exec()
 ';
 
