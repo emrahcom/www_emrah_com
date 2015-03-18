@@ -2,96 +2,74 @@
 PostgreSQL Notları
 -------------------------------------------------------------------------------
 
-- Yükleme
-        aptitude install postgresql postgresql-contrib
-        aptitude install python-psycopg2 postgresql-plpython-8.4
+# Yükleme
+apt-get install postgresql postgresql-contrib
+apt-get install python-psycopg2                 # Python uygulamasi yazilacaksa
+apt-get install postgresql-plpython-9.4         # Python ile stored procedure
 
 
-- Yönetici paneli olacaksa...
-        aptitude install pgadmin3 pgagent phppgadmin
-        su -l
-        su -l postgres
-        psql template1 < /usr/share/postgresql/8.4/contrib/adminpack.sql
+# Web yönetim paneli
+apt-get install phppgadmin
 
 
-- Default klasörün değiştirilmek istenirse...
-        su -l
-        mkdir /home/pgsql
-        chmod 700 /home/pgsql
-        chown postgres: /home/pgsql
-
-        /etc/init.d/postgresql stop
-        cp -arp /var/lib/postgresql/8.4/main/* /home/pgsql/
-
-        vim /etc/postgresql/8.4/main/postgresql.conf
-                #data_directory = '/var/lib/postgresql/8.4/main'
-                data_directory = '/home/pgsql'
-
-        /etc/init.d/postgresql start
+# İlk çalıştırma
+su -l
+su -l postgres
+psql
 
 
-- İlk çalıştırma
-        su -l
-        su -l postgres
-        psql
+# Kullanıcı tanımlama ve yetkilendirme
+Default olarak sadece postgres kullanıcısı tanımlı ve UNIX socket ile
+bağlanabiliyor.
+
+# Kullanıcısı tanımlama
+>>> CREATE ROLE kullanici;
+>>> ALTER ROLE kullanici WITH LOGIN;
+>>> \password kullanici
+
+# Sadece bir tabloda okuma yetkisi olan ağ kullanıcısı tanımlama
+>>> CREATE ROLE okuyucu;
+>>> ALTER ROLE okuyucu WITH LOGIN;
+>>> \password okuyucu
+>>> \c veritabani
+>>> GRANT SELECT ON TABLE tablo TO okuyucu;
+
+# Localhost dışında ağdaki hangi makinelerden bağlanılabileceği
+pg_hba.conf dosyasından tanımlanıyor. Bir kullanıcının ağdaki hangi makineden,
+hangi veritabanına bağlanabileceğini belirlemek için
+
+/etc/postgresql/9.4/main/pg_hba.conf
+host  veritabani  kullanici  192.168.2.103/32  md5
 
 
-- Kullanıcı tanımlama ve yetkilendirme
-        # Default olarak sadece postgres kullanıcısı tanımlı ve UNIX socket
-        ile bağlanabiliyor. Yerel postgres kullanıcısının parolası
-        değiştirilsin.
-                su -l
-                passwd postgres
-
-        # postgres kullanıcısının ağdan da bağlanabilmesi isteniyorsa
-                su -l postgres
-                psql
-                \password postgres
-
-        # Yeni ağ kullanıcısı tanımlama
-                CREATE ROLE kullanici;
-                ALTER ROLE kullanici WITH LOGIN;
-                \password kullanici
-
-        # Sadece bir tabloda okuma yetkisi olan ağ kullanıcısı tanımlama
-                CREATE ROLE okuyucu;
-                ALTER ROLE okuyucu WITH LOGIN;
-                \password okuyucu
-                \c veritabani
-                GRANT SELECT ON TABLE tablo TO okuyucu;
-
-        # Localhost dışında ağdaki hangi makinelerden bağlanılabileceği
-        pg_hba.conf dosyasından tanımlanıyor. Bir kullanıcının ağdaki hangi
-        makineden, hangi veritabanına bağlanabileceğini belirlemek için
-
-                /etc/postgresql/8.4/main/pg_hba.conf
-                host  veritabani  kullanici  192.168.2.103/32  md5
-
-        # Yerel sistem kullanıcısına bağlanma yetkisi vermek için
-                /etc/postgresql/8.4/main/pg_hba.conf
-                local  veritabani  kullanici  ident
+# Yerel sistem kullanıcısına bağlanma yetkisi vermek için
+/etc/postgresql/9.4/main/pg_hba.conf
+local  veritabani  kullanici  ident
 
 
-- Postgresql konsol komutları
-        # SQL script dosyası çalıştırma
-                psql -U kullanici -h localhost -d veritabani -f dosya.sql
-                psql -U kullanici -h localhost -d veritabani < dosya.sql
-                cat dosya.sql | psql -U kullanici -h localhost -d veritabani
+# Postgresql konsol komutları
 
-                su -l postgres
-                psql -d veritabani < dosya.sql
-                psql -d veritabani -e < dosya.sql  # echo commands
+- SQL script dosyası çalıştırma
+psql -U kullanici -h localhost -d veritabani -f dosya.sql
+psql -U kullanici -h localhost -d veritabani < dosya.sql
+cat dosya.sql | psql -U kullanici -h localhost -d veritabani
 
-        # Komut çıktısını alma
-                echo "\l" | psql
-                psql -c "\l"
-                psql -c "SELECT version()"
-                cat dosya.sql | psql
-                echo "\l" | psql -o dosya
-                echo "\l" | psql > dosya
+su -l postgres
+psql -d veritabani < dosya.sql
+psql -d veritabani -e < dosya.sql  # echo commands
 
-        # Veritabanı dökümünü alma (pg_dump)
-                pg_dump veritabani
+- Komut çıktısını alma
+echo "\l" | psql
+psql -c "\l"
+psql -c "SELECT version()"
+cat dosya.sql | psql
+echo "\l" | psql -o dosya
+echo "\l" | psql > dosya
+
+>>> COPY (SELECT version()) TO '/tmp/output'
+
+# Veritabanı dökümünü alma (pg_dump)
+pg_dump veritabani
 
 
 - pgsql temel komutlar
