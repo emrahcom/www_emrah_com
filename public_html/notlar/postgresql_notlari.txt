@@ -1,6 +1,12 @@
--------------------------------------------------------------------------------
-PostgreSQL Notları
--------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# PostgreSQL Notları
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edildi.
+
+
+# -----------------------------------------------------------------------------
+# Kurulum ve ilk ayarlar
+# -----------------------------------------------------------------------------
 
 # Yükleme
 apt-get install postgresql postgresql-contrib
@@ -8,7 +14,7 @@ apt-get install python-psycopg2                 # Python uygulamasi yazilacaksa
 apt-get install postgresql-plpython-9.4         # Python ile stored procedure
 
 
-# Web yönetim paneli
+# Web yönetim paneli yükleme
 apt-get install phppgadmin
 
 
@@ -47,18 +53,20 @@ host  veritabani  kullanici  192.168.2.103/32  md5
 local  veritabani  kullanici  ident
 
 
-# Postgresql konsol komutları
 
-- SQL script dosyası çalıştırma
+# -----------------------------------------------------------------------------
+# Postgresql konsol komutları
+# -----------------------------------------------------------------------------
+
+# SQL script dosyası çalıştırma
 psql -U kullanici -h localhost -d veritabani -f dosya.sql
 psql -U kullanici -h localhost -d veritabani < dosya.sql
-cat dosya.sql | psql -U kullanici -h localhost -d veritabani
 
 su -l postgres
 psql -d veritabani < dosya.sql
 psql -d veritabani -e < dosya.sql  # echo commands
 
-- Komut çıktısını alma
+# Komut çıktısını alma
 echo "\l" | psql
 psql -c "\l"
 psql -c "SELECT version()"
@@ -66,119 +74,149 @@ cat dosya.sql | psql
 echo "\l" | psql -o dosya
 echo "\l" | psql > dosya
 
->>> COPY (SELECT version()) TO '/tmp/output'
-
 # Veritabanı dökümünü alma (pg_dump)
 pg_dump veritabani
 
 
-- pgsql temel komutlar
-        \q                      Çıkış
-        \?                      Yardım
-        \h                      SQL komutlarının listesi
-        \h KOMUT                SQL komutu ile ilgili yardım
-        \l                      Veritabanlarını listele
-        \c VERITABANI           Veritabanina geçer
-        \dt                     Tablo listesi
-        \dtS                    Tablo listesi, sistem tablolari dahil
-        \d NESNE                Tablo, view sequence, index için detay bilgi gösterme
-        \dv                     View listesi
-        \di                     Indeks listesi
-        \dn                     Sema listesi
-        \du                     Role/user listesi
-        \dp                     Yetki (privileges) listesi
-        \password KULLANICI     Kullanıcı parolasını değiştirir
+
+# -----------------------------------------------------------------------------
+# pgsql temel komutlar
+# -----------------------------------------------------------------------------
+>>> \q                      Çıkış
+>>> \?                      Yardım
+>>> \h                      SQL komutlarının listesi
+>>> \h KOMUT                SQL komutu ile ilgili yardım
+>>> \l                      Veritabanlarını listele
+>>> \c VERITABANI           Veritabanina geçer
+>>> \dt                     Tablo listesi
+>>> \dtS                    Tablo listesi, sistem tablolari dahil
+>>> \d NESNE                Tablo, view sequence, index için detay bilgi
+>>> \dv                     View listesi
+>>> \di                     Indeks listesi
+>>> \dn                     Sema listesi
+>>> \du                     Role/user listesi
+>>> \dp                     Yetki (privileges) listesi
+>>> \password KULLANICI     Kullanıcı parolasını değiştirir
+
+>>> COPY (SELECT version()) TO '/tmp/output'
 
 
-- SQL notları
-        - Serial, timestamp vb alanlar.
-        CREATE TABLE sch.tablo (
-                tablo_id        SERIAL PRIMARY KEY,
-                tablo_foreign   INTEGER NOT NULL REFERENCES sch.tablo2(tablo2_pkey),
-                tablo_kod       VARCHAR(50) NOT NULL UNIQUE,
-                tablo_zaman     TIMESTAMP NOT NULL DEFAULT NOW(),
-                tablo_timeout   TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '15 minutes',
-                tablo_captcha   VARCHAR(6) NOT NULL DEFAULT LPAD(TEXT(TRUNC(RANDOM()*1000000)), 6, '0')
-        );
 
-        - Default degeri kullanmak.
-        UPDATE sch.tablo SET alan = DEFAULT ...
-        INSERT INTO sch.tablo VALUES (DEFAULT, "deger", ...
+# -----------------------------------------------------------------------------
+# SQL notları
+# -----------------------------------------------------------------------------
 
-        - SQL sonrası oluşan değerleri almak.
-        Değişen kayıt sayısı kadar kayıt geri döner.
-        INSERT INTO sch.tablo VALUES (..) RETURNING (alan1, alan2);
-        UPDATE sch.tablo SET alan1=DEFAULT RETURNING (alan1, alan2);
+# Serial, timestamp vb alanlar.
+CREATE TABLE sch.tablo (
+tablo_id        SERIAL PRIMARY KEY,
+tablo_foreign   INTEGER NOT NULL REFERENCES sch.tablo2(tablo2_pkey),
+tablo_kod       VARCHAR(50) NOT NULL UNIQUE,
+tablo_zaman     TIMESTAMP NOT NULL DEFAULT NOW(),
+tablo_timeout   TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '15 minutes',
+tablo_captcha   VARCHAR(6) NOT NULL DEFAULT
+                LPAD(TEXT(TRUNC(RANDOM()*1000000)), 6, '0')
+);
 
-        - Serial alanın değerini, mevcut maksimum değere bakarak yeniden atama.
-        SELECT SETVAL('field_id_seq', (SELECT MAX(field_id) FROM tablename));
+# Default degeri kullanmak.
+UPDATE sch.tablo SET alan = DEFAULT ...
+INSERT INTO sch.tablo VALUES (DEFAULT, "deger", ...
 
-        - Sifreleme fonksiyonlarını kullanabilmek için postgresql-contrib
-          paketini yükledikten sonra veritabanına pgcrypto modulünü yüklemek
-          gerekiyor.
-            \c veritabani
-            CREATE EXTENSION pgcrypto;
+# SQL sonrası oluşan değerleri almak.
+Değişen kayıt sayısı kadar kayıt geri döner.
+
+INSERT INTO sch.tablo VALUES (..) RETURNING (alan1, alan2);
+UPDATE sch.tablo SET alan1=DEFAULT RETURNING (alan1, alan2);
+
+# Serial alanın değerini, mevcut maksimum değere bakarak yeniden atama.
+SELECT SETVAL('field_id_seq', (SELECT MAX(field_id) FROM tablename));
+
+# pgcrypto modülü
+Sifreleme fonksiyonlarını kullanabilmek için postgresql-contrib
+paketini yükledikten sonra veritabanına pgcrypto modulünü yüklemek
+gerekiyor.
+
+>>> \c veritabani
+>>> CREATE EXTENSION pgcrypto;
 
 
-- Psycopg notları
-        - Modulun import edilmesi
-                import psycopg2
-                import psycopg2.extras
 
-        - Bağlantı kurulması
-                def get_connection():def get_connection():
-                        try:
-                                cstr = "host=%s dbname=%s user=%s password=%s" % \
-                                        (PSQL_SERVER, PSQL_DB, PSQL_USER, PSQL_PASSWD)
-                                cnn = psycopg2.connect(cstr)
-                                crs = cnn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+# -----------------------------------------------------------------------------
+# Psycopg notları
+# -----------------------------------------------------------------------------
+# Modulun import edilmesi
+import psycopg2
+import psycopg2.extras
 
-                                result = (cnn, crs)
-                        except Exception, err:
-                                if DEBUG:
-                                        raise
-                                else:
-                                        sys.stderr.write(str(err))
+# Bağlantı kurulması
+def get_connection(autocommit=False):
+    try:
+        cstr = "host=%s dbname=%s user=%s password=%s" % \
+                (PSQL_SERVER, PSQL_DB, PSQL_USER, PSQL_PASSWD)
+        cnn = psycopg2.connect(cstr)
+        cnn.autocommit = autocommit
+        crs = cnn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-                                result = (None, None)
+        result = (cnn, crs)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
 
-                        return result
+        result = (None, None)
 
-                (cnn, crs) = get_connection()
+    return result
 
-        - Bağlantının kapatılması
-                def close_connection(cnn, crs):
-                        try:
-                                # Cursori kapat.
-                                try:
-                                        crs.close()
-                                except Exception, err:
-                                        pass
 
-                                # Veritabani baglantisini kapat.
-                                try:
-                                        cnn.close()
-                                except Exception, err:
-                                        pass
+(cnn, crs) = get_connection()
 
-                                result = True
-                        except Exception, err:
-                                if DEBUG:
-                                        raise
-                                else:
-                                        sys.stderr.write(str(err))
 
-                                result = False
+# Bağlantının kapatılması
+def close_connection(cnn, crs):
+    # Cursori kapat.
+    try:
+        crs.close()
+    except Exception, err:
+        pass
 
-                        return result
+    # Veritabani baglantisini kapat.
+    try:
+        cnn.close()
+    except Exception, err:
+        pass
 
-                close_connection(cnn, crs)
+    return True
 
-        - SQL kodunun parametre ile çalıştırılması
-                sql = "SELECT * FROM tablo WHERE id = %s"
-                par = (1212, )
-                crs.execute(sql, par)
-                rows = crs.fetchall()
 
-        - Çalıştırılan SQL'i parametreler yerlerine konulduktan sonraki şekli.
-                print(crs.mogrify(sql, par))
+close_connection(cnn, crs)
+
+
+# Bağlantı koptuysa yeniden bağlansın
+def refresh_connection(cnn, crs, autocommit=False):
+    try:
+        crs.execute('SELECT 1')
+    except Exception:
+        close_psql_connection(cnn, crs)
+        (cnn, crs) = get_psql_connection(autocommit)
+
+    return (cnn, crs)
+
+(cnn, crs) = refresh_connection(cnn, crs)
+
+
+# SQL kodunun parametre ile çalıştırılması
+sql = "SELECT * FROM tablo WHERE id = %s"
+par = (1212, )
+crs.execute(sql, par)
+rows = crs.fetchall()
+
+for row in rows:
+    print(row['alan_adi'])
+
+
+# Çalıştırılan SQL'i parametreler yerlerine konulduktan sonraki şekli.
+print(crs.mogrify(sql, par))
+
+# commit, rollback
+cnn.commit()
+cnn.rollback()
