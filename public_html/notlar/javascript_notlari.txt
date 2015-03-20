@@ -1,0 +1,19 @@
+# -----------------------------------------------------------------------------
+# JAVASCRIPT NOTLARI
+# -----------------------------------------------------------------------------
+
+
+# Sayfa yüklenince çalış
+<html>
+<body>
+Hello
+
+<script type="text/javascript">
+    function loader() {
+        alert('World');
+    }
+
+    window.onload = loader();
+</script>
+</body>
+<html>
