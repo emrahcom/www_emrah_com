@@ -17,3 +17,51 @@ Hello
 </script>
 </body>
 <html>
+
+
+# Parse querystring
+function parsequery() {
+    var query = {};
+    var qarray = window.location.search.substring(1).split('&');
+    for (var i in qarray) {
+        var pair = qarray[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+    }
+
+    return query
+}
+
+
+query = parsequery();
+if (query['param'] != undefined) {
+    alert(query['param']);
+}
+
+
+# Eleman değerini değiştirme
+function setinner(k,v) { document.getElementById(k).innerHTML=v; }
+function setvalue(k,v) { document.getElementById(k).value=v; }
+
+setinner('label_username', 'Kullanıcı Adı');
+setvalue('button_submit', 'OK')
+
+
+# Elamanı gizleme/gösterme
+function hide(k) { document.getElementById(k).style.display = 'none'; }
+function show(k) { document.getElementById(k).style.display = 'block'; }
+
+hide('panel2');
+show('panel1');
+
+
+# Link tıklanınca Javascript çalışsın
+<a onClick="setmode('login');" id="login">Login</a>
+
+
+function setmode(mode) {
+    if (mode=="login") {
+        ...
+    } else {
+        ...
+    }
+}
