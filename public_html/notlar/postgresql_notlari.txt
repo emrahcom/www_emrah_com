@@ -141,6 +141,37 @@ gerekiyor.
 
 
 # -----------------------------------------------------------------------------
+# Fuzzy search
+# -----------------------------------------------------------------------------
+
+# pg_trgm modulü
+Veritabanı için yüklemek gerekiyor.
+
+CREATE EXTENSION pg_trgm;
+
+
+# Benzerlik
+Default benzerlik eşiği 0.3
+
+SELECT similarity('hello', 'hallo');
+SELECT * FROM ogrenci WHERE soyad % 'bayrak';
+SELECT * FROM ogrenci WHERE similarity(soyad, 'bayrak') > 0.5;
+
+
+# index
+Index olmadan benzerlik araması çok kaynak tüketiyor. Index ile bile 1 milyon
+kaydın üstünde performans sorunu var. Kayıt çoksa, kısmi index kullan.
+
+CREATE INDEX ogrenci_soyad_trigram_idx ON ogrenci 
+    USING gist(soyad gist_trgm_ops);
+
+
+# Kaynaklar
+http://bartlettpublishing.com/site/bartpub/blog/3/entry/350
+
+
+
+# -----------------------------------------------------------------------------
 # Psycopg notları
 # -----------------------------------------------------------------------------
 # Modulun import edilmesi
