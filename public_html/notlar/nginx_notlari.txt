@@ -18,19 +18,26 @@ hazırlandı. Eski sürümlerde bazı özellikler mevcut değil.
 # Kurulum
     apt-get install php5-fpm
 
-# conf.d/custom.conf
-     large_client_header_buffers 8 128k;
-     proxy_hide_header X-Powered-By;
-     server_tokens off;
+# /etc/php5/fpm/pool.d/www.conf
+    pm.max_children = 50
+    pm.start_servers = 20
+    pm.min_spare_servers = 10
+    pm.max_spare_servers = 30
+    pm.max_requests = 500
 
-# conf.d/cache.conf
+# /etc/nginx/conf.d/custom.conf
+    large_client_header_buffers 8 128k;
+    proxy_hide_header X-Powered-By;
+    server_tokens off;
+
+# /etc/nginx/conf.d/cache.conf
     fastcgi_cache_path /var/cache/nginx_fastcgi levels=1:2 keys_zone=fcache:64m inactive=60m;
     fastcgi_temp_path /var/cache/nginx_fastcgi/tmp;
     fastcgi_cache_key "$host$request_uri";
     fastcgi_cache_lock on; 
     fastcgi_cache_use_stale error timeout invalid_header updating http_500 http_503
 
-# sites-available/site.conf
+# /etc/nginx/sites-available/site.conf
     set $skip_cache 0;
 
     # Cachelenmeyecek bolumler.
