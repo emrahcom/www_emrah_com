@@ -217,7 +217,7 @@ apt-get install fping arping mtr curl dnsutils whois
 apt-get install sshuttle sudo                           # VPN over SSH
 apt-get install --install-recommends openvpn            # SSL VPN client olacaksa
 apt-get install nmap tcpdump
-apt-get install ngrep netcat-openbsd telnet
+apt-get install ack-grep ngrep netcat-openbsd telnet
 apt-get install minicom                                 # Seri porttan bağlanan cihazlar için
 apt-get install wvdial usb-modeswitch                   # USB 3G modem kullanılacaksa
 apt-get install pptp-linux                              # VPN tunel icin
