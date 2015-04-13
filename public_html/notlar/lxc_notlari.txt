@@ -62,18 +62,30 @@ lxc-create -n jessie -t debian -- -r jessie
 # Container klonlama
 lxc-clone -o template_makine -n yeni_makine
 
+# Container klasörünü paketleme
+cd /var/lib/lxc
+tar czf makine.tar.gz makine
+
+# Container paketini açma (başka bir sunucuda)
+tar zxf makine.tar.gz --numeric-owner -C /var/lib/lxc/
+
+# Container silme
+lxc-destroy -n makine
+
 # Container listesi
 lxc-ls
 lxc-ls -f
 
 # Test için çalıştırma
-lxc-start -n test
+lxc-start -n makine
 
 # Daemon modda çalıştırma
-lxc-start -d -n test
+lxc-start -d -n makine
 
 # Containeri durdurma
-lxc-stop -n test
+lxc-stop -n makine
+
+veya "lxc-attach -n makine" ile bağlanı "poweroff"
 
 # Makinenin konsoluna bağlanma
 lxc-attach -n test
@@ -174,12 +186,12 @@ sysctl -p
 # -----------------------------------------------------------------------------
 
 # Paylaşılacak klasör
-mkdir -p /var/lib/lxc/share/data
+mkdir -p /var/lib/lxc_shares/data
 mkdir -p /var/lib/lxc/test/rootfs/data
 
 # Klasörün container'a mount edilmesi
 /var/lib/lxc/test/config
-    lxc.mount.entry = /var/lib/lxc/share/data /var/lib/lxc/test/rootfs/data none bind 0 0
+    lxc.mount.entry = /var/lib/lxc_shares/data /var/lib/lxc/test/rootfs/data none bind 0 0
 
 
 
@@ -250,7 +262,12 @@ apt-get clean
 
 # Auto start
 Container config dosyasına
-    lxc.start.auto = 1
+    lxc.start.auto = 1      # acilista baslar.
+    lxc.start.order = 1     # baslama sirasi. buyuk olan once baslar.
+    lxc.start.delay = 2     # bir sonraki container kac saniye sonra baslasin.
+    lxc.group = onboot      # acilis gurubunda. bu gruptakilerin onceligi var.
+    lxc.group = group1      # grup adi. grup adi olanlar, eger ayni zamanda
+                            # "onboot" grubunda da degilse acilista baslamaz.
 
 # Reboot problemi
 Wheezy sunucu içinde yer alan container makinelerde reboot yapma.
