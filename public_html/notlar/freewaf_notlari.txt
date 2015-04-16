@@ -23,12 +23,26 @@ git clone https://github.com/p0pr0ck5/FreeWAF.git -b development
 
 # FreeWAF'ın kurulumu
 mkdir -p /usr/local/share/lua/5.1/
-cp -arp  FreeWAF /usr/local/share/lua/5.1/
-sed -i 's/require("inc./require("FreeWAF.inc./g' \
-    /usr/local/share/lua/5.1/FreeWAF/fw.lua
+cp -arp  FreeWAF /usr/local/share/lua/5.1
 
 mkdir -p /usr/local/lib/lua/5.1/FreeWAF/inc/
 cp FreeWAF/inc/libac.so /usr/local/lib/lua/5.1/FreeWAF/inc/
+
+# lua-resty-upload deposunun klonlanması
+git clone https://github.com/openresty/lua-resty-upload.git
+
+# lua-resty-upload kurulumu
+mkdir -p /usr/local/share/lua/5.1/FreeWAF/resty
+cp lua-resty-upload/lib/resty/upload.lua \
+    /usr/local/share/lua/5.1/FreeWAF/resty/
+
+
+
+# -----------------------------------------------------------------------------
+# AYARLAR
+# -----------------------------------------------------------------------------
+# /etc/nginx/conf.d/freewaf.conf
+lua_package_path '/usr/local/share/lua/5.1/FreeWAF/?.lua;;';
 
 # WAF'ın aktif hale getirilmesi
 context: server, location, location if
@@ -70,3 +84,4 @@ curl --head "http://127.0.0.1/?a=1' union"
 https://github.com/p0pr0ck5/FreeWAF
 https://www.cryptobells.com/
 http://cdn.cryptobells.com/written_thesis.pdf
+https://github.com/openresty/lua-resty-upload
