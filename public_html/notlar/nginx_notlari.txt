@@ -169,10 +169,28 @@ Lua ile örnek access control.
 # CACHE PURGE
 # -----------------------------------------------------------------------------
 Key olarak "$host/$1" kullanıldığı farzedildi.
+Bu özellik sadece commercial sürümde olabilir.
 
 # sites-available/site.conf
     location ~ /purge/(.*) {
         fastcgi_cache_purge fcache "$host/$1"; }
+
+
+# -----------------------------------------------------------------------------
+# CACHE BYPASS
+# -----------------------------------------------------------------------------
+Cache bypass edilince içeriği güncellenir. Purge kullanılmaya gerek kalmıyor.
+
+# Query string ile
+proxy_cache_bypass $arg_nocache;
+
+curl http://site.com/?nocache=1
+
+
+# Header ile
+proxy_cache_bypass $http_nocache;
+
+curl http://site.com/ -H "nocache: true"
 
 
 # -----------------------------------------------------------------------------
