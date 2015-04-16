@@ -196,21 +196,30 @@ curl http://site.com/ -H "nocache: true"
 # -----------------------------------------------------------------------------
 # REQUEST LIMIT
 # -----------------------------------------------------------------------------
-Belli bir IP adresinden gelen talep sayısı sınırlandırılabilir.
+Belli bir IP adresinden birim zamanda gelen talep sayısı sınırlandırılabilir.
 
 # /etc/nginx/conf.d/limit.conf
-limit_req_zone $http_x_real_ip zone=limited:10m rate=1r/s;
+limit_req_zone $binary_remote_addr zone=limited:10m rate=1r/s;
 
-Proxy arkasında ise key yerine $binary_remote_addr yerine $http_x_real_ip
-değeri kullanılabilir. Duruma göre IP adresi yerine başka bir key de
-kullanılabilir.
+Proxy arkasında ise key olarak $binary_remote_addr yerine $http_x_real_ip
+değeri kullanılabilir. Duruma göre key olarak IP adresinden başka bir şey de
+verilebilir.
 
-r/s yerine r/m de kullanılabilir.
+Talep oranını belirtmek için r/s ve r/m seçenekleri var. Eğer 2 saniyede 1 adet
+talep izni verilmek isteniyorsa 30 r/s değeri kullanılır.
 
 # Limitlenecek server/location için
 limit_req zone=limited burst=5;
 
-limit_req için "nodelay" parametresine bak.
+Talep oranı aşıldığında burst adedi kadar talep kuyrukta bekletilir ve talep
+oranına uygun şekilde cevaplar gönderilir. Cevap bekleyen talep adedi, burst
+değerini aşarsa bunlar için 503 döner.
+
+# nodelay
+limit_req zone=limited burst=5 nodelay;
+
+503 (service temporary unavailable) cevapları bekletilmeden hemen gönderilmek
+isteniyorsa nodelay parametresi kullanılır.
 
 
 
@@ -334,3 +343,10 @@ error.log dosyasından görülebilir.
 
 # Kaynak
 http://wiki.nginx.org/Debugging
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://nginx.org/en/docs/
