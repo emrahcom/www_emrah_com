@@ -347,6 +347,61 @@ http://wiki.nginx.org/Debugging
 
 
 # -----------------------------------------------------------------------------
+# CONF.D/
+# -----------------------------------------------------------------------------
+# upstream.conf
+upstream cache {
+    server 10.10.10.1;
+    server 10.10.10.2;
+    keepalive 24;
+}
+
+upstream apache {
+    server 127.0.0.1:8080;
+    keepalive 24;
+}
+
+
+# limit.conf
+limit_req_zone $binary_remote_addr zone=limited:10m rate=5r/s;
+
+
+# custom.conf
+server_tokens off;
+autoindex off;
+large_client_header_buffers 8 128k;
+
+
+# proxy.conf
+proxy_http_version 1.1;
+proxy_connect_timeout 3;
+proxy_read_timeout 30;
+
+proxy_set_header Connection "";
+proxy_set_header X-Real-IP  $remote_addr;
+proxy_set_header Host $host;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_hide_header X-Powered-By;
+
+
+# proxy_cache.conf
+proxy_cache_path /var/cache/nginx_proxy levels=1:2 keys_zone=pcache:64m inactive=60m;
+proxy_temp_path /var/cache/nginx_proxy/tmp;
+proxy_cache_key "$host$request_uri";
+proxy_cache_lock on;
+proxy_cache_bypass $http_nocache;
+proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504;
+proxy_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
+
+
+# proxy_buffer.conf
+proxy_buffer_size 64k;
+proxy_buffers 8 64k;
+proxy_busy_buffers_size 64k;
+
+
+
+# -----------------------------------------------------------------------------
 # KAYNAKLAR
 # -----------------------------------------------------------------------------
 http://nginx.org/en/docs/
