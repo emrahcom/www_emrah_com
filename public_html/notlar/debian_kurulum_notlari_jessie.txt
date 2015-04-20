@@ -270,6 +270,7 @@ apt-get install wodim dvd+rw-tools
 apt-get install alsa-base alsa-utils
 apt-get install pulseaudio pulseaudio-utils
 apt-get install mplayer ffmpeg
+apt-get install tpp                                     # text presentation program
 
 # Programlama paketleri
 apt-get install vim-nox                                 # script destekli vim
