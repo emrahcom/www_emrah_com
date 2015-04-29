@@ -275,6 +275,7 @@ apt-get install openssh-server openssh-client
 apt-get install dnsutils curl htop iotop nethogs iftop bmon
 apt-get install cron logrotate rsync bzip2 man
 apt-get install pyflakes git
+apt-get install dbus libpam-systemd
 apt-get install module-init-tools iptables  # container'da kural yazılacaksa
 
 # Kurulum sonrası deb paketlerinin kaldırılması
