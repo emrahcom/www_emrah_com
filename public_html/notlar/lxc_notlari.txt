@@ -190,6 +190,10 @@ sysctl -p
     lxc.network.ipv4 = 192.168.0.100/24
     lxc.network.ipv4.gateway = 192.168.0.1
 
+Container için config dosyasından sabit IP verilecekse container içindeki
+/etc/network/interfaces dosyasına ilgili device'i koyma yoksa açılış
+yavaşlıyor. DHCP bekliyor.
+
 
 # -----------------------------------------------------------------------------
 # Network interface (ethernet adaptör tahsis edilecekse)
