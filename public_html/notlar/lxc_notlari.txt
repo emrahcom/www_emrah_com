@@ -270,11 +270,11 @@ deb http://security.debian.org/ jessie/updates main contrib non-free
 deb-src http://security.debian.org/ jessie/updates main contrib non-free
 
 # Kurulacak sıkca kullanılan bazı paketler
-apt-get install --install-recommends iputils-ping less tmux vim-nox wget zsh
+apt-get install iputils-ping less tmux vim wget zsh
 apt-get install openssh-server openssh-client
-apt-get install dnsutils curl htop iotop nethogs iftop bmon
-apt-get install cron logrotate rsync bzip2 man
-apt-get install pyflakes git
+apt-get install dnsutils curl htop bmon bwm-ng
+apt-get install rsync bzip2 man ack-grep
+apt-get install cron logrotate
 apt-get install dbus libpam-systemd
 apt-get install module-init-tools iptables  # container'da kural yazılacaksa
 
