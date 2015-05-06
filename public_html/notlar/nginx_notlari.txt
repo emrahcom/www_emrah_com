@@ -70,12 +70,15 @@ hazırlandı. Eski sürümlerde bazı özellikler mevcut değil.
         fastcgi_cache_valid 60s;
         fastcgi_cache_valid any 30s;
         fastcgi_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
-        add_header X-Cache $upstream_cache_status;
         expires 300;
 
         add_header X-Powered-By "www.emrah.com";
+        add_header X-Cache $upstream_cache_status;
+        add_header X-Status $upstream_status;
+        add_header X-Time $upstream_response_time;
         add_header X-Upstream $hostname;
-        add_header X-Node "php";
+        add_header X-Backend $upstream_addr;
+        add_header X-Node "php;
         add_header X-Worker $pid; }
 
 
