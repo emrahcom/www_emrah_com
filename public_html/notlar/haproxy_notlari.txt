@@ -1,0 +1,77 @@
+# -----------------------------------------------------------------------------
+# HAPROXY NOTLARI
+# -----------------------------------------------------------------------------
+Debian Wheezy ve Debian Jessie ile denenmiştir.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+Wheezy deposunda yer almıyor. Wheezy için backports deposunu listeye eklemek
+gerekmekte.
+
+# /etc/apt/sources.list (Wheezy için)
+deb http://http.debian.net/debian wheezy-backports main
+deb-src http://http.debian.net/debian wheezy-backports main
+
+# Paketin yüklenmesi
+apt­get install haproxy
+apt­get install hatop
+
+
+
+# -----------------------------------------------------------------------------
+# AYARLAR
+# -----------------------------------------------------------------------------
+
+# Frontend
+Talebi karşılayan kısım.
+
+frontend www-http
+    bind *:80
+    default_backend web_servers
+
+
+# Backend
+Talebi, backend sunuculara aktaran kısım.
+
+backend web_servers
+    mode http
+    balance roundrobin
+    server web1 10.10.10.11:80
+    server web2 10.10.10.12:80
+
+# Load-Balancing modes
+- balance roundrobin
+    Trafiği sırayla bütün backend sunuculara eşit dağıtır. Toplamda her
+    sunucuya eşit miktarda talep gider. Bu modda "weight" kullanılarak sunucu
+    kapasiteleri tanımlanabilir ve sunucuların kapasiteleriyle orantılı olarak
+    talepler eşit dağıtılabilir.
+
+- balance leastconn
+    Gelen talepler, o an en az yük olan backend sunucuya yönlendirilir.
+
+- balance source
+    Gelen talebin kaynağına bakılarak, aynı kaynağa sahip olan talepler hep
+    aynı backend sunucuya gönderilir. Session varsa bu şekilde trafiğin
+    dağıtılması gerekmekte.
+
+# Health check
+backend web_servers
+    mode http
+    balance roundrobin
+    option httpchk HEAD /healt_check.php HTTP/1.1\r\nHost:\ mysite.com
+    server web1 10.10.10.11:80 check
+    server web2 10.10.10.12:80 check
+
+# http-check expect
+    http-check expect status 200
+    http-check expect string OK
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://cbonte.github.io/haproxy-dconv/configuration-1.5.html
+https://www.debian-administration.org/article/709/Using_the_haproxy_load-balancer_for_increased_availability
