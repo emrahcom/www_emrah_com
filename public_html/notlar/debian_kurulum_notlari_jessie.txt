@@ -209,7 +209,8 @@ apt-get install pypy
 apt-get install lxc debootstrap
 
 # monitoring paketleri
-apt-get install htop iotop sysstat nethogs iftop bmon bwm-ng powertop
+apt-get install htop iotop atop powertop sysstat
+apt-get install nethogs iftop bmon bwm-ng
 apt-get install --install-recommends sysdig             # Sistem cagrilarini analiz
 
 # network paketleri
@@ -217,11 +218,11 @@ apt-get install fping arping mtr curl httpie dnsutils whois
 apt-get install sshuttle sudo                           # VPN over SSH
 apt-get install --install-recommends openvpn            # SSL VPN client olacaksa
 apt-get install nmap tcpdump
-apt-get install ack-grep ngrep netcat-openbsd telnet
+apt-get install ngrep netcat-openbsd telnet
 apt-get install minicom                                 # Seri porttan bağlanan cihazlar için
 apt-get install wvdial usb-modeswitch                   # USB 3G modem kullanılacaksa
 apt-get install pptp-linux                              # VPN tunel icin
-apt-get install nuttcp                                  # Netwrok performan olcme
+apt-get install nuttcp                                  # Network performan olcme
 apt-get install ethtool net-tools
 
 # parallel komut çalıştırma
@@ -250,12 +251,14 @@ Diğer makinelerde wireless adaptör varsa olsun
 apt-get install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
-apt-get install bzip2 zip unzip patch tree ncdu parted autojump
-apt-get install lftp ncftp sshfs rsync
+apt-get install bzip2 zip unzip diff patch ack-grep
+apt-get install tree autojump ncdu parted
+apt-get install lftp ncftp rsync
 apt-get install ccrypt cryptsetup
 apt-get install pwgen                                   # Random parola üretmek için
-apt-get install ntfs-3g
+apt-get install sshfs
 apt-get install cifs-utils smbclient
+apt-get install ntfs-3g
 
 # Veritabanı istemcileri
 apt-get install postgresql-client

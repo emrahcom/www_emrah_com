@@ -181,7 +181,7 @@ arping -i eth0 -d 192.168.1.50
 Network hızını ölçmek için...
 
 # kurulum
-apt-get intall nuttcp
+apt-get install nuttcp
 
 # sunucuyu başlatmak
 nuttcp -S
