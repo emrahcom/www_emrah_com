@@ -1,0 +1,14 @@
+# -----------------------------------------------------------------------------
+# KAMAILIO NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie'de test edilmiştir.
+
+
+
+# -----------------------------------------------------------------------------
+# Kaynaklar
+# -----------------------------------------------------------------------------
+https://richardskingdom.net/howto-kamailio-sip-proxy-nat-debian-wheezy
+http://kb.asipto.com/kamailio:skype-like-service-in-less-than-one-hour
+http://web.mit.edu/sip/sip.edu/dns.shtml
+http://anders.com/cms/264/
