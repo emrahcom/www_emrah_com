@@ -251,7 +251,7 @@ Diğer makinelerde wireless adaptör varsa olsun
 apt-get install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
-apt-get install bzip2 zip unzip diff patch ack-grep
+apt-get install bzip2 zip unzip diffutils patch ack-grep
 apt-get install tree autojump ncdu parted
 apt-get install lftp ncftp rsync
 apt-get install ccrypt cryptsetup
