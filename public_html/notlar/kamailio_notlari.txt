@@ -83,6 +83,7 @@ systemctl restart kamailio
 # Client
 # -----------------------------------------------------------------------------
 
+# SIP client
 SIP Id              : 123@sip.emrah.com
 Password            : password123
 Registrar           : sip.beyaz.net
@@ -91,6 +92,9 @@ Proxy               : sip.beyaz.net
 Proxy Port          : 5061
 Preferred Transport : TLS
 TLS protocols       : TLSv1
+
+# Pavucontrol
+Playback -> Jitsi -> Mute
 
 
 
