@@ -94,7 +94,33 @@ Preferred Transport : TLS
 TLS protocols       : TLSv1
 
 # Pavucontrol
-Playback -> Jitsi -> Mute
+Playback  -> Jitsi ->
+Recording -> Jitsi ->
+
+
+
+# -----------------------------------------------------------------------------
+# Kamailio Komutları
+# -----------------------------------------------------------------------------
+
+# Registered users
+kamctl ul show
+kamctl online
+
+# All subscribers
+kamctl db show subscriber
+
+# Add user
+kamctl add <username> <password>
+
+# Remove user
+kamctl rm <username>
+
+# Change user password
+kamctl passwd <username> <password>
+
+# Monitoring
+kamctl monitor
 
 
 
