@@ -139,6 +139,13 @@ UseDNS no                               # Baglanan kisiler icin DNS sorgusu yapm
 ServerAliveInterval 100                 # SSH baglantisi yaptigimizda, sunucudan kopmamamiz icin
                                         # her 100 saniyede bir ping gonderir.
 
+
+
+# /etc/dhcp/dhclient.conf
+prepend domain-name-servers 208.67.220.220, 8.8.4.4;
+timeout 10;
+
+
 # /etc/network/interfaces (Emrah özel kurulum için)
 auto lo
 iface lo inet loopback
@@ -147,6 +154,10 @@ iface lo inet loopback
 allow-hotplug eth0
 iface eth0 inet manual
 
+# The primary wireless interface
+allow-hotplug wlan0
+iface wlan0 inet manual
+
 # bridge
 auto br0
 iface br0 inet dhcp
@@ -154,7 +165,7 @@ bridge_ports eth0
 bridge_stp off
 bridge_fd 0
 bridge_maxwait 0
-bridge_hw aa:bb:cc:dd:ee:ff
+#bridge_hw aa:bb:cc:dd:ee:ff
 
 # br0:0
 auto br0:0
@@ -180,9 +191,11 @@ iface br0:3 inet static
 address 172.16.244.9
 netmask 255.255.255.0
 
-# The primary wireless interface
-allow-hotplug wlan0
-iface wlan0 inet dhcp
+# br0:4 (sip)
+auto br0:4
+iface br0:4 inet static
+address 192.168.18.9
+netmask 255.255.255.0
 
 
 # reboot
