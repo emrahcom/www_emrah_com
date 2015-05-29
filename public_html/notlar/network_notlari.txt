@@ -187,8 +187,8 @@ apt-get install nuttcp
 nuttcp -S
 
 # istemciden transferi başlatmak
-nuttp sunucu_ip
-nuttp -r sunucu_ip
+nuttcp sunucu_ip
+nuttcp -r sunucu_ip
 
 
 
