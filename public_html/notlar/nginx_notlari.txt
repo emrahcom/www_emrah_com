@@ -419,7 +419,6 @@ proxy_hide_header X-Powered-By;
 # proxy_cache.conf
 proxy_cache_path /var/cache/nginx_proxy levels=1:2 keys_zone=pcache:64m inactive=60m;
 proxy_temp_path /var/cache/nginx_proxy/tmp;
-proxy_cache_key "$host$request_uri$mobile";
 proxy_cache_lock on;
 proxy_cache_bypass $http_nocache;
 proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504;
