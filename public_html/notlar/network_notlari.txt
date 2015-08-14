@@ -143,6 +143,9 @@ tcpdump
     src port port_no
     dst port port_no
 
+# dump dosyasını inceleme
+tcpdump -qns0 -X -r /tmp/tcpdump.txt
+
 
 # -----------------------------------------------------------------------------
 # fping
