@@ -143,3 +143,4 @@ frontend
 # -----------------------------------------------------------------------------
 http://cbonte.github.io/haproxy-dconv/configuration-1.5.html
 https://www.debian-administration.org/article/709/Using_the_haproxy_load-balancer_for_increased_availability
+http://blog.haproxy.com/2012/07/02/use-geoip-database-within-haproxy/
