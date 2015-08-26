@@ -115,12 +115,10 @@ http://ip_address:8000/haproxy?stats
 
 
 # -----------------------------------------------------------------------------
-# ACL
+# ACL - domain adına göre farklı backend
 # -----------------------------------------------------------------------------
 
 # Domain'e göre ayrı backend'e yönlendirme
-acl gamma00   hdr(host) -i apple.gamma.com
-
 frontend
     bind :80
 
@@ -137,6 +135,36 @@ frontend
     default_backend default
 
 
+
+# -----------------------------------------------------------------------------
+# ACL - Bölgesel kısıtlama
+# -----------------------------------------------------------------------------
+
+# kural
+acl geo-tr src, map_ip(/etc/haproxy/geo-tr.txt) -n -m str -i TR
+tcp-request content reject if !geo-tr
+
+# /etc/haproxy/geo-tr.txt
+5.2.80.0/21 TR
+5.11.128.0/17 TR
+5.23.8.0/24 TR
+
+
+
+# -----------------------------------------------------------------------------
+# ACL - RTSP trafik filtreleme
+# -----------------------------------------------------------------------------
+
+frontend rtsp-frontend
+    bind :554
+    mode tcp
+
+    tcp-request inspect-delay 3s
+    acl rtsp_stream req.payload(0,0),lower -m sub rtsp
+    tcp-request content reject if !rtsp_stream
+
+    acl banned_stream req.payload(0,0),lower -m sub yasakli_stream
+    tcp-request content reject if banned_stream
 
 # -----------------------------------------------------------------------------
 # KAYNAKLAR
