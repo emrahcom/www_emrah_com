@@ -106,9 +106,8 @@ update-grub
 
 
 # CTRL-ALT-DEL ile sistem kapatilacaksa
-rm /lib/systemd/system/ctrl-alt-del.target
 ln -s /lib/systemd/system/poweroff.target \
-      /lib/systemd/system/ctrl-alt-del.target
+      /etc/systemd/system/ctrl-alt-del.target
 systemctl daemon-reload
 
 # /etc/fstab
