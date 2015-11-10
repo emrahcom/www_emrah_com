@@ -20,6 +20,7 @@ FLUSH PRIVILEGES;
     binlog-do-db=VERITABANI
     innodb_flush_log_at_trx_commit=1
     sync_binlog=1
+    skip-slave-start
 
 /etc/init.d mysql restart
 
@@ -52,6 +53,8 @@ mysql -u root -p
 # Slave: /etc/mysql/my.cnf ayarları
     server-id=2
     read_only=TRUE
+    replicate-wild-do-table=dbname.%
+    slave-skip-errors = 1062
 
 /etc/init.d mysql restart
 
