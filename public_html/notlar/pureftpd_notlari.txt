@@ -44,6 +44,16 @@ Pure-ftpd Notları
         . Listelenecek dosya adedi (default 10000)
         echo "20000 100" > /etc/pure-ftpd/conf/LimitRecursion
 
+        . Unix kullanıcı hesapları ile FTP erişimini engelleme
+        echo "no" > /etc/pure-ftpd/conf/UnixAuthentication
+
+        . PAM ile FTP erişimini yasaklama
+        echo "no" > /etc/pure-ftpd/conf/PAMAuthentication
+
+        . www-data ve diğer sistem kullanıcı hesaplarının da FTP ile
+        bağlanabilmesi için ... (www-data UID: 33)
+        echo "33" > /etc/pure-ftpd/conf/MinUID
+
         . Read-Only anonymous FTP erişimi olacaksa
         adduser --system --group ftp
         echo "no" > /etc/pure-ftpd/conf/NoAnonymous
