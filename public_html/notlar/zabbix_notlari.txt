@@ -106,3 +106,38 @@ a2enconf servername
 a2enconf zabbix-server
 a2enmod ssl
 
+
+# -----------------------------------------------------------------------------
+# ZABBIX API
+# -----------------------------------------------------------------------------
+
+# Paketler
+apt-get install curl jq
+
+# Authentication
+curl -i -X POST -H 'Content-Type: application/json-rpc' \
+    -d "{\"params\": {\"password\": \"$PASSWD\", \"user\": \"Admin\"}, \
+    \"jsonrpc\": \"2.0\", \"method\": \"user.authenticate\", \
+    \"auth\": \"\", \"id\": 0}" \
+    http://localhost/zabbix/api_jsonrpc.php | \
+    jq '.result'
+
+>>> "ee156f93682b14c02117739f53e0bb94"
+
+{"jsonrpc":"2.0","result":"ee156f93682b14c02117739f53e0bb94","id":0}
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://www.zabbix.com/documentation/2.4/manual/api
+https://www.zabbix.com/documentation/2.4/manual/api/reference
+http://www.looke.ch/wp/talking-to-the-the-zabbix-json-api
+
+
+# -----------------------------------------------------------------------------
+# GEÇİCİ NOTLAR
+# -----------------------------------------------------------------------------
+PASSWD=`egrep PASSWORD \
+    /var/lib/lxc/admin-mon/rootfs/etc/zabbix/zabbix.conf.php |
+    cut -d"'" -f4 | cut -c1-8`
