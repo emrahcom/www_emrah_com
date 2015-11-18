@@ -114,31 +114,51 @@ a2enmod ssl
 # Paketler
 apt-get install curl jq
 
-# Authentication
+# api init
 API_HOST="http://localhost/zabbix/api_jsonrpc.php"
 
 HEADER=`cat <<EOF
 Content-Type: application/json-rpc
 EOF
 
+# user.authentication
 JSON=`cat <<EOF
-{ "jsonrpc"     : "2.0",
-  "method"      : "user.authenticate",
-  "params"      : {
-        "user"      : "Admin",
-        "password"  : "$PASSWD"
-  },
-  "auth"        : null,
-  "id"          : 0
+{
+    "jsonrpc" : "2.0",
+    "method" : "user.authenticate",
+    "params" : {
+        "user" : "Admin",
+        "password" : "$PASSWD"
+    },
+    "auth" : null,
+    "id" : 0
 }
 EOF`
 
-curl -s -X POST -H "$HEADER" -d "$JSON" $API_HOST | \
-    jq '.result'
+TOKEN=`curl -s -X POST -H "$HEADER" -d "$JSON" $API_HOST | \
+    jq '.result'`
 
+echo $TOKEN
 >>> "ee156f93682b14c02117739f53e0bb94"
 
-{"jsonrpc":"2.0","result":"ee156f93682b14c02117739f53e0bb94","id":0}
+
+# hostgroup.create
+JSON=`cat <<EOF
+{
+    "jsonrpc" : "2.0",
+    "method" : "hostgroup.create",
+    "params" : {
+        "name" : "My Servers"
+    },
+    "auth" : "$TOKEN",
+    "id" : 0
+}
+EOF`
+
+GROUP_ID=`curl -s -X POST -H "$HEADER" -d "$JSON" $API_HOST | \
+        jq '.result.groupids[0]' | \
+        cut -d '"' -f2`
+
 
 
 # -----------------------------------------------------------------------------
