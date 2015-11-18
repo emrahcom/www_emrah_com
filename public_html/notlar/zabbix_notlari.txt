@@ -115,11 +115,25 @@ a2enmod ssl
 apt-get install curl jq
 
 # Authentication
-curl -i -X POST -H 'Content-Type: application/json-rpc' \
-    -d "{\"params\": {\"password\": \"$PASSWD\", \"user\": \"Admin\"}, \
-    \"jsonrpc\": \"2.0\", \"method\": \"user.authenticate\", \
-    \"auth\": \"\", \"id\": 0}" \
-    http://localhost/zabbix/api_jsonrpc.php | \
+API_HOST="http://localhost/zabbix/api_jsonrpc.php"
+
+HEADER=`cat <<EOF
+Content-Type: application/json-rpc
+EOF
+
+JSON=`cat <<EOF
+{ "jsonrpc"     : "2.0",
+  "method"      : "user.authenticate",
+  "params"      : {
+        "user"      : "Admin",
+        "password"  : "$PASSWD"
+  },
+  "auth"        : null,
+  "id"          : 0
+}
+EOF`
+
+curl -s -X POST -H "$HEADER" -d "$JSON" $API_HOST | \
     jq '.result'
 
 >>> "ee156f93682b14c02117739f53e0bb94"
