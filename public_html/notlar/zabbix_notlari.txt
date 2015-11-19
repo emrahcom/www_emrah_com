@@ -107,6 +107,29 @@ a2enconf zabbix-server
 a2enmod ssl
 
 
+
+# -----------------------------------------------------------------------------
+# ZABBIX SENDER
+# -----------------------------------------------------------------------------
+zabbix_sender, Zabbix sunucuya veri göndermek için kullanılır. Uzun süren
+scriptler içinde kullanılabilir.
+
+# zabbix_sender
+zabbix_sender -z zabbixserver.gno.loc -s "myhostname" -k db.connections -o 43
+
+# -input-file
+Bir text dosyaya birden fazla değer kaydedilip tek seferde gönderilebilir.
+
+
+
+# -----------------------------------------------------------------------------
+# ZABBIX GET
+# -----------------------------------------------------------------------------
+Zabbix Agent makinelerden veri almak için kullanılır.
+
+zabbix_get -s 127.0.0.1 -p 10050 -k "system.cpu.load[all,avg1]"
+
+
 # -----------------------------------------------------------------------------
 # ZABBIX API
 # -----------------------------------------------------------------------------
@@ -164,8 +187,9 @@ GROUP_ID=`curl -s -X POST -H "$HEADER" -d "$JSON" $API_HOST | \
 # -----------------------------------------------------------------------------
 # KAYNAKLAR
 # -----------------------------------------------------------------------------
-https://www.zabbix.com/documentation/2.4/manual/api
-https://www.zabbix.com/documentation/2.4/manual/api/reference
+https://www.zabbix.com/documentation/2.2/start
+https://www.zabbix.com/documentation/2.2/manual/api
+https://www.zabbix.com/documentation/2.2/manual/api/reference
 http://www.looke.ch/wp/talking-to-the-the-zabbix-json-api
 
 
