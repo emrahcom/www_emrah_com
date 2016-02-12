@@ -499,6 +499,9 @@ apt-get install dpkg-dev build-essential fakeroot
 
 - Adblock plus manuel olarak eklensin.
 
+- DuckDuckGo plus manuel olarak eklensin.
+  references içinde özelleştirme yapılacak. Göz at.
+
 - Türk Trust'ı güvenilir sertifika sağlayıcılar listesinden çıkar.
     preferences -> Advanced -> Encryption -> View Certificates
     -> Authorities -> (Seçimi yap) -> Delete or Distrust
