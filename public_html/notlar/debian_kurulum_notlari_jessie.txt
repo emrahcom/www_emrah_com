@@ -431,11 +431,20 @@ apt-get install dpkg-dev build-essential fakeroot
 
 
 
+# Source Code Pro
+https://github.com/adobe-fonts/source-code-pro
+https://github.com/adobe-fonts/source-code-pro/releases/tag/2.010R-ro/1.030R-it
+Download zip
+
+mkdir -p ~/.fonts/Source_Code_Pro
+unzip source-code-pro-*.zip -d ~/.fonts/Source_Code_Pro
+
 # xterm default font
 . ~/.Xdefaults
     URxvt.background: black
     URxvt.foreground: green
-    URxvt.font: xft:DejaVu Sans Mono:size=10
+    #URxvt.font: xft:DejaVu Sans Mono:size=10
+    URxvt.font: xft:Source Code Pro:size=11
     URxvt.scrollBar: false
 
 
