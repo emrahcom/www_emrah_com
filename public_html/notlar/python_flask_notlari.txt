@@ -12,14 +12,14 @@ Recommended paketlerin default olarak kurulmadığı varsayıldı. Nginx ve UWSG
 ile birlikte çalışacak şekilde yapılandırılıyor.
 
 # Paketler
-apt-get install python3-flask python3-flask-sqlalchemy
+apt-get install python3-flask
 apt-get install python3-pip
 apt-get install uwsgi uwsgi-plugin-python3
 apt-get install nginx-extras
 
 # pip3
 su -l emrah
-pip3 install --user flask-wtf htmlmin wtforms'
+pip3 install --user flask-wtf wtforms
 
 # Flask proje klasörü
 mkdir -p /home/emrah/myproject/{templates,static}
@@ -43,7 +43,7 @@ chdir = /home/emrah/myproject/
 
 # /home/emrah/myproject/myapp.py
 from flask import Flask
-app= Flask(__name__)
+app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
@@ -53,9 +53,14 @@ if __name__ == '__main__':
     app.debug = True
     app.run()
 
+# test run
+su -l emrah
+python3 /home/emrah/myproject/myapp.py
+
+<ctrl>+C
+
 # UWSGI link ve restart
-cd /etc/uwsgi/apps-enabled
-ln -s /home/emrah/myproject/myapp.ini
+ln -s /home/emrah/myproject/myapp.ini /etc/uwsgi/apps-enabled/
 systemctl restart uwsgi
 
 # /etc/nginx/sites-available/mysite.conf
@@ -78,14 +83,52 @@ server {
 }
 
 # Nginx link ve restart
-cd /etc/nginx/sites-enabled
-ln -s ../sites-available/mysite.conf
+ln -s ../sites-available/mysite.conf /etc/nginx/sites-enabled/
 systemctl restart nginx
 
 # Test
 curl http://127.0.0.1/
 
+# UWSGI ile debug
+Browserdan hata mesajlarını görebilmek için ana blok içinde:
 
+app = Flask(__name__)
+
+from werkzeug.debug import DebuggedApplication
+app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
+app.debug = True
+
+
+
+# -----------------------------------------------------------------------------
+# STRUCTURE
+# -----------------------------------------------------------------------------
+myproject/
+    blueprint1/
+        view.py
+        static/
+            blueprint1/
+        templates/
+            blueprint1/
+    blueprint2/
+        view.py
+        static/
+            blueprint2/
+        templates/
+            blueprint2/
+    models.py
+    run.py
+
+
+
+# -----------------------------------------------------------------------------
+# SQLALCHEMY
+# -----------------------------------------------------------------------------
+
+# Paketler
+apt-get install python3-flask-sqlalchemy
+apt-get install python3-psycopg2
+apt-get install python3-mysql.connector
 
 # -----------------------------------------------------------------------------
 # KAYNAKLAR
@@ -95,7 +138,13 @@ curl http://127.0.0.1/
 http://flask.pocoo.org/
 http://flask.pocoo.org/docs/0.10/
 http://www.fullstackpython.com/flask.html
-
+# Structure
+https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications
+http://mattupstate.com/python/2013/06/26/how-i-structure-my-flask-applications.html
+http://fewstreet.com/2015/01/16/flask-blueprint-templates.html
+https://www.exploreflask.com/blueprints.html
+# Flask - SQLAlchemy
+http://flask-sqlalchemy.pocoo.org/2.1/
 # UWSGI
 http://uwsgi-docs.readthedocs.org/en/latest/
 http://flask.pocoo.org/docs/0.10/deploying/uwsgi/
