@@ -1,9 +1,7 @@
 # -----------------------------------------------------------------------------
 # FLASK NOTLARI
 # -----------------------------------------------------------------------------
-Notlar, Debian Jessie ve Python 2.7 için hazırlanmıştır. Python 3.x ile
-çalışıyor olmasına karşın bazı extentionların (örneğin flask-spyne) 3.x desteği
-henüz tamamlanmış değil.
+Notlar, Debian Jessie ve Python 3.x için hazırlanmıştır.
 
 
 
@@ -14,12 +12,17 @@ Recommended paketlerin default olarak kurulmadığı varsayıldı. Nginx ve UWSG
 ile birlikte çalışacak şekilde yapılandırılıyor.
 
 # Paketler
-apt-get install python-flask
-apt-get install uwsgi uwsgi-plugin-python
+apt-get install python3-flask python3-flask-sqlalchemy
+apt-get install python3-pip
+apt-get install uwsgi uwsgi-plugin-python3
 apt-get install nginx-extras
 
+# pip3
+su -l emrah
+pip3 install --user flask-wtf htmlmin wtforms'
+
 # Flask proje klasörü
-mkdir /home/emrah/myproject
+mkdir -p /home/emrah/myproject/{templates,static}
 
 # /home/emrah/myproject/myapp.ini
 [uwsgi]
@@ -47,6 +50,7 @@ def hello_world():
     return 'Hello World!'
 
 if __name__ == '__main__':
+    app.debug = True
     app.run()
 
 # UWSGI link ve restart
@@ -54,14 +58,14 @@ cd /etc/uwsgi/apps-enabled
 ln -s /home/emrah/myproject/myapp.ini
 systemctl restart uwsgi
 
-# /etc/nginx/sites-available/mysite
+# /etc/nginx/sites-available/mysite.conf
 server {
-        listen 80; 
+        listen 80;
         server_name _;
         access_log /var/log/nginx/access.mysite.log;
         error_log /var/log/nginx/error.mysite.log;
 
-        root /var/www/html;
+        root /home/emrah/myproject/static;
 
         location / {
                 try_files $uri @myproject;
@@ -75,23 +79,11 @@ server {
 
 # Nginx link ve restart
 cd /etc/nginx/sites-enabled
-ln -s ../sites-available/mysite
+ln -s ../sites-available/mysite.conf
 systemctl restart nginx
 
 # Test
 curl http://127.0.0.1/
-
-
-
-# -----------------------------------------------------------------------------
-# FLASK-SPYNE KURULUM
-# -----------------------------------------------------------------------------
-
-# Paketler
-apt-get install python-spyne python-simplejson python-yaml
-apt-get install python-pip
-pip install flask-spyne
-    (sec-wall paketi de bağımlılık nedeniyle kuruluyor. Debian deposunda yok.)
 
 
 
@@ -107,8 +99,3 @@ http://www.fullstackpython.com/flask.html
 # UWSGI
 http://uwsgi-docs.readthedocs.org/en/latest/
 http://flask.pocoo.org/docs/0.10/deploying/uwsgi/
-
-# Spyne
-http://spyne.io/
-https://github.com/rayrapetyan/flask-spyne
-https://pypi.python.org/pypi/Flask-Spyne
