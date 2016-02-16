@@ -103,21 +103,54 @@ app.debug = True
 # -----------------------------------------------------------------------------
 # STRUCTURE
 # -----------------------------------------------------------------------------
-myproject/
-    blueprint1/
-        view.py
-        static/
-            blueprint1/
-        templates/
-            blueprint1/
-    blueprint2/
-        view.py
-        static/
-            blueprint2/
-        templates/
-            blueprint2/
-    models.py
-    run.py
+myproject
+│
+├── app
+│   ├── __init__.py
+│   ├── models.py
+│   ├── static
+│   │   ├── logo.png
+│   │   └── style.css
+│   ├── templates
+│   │   ├── bp1
+│   │   │   ├── layout.html
+│   │   │   ├── page1.html
+│   │   │   └── page2.html
+│   │   ├── bp2
+│   │   │   ├── layout.html
+│   │   │   ├── page3.html
+│   │   │   └── page4.html
+│   │   └── layout.html
+│   └── views
+│       ├── bp1.py
+│       ├── bp2.py
+│       └── __init__.py
+└── run.py
+
+# myproject/app/view/__init__.py
+touch myproject/app/view/__init__.py
+
+# myproject/app/views/bp1.py
+from flask import Blueprint, render_template
+bp1 = Blueprint('bp1', __name__)
+
+@bp1.route('/page1')
+def page1():
+    return render_template('bp1/page1.html')
+
+# myproject/app/__init__.py
+from flask import Flask
+from .views.bp1 import bp1
+
+app = Flask(__name__)
+app.register_blueprint(bp1, url_prefix='/bp1')
+
+# myproject/run.py
+from app import app
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
 
 
 
@@ -139,10 +172,10 @@ http://flask.pocoo.org/
 http://flask.pocoo.org/docs/0.10/
 http://www.fullstackpython.com/flask.html
 # Structure
+https://www.exploreflask.com/blueprints.html
 https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications
 http://mattupstate.com/python/2013/06/26/how-i-structure-my-flask-applications.html
 http://fewstreet.com/2015/01/16/flask-blueprint-templates.html
-https://www.exploreflask.com/blueprints.html
 # Flask - SQLAlchemy
 http://flask-sqlalchemy.pocoo.org/2.1/
 # UWSGI
