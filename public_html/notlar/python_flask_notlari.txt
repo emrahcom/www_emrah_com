@@ -155,8 +155,11 @@ if __name__ == '__main__':
 
 
 # -----------------------------------------------------------------------------
-# SQLALCHEMY
+# FLASK-SQLALCHEMY
 # -----------------------------------------------------------------------------
+Flask-SQLAlchemy, tamamen SQLAlchemy gibi davranmamakta. Özellikle Flask
+kullanılırken doğrudan SQLAlchemy kullanmak yerine Flask-SQLAlchemy kullanmanın
+bazı avantajları var. Örneğin session yönetimi gibi...
 
 # Paketler
 apt-get install python3-flask-sqlalchemy
