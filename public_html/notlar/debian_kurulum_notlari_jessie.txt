@@ -315,7 +315,7 @@ apt-get install phppgadmin                              # PostrgreSQL icin web U
 # Masaüstü paketleri
 apt-get install --install-recommends xorg
 apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
-apt-get install rxvt-unicode-256color
+apt-get install xterm
 apt-get install ttf-dejavu-core ttf-dejavu-extra
 apt-get install xtrlock unclutter numlockx
 apt-get install scrot                                   # screen capture
@@ -446,6 +446,12 @@ unzip source-code-pro-*.zip -d ~/.fonts/Source_Code_Pro
     #URxvt.font: xft:DejaVu Sans Mono:size=10
     URxvt.font: xft:Source Code Pro:size=11
     URxvt.scrollBar: false
+
+    XTerm*background: black
+    XTerm*foreground: green
+    XTerm*faceName: Source Code Pro
+    XTerm*faceSize: 12
+    XTerm*termName: xterm-256color
 
 
 
