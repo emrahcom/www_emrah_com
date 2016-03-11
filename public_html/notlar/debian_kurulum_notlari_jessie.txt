@@ -461,6 +461,10 @@ unzip source-code-pro-*.zip -d ~/.fonts/Source_Code_Pro
     XTerm*faceName: Source Code Pro
     XTerm*faceSize: 12
     XTerm*termName: xterm-256color
+    XTerm*on2Clicks: word
+    XTerm*on3Clicks: regex [^ \n]+
+    XTerm*on4Clicks: regex [^'"(){}\n]+
+    XTerm*on5Clicks: regex [^\n]+
 
 
 
