@@ -431,6 +431,15 @@ apt-get install dpkg-dev build-essential fakeroot
 
 
 
+# tmux
+. /root/.tmux.conf
+. ~/.tmux.conf
+    bind '"' split-window -c "#{pane_current_path}"
+    bind % split-window -h -c "#{pane_current_path}"
+    bind c new-window -c "#{pane_current_path}"
+
+
+
 # Source Code Pro
 https://github.com/adobe-fonts/source-code-pro
 https://github.com/adobe-fonts/source-code-pro/releases/tag/2.010R-ro/1.030R-it
