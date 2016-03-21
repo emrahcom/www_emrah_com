@@ -221,6 +221,10 @@ aptitude install mjpegtools lame twolame
 # -----------------------------------------------------------------------------
 # NGINX RTMP MODULE
 # -----------------------------------------------------------------------------
+Roman Arutyunyan'ın depoda geliştirme durdu. Güncellemeleri Sergey
+Dryabzhinsky'nin depodan takip et.
+
+https://github.com/sergey-dryabzhinsky/nginx-rtmp-module
 
 # Derleme icin gerekli paketler.
 aptitude install dpkg-dev build-essential fakeroot
@@ -637,5 +641,6 @@ ln -s ../apps-available/geocheck.ini .
 
 # Kaynaklar
 https://github.com/arut/nginx-rtmp-module/wiki/Directives
+https://github.com/sergey-dryabzhinsky/nginx-rtmp-module
 # RTMP/RTSP/MMS/M3U8 adresleri
 http://radyodelisi.blogspot.com/
