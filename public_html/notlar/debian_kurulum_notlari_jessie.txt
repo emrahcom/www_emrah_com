@@ -484,6 +484,12 @@ unzip source-code-pro-*.zip -d ~/.fonts/Source_Code_Pro
     bind[bpython]           = MOD+Shift+o
     program[weechat]        = x-terminal-emulator -T "Weechat" -xrm "*metaSendsEscape:true" -e tmux new-session /usr/bin/weechat
     bind[weechat]           = MOD+Shift+w
+    program[mplayer_mute]   = sh -c "echo mute > /tmp/mplayer.pipe"
+    bind[mplayer_mute]      = Pause
+    program[mplayer_vol_l]  = sh -c "echo 'volume -1' > /tmp/mplayer.pipe"
+    bind[mplayer_vol_l]     = XF86AudioLowerVolume
+    program[mplayer_vol_r]  = sh -c "echo 'volume +1' > /tmp/mplayer.pipe"
+    bind[mplayer_vol_r]     = XF86AudioRaiseVolume
 
 
 
