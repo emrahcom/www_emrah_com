@@ -57,7 +57,7 @@ init_by_lua '
 context: server, location, location if
 
 access_by_lua '
-    FreeWAF = require "FreeWAF.fw"
+    local FreeWAF = require "fw"
     local fw = FreeWAF:new()
     -- fw:set_option("ignore_rule", 90002)
     fw:exec()
