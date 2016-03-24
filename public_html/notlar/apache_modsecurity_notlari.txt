@@ -1,0 +1,39 @@
+# -----------------------------------------------------------------------------
+# APACHE MODSECURITY NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie ve Apache2 ile test edildi.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+Apache2 paketinin kurulu ve çalışır durumda olduğu varsayıldı.
+
+# Paketler
+apt-get install libapache2-mod-security2 modsecurity-crs
+
+# Default conf
+mv /etc/modsecurity/modsecurity.conf-recommended \
+    /etc/modsecurity/modsecurity.conf
+
+# /etc/modsecurity/modsecurity.conf
+SecRuleEngine On
+SecResponseBodyAccess Off
+SecRequestBodyLimit 13107200
+
+# /etc/modsecurity/myconf.conf
+Include /usr/share/modsecurity-crs/*.conf
+Include /usr/share/modsecurity-crs/base_rules/*.conf
+
+# Enable mod
+a2enmod security2
+systemctl reload apache2
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://github.com/SpiderLabs/ModSecurity
+https://github.com/SpiderLabs/ModSecurity/wiki/Reference-Manual
