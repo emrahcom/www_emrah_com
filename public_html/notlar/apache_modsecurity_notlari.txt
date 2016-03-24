@@ -25,6 +25,7 @@ SecRequestBodyLimit 13107200
 # /etc/modsecurity/myconf.conf
 Include /usr/share/modsecurity-crs/*.conf
 Include /usr/share/modsecurity-crs/base_rules/*.conf
+SecRuleRemoveById 960017
 
 # Enable mod
 a2enmod security2
