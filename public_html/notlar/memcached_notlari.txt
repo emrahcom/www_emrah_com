@@ -77,8 +77,8 @@ PHP-FPM kullanıldığı varsayıldı.
 10.0.0.2    mcache2.srv.loc
 
 # /etc/php5/fpm/php.ini
-session.save_handler = memcache
-session.save_path = "tcp://mcache1.srv.loc:11211,tcp://mcache1.srv.loc:11211"
+session.save_handler = memcached
+session.save_path = "mcache1.srv.loc:11211,mcache1.srv.loc:11211"
 
 # /etc/php5/mods-available/memcache.ini
 Failover ve redundancy için aşağıdaki ayarları eklemek gerekiyor.
