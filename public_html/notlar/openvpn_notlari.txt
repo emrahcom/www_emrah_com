@@ -1,0 +1,132 @@
+# -----------------------------------------------------------------------------
+# OPENVPN NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edilmiştir.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+# Paketler
+apt-get install -y openvpn easy-rsa
+apt-get install -y iptables iptables-persistent
+apt-get install -y expect
+
+
+
+# -----------------------------------------------------------------------------
+# SERTİFİKA OTORİTESİ
+# -----------------------------------------------------------------------------
+# ca klasörü
+cd /etc/openvpn
+make-cadir ca
+cd /etc/openvpn/ca
+
+# vars
+cp vars vars.orig
+vim vars
+    export KEY_COUNTRY="TR"
+    export KEY_PROVINCE="-"
+    export KEY_CITY="Istanbul"
+    export KEY_ORG="Firma Adi"
+    export KEY_EMAIL="mail@firma.com"
+    export KEY_OU="Bolum Adi"
+    export KEY_NAME="Anahtar Adi"
+
+# Sertifika otoritesi için sertifika oluşturulması
+source vars
+./clean-all
+./build-ca --batch
+
+
+
+# -----------------------------------------------------------------------------
+# OPENVPN SUNUCU
+# -----------------------------------------------------------------------------
+OpenVPN sunucu sertifikasını, sertifika otoritesi oluşturur. Bu örnekte,
+sertifika otoritesi ve OpenVPN sunucu aynı makinedir ama aynı olması şart
+değildir.
+
+# Sertifikanın oluşturulması
+./build-key-server --batch server
+
+# OpenVPN sunucuya sertifikanın yüklenmesi
+cp keys/ca.crt /etc/openvpn/
+cp keys/server.crt /etc/openvpn/
+cp keys/server.key /etc/openvpn/
+
+# Diffie-Hellman anahtar çiftinin oluşturulması
+./build-dh
+cp keys/dh2048.pem /etc/openvpn/
+
+# ip_forward
+echo 1 > /proc/sys/net/ipv4/ip_forward
+echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/ip_forward.conf
+
+# iptables ayarları
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+iptables-save > /etc/iptables/rules.v4
+ip6tables-save > /etc/iptables/rules.v6
+
+# /etc/openvpn/my_server.conf (kontrol edilecek kısımlar)
+ca ca.crt
+cert server.crt
+key server.key
+dh dh2048.pem
+server 10.8.0.0 255.255.255.0
+push "route 172.72.72.0 255.255.255.0"
+duplicate-cn
+user nobody
+group nogroup
+
+# /etc/default/openvpn
+AUTOSTART="my_server"
+
+# restart
+systemctl daemon-reload
+systemctl restart openvpn
+
+
+
+# -----------------------------------------------------------------------------
+# OPENVPN İSTEMCİ
+# -----------------------------------------------------------------------------
+OpenVPN istemci sertifikasını, sertifika otoritesi oluşturur.
+
+# Sertifikanın oluşturulması
+export VPN_CLIENT="istemci_adi"
+export KEY_PASSWORD=$(echo $RANDOM | sha256sum | cut -c1-12)
+expect << EOF
+    set timeout 10
+    spawn ./build-key-pass --batch $VPN_CLIENT
+    expect "Enter PEM pass phrase:"
+    send "$KEY_PASSWORD\n"
+    expect "Verifying - Enter PEM pass phrase:"
+    send "$KEY_PASSWORD\n"
+    expect eof
+EOF
+
+# İstemciye iletilecek dosyalarının bir klasöre toplanması
+mkdir /etc/openvpn/$VPN_CLIENT
+chmod 700 /etc/openvpn/$VPN_CLIENT
+
+cp keys/ca.crt /etc/openvpn/$VPN_CLIENT/
+mv keys/$VPN_CLIENT.crt /etc/openvpn/$VPN_CLIENT/
+mv keys/$VPN_CLIENT.key /etc/openvpn/$VPN_CLIENT/
+
+cd /etc/openvpn/$VPN_CLIENT
+echo $KEY_PASSWORD > password
+chmod 600 password
+
+cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf \
+    $VPN_CLIENT.conf
+sed -i "s/^remote /;remote /g" $VPN_CLIENT.conf
+sed -i "s/^cert client.crt/cert $VPN_CLIENT.crt/g" $VPN_CLIENT.conf
+sed -i "s/^key client.key/key $VPN_CLIENT.key/g" $VPN_CLIENT.conf
+
+echo "echo remote \$MY_SERVER_IP >> $VPN_CLIENT.conf" > README
+echo "sudo openvpn --config $VPN_CLIENT.conf" >> README
+
+# VPN kurulması
+sudo openvpn --config istemci_adi.conf
