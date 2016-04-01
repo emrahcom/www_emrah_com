@@ -18,6 +18,9 @@ apt-get install -y expect
 # -----------------------------------------------------------------------------
 # SERTİFİKA OTORİTESİ
 # -----------------------------------------------------------------------------
+Bu örnekte, sertifika otoritesi ve OpenVPN sunucu aynı makinede ama öyle olmak
+zorunda değil.
+
 # ca klasörü
 cd /etc/openvpn
 make-cadir ca
@@ -56,7 +59,7 @@ cp keys/ca.crt /etc/openvpn/
 cp keys/server.crt /etc/openvpn/
 cp keys/server.key /etc/openvpn/
 
-# Diffie-Hellman anahtar çiftinin oluşturulması
+# Diffie-Hellman anahtar oluşturulması
 ./build-dh
 cp keys/dh2048.pem /etc/openvpn/
 
