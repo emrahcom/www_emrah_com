@@ -47,6 +47,7 @@ init_by_lua '
     lua_resty_waf.default_option("event_log_buffer_size", 8192)
     lua_resty_waf.default_option("event_log_verbosity", 3)
     lua_resty_waf.default_option("event_log_periodic_flush", 60)
+    lua_resty_waf.default_option("event_log_ngx_vars", "host")
 
     lua_resty_waf.init()
 ';
