@@ -1,0 +1,129 @@
+ -----------------------------------------------------------------------------
+# LUA-RESTY-WAF NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie'de uygulanmıştır.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+
+# Paketlerin kurulması
+apt-get install nginx-extras
+apt-get install lua-cjson
+
+# lua-resty-waf deposunun klonlanması (master)
+git clone https://github.com/p0pr0ck5/lua-resty-waf.git
+
+# lua-resty-waf deposunun klonlanması (development)
+Yeni özellikleri denemek için development deposu klonlanabilir.
+
+git clone https://github.com/p0pr0ck5/lua-resty-waf.git -b development
+
+# lua-resty-waf kurulumu
+mkdir -p /usr/local/share/lua/5.1/
+cp -arp lua-resty-waf /usr/local/share/lua/5.1/
+
+
+
+# -----------------------------------------------------------------------------
+# AYARLAR
+# -----------------------------------------------------------------------------
+
+# /etc/nginx/conf.d/waf.conf
+lua_package_path '/usr/local/share/lua/5.1/lua-resty-waf/?.lua;;';
+lua_package_cpath '/usr/local/share/lua/5.1/lua-resty-waf/?.lua;;';
+
+init_by_lua '
+    local lua_resty_waf = require "waf"
+
+    lua_resty_waf.default_option("mode", "ACTIVE")
+    lua_resty_waf.default_option("disable_pcre_optimization", true)
+    lua_resty_waf.default_option("score_threshold", 5)
+
+    lua_resty_waf.default_option("event_log_target", "file")
+    lua_resty_waf.default_option("event_log_target_path", "/var/log/nginx/waf.log")
+    lua_resty_waf.default_option("event_log_buffer_size", 8192)
+    lua_resty_waf.default_option("event_log_verbosity", 3)
+    lua_resty_waf.default_option("event_log_periodic_flush", 60)
+
+    lua_resty_waf.init()
+';
+
+# WAF'ın aktif hale getirilmesi
+context: server, location, location if
+
+access_by_lua '
+    local lua_resty_waf = require "waf"
+    local waf = lua_resty_waf:new()
+    -- waf:set_option("ignore_rule", 90002)
+    waf:exec()
+';
+header_filter_by_lua '
+    local lua_resty_waf = require "waf"
+    local waf = lua_resty_waf:new()
+    waf:exec()
+';
+body_filter_by_lua '
+    local lua_resty_waf = require "waf"
+    local waf = lua_resty_waf:new()
+    waf:exec()
+';
+log_by_lua '
+    local lua_resty_waf = require "waf"
+    local waf = lua_resty_waf:new()
+    waf:write_log_events()
+';
+
+# Nginx restart
+systemctl restart nginx
+
+# Test
+curl --head "http://127.0.0.1/index.php?a=1'"
+curl --head "http://127.0.0.1/index.php?a=1' union"
+
+
+
+# -----------------------------------------------------------------------------
+# LOGGING
+# -----------------------------------------------------------------------------
+# Ayrı bir dosyaya loglama
+Bütün sistemde sadece tek bir lua_resty_waf log dosyası kullanılabilir.
+
+waf:set_option("event_log_target", "file")
+waf:set_option("event_log_target_path", "/var/log/nginx/freewaf.log")
+waf:set_option("event_log_buffer_size", 8192)
+waf:set_option("event_log_verbosity", 3)
+waf:set_option("event_log_periodic_flush", 30)
+
+# lua_resty_waf log -> Nginx error_log
+waf:set_option("event_log_target", "error")
+waf:set_option("event_log_level", ngx.WARN);
+
+error_log /var/log/nginx/error.log warn;
+
+# Debug mod
+waf:set_option("debug", true)
+waf:set_option("debug_log_level", ngx.DEBUG)
+
+error_log /var/log/nginx/error.log debug;
+
+
+
+# -----------------------------------------------------------------------------
+# NOTLAR
+# -----------------------------------------------------------------------------
+# JIT-capable PCRE
+JIT-capable PCRE yoksa /Debian Jessie'de sorunlu) "disable_pcre_optimization"
+özelliğini kapatmak gerekiyor.
+
+waf:set_option("disable_pcre_optimization", true)
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://github.com/p0pr0ck5/lua-resty-waf
+https://www.cryptobells.com/
+http://cdn.cryptobells.com/written_thesis.pdf
+https://github.com/openresty/lua-resty-upload
