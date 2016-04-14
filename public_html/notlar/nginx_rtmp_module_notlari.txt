@@ -148,6 +148,7 @@ tmpfs  /var/tmp/hls  tmpfs  noatime,size=512M,nr_inodes=10k,mode=1777  0  0
     - /root/scripts/cleanup.sh
     #!/bin/bash
     find /var/tmp/hls/ -type f -name "*.ts" -cmin +5 -delete
+    find /var/tmp/hls/ -type f -name "*.m3u8" -cmin +5 -delete
 
     - /etc/crontab
     *  *    * * *   root    /root/scripts/cleanup.sh >/dev/null 2>&1
