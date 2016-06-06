@@ -173,6 +173,33 @@ apt-get install python3-mysql.connector
 
 
 # -----------------------------------------------------------------------------
+# FLASK SERVER SIDE SESSION
+# -----------------------------------------------------------------------------
+Burada Redis ile kullanımı yer almakta. Farklı SESSION_TYPE seçilerek otorum
+verileri memcached, veritabanı veya dosya sisteminde de tutulabilir.
+
+# Paketler
+apt-get install redis-server python3-redis
+
+su -l emrah
+pip3 install --user flask-session
+
+# Örnek kod
+from flask import Flask, session
+from flask.ext.session import Session
+
+app = Flask(__name__)
+app.secret_key = 'my secret key'
+app.config["SESSION_TYPE"] = "redis"
+Session(app)
+
+username = session.get('username', 'not set')
+session['username'] = 'emrah'
+
+
+
+
+# -----------------------------------------------------------------------------
 # KAYNAKLAR
 # -----------------------------------------------------------------------------
 
