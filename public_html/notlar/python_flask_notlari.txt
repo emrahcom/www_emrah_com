@@ -17,6 +17,11 @@ apt-get install python3-pip
 apt-get install uwsgi uwsgi-plugin-python3
 apt-get install nginx-extras
 
+# Paketler (postgresql varsa)
+apt-get install postgresql postgresql-contrib
+apt-get install python3-psycopg2
+apt-get install python3-flask-sqlalchemy
+
 # pip3
 su -l emrah
 pip3 install --user flask-wtf wtforms
@@ -84,6 +89,7 @@ server {
 
 # Nginx link ve restart
 ln -s ../sites-available/mysite.conf /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
 systemctl restart nginx
 
 # Test
