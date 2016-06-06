@@ -17,11 +17,6 @@ apt-get install python3-pip
 apt-get install uwsgi uwsgi-plugin-python3
 apt-get install nginx-extras
 
-# Paketler (postgresql varsa)
-apt-get install postgresql postgresql-contrib
-apt-get install python3-psycopg2
-apt-get install python3-flask-sqlalchemy
-
 # pip3
 su -l emrah
 pip3 install --user flask-wtf wtforms
@@ -167,10 +162,15 @@ Flask-SQLAlchemy, tamamen SQLAlchemy gibi davranmamakta. Özellikle Flask
 kullanılırken doğrudan SQLAlchemy kullanmak yerine Flask-SQLAlchemy kullanmanın
 bazı avantajları var. Örneğin session yönetimi gibi...
 
+# Paketler (postgresql varsa)
+apt-get install postgresql postgresql-contrib
+
 # Paketler
 apt-get install python3-flask-sqlalchemy
 apt-get install python3-psycopg2
 apt-get install python3-mysql.connector
+
+
 
 # -----------------------------------------------------------------------------
 # KAYNAKLAR
