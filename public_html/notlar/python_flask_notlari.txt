@@ -11,18 +11,21 @@ Notlar, Debian Jessie ve Python 3.x için hazırlanmıştır.
 Recommended paketlerin default olarak kurulmadığı varsayıldı. Nginx ve UWSGI
 ile birlikte çalışacak şekilde yapılandırılıyor.
 
-# Paketler
-apt-get install python3-flask
-apt-get install python3-pip
-apt-get install uwsgi uwsgi-plugin-python3
+# Global Paketler
 apt-get install nginx-extras
+apt-get install uwsgi uwsgi-plugin-python3 --install-recommends
+apt-get install python3-pip
+# derlenerek kurulacak Python paketleri olacaksa
+apt-get install build-essential python3-dev
 
-# pip3
+# Lokal Python Paketleri
 su -l emrah
-pip3 install --user flask-wtf wtforms
+pip3 install --user Flask
+pip3 install --user Flask-WTF WTForms
 
-# Flask proje klasörü
+# Flask Proje Klasörü
 mkdir -p /home/emrah/myproject/{templates,static}
+cd myproject
 
 # /home/emrah/myproject/myapp.ini
 [uwsgi]
@@ -38,8 +41,8 @@ post-buffering = 8192
 vacuum = true
 socket = 127.0.0.1:8000
 callable = app
-wsgi-file = /home/emrah/myproject/myapp.py
 chdir = /home/emrah/myproject/
+wsgi-file = /home/emrah/myproject/myapp.py
 
 # /home/emrah/myproject/myapp.py
 from flask import Flask
@@ -162,27 +165,36 @@ Flask-SQLAlchemy, tamamen SQLAlchemy gibi davranmamakta. Özellikle Flask
 kullanılırken doğrudan SQLAlchemy kullanmak yerine Flask-SQLAlchemy kullanmanın
 bazı avantajları var. Örneğin session yönetimi gibi...
 
-# Paketler (postgresql varsa)
+# Global Paketler (postgresql varsa)
 apt-get install postgresql postgresql-contrib
 
-# Paketler
-apt-get install python3-flask-sqlalchemy
+# Veritabani paketleri binary olarak Debian deposundan veya derlenerek Python
+# deposundan kurulabilir.
 apt-get install python3-psycopg2
 apt-get install python3-mysql.connector
+        veya
+su -l emrah
+pip3 install --user psycopg2
+
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user Flask-SQLAlchemy
 
 
 
 # -----------------------------------------------------------------------------
 # FLASK SERVER SIDE SESSION
 # -----------------------------------------------------------------------------
-Burada Redis ile kullanımı yer almakta. Farklı SESSION_TYPE seçilerek otorum
+Burada Redis ile kullanımı yer almakta. Farklı SESSION_TYPE seçilerek oturum
 verileri memcached, veritabanı veya dosya sisteminde de tutulabilir.
 
-# Paketler
-apt-get install redis-server python3-redis
+# Global Paketler
+apt-get install redis-server
 
+# Lokal Python Paketleri
 su -l emrah
-pip3 install --user flask-session
+pip3 install --user redis
+pip3 install --user Flask-Session
 
 # Örnek kod
 from flask import Flask, session
@@ -195,7 +207,6 @@ Session(app)
 
 username = session.get('username', 'not set')
 session['username'] = 'emrah'
-
 
 
 
