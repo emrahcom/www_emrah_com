@@ -24,10 +24,10 @@ pip3 install --user Flask
 pip3 install --user Flask-WTF WTForms
 
 # Flask Proje Klasörü
-mkdir -p /home/emrah/myproject/{templates,static}
+mkdir -p /home/emrah/myproject/app/{static,templates,views}
 cd myproject
 
-# /home/emrah/myproject/myapp.ini
+# /home/emrah/myproject/run.ini
 [uwsgi]
 plugins = python
 uid = emrah
@@ -42,28 +42,36 @@ vacuum = true
 socket = 127.0.0.1:8000
 callable = app
 chdir = /home/emrah/myproject/
-wsgi-file = /home/emrah/myproject/myapp.py
+wsgi-file = /home/emrah/myproject/run.py
 
-# /home/emrah/myproject/myapp.py
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
+# /home/emrah/myproject/run.py
+from app import app
 
 if __name__ == '__main__':
     app.debug = True
     app.run()
 
+# /home/emrah/myproject/config.py
+DEBUG = True
+
+# /home/emrah/myproject/app/__init__.py
+from flask import Flask
+
+app = Flask(__name__)
+app.config.from_object('config')
+
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+
 # test run
 su -l emrah
-python3 /home/emrah/myproject/myapp.py
+python3 /home/emrah/myproject/run.py
 
 <ctrl>+C
 
 # UWSGI link ve restart
-ln -s /home/emrah/myproject/myapp.ini /etc/uwsgi/apps-enabled/
+ln -s /home/emrah/myproject/run.ini /etc/uwsgi/apps-enabled/
 systemctl restart uwsgi
 
 # /etc/nginx/sites-available/mysite.conf
@@ -94,13 +102,13 @@ systemctl restart nginx
 curl http://127.0.0.1/
 
 # UWSGI ile debug
-Browserdan hata mesajlarını görebilmek için ana blok içinde:
+Browserdan hata mesajlarını görebilmek için ana blok içine aşağıdaki kodlar
+eklenir. 'config.py' içinde 'DEBUG' değeri için True verilmeli.
 
 app = Flask(__name__)
 
 from werkzeug.debug import DebuggedApplication
 app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
-app.debug = True
 
 
 
@@ -129,10 +137,12 @@ myproject
 │       ├── bp1.py
 │       ├── bp2.py
 │       └── __init__.py
+├── config.py
+├── run.ini
 └── run.py
 
-# myproject/app/view/__init__.py
-touch myproject/app/view/__init__.py
+# myproject/app/views/__init__.py
+touch myproject/app/views/__init__.py
 
 # myproject/app/views/bp1.py
 from flask import Blueprint, render_template
@@ -156,6 +166,27 @@ if __name__ == '__main__':
     app.debug = True
     app.run()
 
+# Test
+curl http://127.0.0.1/bp1/page1
+
+
+
+# -----------------------------------------------------------------------------
+# CONFIG
+# -----------------------------------------------------------------------------
+Config dosyası kullanarak.
+
+# config.py
+DEBUG = True
+SECRET_KEY = 'my secret key'
+SESSION_TYPE = 'redis'
+PERMANENT_SESSION_LIFETIME = 1800
+
+# run.py
+...
+app.config.from_object('config')
+...
+
 
 
 # -----------------------------------------------------------------------------
@@ -170,11 +201,11 @@ apt-get install postgresql postgresql-contrib
 
 # Veritabani paketleri binary olarak Debian deposundan veya derlenerek Python
 # deposundan kurulabilir.
-apt-get install python3-psycopg2
-apt-get install python3-mysql.connector
-        veya
 su -l emrah
 pip3 install --user psycopg2
+        veya
+apt-get install python3-psycopg2
+apt-get install python3-mysql.connector
 
 # Lokal Python Paketleri
 su -l emrah
@@ -198,11 +229,12 @@ pip3 install --user Flask-Session
 
 # Örnek kod
 from flask import Flask, session
-from flask.ext.session import Session
+from flask_session import Session
 
 app = Flask(__name__)
 app.secret_key = 'my secret key'
 app.config["SESSION_TYPE"] = "redis"
+app.config["PERMANENT_SESSION_LIFETIME"] = "redis"
 Session(app)
 
 username = session.get('username', 'not set')
