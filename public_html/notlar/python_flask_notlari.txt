@@ -113,6 +113,19 @@ app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
 
 
 # -----------------------------------------------------------------------------
+# UPGRADE
+# -----------------------------------------------------------------------------
+Kullanıcı yerel deponun güncellenmesi.
+
+for p in `pip3 list -lo | cut -d ' ' -f1`
+do
+    echo "### $p ###"
+    pip3 install --upgrade --user $p
+done
+
+
+
+# -----------------------------------------------------------------------------
 # STRUCTURE
 # -----------------------------------------------------------------------------
 myproject
@@ -243,15 +256,12 @@ session['username'] = 'emrah'
 
 
 # -----------------------------------------------------------------------------
-# UPGRADE
+# FLASK-USER
 # -----------------------------------------------------------------------------
-Kullanıcı yerel deponun güncellenmesi.
 
-for p in `pip3 list -lo | cut -d ' ' -f1`
-do
-    echo "### $p ###"
-    pip3 install --upgrade --user $p
-done
+# Kurulum
+su -l emrah
+pip3 install --user Flask-User
 
 
 
