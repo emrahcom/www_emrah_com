@@ -15,8 +15,8 @@ ile birlikte çalışacak şekilde yapılandırılıyor.
 apt-get install nginx-extras
 apt-get install uwsgi uwsgi-plugin-python3 --install-recommends
 apt-get install python3-pip
-# derlenerek kurulacak Python paketleri olacaksa
-apt-get install build-essential python3-dev
+# Derlenerek kurulacak Python paketleri olacaksa
+apt-get install build-essential python3-dev libffi-dev
 
 # Lokal Python Paketleri
 su -l emrah
