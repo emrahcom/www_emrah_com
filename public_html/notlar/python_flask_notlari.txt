@@ -133,6 +133,7 @@ myproject
 ├── app
 │   ├── __init__.py
 │   ├── models.py
+│   ├── view.py
 │   ├── static
 │   │   ├── logo.png
 │   │   └── style.css
@@ -153,6 +154,21 @@ myproject
 ├── config.py
 ├── run.ini
 └── run.py
+
+# myproject/models.py
+from app import db
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(255), nullable=False, server_default='')
+
+# myproject/view.py
+from app import app
+
+@app.route('/')
+def hello_world():
+    return 'Hello World!!!'
 
 # myproject/app/views/__init__.py
 touch myproject/app/views/__init__.py
