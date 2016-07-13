@@ -206,12 +206,16 @@ def hello_world():
     return 'Hello World!!!'
 
 # myproject/app/views/bp2.py
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
+from jinja2 import TemplateNotFound
 bp2 = Blueprint('bp2', __name__, template_folder='../templates/bp2')
 
 @bp2.route('/page3')
 def page3():
-    return render_template('page3.html')
+    try:
+        return render_template('page3.html')
+    except TemplateNotFound:
+        abort(404)
 
 # templates
 mkdir -p myproject/app/templates/{bp1,bp2}
