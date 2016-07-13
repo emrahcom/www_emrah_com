@@ -207,11 +207,11 @@ def hello_world():
 
 # myproject/app/views/bp2.py
 from flask import Blueprint, render_template
-bp2 = Blueprint('bp2', __name__)
+bp2 = Blueprint('bp2', __name__, template_folder='../templates/bp2')
 
 @bp2.route('/page3')
 def page3():
-    return render_template('bp2/page3.html')
+    return render_template('page3.html')
 
 # templates
 mkdir -p myproject/app/templates/{bp1,bp2}
