@@ -116,7 +116,7 @@ app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
 # -----------------------------------------------------------------------------
 # UPGRADE
 # -----------------------------------------------------------------------------
-Kullanıcı yerel deponun güncellenmesi.
+Kullanıcı yerel deponun güncellenmesi. Normal kullanıcı olarak çalıştırılır.
 
 for p in `pip3 list -lo | cut -d ' ' -f1`
 do
@@ -219,6 +219,7 @@ touch myproject/app/templates/bp1/{layout,page1,page2}.html
 touch myproject/app/templates/bp2/{layout,page3,page4}.html
 
 # Test
+systemctl restart uwsgi
 curl http://127.0.0.1/
 
 
