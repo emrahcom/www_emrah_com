@@ -22,6 +22,7 @@ apt-get install build-essential python3-dev libffi-dev
 su -l emrah
 pip3 install --user Flask
 pip3 install --user Flask-WTF WTForms
+pip3 install --user Flask-SQLAlchemy
 
 # Flask Proje Klasörü
 mkdir -p /home/emrah/myproject/app/{static,templates,views}
@@ -133,7 +134,6 @@ myproject
 ├── app
 │   ├── __init__.py
 │   ├── models.py
-│   ├── view.py
 │   ├── static
 │   │   ├── logo.png
 │   │   └── style.css
@@ -148,45 +148,20 @@ myproject
 │   │   │   └── page4.html
 │   │   └── layout.html
 │   └── views
+│       ├── __init__.py
 │       ├── bp1.py
-│       ├── bp2.py
-│       └── __init__.py
+│       └── bp2.py
 ├── config.py
 ├── run.ini
 └── run.py
 
-# myproject/models.py
-from app import db
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False, server_default='')
-
-# myproject/view.py
-from app import app
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!!!'
-
-# myproject/app/views/__init__.py
-touch myproject/app/views/__init__.py
-
-# myproject/app/views/bp1.py
-from flask import Blueprint, render_template
-bp1 = Blueprint('bp1', __name__)
-
-@bp1.route('/page1')
-def page1():
-    return render_template('bp1/page1.html')
-
-# myproject/app/__init__.py
-from flask import Flask
-from .views.bp1 import bp1
-
-app = Flask(__name__)
-app.register_blueprint(bp1, url_prefix='/bp1')
+# myproject/config.py
+DEBUG = True
+CSRF_ENABLED = True
+SECRET_KEY = 'my secret key'
+SESSION_TYPE = 'redis'
+PERMANENT_SESSION_LIFETIME = 1800
+SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/myapp.db'
 
 # myproject/run.py
 from app import app
@@ -195,26 +170,56 @@ if __name__ == '__main__':
     app.debug = True
     app.run()
 
-# Test
-curl http://127.0.0.1/bp1/page1
+# myproject/app/__init__.py
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-
-
-# -----------------------------------------------------------------------------
-# CONFIG
-# -----------------------------------------------------------------------------
-Config dosyası kullanarak.
-
-# config.py
-DEBUG = True
-SECRET_KEY = 'my secret key'
-SESSION_TYPE = 'redis'
-PERMANENT_SESSION_LIFETIME = 1800
-
-# run.py
-...
+app = Flask(__name__)
 app.config.from_object('config')
-...
+db = SQLAlchemy(app)
+
+from app import models
+from app.views.bp1 import bp1
+from app.views.bp2 import bp2
+app.register_blueprint(bp1, url_prefix='/')
+app.register_blueprint(bp2, url_prefix='/bp2')
+
+# myproject/app/models.py
+from app import db
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(255), nullable=False, server_default='')
+
+db.create_all()
+
+# myproject/app/views/__init__.py
+touch myproject/app/views/__init__.py
+
+# myproject/app/views/bp1.py
+from flask import Blueprint
+bp1 = Blueprint('bp1', __name__)
+
+@bp1.route('/')
+def hello_world():
+    return 'Hello World!!!'
+
+# myproject/app/views/bp2.py
+from flask import Blueprint, render_template
+bp2 = Blueprint('bp2', __name__)
+
+@bp2.route('/page3')
+def page3():
+    return render_template('bp2/page3.html')
+
+# templates
+mkdir -p myproject/app/templates/{bp1,bp2}
+touch myproject/app/templates/bp1/{layout,page1,page2}.html
+touch myproject/app/templates/bp2/{layout,page3,page4}.html
+
+# Test
+curl http://127.0.0.1/
 
 
 
