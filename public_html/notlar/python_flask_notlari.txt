@@ -282,12 +282,73 @@ session['username'] = 'emrah'
 
 
 # -----------------------------------------------------------------------------
+# FLASK-MAIL
+# -----------------------------------------------------------------------------
+Gmail üzerinden email göndermek için yapılacak ayarlar.
+
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user Flask-Mail
+
+# Gmail ayarları
+https://www.google.com/settings/security/lesssecureapps linkinden 'Turn off'
+seçeneği işaretlenir.
+
+# myproject/config.py
+MAIL_USERNAME = 'emrah@gmail.com'
+MAIL_PASSWORD = 'parolam'
+MAIL_DEFAULT_SENDER = '"Emrah" <emrah@gmail.com>'
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_SSL = False
+MAIL_USE_TLS = True
+
+# Mail kodu
+from flask import Flask
+from flask_mail import Mail, Message
+
+app = Flask(__name__)
+app.config.from_object('config')
+mail = Mail(app)
+
+@app.route('/sendmail')
+def sendmail():
+    msg = Message('Subject',
+                  sender='emrah@gmail.com',
+                  recipients=['emrah@gmail.com'])
+    msg.body = 'Hello World'
+    mail.send(msg)
+
+    return 'sent'
+
+
+
+# -----------------------------------------------------------------------------
 # FLASK-USER
 # -----------------------------------------------------------------------------
 
 # Kurulum
 su -l emrah
 pip3 install --user Flask-User
+
+# myproject/config.py
+DEBUG = True
+CSRF_ENABLED = True
+SECRET_KEY = 'my secret key'
+SESSION_TYPE = 'redis'
+PERMANENT_SESSION_LIFETIME = 1800
+SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/myapp.db'
+
+MAIL_USERNAME = 'emrah@gmail.com'
+MAIL_PASSWORD = 'parolam'
+MAIL_DEFAULT_SENDER = '"Emrah" <emrah@gmail.com>'
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_SSL = False
+MAIL_USE_TLS = True
+USER_APP_NAME = 'MyApp'
+
+# myproject/app/__init__.py
 
 
 
