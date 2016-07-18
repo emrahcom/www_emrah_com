@@ -389,6 +389,12 @@ user_manager = UserManager(db_adapter, app)
 def hello_world():
     return 'Hello World'
 
+# template özelleştirme
+Özelleştirilecek template 'myproject/app/templates/flask_user/' klasörü altına
+kopyalanır. pip3 ile lokale kuruldu ise orjinal template dosyaları
+'~/.local/lib/python3.4/site-packages/flask_user/templates/flask_user' klasörü
+altında...
+
 
 
 # -----------------------------------------------------------------------------
