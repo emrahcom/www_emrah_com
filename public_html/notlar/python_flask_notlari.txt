@@ -412,6 +412,8 @@ http://mattupstate.com/python/2013/06/26/how-i-structure-my-flask-applications.h
 http://fewstreet.com/2015/01/16/flask-blueprint-templates.html
 # Flask - SQLAlchemy
 http://flask-sqlalchemy.pocoo.org/2.1/
+# Flask-User
+https://pythonhosted.org/Flask-User/
 # UWSGI
 http://uwsgi-docs.readthedocs.org/en/latest/
 http://flask.pocoo.org/docs/0.10/deploying/uwsgi/
