@@ -393,7 +393,10 @@ kopyalanır. pip3 ile lokale kuruldu ise orjinal template dosyaları
 '~/.local/lib/python3.4/site-packages/flask_user/templates/flask_user' klasörü
 altında...
 
-# form özelleştirme (myproject/app/forms.py)
+# form validator özelleştirme (myproject/app/forms.py)
+Örnek kod için '~/.local/lib/python3.4/site-packages/flask_user/forms.py'
+kodlarına bakılabilir.
+
 from wtforms.validators import ValidationError
 
 def my_password_validator(form, field):
@@ -410,7 +413,7 @@ def my_password_validator(form, field):
         raise ValidationError('''Password must have at least 6 characters with
                               one letter and one number''')
 
-# form özelleştirme (myproject/app/__init__.py)
+# form validator özelleştirme (myproject/app/__init__.py)
 from app import models, forms
 
 db_adapter = SQLAlchemyAdapter(db, models.User)
