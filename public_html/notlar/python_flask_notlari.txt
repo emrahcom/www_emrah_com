@@ -452,10 +452,12 @@ https://www.exploreflask.com/blueprints.html
 https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications
 http://mattupstate.com/python/2013/06/26/how-i-structure-my-flask-applications.html
 http://fewstreet.com/2015/01/16/flask-blueprint-templates.html
-# Flask - SQLAlchemy
+# Flask-SQLAlchemy
 http://flask-sqlalchemy.pocoo.org/2.1/
 # Flask-User
 https://pythonhosted.org/Flask-User/
+# Flask-Admin
+https://flask-admin.readthedocs.io/en/latest/
 # UWSGI
 http://uwsgi-docs.readthedocs.org/en/latest/
 http://flask.pocoo.org/docs/0.10/deploying/uwsgi/
