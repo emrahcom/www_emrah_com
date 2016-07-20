@@ -423,6 +423,23 @@ user_manager = UserManager(db_adapter, app,
 
 
 # -----------------------------------------------------------------------------
+# FLASK_ADMIN
+# -----------------------------------------------------------------------------
+
+# Kurulum
+su -l emrah
+pip3 install --user Flask-Admin
+
+# myproject/app/__init__.py
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
+admin = Admin(app, name='admin', template_mode='bootstrap3')
+admin.add_view(ModelView(models.User, db.session))
+
+
+
+# -----------------------------------------------------------------------------
 # KAYNAKLAR
 # -----------------------------------------------------------------------------
 
