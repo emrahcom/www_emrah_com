@@ -437,6 +437,15 @@ from flask_admin.contrib.sqla import ModelView
 admin = Admin(app, name='admin', template_mode='bootstrap3')
 admin.add_view(ModelView(models.User, db.session))
 
+# static klasörü için Flask_Admin filemanager (myproject/app/__init__.py)
+from flask_admin import Admin
+from flask_admin.contrib.fileadmin import FileAdmin
+import os.path as op
+
+admin = Admin(app, name='admin', template_mode='bootstrap3')
+path = op.join(op.dirname(__file__), 'static')
+admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
+
 
 
 # -----------------------------------------------------------------------------
