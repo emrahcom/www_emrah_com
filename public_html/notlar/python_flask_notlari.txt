@@ -229,30 +229,6 @@ curl http://127.0.0.1/
 
 
 # -----------------------------------------------------------------------------
-# FLASK-SQLALCHEMY
-# -----------------------------------------------------------------------------
-Flask-SQLAlchemy, tamamen SQLAlchemy gibi davranmamakta. Özellikle Flask
-kullanılırken doğrudan SQLAlchemy kullanmak yerine Flask-SQLAlchemy kullanmanın
-bazı avantajları var. Örneğin session yönetimi gibi...
-
-# Global Paketler (postgresql varsa)
-apt-get install postgresql postgresql-contrib
-
-# Veritabani paketleri binary olarak Debian deposundan veya derlenerek Python
-# deposundan kurulabilir.
-su -l emrah
-pip3 install --user psycopg2
-        veya
-apt-get install python3-psycopg2
-apt-get install python3-mysql.connector
-
-# Lokal Python Paketleri
-su -l emrah
-pip3 install --user Flask-SQLAlchemy
-
-
-
-# -----------------------------------------------------------------------------
 # FLASK SERVER SIDE SESSION
 # -----------------------------------------------------------------------------
 Burada Redis ile kullanımı yer almakta. Farklı SESSION_TYPE seçilerek oturum
@@ -278,6 +254,30 @@ Session(app)
 
 username = session.get('username', 'not set')
 session['username'] = 'emrah'
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK-SQLALCHEMY
+# -----------------------------------------------------------------------------
+Flask-SQLAlchemy, tamamen SQLAlchemy gibi davranmamakta. Özellikle Flask
+kullanılırken doğrudan SQLAlchemy kullanmak yerine Flask-SQLAlchemy kullanmanın
+bazı avantajları var. Örneğin session yönetimi gibi...
+
+# Global Paketler (postgresql varsa)
+apt-get install postgresql postgresql-contrib
+
+# Veritabani paketleri binary olarak Debian deposundan veya derlenerek Python
+# deposundan kurulabilir.
+su -l emrah
+pip3 install --user psycopg2
+        veya
+apt-get install python3-psycopg2
+apt-get install python3-mysql.connector
+
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user Flask-SQLAlchemy
 
 
 
@@ -423,7 +423,7 @@ user_manager = UserManager(db_adapter, app,
 
 
 # -----------------------------------------------------------------------------
-# FLASK_ADMIN
+# FLASK-ADMIN
 # -----------------------------------------------------------------------------
 
 # Kurulum
