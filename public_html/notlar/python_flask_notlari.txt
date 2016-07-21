@@ -442,9 +442,31 @@ from flask_admin import Admin
 from flask_admin.contrib.fileadmin import FileAdmin
 import os.path as op
 
-admin = Admin(app, name='admin', template_mode='bootstrap3')
 path = op.join(op.dirname(__file__), 'static')
+admin = Admin(app, name='admin', template_mode='bootstrap3')
 admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
+
+# Admin sayfasına erişimi sınırlandırma (myproject/app/__init__.py)
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.fileadmin import FileAdmin
+from flask_user import current_user
+import os.path as op
+
+FILE_MANAGERS = ('emrah', 'admin')
+
+class MyModelView(ModelView):
+    def is_accessible(self):
+        #return current_user.has_role('admin')
+        return current_user.is_authenticated
+class MyFileAdmin(FileAdmin):
+    def is_accessible(self):
+        return current_user.username in FILE_MANAGERS
+
+path = op.join(op.dirname(__file__), 'static')
+admin = Admin(app, name='admin', template_mode='bootstrap3')
+admin.add_view(MyModelView(models.User, db.session))
+admin.add_view(MyFileAdmin(path, '/static/', name='Static Files'))
 
 
 
