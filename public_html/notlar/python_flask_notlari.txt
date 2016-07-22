@@ -461,11 +461,13 @@ FILE_MANAGERS = ('emrah', 'admin')
 
 class MyModelView(ModelView):
     def is_accessible(self):
-        #return current_user.has_role('admin')
+        #return (current_user.is_authenticated and
+        #        current_user.has_role('admin'))
         return current_user.is_authenticated
 class MyFileAdmin(FileAdmin):
     def is_accessible(self):
-        return current_user.username in FILE_MANAGERS
+        return (current_user.is_authenticated and
+                current_user.username in FILE_MANAGERS)
 
 path = op.join(op.dirname(__file__), 'static')
 admin = Admin(app, name='admin', template_mode='bootstrap3')
