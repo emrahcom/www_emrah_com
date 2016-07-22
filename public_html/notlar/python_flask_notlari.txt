@@ -420,6 +420,10 @@ db_adapter = SQLAlchemyAdapter(db, models.User)
 user_manager = UserManager(db_adapter, app,
                            password_validator=forms.my_password_validator)
 
+# Onay emaili olmayacaksa (myproject/config.py)
+USER_ENABLE_CONFIRM_EMAIL = False
+USER_ENABLE_LOGIN_WITHOUT_CONFIRM = True
+
 
 
 # -----------------------------------------------------------------------------
