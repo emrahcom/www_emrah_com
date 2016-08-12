@@ -177,8 +177,9 @@ mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
 
 gst-launch-1.0 -e \
 videotestsrc pattern=0 ! \
-queue ! videoconvert ! x264enc ! \
-'video/x-h264,profile=high,framerate=25/1,width=600,height=300' ! \
+queue ! videoconvert ! \
+x264enc bitrate=512 key-int-max=45 speed-preset=superfast threads=1 ! \
+'video/x-h264,profile=constrained-baseline,framerate=25/1,width=600,height=300' ! \
 queue ! flvmux name=mux \
 audiotestsrc volume=1 ! audioresample ! audioconvert ! \
 queue ! voaacenc bitrate=64000 ! queue ! mux. \
