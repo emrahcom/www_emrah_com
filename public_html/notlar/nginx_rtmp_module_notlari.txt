@@ -62,9 +62,10 @@ dpkg-buildpackage -rfakeroot -uc -b
 # KURULUM
 # -----------------------------------------------------------------------------
 cd source
-dpkg -i nginx-common_1.6.2-5+deb8u1_all.deb
-dpkg -i nginx-extras_1.6.2-5+deb8u1_amd64.deb
-apt-mark hold nginx-common nginx-extras
+dpkg -i nginx-common_1.6.2-5+deb8u2_all.deb
+dpkg -i nginx-extras_1.6.2-5+deb8u2_amd64.deb
+dpkg -i nginx-doc_1.6.2-5+deb8u2_all.deb
+apt-mark hold nginx-common nginx-extras nginx-doc
 
 
 
