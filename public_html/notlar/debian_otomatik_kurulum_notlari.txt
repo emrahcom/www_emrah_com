@@ -48,3 +48,11 @@ xorriso -as mkisofs -o debian_custom.iso \
     -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
     -c isolinux/boot.cat -b isolinux/isolinux.bin \
     -no-emul-boot -boot-load-size 4 -boot-info-table ~/iso
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://www.debian.org/releases/stable/i386/apb.html
+https://wiki.debian.org/DebianInstaller/Preseed
