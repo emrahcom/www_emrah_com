@@ -1,0 +1,50 @@
+# -----------------------------------------------------------------------------
+# DEBIAN OTOMATİK KURULUM NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edilmiştir. Test sırasında NetInstall ISO'su
+kullanılmıştır.
+
+
+
+# -----------------------------------------------------------------------------
+# ORTAMIN HAZIRLANMASI
+# -----------------------------------------------------------------------------
+İşlemler 'root' kullanıcısı olarak yapılacak.
+
+# Kurulacak paketler
+apt-get install bsdtar xorriso isolinux cpio
+
+# ISO dosyanın açılması
+cd
+mkdir iso
+wget http://cdimage.debian.org/debian-cd/8.6.0/amd64/iso-cd/debian-8.6.0-amd64-netinst.iso
+bsdtar -C iso -xf debian-8.6.0-amd64-netinst.iso
+
+# custom preseed.cfg
+cd
+mkdir initrd
+cd initrd
+gzip -d < ~/iso/install.amd/initrd.gz | \
+    cpio --extract --verbose --make-directories --no-absolute-filenames
+cp ./my_preseed.cfg preseed.cfg
+find . | \
+    cpio -H newc --create --verbose | \
+    gzip -9 > ~/iso/install.amd/initrd.gz
+
+
+
+# -----------------------------------------------------------------------------
+# ISO DOSYANIN YENİDEN OLUŞTURULMASI
+# -----------------------------------------------------------------------------
+
+# md5sum.txt
+cd ~/iso
+md5sum `find ! -name "md5sum.txt" ! -path "./isolinux/*" -follow -type f` > \
+    md5sum.txt
+cd
+
+# ISO oluşturma
+xorriso -as mkisofs -o debian_custom.iso \
+    -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+    -c isolinux/boot.cat -b isolinux/isolinux.bin \
+    -no-emul-boot -boot-load-size 4 -boot-info-table ~/iso
