@@ -250,7 +250,7 @@ from flask_session import Session
 app = Flask(__name__)
 app.secret_key = 'my secret key'
 app.config["SESSION_TYPE"] = "redis"
-app.config["PERMANENT_SESSION_LIFETIME"] = "redis"
+app.config["PERMANENT_SESSION_LIFETIME"] = 1800
 Session(app)
 
 username = session.get('username', 'not set')
