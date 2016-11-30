@@ -12,6 +12,38 @@ Debian Jessie'de uygulanmıştır.
 # Paketlerin kurulması
 apt-get install nginx-extras
 apt-get install lua-cjson
+apt-get install git
+apt-get install build-essential
+apt-get install liblua5.1-0-dev
+
+# install & source directories
+mkdir -p /usr/local/share/lua/5.1/resty
+mkdir ~/source
+cd ~/source
+
+# lua-resty-upload
+git clone https://github.com/openresty/lua-resty-upload.git
+cd ~/source/lua-resty-upload
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
+cd ~/source
+
+# lua-resty-dns
+git clone https://github.com/openresty/lua-resty-dns.git
+cd ~/source/lua-resty-dns
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
+cd ~/source
+
+# lua-resty-random
+git clone https://github.com/bungle/lua-resty-random.git
+cd ~/source/lua-resty-random
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
+cd ~/source
+
+# lua-resty-string
+git clone https://github.com/openresty/lua-resty-string.git
+cd ~/source/lua-resty-string
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
+cd ~/source
 
 # lua-resty-waf deposunun klonlanması (master)
 git clone https://github.com/p0pr0ck5/lua-resty-waf.git
@@ -21,9 +53,23 @@ Yeni özellikleri denemek için development deposu klonlanabilir.
 
 git clone https://github.com/p0pr0ck5/lua-resty-waf.git -b development
 
-# lua-resty-waf kurulumu
-mkdir -p /usr/local/share/lua/5.1/
-cp -arp lua-resty-waf /usr/local/share/lua/5.1/
+# cd to source
+cd ~/source/lua-resty-waf
+
+# lua-aho-corasick deposunun klonlanması
+git clone https://github.com/p0pr0ck5/lua-aho-corasick.git
+
+# libinjection deposunun klonlanması
+git clone https://github.com/p0pr0ck5/libinjection
+
+# lua-resty-waf make
+make
+
+# lua-resty-waf install
+mkdir -p /usr/local/share/lua/5.1/resty
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install-hard
+mv /usr/local/share/lua/5.1/{libac,libinjection}.so \
+   /usr/local/share/lua/5.1/resty/
 
 
 
@@ -32,14 +78,14 @@ cp -arp lua-resty-waf /usr/local/share/lua/5.1/
 # -----------------------------------------------------------------------------
 
 # /etc/nginx/conf.d/waf.conf
-lua_package_path '/usr/local/share/lua/5.1/lua-resty-waf/?.lua;;';
-lua_package_cpath '/usr/local/share/lua/5.1/lua-resty-waf/?.lua;;';
+lua_package_path '/usr/local/share/lua/5.1/resty/?.lua;;';
+lua_package_cpath '/usr/local/share/lua/5.1/resty/?.lua;;';
 
 init_by_lua '
     local lua_resty_waf = require "waf"
 
     lua_resty_waf.default_option("mode", "ACTIVE")
-    lua_resty_waf.default_option("disable_pcre_optimization", true)
+    -- lua_resty_waf.default_option("disable_pcre_optimization", true)
     lua_resty_waf.default_option("score_threshold", 5)
 
     lua_resty_waf.default_option("event_log_target", "file")
