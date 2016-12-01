@@ -11,10 +11,9 @@ Debian Jessie'de uygulanmıştır.
 
 # Paketlerin kurulması
 apt-get install nginx-extras
-apt-get install lua-cjson
-apt-get install git
-apt-get install build-essential
-apt-get install liblua5.1-0-dev
+apt-get install git build-essential
+apt-get install lua-cjson liblua5.1-0-dev
+apt-get install python
 
 # install & source directories
 mkdir -p /usr/local/share/lua/5.1/resty
