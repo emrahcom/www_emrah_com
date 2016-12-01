@@ -19,42 +19,39 @@ apt-get install liblua5.1-0-dev
 # install & source directories
 mkdir -p /usr/local/share/lua/5.1/resty
 mkdir ~/source
-cd ~/source
 
 # lua-resty-upload
-git clone https://github.com/openresty/lua-resty-upload.git
-cd ~/source/lua-resty-upload
-LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 cd ~/source
+git clone https://github.com/openresty/lua-resty-upload.git
+cd lua-resty-upload
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 
 # lua-resty-dns
-git clone https://github.com/openresty/lua-resty-dns.git
-cd ~/source/lua-resty-dns
-LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 cd ~/source
+git clone https://github.com/openresty/lua-resty-dns.git
+cd lua-resty-dns
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 
 # lua-resty-random
-git clone https://github.com/bungle/lua-resty-random.git
-cd ~/source/lua-resty-random
-LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 cd ~/source
+git clone https://github.com/bungle/lua-resty-random.git
+cd lua-resty-random
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 
 # lua-resty-string
-git clone https://github.com/openresty/lua-resty-string.git
-cd ~/source/lua-resty-string
-LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 cd ~/source
+git clone https://github.com/openresty/lua-resty-string.git
+cd lua-resty-string
+LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 
 # lua-resty-waf deposunun klonlanması (master)
+cd ~/source
 git clone https://github.com/p0pr0ck5/lua-resty-waf.git
+cd ~/source/lua-resty-waf
 
 # lua-resty-waf deposunun klonlanması (development)
 Yeni özellikleri denemek için development deposu klonlanabilir.
-
 git clone https://github.com/p0pr0ck5/lua-resty-waf.git -b development
-
-# cd to source
-cd ~/source/lua-resty-waf
 
 # lua-aho-corasick deposunun klonlanması
 git clone https://github.com/p0pr0ck5/lua-aho-corasick.git
