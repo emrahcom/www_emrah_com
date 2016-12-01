@@ -45,21 +45,18 @@ cd lua-resty-string
 LUA_LIB_DIR=/usr/local/share/lua/5.1 make install
 
 # lua-resty-waf deposunun klonlanması (master)
+# submodules: lua-aho-corasick
+# submodules: libinjection
 cd ~/source
-git clone https://github.com/p0pr0ck5/lua-resty-waf.git
-cd ~/source/lua-resty-waf
+git clone --recursive https://github.com/p0pr0ck5/lua-resty-waf.git
 
 # lua-resty-waf deposunun klonlanması (development)
 Yeni özellikleri denemek için development deposu klonlanabilir.
-git clone https://github.com/p0pr0ck5/lua-resty-waf.git -b development
-
-# lua-aho-corasick deposunun klonlanması
-git clone https://github.com/p0pr0ck5/lua-aho-corasick.git
-
-# libinjection deposunun klonlanması
-git clone https://github.com/p0pr0ck5/libinjection
+git clone --recursive https://github.com/p0pr0ck5/lua-resty-waf.git \
+    -b development
 
 # lua-resty-waf make
+cd ~/source/lua-resty-waf
 make
 
 # lua-resty-waf install
