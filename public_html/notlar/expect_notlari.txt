@@ -1,0 +1,30 @@
+# -----------------------------------------------------------------------------
+# EXPECT NOTLARI
+# -----------------------------------------------------------------------------
+expect komutunun kullanımı hakkındaa notlar.
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+apt-get install expect
+
+
+# -----------------------------------------------------------------------------
+# autoexpect
+# -----------------------------------------------------------------------------
+Bir oturumu izleyip expect dosyası hazırlar.
+
+
+# Kullanımı
+autoexpect komut
+
+# Parametreler
+-f  oluşacak dosyanın ismi. Belirtilmezse script.exp oluyor.
+
+-c  conservative mode
+    Cevabı göndermeden önce kısa beklemeler koyuyor. Bu bekleme olmazsa bazı
+    programlar hızlı veren cevapları dikkate almıyor.
+
+-p  prompt mode
+    Gelen çıktıların tamamını değiş, sadece son satırı dikkate alıyor.
