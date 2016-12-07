@@ -15,7 +15,6 @@ apt-get install expect
 # -----------------------------------------------------------------------------
 Bir oturumu izleyip expect dosyası hazırlar.
 
-
 # Kullanımı
 autoexpect komut
 
@@ -28,3 +27,70 @@ autoexpect komut
 
 -p  prompt mode
     Gelen çıktıların tamamını değiş, sadece son satırı dikkate alıyor.
+
+
+# -----------------------------------------------------------------------------
+# expect
+# -----------------------------------------------------------------------------
+TCL komutları kullanılmakta.
+
+#!/usr/bin/expect -f
+
+# argument
+set arg1 [lindex $argv 0]
+
+# spawn
+spawn komut
+
+# exit
+exit
+
+# expect
+expect "beklenen ifade"
+expect -re "beklenen regex ifade"
+expect -re "\\\[Y/n]:"
+expect eof
+expect "\n" {
+    set raw $expect_out(buffer)
+    set response [string trimright "$raw" "\n"]
+}
+
+# expect_out
+expect -re "tarih (.*) olunca"
+if {$expect_out(1,string)!="2017"} {
+    send "2017 bulundu"
+}
+
+set raw $expect_out(buffer)
+
+# send
+send "text"
+send "\n"
+
+# send_tty
+send_tty "prompt: "
+
+# send_user
+if {$argc<2} {
+    send_user "usage: $argv0 user message\n"
+    exit
+}
+
+# set
+set key1 "value1"
+set timeout 10
+
+
+# -----------------------------------------------------------------------------
+# Pexpect
+# -----------------------------------------------------------------------------
+Python3 expect paketi
+
+# kurulum
+apt-get install python3-pexpect
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://www.linux-mag.com/id/699/
