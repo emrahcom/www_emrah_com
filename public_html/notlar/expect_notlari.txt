@@ -89,8 +89,34 @@ Python3 expect paketi
 # kurulum
 apt-get install python3-pexpect
 
+# ornek
+import pexpect
+child = pexpect.spawn('ftp ftp.openbsd.org')
+child.expect('Name .*: ')
+child.sendline('anonymous')
+
+# after & before
+child.after : beklenen regex'e uyan kısım
+child.before : beklenen kısımdan once gelenler
+
+# close
+child.close()
+
+# expect
+child.expect('^Login.*:')
+child.expect('^Login.*:', timeout=3)
+match_index = child.expect(['^Login.*:', pexpect.EOF], timeout=3)
+
+# send & sendline
+child.send('mypassword\n')
+child.sendline('mypassword')
+
+# exceptions
+pexpect.TIMEOUT
+
 
 # -----------------------------------------------------------------------------
 # KAYNAKLAR
 # -----------------------------------------------------------------------------
 http://www.linux-mag.com/id/699/
+https://pexpect.readthedocs.io/en/stable/index.html
