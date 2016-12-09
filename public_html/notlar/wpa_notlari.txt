@@ -1,0 +1,25 @@
+#------------------------------------------------------------------------------
+# WPA
+#------------------------------------------------------------------------------
+Testing on Debian Jessie
+
+# packages
+apt-get install wpasupplicant
+
+# scan
+iwlist scan
+iwlist scan | grep ESSID
+
+# /etc/wpa_supplicant/wpa_supplicant.conf
+network={
+    ssid="my_ssid"
+    psk="my_password"
+}
+
+# connect
+ifdown wlan0
+ifup wlan0
+
+# info
+iwconfig wlan0
+ifconfig wlan0
