@@ -1,0 +1,49 @@
+# -----------------------------------------------------------------------------
+# XIAOMI YI
+# -----------------------------------------------------------------------------
+ESSID: YDXJ_xxxxxxx
+Passphrase: 1234567890
+IP: 192.168.42.1
+
+# -----------------------------------------------------------------------------
+# COMMUNICATION
+# -----------------------------------------------------------------------------
+
+# packages
+apt-get install netcat-openbsd
+
+# connection
+nc 192.168.42.1 7878
+
+# token
+>>> {"msg_id":257,"token":0}
+<<< { "rval": 0, "msg_id": 257, "param": 7 }
+
+param is the token (7 in this example)
+
+# config get
+>>> {"msg_id":3, "token":7}
+<<< {"rval": 0, "msg_id": 3, "param": [.....]}
+
+>>> {"msg_id":3, "token":7, "param":"video_standard"}
+<<< { "rval": 0, "msg_id": 3, "param": [{ "video_standard": "readonly:NTSC#PAL"}]}
+
+# config set
+config could not be set while streaming. Stop the stream first.
+
+>>> {"msg_id":2,"token":7, "type":"start_wifi_while_booted", "param":"on"}
+
+# start stream
+>>> {"msg_id":259,"token":7,"param":"none_force"}
+<<< {"rval":0,"msg_id":259}
+<<< { "msg_id": 7, "type": "vf_start" }
+
+# live stream link
+rtsp://192.168.42.1/live
+
+# -----------------------------------------------------------------------------
+# RELATED LINKS
+# -----------------------------------------------------------------------------
+https://gist.github.com/franga2000/1be2aa18cb3409e57af149883c06e34a
+https://github.com/deltaflyer4747/Xiaomi_Yi
+
