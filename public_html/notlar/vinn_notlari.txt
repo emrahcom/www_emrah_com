@@ -4,9 +4,8 @@
 Debian Jessie ve Raspbian ile test edilmiştir.
 
 #------------------------------------------------------------------------------
-# Huawei HiLink
+# Huawei HiLink (ethernet mode)
 #------------------------------------------------------------------------------
-
 # packages
 apt-get install usb-modeswitch
 
@@ -38,3 +37,56 @@ systemctl restart udev.service
 # ifconfig
 eth1      Link encap:Ethernet  HWaddr 58:2c:80:71:47:58
           inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+
+#------------------------------------------------------------------------------
+# Huawei HiLink (modem mode)
+#------------------------------------------------------------------------------
+# packages
+apt-get install minicom wvdial
+
+# switch to modem mode
+http://192.168.1.1/html/switchProjectMode.html
+
+# fix the modem mode
+minicom -D /dev/ttyUSB0 -b 9600 -8 -z
+>>> AT^U2DIAG=0
+<<< OK
+
+<ctrl>+a z x
+
+# return to ethernet mode
+minicom -D /dev/ttyUSB0 -b 9600 -8 -z
+>>> AT^U2DIAG=119
+<<< OK
+
+<ctrl>+a z x
+
+# reconnect
+disconnect & connect device
+
+# device
+ls /dev/ttyUSB*
+<<< /dev/ttyUSB0  /dev/ttyUSB1 /dev/ttyUSB2
+lsusb
+<<< 12d1:1442 Huawei Technologies Co., Ltd.
+
+# /etc/wvdial.conf
+[Dialer Defaults]
+Init1 = ATZ
+Init2 = ATQ0 V1 E1 S0=0 &C1 &D2
+Init3 = AT+CGDCONT=1, "IP", "internet"
+Modem = /dev/ttyUSB0
+Modem Type = Analog Modem
+Baud = 460800
+ISDN = 0
+New PPPD = yes
+Phone = *99#
+Username = vodafone
+Password = vodafone
+Stupid Mode = 1
+Dial Command = ATD
+Carrier Check = no
+Auto DNS = 0
+
+# dial up
+wvdial
