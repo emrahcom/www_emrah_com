@@ -1,0 +1,40 @@
+#------------------------------------------------------------------------------
+# VINN NOTLARI
+#------------------------------------------------------------------------------
+Debian Jessie ve Raspbian ile test edilmiştir.
+
+#------------------------------------------------------------------------------
+# Huawei HiLink
+#------------------------------------------------------------------------------
+
+# packages
+apt-get install usb-modeswitch
+
+# lsusb (before switch)
+12d1:1f01 Huawei Technologies Co., Ltd.
+
+# lsusb (after switch)
+12d1:14db Huawei Technologies Co., Ltd.
+
+# test run
+usb_modeswitch -v 12d1 -p 1f01 -V 12d1 -P 14db -M \
+    "55534243123456780000000000000a11062000000000000100000000000000"
+
+# /etc/usb_modeswitch.d/vinn_huawei_hilink.conf
+DefaultVendor= 0x12d1
+DefaultProduct= 0x1f01
+TargetVendor= 0x12d1
+TargetProduct= 0x14db
+MessageEndPoint = "0x01"
+MessageContent="55534243123456780000000000000a11062000000000000100000000000000"
+NoDriverLoading=1
+
+# /etc/udev/rules.d/90-usb-modeswitch.rules
+ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="12d1", ATTRS{idProduct}=="1f01", RUN+="/usr/sbin/usb_modeswitch -c /etc/usb_modeswitch.d/vinn_huawei_hilink.conf"
+
+# restart udev
+systemctl restart udev.service
+
+# ifconfig
+eth1      Link encap:Ethernet  HWaddr 58:2c:80:71:47:58
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
