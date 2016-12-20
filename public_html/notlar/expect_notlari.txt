@@ -54,6 +54,11 @@ expect "\n" {
     set raw $expect_out(buffer)
     set response [string trimright "$raw" "\n"]
 }
+expect {
+    "beklenen1" { send "komut1\n" }
+    "beklenen2" { send "komut2\n" }
+    default { exit }
+}
 
 # expect_out
 expect -re "tarih (.*) olunca"
