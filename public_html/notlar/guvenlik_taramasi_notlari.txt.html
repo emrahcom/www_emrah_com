@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>guvenlik_taramasi_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# GÜVENLİK TARAMASI NOTLARI
+# -----------------------------------------------------------------------------
+Bu bölümde sunucu ve web güvenlik taramaları ile ilgili notlar yer alır.
+
+W3af, Skipfish, Ratproxy incelenecek.
+
+# -----------------------------------------------------------------------------
+# Nikto
+# -----------------------------------------------------------------------------
+Web güvenlik taraması. Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install nikto
+
+# Veritabanını güncelleme
+Komut root olarak çalıştırılacak ama artık güncelleme gelmiyor.
+
+nikto -update
+
+# Kullanım
+nikto -h http://www.google.com/
+
+
+
+# -----------------------------------------------------------------------------
+# Wapiti
+# -----------------------------------------------------------------------------
+Web güvenlik taraması. Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install wapiti
+
+# Kullanımı
+wapiti http://url/path/
+
+
+
+# -----------------------------------------------------------------------------
+# Skipfish
+# -----------------------------------------------------------------------------
+Web güvenlik taraması. Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install skipfish
+
+# Kullanımı
+skipfish -o skipfish http://www.google.com/
+
+# Rapor
+Tarayıcı ile skipfish/index.html sayfası açılacak.
+
+
+
+# -----------------------------------------------------------------------------
+# Ratproxy
+# -----------------------------------------------------------------------------
+Web güvenlik taraması için proxy... Debian Jessie ile test edildi.
+
+# Kurulum
+apt-get install ratproxy
+
+# Kullanımı
+ratproxy -v &lt;outdir&gt; -w &lt;outfile&gt; -d &lt;domain&gt; -lfscmr
+
+Tarayıcıyı açıp &quot;HTTP proxy&quot; olarak ratproxy gösterilir ve ilgili site gezilir.
+
+# Raporun oluşturulması
+ratproxy-report &lt;outfile&gt; &gt; rapor.html
+
+
+
+# -----------------------------------------------------------------------------
+# W3af
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edildi. Kurulum aşamasında sorunlarla karşılaşıldı,
+düzgün çalıştırılamadı.
+
+# Kurulumu
+apt-get install w3af-console
+
+# Kullanımı
+python /usr/share/w3af/w3af_console
+w3af&gt;&gt;&gt; help
+w3af&gt;&gt;&gt; http-settings
+w3af/config:http-settings&gt;&gt;&gt; help
+w3af/config:http-settings&gt;&gt;&gt; set timeout 5
+w3af/config:http-settings&gt;&gt;&gt; back
+w3af&gt;&gt;&gt; plugins
+w3af/plugins&gt;&gt;&gt; list audit
+w3af/plugins&gt;&gt;&gt; audit xss, sqli
+w3af/plugins&gt;&gt;&gt; back
+w3af&gt;&gt;&gt; target
+w3af/config:target&gt;&gt;&gt; set target http://www.google.com/
+w3af/config:target&gt;&gt;&gt; back
+w3af&gt;&gt;&gt; start
+    !! HATA OLUŞUYOR
+
+
+
+
+# -----------------------------------------------------------------------------
+# OpenVAS
+# -----------------------------------------------------------------------------
+Genel güvenlik taraması... Debian Wheezy ile test edildi.
+
+# /etc/apt/sources.list
+deb http://download.opensuse.org/repositories/security:/OpenVAS:/UNSTABLE:/v6/Debian_7.0/ ./
+
+# apt key
+wget http://download.opensuse.org/repositories/security:/OpenVAS:/UNSTABLE:/v6/Debian_7.0/Release.key
+apt-key add ./Release.key
+apt-get update
+
+# Kurulacak paketler
+apt-get install --install-recommends greenbone-security-assistant openvas-cli \
+    openvas-manager openvas-scanner openvas-administrator sqlite3 xsltproc \
+    rsync nmap
+apt-get install texlive-latex-base texlive-latex-extra \
+    texlive-latex-recommended htmldoc
+apt-get install alien rpm nsis fakeroot
+
+# /etc/default/greenbone-security-assistant
+    GSA_ADDRESS=127.0.0.1  -&gt; GSA_ADDRESS=0.0.0.0
+
+# Verilerin güncellenmesi ve servislerin başlatılması
+test -e /var/lib/openvas/CA/cacert.pem  || openvas-mkcert -q
+openvas-nvt-sync
+test -e /var/lib/openvas/users/om || openvas-mkcert-client -n om -i
+/etc/init.d/openvas-manager stop
+/etc/init.d/openvas-scanner stop
+openvassd
+openvasmd --rebuild
+openvas-scapdata-sync
+openvas-certdata-sync
+test -e /var/lib/openvas/users/admin || openvasad -c add_user -n admin -r Admin
+pkill -f openvassd
+/etc/init.d/openvas-scanner start
+/etc/init.d/openvas-manager start
+/etc/init.d/openvas-administrator restart
+/etc/init.d/greenbone-security-assistant restart
+
+# Tarama
+https://ip_adresi:9392/
+
+
+
+# -----------------------------------------------------------------------------
+# Kaynaklar
+# -----------------------------------------------------------------------------
+
+# OpenVAS
+http://www.openvas.org/install-packages-v6.html#openvas_debian_obs
+https://it-nuggets.net/2014/08/23/openvas-installation-debian-wheezy
+
+# Scanner
+http://resources.infosecinstitute.com/14-popular-web-application-vulnerability-scanners/
+http://n0where.net/best-web-application-vulnerability-scanners/
+https://code.google.com/p/ratproxy/wiki/RatproxyDoc
+</code></pre>
+</body>
+</html>

@@ -21,7 +21,6 @@
 
 import re
 import sys
-import httplib
 import urllib
 import socket
 import HTMLParser
@@ -31,13 +30,12 @@ DEBUG = 0
 # Color mode for print out. 0 for no color, 1 for colored print out.
 COLORED = 1
 # Server address and web page.
-SERVER = 'www.zargan.com'
-PAGE = '/mobil/sozluk.asp'
+PAGE = 'http://www.zargan.com/Mobile/tr/page/search'
 # Regex pattern to parse word list block.
 P_WORD_BLOCK = re.compile('&lt;div id=&quot;listResults&quot;&gt;(.*?)&lt;/div&gt;', re.DOTALL)
 # Regex pattern to parse (word, meaning) pair.
-P_WORD_PAIR  = '.*?&lt;span class=&quot;listString&quot;&gt;(.*?)&lt;/span&gt;'
-P_WORD_PAIR += '.*?&lt;a href=&quot;.*?&quot;&gt;(.*?)&lt;/a&gt;(.*)'
+P_WORD_PAIR  = '.*?&lt;div class=&quot;resultFromText&quot;&gt;.*?&gt;(.*?)&lt;/a&gt;'
+P_WORD_PAIR += '.*?&lt;div class=&quot;resultToText&quot;&gt;.*?&gt;(.*?)&lt;/a&gt;(.*)'
 P_WORD_PAIR  = re.compile(P_WORD_PAIR, re.DOTALL)
 
 
@@ -49,16 +47,11 @@ def get_response_from_zargan(word):
     an unparsed HTML text.
     &quot;&quot;&quot;
     try:
-        header = {'Content-type'   : 'application/x-www-form-urlencoded',
-                  'Accept'         : 'text:plain' }
-        param = urllib.urlencode({'sozcuk': word})
-        cnn = httplib.HTTPConnection(SERVER)
+        param = urllib.urlencode({'text': word})
         socket.setdefaulttimeout(5)
-        cnn.request('GET', PAGE, param, header)
-        res = cnn.getresponse().read().decode('utf-8')
-        cnn.close()
-
-        result = HTMLParser.HTMLParser().unescape(res)
+        cnn = urllib.urlopen(&quot;%s?%s&quot; % (PAGE, param))
+        buf = cnn.read().decode('utf-8')
+        result = HTMLParser.HTMLParser().unescape(buf)
     except Exception, err:
         if DEBUG:
             raise
@@ -78,12 +71,6 @@ def get_dict_pairs(html):
     &quot;&quot;&quot;
     try:
         result = []
-
-        # Parse word list block.
-        g = P_WORD_BLOCK.search(html)
-        if not g:
-            raise NameError('Word list block not found')
-        html = g.group(1)
 
         # Parse (word, meaning) pairs
         while True:

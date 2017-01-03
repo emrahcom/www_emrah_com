@@ -7,80 +7,96 @@
 </head>
 <body>
 <pre><code>
-TMUX NOTLARI
-------------
-
-- Yükleme
-
-        aptitude install tmux
+# -----------------------------------------------------------------------------
+# TMUX NOTLARI
+# -----------------------------------------------------------------------------
+Terminal multiplexer. Screen yerine bunu kullan.
 
 
-- Başlatma
 
-        # yeni başlatırken
-        tmux
+# -----------------------------------------------------------------------------
+# Kurulum
+# -----------------------------------------------------------------------------
 
-        # detach
-        ctrl+b d
-
-        # çalışmakta olan screen'lerin listesi
-        tmux ls
-        tmux &lt;ctrl+b s&gt;
-
-        # detach olunmuş tmux'a yeniden bağlanmak için
-        tmux a
-        tmux attach
-        tmux attach -t &lt;num&gt;
-
-        # detach olunmamış tmux'a yeniden bağlanmak için (singleuser mode)
-        tmux attach -d
-
-        # kullanılmakta olan tmux'a bağlanmak (multiuser mode)
-        tmux attach
-
-        # bir uygulama ile başlatma
-        tmux new-session &lt;uygulama&gt;
+apt-get install tmux
 
 
-- Sık kullanılan kısayollar
 
-        ctrl+b ?                yardım
-        ctrl+b s                mevcut oturumları (session) listeleme ve geçiş
-        ctrl+b d                oturumdan ayrılma (detach)
+# -----------------------------------------------------------------------------
+# Başlatma
+# -----------------------------------------------------------------------------
 
-        ctrl+b c                yeni pencere oluşturma (create)
-        ctrl+b ,                pencere adını değiştirme
-        ctrl+b l                son (last) pencereye dön
-        ctrl+b n                sonraki pencere (next)
-        ctrl+b p                önceki pencere (previous)
-        ctrl+b w                pencereleri (window) listeleme ve geçme
-        ctrl+b &lt;num&gt;            &lt;num&gt; numaralı pencereye geçme
+# yeni başlatırken
+tmux
 
-        ctrl+b %                paneli dikey böler
-        ctrl+b &quot;                paneli yatay böler
-        ctrl+b &lt;space&gt;          panel yerleşim modunu değiştirir
-        ctrl+b ctrl+o           panellerin yerlerini değiştirir
-        ctrl+b o                paneller arasında geçiş
-        ctrl+b q                panel numaralarını gösterme ve geçme
-        ctrl+b &lt;ok tusu&gt;        paneller arasında geçiş
-        ctrl+b ctrl+&lt;ok tusu&gt;   panel boyunu ok yönünde değiştirme
+# detach
+ctrl+b d
 
-        ctrl+b [                copy moda geçer
-        &lt;ok tuşları&gt;
-        ctrl+space              seçmeye başlar
-        alt+w                   seçili alanı kopyalar
-        ctrl+b ]                paste eder
-        ctrl+b =                bufferdan seçip paste eder
+# çalışmakta olan screen'lerin listesi
+tmux ls
+tmux
+    &lt;ctrl+b s&gt;
 
-        ctrl+b t                zamanı (time) gösterme
-        ctrl+b :                komut modu
+# detach olunmuş tmux'a yeniden bağlanmak için (attach)
+tmux attach
+tmux a
+tmux a -t &lt;num&gt;
+
+# detach olunmamış tmux'a yeniden bağlanmak için (singleuser mode)
+tmux a -d
+
+# kullanılmakta olan tmux'a bağlanmak (multiuser mode)
+tmux a
+
+# bir uygulama ile başlatma
+tmux new-session &lt;uygulama&gt;
 
 
-- Komutlar
+# -----------------------------------------------------------------------------
+# Sık Kullanılan Kısayollar
+# -----------------------------------------------------------------------------
 
-        set status off          status barı kapatır
-        setw synchronize-panes  pencereleri senkronize eder.
-                                aynı komut bütün pencerelerde çalışır.
+ctrl+b ?                yardım
+ctrl+b s                mevcut oturumları (session) listeleme ve geçiş
+ctrl+b d                oturumdan ayrılma (detach)
+
+ctrl+b c                yeni pencere oluşturma (create)
+ctrl+b ,                pencere adını değiştirme
+ctrl+b l                son (last) pencereye dön
+ctrl+b n                sonraki pencere (next)
+ctrl+b p                önceki pencere (previous)
+ctrl+b w                pencereleri (window) listeleme ve geçme
+ctrl+b &lt;num&gt;            &lt;num&gt; numaralı pencereye geçme
+
+ctrl+b %                paneli dikey böler
+ctrl+b &quot;                paneli yatay böler
+ctrl+b &lt;space&gt;          panel yerleşim modunu değiştirir
+ctrl+b ctrl+o           panellerin yerlerini değiştirir
+ctrl+b o                paneller arasında geçiş (ring)
+ctrl+b q                panel numaralarını gösterme ve geçme
+ctrl+b &lt;ok tusu&gt;        paneller arasında geçiş
+ctrl+b ctrl+&lt;ok tusu&gt;   panel boyunu ok yönünde değiştirme
+ctrl+b !                paneli, yeni açılan kendi penceresine taşımak
+
+ctrl+b [                copy moda geçer
+&lt;ok tuşları&gt;
+ctrl+space              seçmeye başlar
+alt+w                   seçili alanı kopyalar
+ctrl+b ]                paste eder
+ctrl+b =                bufferdan seçip paste eder
+
+ctrl+b t                zamanı (time) gösterme
+
+
+
+# -----------------------------------------------------------------------------
+# Komutlar
+# -----------------------------------------------------------------------------
+
+ctrl+b :                komut modu
+set status off          status barı kapatır
+setw synchronize-panes  pencereleri senkronize eder.
+                        aynı komut bütün pencerelerde çalışır.
 </code></pre>
 </body>
 </html>

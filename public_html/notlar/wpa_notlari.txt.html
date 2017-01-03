@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>wpa_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+#------------------------------------------------------------------------------
+# WPA
+#------------------------------------------------------------------------------
+Testing on Debian Jessie
+
+# packages
+apt-get install wpasupplicant
+
+# scan
+iwlist scan
+iwlist scan | grep ESSID
+
+# /etc/wpa_supplicant/wpa_supplicant.conf
+network={
+    ssid=&quot;my_ssid&quot;
+    psk=&quot;my_password&quot;
+}
+
+# connect
+ifdown wlan0
+ifup wlan0
+
+# info
+iwconfig wlan0
+ifconfig wlan0
+</code></pre>
+</body>
+</html>

@@ -10,9 +10,7 @@
 # -----------------------------------------------------------------------------
 # FLASK NOTLARI
 # -----------------------------------------------------------------------------
-Notlar, Debian Jessie ve Python 2.7 için hazırlanmıştır. Python 3.x ile
-çalışıyor olmasına karşın bazı extentionların (örneğin flask-spyne) 3.x desteği
-henüz tamamlanmış değil.
+Notlar, Debian Jessie ve Python 3.x için hazırlanmıştır.
 
 
 
@@ -22,15 +20,24 @@ henüz tamamlanmış değil.
 Recommended paketlerin default olarak kurulmadığı varsayıldı. Nginx ve UWSGI
 ile birlikte çalışacak şekilde yapılandırılıyor.
 
-# Paketler
-apt-get install python-flask
-apt-get install uwsgi uwsgi-plugin-python
+# Global Paketler
 apt-get install nginx-extras
+apt-get install uwsgi uwsgi-plugin-python3 --install-recommends
+apt-get install python3-pip
+# Derlenerek kurulacak Python paketleri olacaksa
+apt-get install build-essential python3-dev libffi-dev
 
-# Flask proje klasörü
-mkdir /home/emrah/myproject
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user Flask
+pip3 install --user Flask-WTF WTForms
+pip3 install --user Flask-SQLAlchemy
 
-# /home/emrah/myproject/myapp.ini
+# Flask Proje Klasörü
+mkdir -p /home/emrah/myproject/app/{static,templates,views}
+cd myproject
+
+# /home/emrah/myproject/run.ini
 [uwsgi]
 plugins = python
 uid = emrah
@@ -44,33 +51,47 @@ post-buffering = 8192
 vacuum = true
 socket = 127.0.0.1:8000
 callable = app
-wsgi-file = /home/emrah/myproject/myapp.py
 chdir = /home/emrah/myproject/
+wsgi-file = /home/emrah/myproject/run.py
 
-# /home/emrah/myproject/myapp.py
+# /home/emrah/myproject/run.py
+from app import app
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
+
+# /home/emrah/myproject/config.py
+DEBUG = True
+
+# /home/emrah/myproject/app/__init__.py
 from flask import Flask
-app= Flask(__name__)
+
+app = Flask(__name__)
+app.config.from_object('config')
 
 @app.route('/')
 def hello_world():
     return 'Hello World!'
 
-if __name__ == '__main__':
-    app.run()
+# test run
+su -l emrah
+python3 /home/emrah/myproject/run.py
+
+&lt;ctrl&gt;+C
 
 # UWSGI link ve restart
-cd /etc/uwsgi/apps-enabled
-ln -s /home/emrah/myproject/myapp.ini
+ln -s /home/emrah/myproject/run.ini /etc/uwsgi/apps-enabled/
 systemctl restart uwsgi
 
-# /etc/nginx/sites-available/mysite
+# /etc/nginx/sites-available/mysite.conf
 server {
-        listen 80; 
+        listen 80;
         server_name _;
         access_log /var/log/nginx/access.mysite.log;
         error_log /var/log/nginx/error.mysite.log;
 
-        root /var/www/html;
+        root /home/emrah/myproject/static;
 
         location / {
                 try_files $uri @myproject;
@@ -83,24 +104,385 @@ server {
 }
 
 # Nginx link ve restart
-cd /etc/nginx/sites-enabled
-ln -s ../sites-available/mysite
+ln -s ../sites-available/mysite.conf /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
 systemctl restart nginx
 
 # Test
 curl http://127.0.0.1/
 
+# UWSGI ile debug
+Browserdan hata mesajlarını görebilmek için ana blok içine aşağıdaki kodlar
+eklenir. 'config.py' içinde 'DEBUG' değeri için True verilmeli.
+
+app = Flask(__name__)
+
+from werkzeug.debug import DebuggedApplication
+app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
+
 
 
 # -----------------------------------------------------------------------------
-# FLASK-SPYNE KURULUM
+# UPGRADE
+# -----------------------------------------------------------------------------
+Kullanıcı yerel deponun güncellenmesi. Normal kullanıcı olarak çalıştırılır.
+
+for p in `pip3 list -lo | cut -d ' ' -f1`
+do
+    echo &quot;### $p ###&quot;
+    pip3 install --upgrade --user $p
+done
+
+
+
+# -----------------------------------------------------------------------------
+# STRUCTURE
+# -----------------------------------------------------------------------------
+myproject
+│
+├── app
+│   ├── __init__.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── static
+│   │   ├── logo.png
+│   │   └── style.css
+│   ├── templates
+│   │   ├── bp1
+│   │   │   ├── layout.html
+│   │   │   ├── page1.html
+│   │   │   └── page2.html
+│   │   ├── bp2
+│   │   │   ├── layout.html
+│   │   │   ├── page3.html
+│   │   │   └── page4.html
+│   │   └── layout.html
+│   └── views
+│       ├── __init__.py
+│       ├── bp1.py
+│       └── bp2.py
+├── config.py
+├── run.ini
+└── run.py
+
+# myproject/config.py
+DEBUG = True
+CSRF_ENABLED = True
+SECRET_KEY = 'my secret key'
+SESSION_TYPE = 'redis'
+PERMANENT_SESSION_LIFETIME = 1800
+SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/myapp.db'
+
+# myproject/run.py
+from app import app
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
+
+# myproject/app/__init__.py
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config.from_object('config')
+db = SQLAlchemy(app)
+
+from app import models
+from app.views.bp1 import bp1
+from app.views.bp2 import bp2
+app.register_blueprint(bp1, url_prefix='/')
+app.register_blueprint(bp2, url_prefix='/bp2')
+
+# myproject/app/models.py
+from app import db
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(255), nullable=False, server_default='')
+
+db.create_all()
+
+# myproject/app/views/__init__.py
+touch myproject/app/views/__init__.py
+
+# myproject/app/views/bp1.py
+from flask import Blueprint
+bp1 = Blueprint('bp1', __name__)
+
+@bp1.route('/')
+def hello_world():
+    return 'Hello World!!!'
+
+# myproject/app/views/bp2.py
+from flask import Blueprint, render_template, abort
+from jinja2 import TemplateNotFound
+bp2 = Blueprint('bp2', __name__, template_folder='../templates/bp2')
+
+@bp2.route('/page3')
+def page3():
+    try:
+        return render_template('page3.html')
+    except TemplateNotFound:
+        abort(404)
+
+# templates
+mkdir -p myproject/app/templates/{bp1,bp2}
+touch myproject/app/templates/bp1/{layout,page1,page2}.html
+touch myproject/app/templates/bp2/{layout,page3,page4}.html
+
+# Test
+systemctl restart uwsgi
+curl http://127.0.0.1/
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK SERVER SIDE SESSION
+# -----------------------------------------------------------------------------
+Burada Redis ile kullanımı yer almakta. Farklı SESSION_TYPE seçilerek oturum
+verileri memcached, veritabanı veya dosya sisteminde de tutulabilir.
+
+# Global Paketler
+apt-get install redis-server
+
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user redis
+pip3 install --user Flask-Session
+
+# Örnek kod
+from flask import Flask, session
+from flask_session import Session
+
+app = Flask(__name__)
+app.secret_key = 'my secret key'
+app.config[&quot;SESSION_TYPE&quot;] = &quot;redis&quot;
+app.config[&quot;PERMANENT_SESSION_LIFETIME&quot;] = 1800
+Session(app)
+
+username = session.get('username', 'not set')
+session['username'] = 'emrah'
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK-SQLALCHEMY
+# -----------------------------------------------------------------------------
+Flask-SQLAlchemy, tamamen SQLAlchemy gibi davranmamakta. Özellikle Flask
+kullanılırken doğrudan SQLAlchemy kullanmak yerine Flask-SQLAlchemy kullanmanın
+bazı avantajları var. Örneğin session yönetimi gibi...
+
+# Global Paketler (postgresql varsa)
+apt-get install postgresql postgresql-contrib
+
+# Veritabani paketleri binary olarak Debian deposundan veya derlenerek Python
+# deposundan kurulabilir.
+su -l emrah
+pip3 install --user psycopg2
+        veya
+apt-get install python3-psycopg2
+apt-get install python3-mysql.connector
+
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user Flask-SQLAlchemy
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK-MAIL
+# -----------------------------------------------------------------------------
+Gmail üzerinden email göndermek için yapılacak ayarlar.
+
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user Flask-Mail
+
+# Gmail ayarları
+https://www.google.com/settings/security/lesssecureapps linkinden 'Turn off'
+seçeneği işaretlenir.
+
+# myproject/config.py
+MAIL_USERNAME = 'emrah@gmail.com'
+MAIL_PASSWORD = 'parolam'
+MAIL_DEFAULT_SENDER = '&quot;Emrah&quot; &lt;emrah@gmail.com&gt;'
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_SSL = False
+MAIL_USE_TLS = True
+
+# Mail kodu
+from flask import Flask
+from flask_mail import Mail, Message
+
+app = Flask(__name__)
+app.config.from_object('config')
+mail = Mail(app)
+
+@app.route('/sendmail')
+def sendmail():
+    msg = Message('Subject',
+                  sender='emrah@gmail.com',
+                  recipients=['emrah@gmail.com'])
+    msg.body = 'Hello World'
+    mail.send(msg)
+
+    return 'sent'
+
+# Test
+systemctl restart uwsgi
+curl http://127.0.0.1/sendmail
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK-USER
 # -----------------------------------------------------------------------------
 
-# Paketler
-apt-get install python-spyne python-simplejson python-yaml
-apt-get install python-pip
-pip install flask-spyne
-    (sec-wall paketi de bağımlılık nedeniyle kuruluyor. Debian deposunda yok.)
+# Kurulum
+su -l emrah
+pip3 install --user Flask-User
+
+# myproject/config.py
+DEBUG = True
+CSRF_ENABLED = True
+SECRET_KEY = 'my secret key'
+SESSION_TYPE = 'redis'
+PERMANENT_SESSION_LIFETIME = 1800
+SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/myapp.db'
+
+MAIL_USERNAME = 'emrah@gmail.com'
+MAIL_PASSWORD = 'parolam'
+MAIL_DEFAULT_SENDER = '&quot;Emrah&quot; &lt;emrah@gmail.com&gt;'
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_SSL = False
+MAIL_USE_TLS = True
+USER_APP_NAME = 'MyApp'
+
+# myproject/app/models.py
+from app import db
+from flask_user import UserMixin
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(255), nullable=False, server_default='')
+    reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    confirmed_at = db.Column(db.DateTime())
+    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
+
+db.create_all()
+
+# myproject/app/__init__.py
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
+from flask_user import UserManager, SQLAlchemyAdapter, login_required
+
+app = Flask(__name__)
+app.config.from_object('config')
+
+db = SQLAlchemy(app)
+mail = Mail(app)
+from app import models
+db_adapter = SQLAlchemyAdapter(db, models.User)
+user_manager = UserManager(db_adapter, app)
+
+@app.route('/')
+@login_required
+def hello_world():
+    return 'Hello World'
+
+# template özelleştirme
+Özelleştirilecek template 'myproject/app/templates/flask_user/' klasörü altına
+kopyalanır. pip3 ile lokale kuruldu ise orjinal template dosyaları
+'&tilde;/.local/lib/python3.4/site-packages/flask_user/templates/flask_user' klasörü
+altında...
+
+# form validator özelleştirme (myproject/app/forms.py)
+Örnek kod için '&tilde;/.local/lib/python3.4/site-packages/flask_user/forms.py'
+kodlarına bakılabilir.
+
+from wtforms.validators import ValidationError
+
+def my_password_validator(form, field):
+    password = list(field.data)
+    password_length = len(password)
+
+    alpha = digit = 0
+    for ch in password:
+        if ch.isalpha(): alpha+=1
+        if ch.isdigit(): digit+=1
+
+    is_valid = password_length&gt;=6 and alpha and digit
+    if not is_valid:
+        raise ValidationError('''Password must have at least 6 characters with
+                              one letter and one number''')
+
+# form validator özelleştirme (myproject/app/__init__.py)
+from app import models, forms
+
+db_adapter = SQLAlchemyAdapter(db, models.User)
+user_manager = UserManager(db_adapter, app,
+                           password_validator=forms.my_password_validator)
+
+# Onay emaili olmayacaksa (myproject/config.py)
+USER_ENABLE_CONFIRM_EMAIL = False
+USER_ENABLE_LOGIN_WITHOUT_CONFIRM = True
+
+
+
+# -----------------------------------------------------------------------------
+# FLASK-ADMIN
+# -----------------------------------------------------------------------------
+
+# Kurulum
+su -l emrah
+pip3 install --user Flask-Admin
+
+# myproject/app/__init__.py
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
+admin = Admin(app, name='admin', template_mode='bootstrap3')
+admin.add_view(ModelView(models.User, db.session))
+
+# static klasörü için Flask_Admin filemanager (myproject/app/__init__.py)
+from flask_admin import Admin
+from flask_admin.contrib.fileadmin import FileAdmin
+import os.path as op
+
+path = op.join(op.dirname(__file__), 'static')
+admin = Admin(app, name='admin', template_mode='bootstrap3')
+admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
+
+# Admin sayfasına erişimi sınırlandırma (myproject/app/__init__.py)
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.fileadmin import FileAdmin
+from flask_user import current_user
+import os.path as op
+
+FILE_MANAGERS = ('emrah', 'admin')
+
+class MyModelView(ModelView):
+    def is_accessible(self):
+        #return (current_user.is_authenticated and
+        #        current_user.has_role('admin'))
+        return current_user.is_authenticated
+class MyFileAdmin(FileAdmin):
+    def is_accessible(self):
+        return (current_user.is_authenticated and
+                current_user.username in FILE_MANAGERS)
+
+path = op.join(op.dirname(__file__), 'static')
+admin = Admin(app, name='admin', template_mode='bootstrap3')
+admin.add_view(MyModelView(models.User, db.session))
+admin.add_view(MyFileAdmin(path, '/static/', name='Static Files'))
 
 
 
@@ -112,15 +494,20 @@ pip install flask-spyne
 http://flask.pocoo.org/
 http://flask.pocoo.org/docs/0.10/
 http://www.fullstackpython.com/flask.html
-
+# Structure
+https://www.exploreflask.com/blueprints.html
+https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications
+http://mattupstate.com/python/2013/06/26/how-i-structure-my-flask-applications.html
+http://fewstreet.com/2015/01/16/flask-blueprint-templates.html
+# Flask-SQLAlchemy
+http://flask-sqlalchemy.pocoo.org/2.1/
+# Flask-User
+https://pythonhosted.org/Flask-User/
+# Flask-Admin
+https://flask-admin.readthedocs.io/en/latest/
 # UWSGI
 http://uwsgi-docs.readthedocs.org/en/latest/
 http://flask.pocoo.org/docs/0.10/deploying/uwsgi/
-
-# Spyne
-http://spyne.io/
-https://github.com/rayrapetyan/flask-spyne
-https://pypi.python.org/pypi/Flask-Spyne
 </code></pre>
 </body>
 </html>

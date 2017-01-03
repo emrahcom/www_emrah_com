@@ -7,526 +7,554 @@
 </head>
 <body>
 <pre><code>
-SHELL NOTLARI
--------------
+# -----------------------------------------------------------------------------
+# SHELL NOTLARI
+# -----------------------------------------------------------------------------
+Komutlar çoğunlukla bash ve zsh ile test edilmiştir.
 
-- Renkler
-        \033 [ &lt;komut&gt; m
 
-        echo -e &quot;\033[35mRenkli \033[0m&quot;
-        echo -e &quot;\033[35;1mRenkli Bold\033[0m&quot;
-        echo -e &quot;\033[1;35mRenkli Bold\033[0m&quot;
-        echo -e &quot;\033[43;35;1mRenkli Bold Sarı Zemine\033[0m&quot;
+# Renkler
+\033 [ &lt;komut&gt; m
 
-        - Yazı renkleri
-                30    siyah
-                31    kırmızı
-                32    yeşil
-                33    sarı
-                34    lacivert
-                35    magenta
-                36    açık mavi
-                37    beyaz
+echo -e &quot;\033[35mRenkli \033[0m&quot;
+echo -e &quot;\033[35;1mRenkli Bold\033[0m&quot;
+echo -e &quot;\033[1;35mRenkli Bold\033[0m&quot;
+echo -e &quot;\033[43;35;1mRenkli Bold Sarı Zemine\033[0m&quot;
 
-        - Arkaplan renkleri
-                40    siyah
-                41    kırmızı
-                42    yeşil
-                43    sarı
-                44    lacivert
-                45    magenta
-                46    açık mavi
-                47    beyaz
+- Yazı renkleri
+    30    siyah
+    31    kırmızı
+    32    yeşil
+    33    sarı
+    34    lacivert
+    35    magenta
+    36    açık mavi
+    37    beyaz
 
-        - Diğer kodlar
-                0     reset
-                1     kalın
-                5     yanıp sönme
-                7     ters renk
-                22    normal parlaklık
-                25    yanıp sönmeyi kapat
-                27    ters rengi kapat
+- Arkaplan renkleri
+    40    siyah
+    41    kırmızı
+    42    yeşil
+    43    sarı
+    44    lacivert
+    45    magenta
+    46    açık mavi
+    47    beyaz
 
+- Diğer kodlar
+    0     reset
+    1     kalın
+    5     yanıp sönme
+    7     ters renk
+    22    normal parlaklık
+    25    yanıp sönmeyi kapat
+    27    ters rengi kapat
 
 
-- Resim dönüştürme
-        convert resim.jpg resim.png
 
+# Resim dönüştürme
+convert resim.jpg resim.png
 
-- Python Imaging Library
-        aptitude install python-imaging
 
-        - resim dönüştürme
-        pilconvert.py resim.jpg resim.png
+# Python Imaging Library
+apt-get install python-imaging
 
-        - bir klasordeki resimleri tek bir pdf dosyaya dönüştürme
-        pilprint.py *.jpg *.png | ps2pdf12 - dosya.pdf
+- resim dönüştürme
+pilconvert.py resim.jpg resim.png
 
-        - programlar tam istenilen sonucu vermiyorsa
-        vim /usr/bin/pilxxx.py
+- bir klasordeki resimleri tek bir pdf dosyaya dönüştürme
+pilprint.py *.jpg *.png | ps2pdf12 - dosya.pdf
 
+- programlar tam istenilen sonucu vermiyorsa
+vim /usr/bin/pilxxx.py
 
-- Python komutunu konsoldan çalıştırma
 
-        python -c &quot;print('merhaba');print('dunya')&quot;
+# Python komutunu konsoldan çalıştırma
 
+python -c &quot;print('merhaba');print('dunya')&quot;
 
-- Bulunulan klasörü webe açmak
-        python -m SimpleHTTPServer 8000
 
+# Bulunulan klasörü webe açmak
+python -m SimpleHTTPServer 8000
 
-- Netcat ile bir web sayfasını yayınlamak.
-        while true; do nc -l -p 8080 -q 1 &lt; sayfa.html; done
+# Random parola üretmek için
+apt-get install pwgen
+pwgen -s 20
 
 
-- Bir önceki komutu ufak bi değişiklikle yeniden tekrarlamak
-        örnek:
-        cp ab1.jpg ba1.jpg
-        &circ;1&circ;2&circ;
+# Netcat ile bir web sayfasını yayınlamak.
+while true; do nc -l -p 8080 -q 1 &lt; sayfa.html; done
 
-        İkinci komut, 1 yazan yerlere 2 koyarak komutu yeniden çalıştırır. Çalışan komut:
-        cp ab2.jpg ba2.jpg
 
-        !:s/1/2         # ilk 1 degisir
-        !:gs/1/2        # butun 1'ler degisir
+# Bir önceki komutu ufak bi değişiklikle yeniden tekrarlamak
+örnek:
+cp ab1.jpg ba1.jpg
+&circ;1&circ;2&circ;
 
+İkinci komut, 1 yazan yerlere 2 koyarak komutu yeniden çalıştırır. Çalışan komut:
+cp ab2.jpg ba2.jpg
 
-- shell'e otomatik login
-        /usr/local/sbin/autologin
-                #!/usr/bin/python
-                import os
-                os.execlp('login', 'login', '-f', 'kullanici', '0')
+!:s/1/2         # ilk 1 degisir
+!:gs/1/2        # butun 1'ler degisir
 
-        /etc/inittab
-                1:2345:respawn:/sbin/getty -n -l /usr/local/sbin/autologin 38400 tty1
 
+# shell'e otomatik login
+/usr/local/sbin/autologin
+    #!/usr/bin/python
+    import os
+    os.execlp('login', 'login', '-f', 'kullanici', '0')
 
-- config dosyasını yeniden yükleme (örneğin .bashrc)
+/etc/inittab
+    1:2345:respawn:/sbin/getty -n -l /usr/local/sbin/autologin 38400 tty1
 
-        source .bashrc
 
+# config dosyasını yeniden yükleme (örneğin .bashrc)
 
-- history kopyalama
-        history -a      # birinci shellde
-        history -r      # ikinci shellde
+source .bashrc
 
 
-- vi modunda kullanmak için
-        set -o vi
+# history kopyalama
+history -a      # birinci shellde
+history -r      # ikinci shellde
 
-        Bu satır, &tilde;/.bashrc içine konabilir.
-        Bu modda iken
-                - h, j, k, l, w, b gibi hareket işlemleri
-                - /aranacak kelime gibi search işlemleri
-                - cw, shift+D, dd gibi metin düzenleme işlemleri
-        yapılabilir.
+zsh kullanınca buna gerek kalmıyor.
 
 
-- bilgisayar ilk açıldığında, login olmadan normal kullanıcının bir programı başlatabilmesi için...
-  komuttan önce sleep eklemek faydalı olabilir. program fazla erken çalışmasın
-        crontab -e
+# vi modunda kullanmak için
+set -o vi
 
-        @reboot komut
+Bu satır, &tilde;/.bashrc içine konabilir.
+Bu modda iken
+        - h, j, k, l, w, b gibi hareket işlemleri
+        - /aranacak kelime gibi search işlemleri
+        - cw, shift+D, dd gibi metin düzenleme işlemleri
+yapılabilir.
 
 
-- UUID işlemleri
-        - partitionın UUID'sini görmek
+# crontab ile açılış scripti
+Bilgisayar ilk açıldığında, login olmadan normal kullanıcının bir
+programı başlatabilmesi için... Komuttan önce sleep eklemek faydalı
+olabilir. program fazla erken çalışmasın
 
-          vol_id --uuid /dev/sda1
+crontab -e
+    @reboot komut
 
 
-        - rastgele UUID atamak
+# UUID işlemleri
+- partitionın UUID'sini görmek
+    vol_id --uuid /dev/sda1
 
-          tune2fs -U random /dev/sda1
+- rastgele UUID atamak
+    tune2fs -U random /dev/sda1
 
+- belli bir UUID atamak
+    tune2fs -U 16260161-66a8-415f-81df-76fac2fc115c /dev/sda1
 
-        - belli bir UUID atamak
 
-          tune2fs -U 16260161-66a8-415f-81df-76fac2fc115c /dev/sda1
 
+# badblock kontrolu
+mount edilmemiş aygıta uygula
 
+badblocks -s /dev/sdd
 
-- badblock kontrolu
-  mount edilmemiş aygıta uygula
+    -s özet gösterir
+    -n non-destructive read-write test
+    -w write mode test (içinde veri olan aygıta uygulama)
+    -p kaç tur
 
-        badblocks -s /dev/sdd
 
-                -s özet gösterir
-                -n non-destructive read-write test
-                -w write mode test (içinde veri olan aygıta uygulama)
-                -p kaç tur
 
+# bad blokların işaretlenmesi
+Bu yöntem sadece ext2/ext3/ext4 formatındaki mount edilmemiş dosya sistemine
+uygulanır. Yeni disklerde, disiklerin kendisi bad blokları remap yapabiliyor.
 
+    e2fsck -c -c -k -C 0 /dev/sdd1
+    sync
 
-- bad blokların işaretlenmesi
-  Bu yöntem sadece ext2/ext3/ext4 formatındaki mount edilmemiş dosya sistemine
-  uygulanır. Yeni disklerde, disiklerin kendisi bad blokları remap yapabiliyor.
 
-        e2fsck -c -c -k -C 0 /dev/sdd1
-        sync
 
+# CD/DVD işlemleri (wodim, genisofs, dvd+rw-tools)
 
+- format CD
+  wodim -v blank=fast
 
-- CD/DVD işlemleri (wodim, genisofs, dvd+rw-tools)
+- CD yazma
+  wodim -v -dao speed=4 dosya.iso
 
-        - format CD
-          wodim -v blank=fast
+- format DVD
 
-        - CD yazma
-          wodim -v -dao speed=4 dosya.iso
+  dvd+rw-format -f /dev/dvd
+  wodim -format
 
-        - format DVD
 
-          dvd+rw-format -f /dev/dvd
-          wodim -format
+- DVD içeriğinden iso oluşturma
 
+  readom f=dosya.iso
 
-        - DVD içeriğinden iso oluşturma
 
-          readom f=dosya.iso
+- klasör içeriğinden  iso oluşturma
 
+  genisoimage -f -r -J -o dosya.iso klasor/
+  growisofs -f -R -J -Z dosya.iso .
 
-        - klasör içeriğinden  iso oluşturma
 
-          genisoimage -f -r -J -o dosya.iso klasor/
-          growisofs -f -R -J -Z dosya.iso .
+- klasör içeriğini DVD'ye doğrudan yazma
 
+  growisofs -f -R -J -Z /dev/dvd .
 
-        - klasör içeriğini DVD'ye doğrudan yazma
 
-          growisofs -f -R -J -Z /dev/dvd .
+- Dolu DVD'ye veri ekleme
+  growisofs -f -R -J -M /dev/dvd .
 
 
-        - Dolu DVD'ye veri ekleme
-          growisofs -f -R -J -M /dev/dvd .
+- iso içeriğini DVD'ye yazma
 
+  growisofs -Z /dev/dvd=dosya.iso
 
-        - iso içeriğini DVD'ye yazma
 
-          growisofs -Z /dev/dvd=dosya.iso
+- DVD oturum kapatma
 
+  dvd+rw-format -lead-out /dev/dvd
 
-        - DVD oturum kapatma
 
-          dvd+rw-format -lead-out /dev/dvd
+- DVD sürücüyü açma-kapama
 
+  eject
+  eject -t
 
-        - DVD sürücüyü açma-kapama
 
-          eject
-          eject -t
+# dd çalışırken gerçekleşmiş transfer miktarını öğrenme
+ps aux | grep dd ile pid öğrenilir
+kill -SIGUSR1 pid
 
 
-- dd çalışırken gerçekleşmiş transfer miktarını öğrenme
-        ps aux | grep dd ile pid öğrenilir
-        kill -SIGUSR1 pid
+# Dosya kurtarma
+apt-get install testdisk
+dd if=/dev/sdb1 of=sdb1.iso bs=1024M
+exit
 
+/usr/sbin/photorec /log /d dosyalar sdb1.iso
 
-- Dosya kurtarma
-        aptitude install testdisk
-        dd if=/dev/sdb1 of=sdb1.iso bs=1024M
-        exit
 
-        /usr/sbin/photorec /log /d dosyalar sdb1.iso
+# Debian paketleri
 
+- deb paketinin yükleyeceği dosyaların listesini görmek
 
-- Debian paketleri
+  dpkg --contents paket.deb
 
-        - deb paketinin yükleyeceği dosyaların listesini görmek
 
-          dpkg --contents paket.deb
+- deb paketinin yükleyeceği dosyaları bir klasöre açmak
 
+  dpkg -x paket.deb tmp
 
-        - deb paketinin yükleyeceği dosyaları bir klasöre açmak
 
-          dpkg -x paket.deb tmp
+- deb paketi içinde yer alan ana dosyaları görmek
 
+  ar -t paket.deb
 
-        - deb paketi içinde yer alan ana dosyaları görmek
+        control.tar.gz, data.tar.gz ve debian-binary görünecek
 
-          ar -t paket.deb
 
-                control.tar.gz, data.tar.gz ve debian-binary görünecek
+- deb paketi içinde yer alan kontrol ve data dosyalarını ortaya çıkarmak
 
+  ar -x paket.deb
 
-        - deb paketi içinde yer alan kontrol ve data dosyalarını ortaya çıkarmak
 
-          ar -x paket.deb
+# cstream
+dd yerine kullanılabilir.
 
+cstream -v -b 1m -T 2 -i /dev/hda7 -o boot.img
 
-- cstream
+-v      bilgi verme seviyesi. default 0, hata olmadıkça mesaj yok
+-b      kopyalama esnasında blok boyu (default 8192 bytes)
+-T      kaç saniyede bir rapor verilecegi
+-i      input file
+-o      output file
 
-        cstream -v -b 1m -T 2 -i /dev/hda7 -o boot.img
 
-        -v      bilgi verme seviyesi. default 0, hata olmadıkça mesaj yok
-        -b      kopyalama esnasında blok boyu (default 8192 bytes)
-        -T      kaç saniyede bir rapor verilecegi
-        -i      input file
-        -o      output file
+# komut çıktısını hem ekrana hem de dosyaya aktarma
 
+komut 2&gt;&amp;1 | tee dosya.log
 
-- komut çıktısını hem ekrana hem de dosyaya aktarma
 
-        komut 2&gt;&amp;1 | tee dosya.log
+# process'i çalışır durumda bırakıp logout
+screen veya nohup kullanılmadan process başlatılmışsa...
 
+ctrl + z
+bg
+disown
 
-- process'i çalışır durumda bırakıp logout
-  screen veya nohup kullanılmadan process başlatılmışsa...
 
-        ctrl + z
-        bg
-        disown
+# gtf (verilen çözünürlük için modeline satırını öğrenme)
 
+gtf 1280 768 60 -x
+gtf 1440 900 70 -x
 
-- gtf (verilen çözünürlük için modeline satırını öğrenme)
 
-        gtf 1280 768 60 -x
-        gtf 1440 900 70 -x
+# xrandr
 
+- Ekranlar
+    xrandr -q
 
-- xrandr (ekran yönü, boyunu değiştirme)
+- ekran yönü
+    xrandr -o left | right | normal | inverted
 
-        xrandr -o left | right | normal | inverted
-        xrandr -s 1440x900
+- ekran boyunu değiştirme
+    xrandr -s 1440x900
 
+- İkinci ekrani yerleştirme
+Önce &quot;xrandr -q&quot; ile ekran bilgilerini al.
+    xrandr --output LVDS1 --auto --output VGA1 --auto --right-of LVDS1
 
-- klavye düzeni değiştirme
 
-        setxkbmap us
-        setxkbmap tr
+# klavye düzeni değiştirme
 
+setxkbmap us
+setxkbmap tr
 
-- klavye tuşunun basacağı karakteri değiştirme
 
-        xmodmap -pke
-        xmodmap -pke | grep &quot;a A&quot;
-        &gt;&gt;&gt; keycode  38 = a A acircumflex Acircumflex acircumflex Acircumflex
-        xmodmap -e &quot;keycode 38 = b B acircumflex Acircumflex acircumflex Acircumflex&quot;
-        xmodmap -pke | grep &quot;38&quot;
-        &gt;&gt;&gt; keycode  38 = b B acircumflex Acircumflex acircumflex Acircumflex
+# klavye tuşunun basacağı karakteri değiştirme
 
+xmodmap -pke
+xmodmap -pke | grep &quot;a A&quot;
+&gt;&gt;&gt; keycode  38 = a A acircumflex Acircumflex acircumflex Acircumflex
+xmodmap -e &quot;keycode 38 = b B acircumflex Acircumflex acircumflex Acircumflex&quot;
+xmodmap -pke | grep &quot;38&quot;
+&gt;&gt;&gt; keycode  38 = b B acircumflex Acircumflex acircumflex Acircumflex
 
-- Girdileri kolon kolon birleştirme
 
-        paste &lt;(ls -1) &lt;(ls -1)
+# Girdileri kolon kolon birleştirme
 
-                -s seri (yatık) dizme
+paste &lt;(ls -1) &lt;(ls -1)
 
+    -s seri (yatık) dizme
 
-- Windows formatlı text dosyayı, Linux formatına çevirmek
 
-        tr -d '\15\32' &lt; windows_dosya &gt; linux_dosya
+# Windows formatlı text dosyayı, Linux formatına çevirmek
 
+tr -d '\15\32' &lt; windows_dosya &gt; linux_dosya
 
-- bir programın bağımlı olduğu kütüphaneler
 
-        ldd /bin/bash
+# bir programın bağımlı olduğu kütüphaneler
 
+ldd /bin/bash
 
-- bir dosyanın içeriğini yok etmek
 
-        # dosya içeriğini rastgele verilerle doldurur
-        shred dosya
+# bir dosyanın içeriğini yok etmek
 
-        # dosya içeriğini rastgele verilerle doldurduktan sonra siler, dosya geri alınamaz hale gelir
-        shred -z -u dosya
+- dosya içeriğini rastgele verilerle doldurur
+    shred dosya
 
+- dosya içeriğini rastgele verilerle doldurduktan sonra sil
+  dosya geri alınamaz hale gelir
+    shred -z -u dosya
 
-- enter tusuna basılana kadar bekletme
 
-        read enterKey
+# enter tusuna basılana kadar bekletme
 
+read enterKey
 
-- pgrep, pkill
-  şablona göre processleri bulup PID'lerini yazar veya kill eder
 
-        pgrep -u emrah -f fire.{3}
+# pgrep, pkill
+Şablona göre processleri bulup PID'lerini yazar veya kill eder
 
+pgrep -u emrah -f fire.{3}
 
-- Cache'i boşaltma
-        sync; echo 3 &gt; /proc/sys/vm/drop_caches
 
+# Cache'i boşaltma
 
-- Bir süreçin limitlerini öğrenmek
-        cat /proc/PID/limits
+sync; echo 3 &gt; /proc/sys/vm/drop_caches
 
 
-- en çok RAM kullanan 10 uygulama
+# Bir süreçin limitlerini öğrenmek
 
-        ps aux | sort -nrk4 | head
+cat /proc/PID/limits
 
 
-- image ile loop device olarak çalışma
+# en çok RAM kullanan 10 uygulama
 
-        dd if=/dev/zero of=disk.img bs=1M count=400
-        su
-        losetup /dev/loop0 disk.img
-        dd if=/usr/lib/syslinux/mbr.bin of=/dev/loop0
-        fdisk /dev/loop0
-                p
-                n -&gt; p -&gt; 1 -&gt; &lt;enter&gt; -&gt; &lt;enter&gt;
-                a -&gt; 1
-                p (kafa, sektor, silindir bilgisini al)
-                w
-        losetup -d /dev/loop0
+ps aux | sort -nrk4 | head
 
-        losetup -o 32256 /dev/loop0 disk.img
-        mkfs.ext3 /dev/loop0
-        mount -t ext3 /dev/loop0 /mnt/
-        mkdir -pv /mnt/{dev,proc,sys}
-        mknod -m 600 /mnt/dev/console c 5 1
-        mknod -m 666 /mnt/dev/null c 1 3
-        mkdir -pv /mnt/{bin,boot,etc,home,lib,media,mnt,opt,root,sbin,srv,tmp,usr,var}
-        mkdir -pv /mnt/etc/opt
-        mkdir -pv /mnt/media/{floppy,cdrom}
-        mkdir -pv /mnt/usr/{bin,include,lib,lib64,local,sbin,share,src}
-        mkdir -pv /mnt/usr/local/{bin,etc,include,lib,sbin,share,src}
-        mkdir -pv /mnt/usr/local/share/man
-        mkdir -pv /mnt/usr/share/{doc,info,locale,man,misc,terminfo,zoneinfo}
-        mkdir -pv /mnt/usr/share/man/man{1..8}
-        mkdir -pv /mnt/var/{cache,lib,local,lock,log,mail,opt,run,spool,tmp}
-        mkdir -pv /mnt/var/lib/misc
 
-        ln -sv share/man /mnt/usr/local/
-        chmod 0750 /mnt/root
-        chmod 1777 /mnt/tmp /mnt/var/tmp
+# image dosyayı loop device olarak çalışma
 
-        mkdir -p /mnt/boot/grub
-        cp /boot/grub/stage1 /boot/grub/stage2 /mnt/boot/grub/
-        touch /mnt/boot/grub/menu.lst
-        vim /mnt/boot/grub/menu.lst
-                default         0
-                timeout         5
-                color cyan/blue white/blue
+dd if=/dev/zero of=disk.img bs=1M count=400
+su
+losetup /dev/loop0 disk.img
+dd if=/usr/lib/syslinux/mbr.bin of=/dev/loop0
+fdisk /dev/loop0
+        p
+        n -&gt; p -&gt; 1 -&gt; &lt;enter&gt; -&gt; &lt;enter&gt;
+        a -&gt; 1
+        p (kafa, sektor, silindir bilgisini al)
+        w
+losetup -d /dev/loop0
 
-                title           Debian GNU/Linux, kernel 2.6.26-2-686
-                root            (hd0,0)
-                kernel          /boot/vmlinuz-2.6.26-2-686 root=/dev/hda1 ro init=/bin/bash
-                initrd          /boot/initrd.img-2.6.26-2-686
+losetup -o 32256 /dev/loop0 disk.img
+mkfs.ext3 /dev/loop0
+mount -t ext3 /dev/loop0 /mnt/
+mkdir -pv /mnt/{dev,proc,sys}
+mknod -m 600 /mnt/dev/console c 5 1
+mknod -m 666 /mnt/dev/null c 1 3
+mkdir -pv /mnt/{bin,boot,etc,home,lib,media,mnt,opt,root,sbin,srv,tmp,usr,var}
+mkdir -pv /mnt/etc/opt
+mkdir -pv /mnt/media/{floppy,cdrom}
+mkdir -pv /mnt/usr/{bin,include,lib,lib64,local,sbin,share,src}
+mkdir -pv /mnt/usr/local/{bin,etc,include,lib,sbin,share,src}
+mkdir -pv /mnt/usr/local/share/man
+mkdir -pv /mnt/usr/share/{doc,info,locale,man,misc,terminfo,zoneinfo}
+mkdir -pv /mnt/usr/share/man/man{1..8}
+mkdir -pv /mnt/var/{cache,lib,local,lock,log,mail,opt,run,spool,tmp}
+mkdir -pv /mnt/var/lib/misc
 
-        echo 'proc          /proc       proc    defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
-        echo '/dev/hda1     /           ext3    errors=remount-ro,noatime    0    1' &gt;&gt; /mnt/etc/fstab
-        echo 'none          /tmp        tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
-        echo 'none          /var/tmp    tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
-        echo 'none          /var/run    tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
-        echo 'none          /var/log    tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
-        echo 'none          /var/lock   tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
+ln -sv share/man /mnt/usr/local/
+chmod 0750 /mnt/root
+chmod 1777 /mnt/tmp /mnt/var/tmp
 
-        aptitude update
-        aptitude autoclean
-        aptitude reinstall -d -y libc6 libgcc1 gcc-4.3-base bash busybox libncurses5
-        dpkg -x /var/cache/apt/archives/linux-image-2.6.26-2-686_2.6.26-15_i386.deb /mnt/
-        cp /boot/initrd.img-2.6.26-2-686 /mnt/boot/
-        dpkg -x `ls /var/cache/apt/archives/libc6_*.deb` /mnt
-        dpkg -x `ls /var/cache/apt/archives/libgcc1_*.deb` /mnt
-        dpkg -x `ls /var/cache/apt/archives/gcc-4.3-base_*.deb` /mnt
-        dpkg -x `ls /var/cache/apt/archives/libncurses5_*.deb` /mnt
-        dpkg -x `ls /var/cache/apt/archives/bash_*.deb` /mnt
-        dpkg -x `ls /var/cache/apt/archives/busybox_*.deb` /mnt
-        umount /dev/loop0
-        losetup -d /dev/loop0
+mkdir -p /mnt/boot/grub
+cp /boot/grub/stage1 /boot/grub/stage2 /mnt/boot/grub/
+touch /mnt/boot/grub/menu.lst
+vim /mnt/boot/grub/menu.lst
+        default         0
+        timeout         5
+        color cyan/blue white/blue
 
-        grub
-                device (hd0) disk.img
-                root (hd0,0)
-                setup (hd0)
-                quit
+        title           Debian GNU/Linux, kernel 2.6.26-2-686
+        root            (hd0,0)
+        kernel          /boot/vmlinuz-2.6.26-2-686 root=/dev/hda1 ro init=/bin/bash
+        initrd          /boot/initrd.img-2.6.26-2-686
 
-        aptitude install qemu
-        exit
-        qemu disk.img
-        busybox
+echo 'proc          /proc       proc    defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
+echo '/dev/hda1     /           ext3    errors=remount-ro,noatime    0    1' &gt;&gt; /mnt/etc/fstab
+echo 'none          /tmp        tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
+echo 'none          /var/tmp    tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
+echo 'none          /var/run    tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
+echo 'none          /var/log    tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
+echo 'none          /var/lock   tmpfs   defaults,noatime             0    0' &gt;&gt; /mnt/etc/fstab
 
+aptitude update
+aptitude autoclean
+aptitude reinstall -d -y libc6 libgcc1 gcc-4.3-base bash busybox libncurses5
+dpkg -x /var/cache/apt/archives/linux-image-2.6.26-2-686_2.6.26-15_i386.deb /mnt/
+cp /boot/initrd.img-2.6.26-2-686 /mnt/boot/
+dpkg -x `ls /var/cache/apt/archives/libc6_*.deb` /mnt
+dpkg -x `ls /var/cache/apt/archives/libgcc1_*.deb` /mnt
+dpkg -x `ls /var/cache/apt/archives/gcc-4.3-base_*.deb` /mnt
+dpkg -x `ls /var/cache/apt/archives/libncurses5_*.deb` /mnt
+dpkg -x `ls /var/cache/apt/archives/bash_*.deb` /mnt
+dpkg -x `ls /var/cache/apt/archives/busybox_*.deb` /mnt
+umount /dev/loop0
+losetup -d /dev/loop0
 
-- terminalde scroll
+grub
+        device (hd0) disk.img
+        root (hd0,0)
+        setup (hd0)
+        quit
 
-        ctrl+s  -&gt; veri çıktısı durur
-        ctrl+q  -&gt; veri çıktısı başlar
+aptitude install qemu
+exit
+qemu disk.img
+busybox
 
 
-- encfs
+# terminalde scroll
 
-        aptitude install encfs
+ctrl+s  -&gt; veri çıktısı durur
+ctrl+q  -&gt; veri çıktısı başlar
 
-        # normal kullanıcı olarak
-        mkdir .sifreli
-        mkdir mountpoint
-        # tam path verilecek
-        encfs &tilde;/.sifreli &tilde;/mountpoint
-                paranoia mode
-                parola
-        # umount icin
-        fusermount -u &tilde;/.sifreli
-        # parolayi bir programdan almak icin
-        encfs &tilde;/.sifreli &tilde;/mountpoint --extpass=program
-        # public erisim icin, root olarak
-        encfs --public /home/emrah/.sifreli /home/emrah/mountpoint
 
+# encfs
 
-- cryptsetup
-        aptitude install cryptsetup
-        modprobe dm_mod
+apt-get install encfs
 
-        # mount etmek için
-        cryptsetup luksOpen /dev/sdb1 map1
-        mkdir -p /media/map1
-        mount /dev/mapper/map1 /media/map1
+- normal kullanıcı olarak
+    mkdir .sifreli
+    mkdir mountpoint
 
-        # umount etmek için
-        umount /dev/mapper/map1
-        cryptsetup luksClose map1
+- tam path verilecek
 
-- cryptsetup target adı değiştirme (Wheezy)
+    encfs &tilde;/.sifreli &tilde;/mountpoint
+        paranoia mode
+        parola
+
+- umount icin
+    fusermount -u &tilde;/.sifreli
+
+- parolayi bir programdan almak icin
+    encfs &tilde;/.sifreli &tilde;/mountpoint --extpass=program
+
+- public erisim icin, root olarak
+    encfs --public /home/emrah/.sifreli /home/emrah/mountpoint
+
+
+# cryptsetup
+apt-get install cryptsetup
+modprobe dm_mod
+
+- mount etmek için
+    cryptsetup luksOpen /dev/sdb1 map1
+    mkdir -p /media/map1
+    mount /dev/mapper/map1 /media/map1
+
+- umount etmek için
+    umount /dev/mapper/map1
+    cryptsetup luksClose map1
+
+# cryptsetup target adı değiştirme (Wheezy)
 Crypto diskin sdb2 olduğu ve sdb1'de /boot partitionı olduğunu varsayıldı.
 2. bir sistem ile boot edilir.
 
-        cryptsetup luksOpen /dev/sdb2 newname
-        mount /dev/mapper/newname /mnt
+cryptsetup luksOpen /dev/sdb2 newname
+mount /dev/mapper/newname /mnt
 
-        mount /dev/sdb1 /mnt/boot
-        cd /mnt
-        mount -t proc proc proc/
-        mount --rbind /sys sys/
-        mount --rbind /dev dev/
-        chroot /mnt /bin/bash
+mount /dev/sdb1 /mnt/boot
+cd /mnt
+mount -t proc proc proc/
+mount --rbind /sys sys/
+mount --rbind /dev dev/
+chroot /mnt /bin/bash
 
-        /etc/fstab ve /etc/crypttab içinde target adı newname yapılır.
-        update-initramfs -u
+/etc/fstab ve /etc/crypttab içinde target adı newname yapılır.
+update-initramfs -u
 
-        manual reboot
-        grub edit ile root=/dev/mapper/newname
+manual reboot
+grub edit ile root=/dev/mapper/newname
 
-        update-grub
-
-
-
-- mail komutunda header bilgileri
-
-        mail -a 'from: emrah &lt;emrah.test@yahoo.com&gt;' -a 'reply-to: emrah.test@yahoo.com' -s 'deneme mesaji' arkadasim@yahoo.com
+update-grub
 
 
-- fork bomb
 
-        :(){ :|:&amp;};:
+# mail komutunda header bilgileri
 
-
-- Random sayı yazdırma
-
-        echo $RANDOM
-
-
-- Mikrofondan girilen sesi SSH üzerinden sunucu hopörlöründen seslendirmek
-
-        arecord -f dat | ssh -C kullanici@IP_Adresi aplay -f dat
+mail -a 'from: emrah &lt;emrah.test@yahoo.com&gt;' \
+     -a 'reply-to: emrah.test@yahoo.com' \
+     -s 'deneme mesaji' \
+     arkadasim@yahoo.com
 
 
-- Google translator
-  .bashrc içine eklenebilir
+# fork bomb
 
-  trans(){
-        wget -qO- &quot;http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&amp;q=$1&amp;langpair=${2:en}|${3:-tr}&quot; \
+:(){ :|:&amp;};:
+
+
+# Random sayı yazdırma
+
+echo $RANDOM
+
+
+# Mikrofon sesini SSH ile uzak makineye aktarma
+
+arecord -f dat | ssh -C kullanici@IP_Adresi aplay -f dat
+
+
+# Google translator
+.bashrc içine eklenebilir
+
+trans(){
+    wget -qO- &quot;http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&amp;q=$1&amp;langpair=${2:en}|${3:-tr}&quot; \
         | sed 's/.*&quot;translatedText&quot;:&quot;\([&circ;&quot;]*\)&quot;.*}/\1\n/';
-  }
+}
 </code></pre>
 </body>
 </html>

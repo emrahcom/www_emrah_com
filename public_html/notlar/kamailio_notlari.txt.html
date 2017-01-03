@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>kamailio_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# KAMAILIO NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie'de test edilmiştir.
+
+
+
+# -----------------------------------------------------------------------------
+# DNS Ayarları
+# -----------------------------------------------------------------------------
+_sips._tls.emrah.com. IN SRV 10 0 5061 sip.emrah.com.
+sip.emrah.com. IN A 11.22.33.44
+
+
+
+# -----------------------------------------------------------------------------
+# Kurulum ve Ayarlar
+# -----------------------------------------------------------------------------
+
+# Paketler
+apt-get install mysql-server
+apt-get install rtpproxy
+apt-get install kamailio kamailio-mysql-modules kamailio-tls-modules
+
+# /etc/kamailio/kamctlrc
+SIP_DOMAIN=sip.emrah.com
+DBENGINE=MYSQL
+DBRWPW=&quot;kamailiorw&quot;
+DBROPW=&quot;kamailioro&quot;
+
+# Veritabaninin oluşturulması
+kamdbctl create
+
+    MySQL password for root:
+    Install presence related tables? (y/n): y
+    rtpproxy? (y/n): y
+    uid_uri_db? (y/n): y
+
+
+# Kullanıcıların eklenmesi
+kamctl add 123 password123         # 123@sip.emrah.com
+
+# /etc/default/kamailio
+RUN_KAMAILIO=yes
+
+# /etc/kamailio/kamailio-local.cfg
+#!define WITH_MYSQL
+#!define WITH_AUTH
+#!define WITH_USRLOCDB
+#!define WITH_NAT
+#!define WITH_TLS
+
+auto_aliases=no
+alias=sip.emrah.com
+
+# /etc/default/rtpproxy
+USER=kamailio
+GROUP=kamailio
+
+# /etc/kamailio/kamailio.cfg
+#modparam(&quot;rtpproxy&quot;, &quot;rtpproxy_sock&quot;, &quot;udp:127.0.0.1:7722&quot;)
+modparam(&quot;rtpproxy&quot;, &quot;rtpproxy_sock&quot;, &quot;unix:/var/run/rtpproxy/rtpproxy.sock&quot;)
+
+# TLS
+for f in /etc/ssl/certs/*.pem ; do cat &quot;$f&quot; &gt;&gt; /etc/kamailio/ca_list.pem; done
+
+# /etc/kamailio/tls.cfg
+[server:default]
+method = TLSv1
+verify_certificate = no
+require_certificate = no
+private_key = /etc/kamailio/kamailio-selfsigned.key
+certificate = /etc/kamailio/kamailio-selfsigned.pem
+ca_list = /etc/kamailio/ca_list.pem
+
+# restart
+systemctl restart rtpproxy
+systemctl restart kamailio
+
+
+
+# -----------------------------------------------------------------------------
+# Client
+# -----------------------------------------------------------------------------
+
+# SIP client
+SIP Id              : 123@sip.emrah.com
+Password            : password123
+Registrar           : sip.beyaz.net
+Registrar Port      : 5060
+Proxy               : sip.beyaz.net
+Proxy Port          : 5061
+Preferred Transport : TLS
+TLS protocols       : TLSv1
+
+# Pavucontrol
+Playback  -&gt; Jitsi -&gt;
+Recording -&gt; Jitsi -&gt;
+
+
+
+# -----------------------------------------------------------------------------
+# Kamailio Komutları
+# -----------------------------------------------------------------------------
+
+# Registered users
+kamctl ul show
+kamctl online
+
+# All subscribers
+kamctl db show subscriber
+
+# Add user
+kamctl add &lt;username&gt; &lt;password&gt;
+
+# Remove user
+kamctl rm &lt;username&gt;
+
+# Change user password
+kamctl passwd &lt;username&gt; &lt;password&gt;
+
+# Monitoring
+kamctl monitor
+
+
+
+# -----------------------------------------------------------------------------
+# Kaynaklar
+# -----------------------------------------------------------------------------
+https://richardskingdom.net/howto-kamailio-sip-proxy-nat-debian-wheezy
+http://kb.asipto.com/kamailio:skype-like-service-in-less-than-one-hour
+http://web.mit.edu/sip/sip.edu/dns.shtml
+http://anders.com/cms/264/
+</code></pre>
+</body>
+</html>

@@ -12,9 +12,16 @@
 # -----------------------------------------------------------------------------
 
 
+# -----------------------------------------------------------------------------
+# IPTABLES
+# -----------------------------------------------------------------------------
 
 # Kurulum
-        aptitude install iptables
+apt-get install iptables
+
+
+# LXC Container içinde kullanılacaksa
+apt-get install module-init-tools iptables
 
 
 
@@ -94,56 +101,83 @@
                                POSTROUTING
 
 
-# Kuralları listeleme
-        iptables -L
+# Kuralları listeleme (list)
+iptables -L
+iptables -L -t nat
+iptables -L -n -v
 
-# Kuralların tamamını silme
-        iptables -F
+    -n  numeric
+    -v  verbose
+    -t  table
+        filter (default)
+        nat
+        mangle
+
+# Kuralların tamamını silme (flush)
+iptables -F
+iptables -F -t nat
 
 # Liste sonuna kural ekleme (append)
-        iptables -A INPUT -p tcp --dport 80 -j REJECT
+iptables -A INPUT -p tcp --dport 80 -j REJECT
 
-# Liste başına kural ekleme (insert)
-        iptables -A INPUT -s 192.168.1.10 -p tcp --dport 80 -j ACCEPT
+# Listede belli sıraya kural ekleme (insert)
+iptables -I INPUT 1 -s 192.168.1.10 -p tcp --dport 80 -j ACCEPT
+
+# Listeden bir kuralı silme
+iptables -D INPUT -p tcp --dport 80 -j REJECT
+iptables -D INPUT 1
+
+# Masquerade
+iptables -t nat -A POSTROUTING -s 172.16.244.0/24 -o eth0 -j MASQUERADE
+
+Masquerade yaparken routing yapmak da gerekecek. Bu nedenle /etc/sysctl.conf
+net.ipv4.ip_forward=1
+
+# DNAT
+iptables -t nat -A PREROUTING -i eth0 -p tcp ! -s 172.16.244.0/24 \
+    --dport 1021 -j DNAT --to 172.16.244.111:21
+iptables -t nat -A PREROUTING -i eth0 -p tcp ! -s 172.16.244.0/24 \
+    --dport 49152:65534 -j DNAT --to 172.16.244.111
 
 
 
 # -----------------------------------------------------------------------------
-
+# IPSET
+# -----------------------------------------------------------------------------
 
 # Ipset kurulum
-        aptitude install ipset ipset-source
-        m-a a-i ipsey-source
+apt-get install ipset ipset-source
+m-a a-i ipsey-source
 
 # Set oluşturma
-        ipset -N setx iphash
-        ipset -N setx nethash
-        ipset -N sety iptree --timeout 100
+ipset -N setx iphash
+ipset -N setx nethash
+ipset -N sety iptree --timeout 100
 
 # Set silme
-        ipset -X setx
+ipset -X setx
 
 # Setleri listeleme
-        ipset -L
+ipset -L
 
 # Sete ekleme
-        ipset -A ipsetx 192.168.1.10
-        ipset -A ipsety 192.168.1.0/24
+ipset -A ipsetx 192.168.1.10
+ipset -A ipsety 192.168.1.0/24
 
 # Setten kayıt silme
-        ipset -D ipsetx 192.168.1.10
+ipset -D ipsetx 192.168.1.10
 
 # Setteki büyün kayıtları silme
-        ipset -F ipsetx
+ipset -F ipsetx
 
 # Set kayıtlarını listeleme
-        ipset -L ipsetx
+ipset -L ipsetx
 
 # Bir kayıt sette var mı diye test etme
-        ipset -T ipsetx 192.168.1.10
+ipset -T ipsetx 192.168.1.10
 
 # Seti iptables ile kullanma
-        iptables -A INPUT -m set --set ipsetx src -j ACCEPT
+iptables -A INPUT -m set --set ipsetx src -j ACCEPT
 </code></pre>
 </body>
 </html>

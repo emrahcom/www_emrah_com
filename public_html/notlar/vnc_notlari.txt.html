@@ -7,44 +7,63 @@
 </head>
 <body>
 <pre><code>
--------------------------------------------------------------------------------
-HEADLESS VNC SERVER
--------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# HEADLESS VNC SERVER
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edilmiştir.
 
-# Kurulum (server)
+# -----------------------------------------------------------------------------
+# VNC SERVER (tightvncserver)
+# -----------------------------------------------------------------------------
 
-        - Gerekli paketler
-        aptitude install tightvncserver xfonts-base x11-xserver-utils
+# Gerekli paketler
+apt-get install tightvncserver xfonts-base x11-xserver-utils
 
-        - Gerekebilecek paketler
-        aptitude install openbox menu rxvt-unicode iceweasel
+# Gerekebilecek paketler
+apt-get install openbox menu rxvt-unicode iceweasel
 
-        - Sunucuyu başlatma. İlk seferde parola tanımlanmasını gerekiyor.
-        su -l emrah
-        tightvncserver -geometry 800x600 :1
+# Sunucuyu başlatma
+İlk seferde parola tanımlanmasını gerekiyor.
 
-        - Sunucuyu sonlandırma
-        su -l emrah
-        tightvncserver -kill :1
+su -l emrah
+tightvncserver -geometry 800x600 :1
 
+# Sunucuyu sonlandırma
+su -l emrah
+tightvncserver -kill :1
 
-# Kurulum (client)
+# -----------------------------------------------------------------------------
+# VNC SERVER (x11vnc)
+# -----------------------------------------------------------------------------
+Açık oturumu paylaşmak için
 
-        aptitude install xvnc4viewer
+# Gerekli paketler
+apt-get install x11vnc
 
+# Sunucuyu başlatma
+x11vnc -display :0 -ncache 10 -nolookup -autoport 5901
 
-# VNC sunucuya bağlanma (client makinede)
-        - SSH ile tünel oluştur
-        ssh -p10022 -L5901:localhost:5901 emrah@xxx.yyy.www.zzz
+# -----------------------------------------------------------------------------
+# VNC CLIENT (xvnc4viewer)
+# -----------------------------------------------------------------------------
 
-        Sunucu başlatılmamışsa SSH ile login olduktan sonra başlat.
-        tightvncserver -geometry 800x600 :1
+# Gerekli paketler
+apt-get install xvnc4viewer
 
-        - Oturumu başlatma
-        vncviewer localhost:5901
+# SSH tünel
+ssh -p10022 -L5901:localhost:5901 emrah@xxx.yyy.www.zzz
 
+# VNC bağlantısı
+vncviewer localhost:5901
 
+# Masaüstünü paylaşarak bağlanma
+vncviewer -Shared localhost:5901
 
+# Masaüstünü paylaşarak viewonly bağlanma
+vncviewer -Shared -Viewonly localhost:5901
+
+&quot;Shared&quot; parametresini kullanmadan biri bağlanırsa, diğer bağlantılar
+kapatılır.
 </code></pre>
 </body>
 </html>

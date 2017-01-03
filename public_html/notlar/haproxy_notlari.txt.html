@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>haproxy_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# HAPROXY NOTLARI
+# -----------------------------------------------------------------------------
+Debian Wheezy ve Debian Jessie ile denenmiştir.
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+Wheezy deposunda yer almıyor. Wheezy için backports deposunu listeye eklemek
+gerekmekte.
+
+# /etc/apt/sources.list (Wheezy için)
+deb http://http.debian.net/debian wheezy-backports main
+deb-src http://http.debian.net/debian wheezy-backports main
+
+# Paketin yüklenmesi
+apt-get install haproxy
+apt-get install hatop
+
+
+
+# -----------------------------------------------------------------------------
+# FRONTEND - BACKEND
+# -----------------------------------------------------------------------------
+
+# Frontend
+Talebi karşılayan kısım.
+
+frontend www-http
+    bind *:80
+    bind *:8080
+    default_backend web_servers
+
+
+# Backend
+Talebi, backend sunuculara aktaran kısım.
+
+backend web_servers
+    mode http
+    balance roundrobin
+    server web1 10.10.10.11:80
+    server web2 10.10.10.12:80
+
+
+
+# -----------------------------------------------------------------------------
+# LOAD BALANCING MODES
+# -----------------------------------------------------------------------------
+
+# Load-Balancing modes
+- balance roundrobin
+    Trafiği sırayla bütün backend sunuculara eşit dağıtır. Toplamda her
+    sunucuya eşit miktarda talep gider. Bu modda &quot;weight&quot; kullanılarak sunucu
+    kapasiteleri tanımlanabilir ve sunucuların kapasiteleriyle orantılı olarak
+    talepler eşit dağıtılabilir.
+
+- balance leastconn
+    Gelen talepler, o an en az yük olan backend sunucuya yönlendirilir.
+
+- balance source
+    Gelen talebin kaynağına bakılarak, aynı kaynağa sahip olan talepler hep
+    aynı backend sunucuya gönderilir. Session varsa bu şekilde trafiğin
+    dağıtılması gerekmekte.
+
+# stick
+Aynı IP adresli talepleri, aynı sunucuya yönlendilir. 1000000 IP adresini
+saklamak için yaklaşık 40m alan kullanılır. &quot;balance source&quot; kullanmaktan
+farkı, down olan sunucu geri gelirse ona ait ziyaretçileri geri iade etmez.
+Böylece ziyaretçiler, bir kez daha sunucu değişikliğinden etkilenmek zorunda
+kalmaz. &quot;backend&quot; kısmında:
+
+    stick on src
+    stick-table type ip size 10m expire 2h
+
+
+
+# -----------------------------------------------------------------------------
+# HEALTH CHECK
+# -----------------------------------------------------------------------------
+
+# Health check
+backend web_servers
+    mode http
+    balance roundrobin
+    option httpchk HEAD /healt_check.php HTTP/1.1\r\nHost:\ mysite.com
+    server web1 10.10.10.11:80 check
+    server web2 10.10.10.12:80 check
+
+# http-check expect
+    http-check expect status 200
+    http-check expect string OK
+
+
+
+# -----------------------------------------------------------------------------
+# MONITORING
+# -----------------------------------------------------------------------------
+
+# hatop
+hatop -s /run/haproxy/admin.sock
+
+# /etc/haproxy/haproxy.cfg
+listen monitoring
+    bind *:8000
+    stats enable
+    stats refresh 30s
+    stats auth username:password
+    stats uri /haproxy?stats
+
+# Web arayuzunden izleme
+http://ip_address:8000/haproxy?stats
+
+
+
+# -----------------------------------------------------------------------------
+# ACL - domain adına göre farklı backend
+# -----------------------------------------------------------------------------
+
+# Domain'e göre ayrı backend'e yönlendirme
+frontend
+    bind :80
+
+    acl dom0 hdr(host) -i host0.com
+    acl dom1 hdr(host) -i host1.com
+    acl sub0 hdr(host) -i sub.host0.com
+    acl sub1 hdr(host) -i sub.host1.com
+
+    use_backend back0 if dom0
+    use_backend back1 if dom1
+    use_backend back2 if sub0
+    use_backend back3 if sub1
+
+    default_backend default
+
+
+
+# -----------------------------------------------------------------------------
+# ACL - Bölgesel kısıtlama
+# -----------------------------------------------------------------------------
+
+# kural
+acl geo-tr src, map_ip(/etc/haproxy/geo-tr.txt) -n -m str -i TR
+tcp-request content reject if !geo-tr
+
+# /etc/haproxy/geo-tr.txt
+5.2.80.0/21 TR
+5.11.128.0/17 TR
+5.23.8.0/24 TR
+
+
+
+# -----------------------------------------------------------------------------
+# ACL - RTSP trafik filtreleme
+# -----------------------------------------------------------------------------
+
+frontend rtsp-frontend
+    bind :554
+    mode tcp
+
+    tcp-request inspect-delay 3s
+    acl rtsp_stream req.payload(0,0),lower -m sub rtsp
+    tcp-request content reject if !rtsp_stream
+
+    acl banned_stream req.payload(0,0),lower -m sub yasakli_stream
+    tcp-request content reject if banned_stream
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://cbonte.github.io/haproxy-dconv/configuration-1.5.html
+https://www.debian-administration.org/article/709/Using_the_haproxy_load-balancer_for_increased_availability
+http://blog.haproxy.com/2012/07/02/use-geoip-database-within-haproxy/
+</code></pre>
+</body>
+</html>

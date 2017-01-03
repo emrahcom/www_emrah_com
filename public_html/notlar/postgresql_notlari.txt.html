@@ -7,212 +7,259 @@
 </head>
 <body>
 <pre><code>
--------------------------------------------------------------------------------
-PostgreSQL Notları
--------------------------------------------------------------------------------
-
-- Yükleme
-        aptitude install postgresql postgresql-contrib
-        aptitude install python-psycopg2 postgresql-plpython-8.4
+# -----------------------------------------------------------------------------
+# PostgreSQL Notları
+# -----------------------------------------------------------------------------
+Debian Jessie ile test edildi.
 
 
-- Yönetici paneli olacaksa...
-        aptitude install pgadmin3 pgagent phppgadmin
-        su -l
-        su -l postgres
-        psql template1 &lt; /usr/share/postgresql/8.4/contrib/adminpack.sql
+# -----------------------------------------------------------------------------
+# Kurulum ve ilk ayarlar
+# -----------------------------------------------------------------------------
+
+# Yükleme
+apt-get install postgresql postgresql-contrib
+apt-get install python-psycopg2                 # Python uygulamasi yazilacaksa
+apt-get install postgresql-plpython-9.4         # Python ile stored procedure
 
 
-- Default klasörün değiştirilmek istenirse...
-        su -l
-        mkdir /home/pgsql
-        chmod 700 /home/pgsql
-        chown postgres: /home/pgsql
-
-        /etc/init.d/postgresql stop
-        cp -arp /var/lib/postgresql/8.4/main/* /home/pgsql/
-
-        vim /etc/postgresql/8.4/main/postgresql.conf
-                #data_directory = '/var/lib/postgresql/8.4/main'
-                data_directory = '/home/pgsql'
-
-        /etc/init.d/postgresql start
+# Web yönetim paneli yükleme
+apt-get install phppgadmin
 
 
-- İlk çalıştırma
-        su -l
-        su -l postgres
-        psql
+# İlk çalıştırma
+su -l
+su -l postgres
+psql
 
 
-- Kullanıcı tanımlama ve yetkilendirme
-        # Default olarak sadece postgres kullanıcısı tanımlı ve UNIX socket
-        ile bağlanabiliyor. Yerel postgres kullanıcısının parolası
-        değiştirilsin.
-                su -l
-                passwd postgres
+# Kullanıcı tanımlama ve yetkilendirme
+Default olarak sadece postgres kullanıcısı tanımlı ve UNIX socket ile
+bağlanabiliyor.
 
-        # postgres kullanıcısının ağdan da bağlanabilmesi isteniyorsa
-                su -l postgres
-                psql
-                \password postgres
+# Kullanıcısı tanımlama
+&gt;&gt;&gt; CREATE ROLE kullanici;
+&gt;&gt;&gt; ALTER ROLE kullanici WITH LOGIN;
+&gt;&gt;&gt; \password kullanici
 
-        # Yeni ağ kullanıcısı tanımlama
-                CREATE ROLE kullanici;
-                ALTER ROLE kullanici WITH LOGIN;
-                \password kullanici
+# Sadece bir tabloda okuma yetkisi olan ağ kullanıcısı tanımlama
+&gt;&gt;&gt; CREATE ROLE okuyucu;
+&gt;&gt;&gt; ALTER ROLE okuyucu WITH LOGIN;
+&gt;&gt;&gt; \password okuyucu
+&gt;&gt;&gt; \c veritabani
+&gt;&gt;&gt; GRANT SELECT ON TABLE tablo TO okuyucu;
 
-        # Sadece bir tabloda okuma yetkisi olan ağ kullanıcısı tanımlama
-                CREATE ROLE okuyucu;
-                ALTER ROLE okuyucu WITH LOGIN;
-                \password okuyucu
-                \c veritabani
-                GRANT SELECT ON TABLE tablo TO okuyucu;
+# Localhost dışında ağdaki hangi makinelerden bağlanılabileceği
+pg_hba.conf dosyasından tanımlanıyor. Bir kullanıcının ağdaki hangi makineden,
+hangi veritabanına bağlanabileceğini belirlemek için
 
-        # Localhost dışında ağdaki hangi makinelerden bağlanılabileceği
-        pg_hba.conf dosyasından tanımlanıyor. Bir kullanıcının ağdaki hangi
-        makineden, hangi veritabanına bağlanabileceğini belirlemek için
-
-                /etc/postgresql/8.4/main/pg_hba.conf
-                host  veritabani  kullanici  192.168.2.103/32  md5
-
-        # Yerel sistem kullanıcısına bağlanma yetkisi vermek için
-                /etc/postgresql/8.4/main/pg_hba.conf
-                local  veritabani  kullanici  ident
+/etc/postgresql/9.4/main/pg_hba.conf
+host  veritabani  kullanici  192.168.2.103/32  md5
 
 
-- Postgresql konsol komutları
-        # SQL script dosyası çalıştırma
-                psql -U kullanici -h localhost -d veritabani -f dosya.sql
-                psql -U kullanici -h localhost -d veritabani &lt; dosya.sql
-                cat dosya.sql | psql -U kullanici -h localhost -d veritabani
-
-                su -l postgres
-                psql -d veritabani &lt; dosya.sql
-                psql -d veritabani -e &lt; dosya.sql  # echo commands
-
-        # Komut çıktısını alma
-                echo &quot;\l&quot; | psql
-                psql -c &quot;\l&quot;
-                psql -c &quot;SELECT version()&quot;
-                cat dosya.sql | psql
-                echo &quot;\l&quot; | psql -o dosya
-                echo &quot;\l&quot; | psql &gt; dosya
-
-        # Veritabanı dökümünü alma (pg_dump)
-                pg_dump veritabani
+# Yerel sistem kullanıcısına bağlanma yetkisi vermek için
+/etc/postgresql/9.4/main/pg_hba.conf
+local  veritabani  kullanici  ident
 
 
-- pgsql temel komutlar
-        \q                      Çıkış
-        \?                      Yardım
-        \h                      SQL komutlarının listesi
-        \h KOMUT                SQL komutu ile ilgili yardım
-        \l                      Veritabanlarını listele
-        \c VERITABANI           Veritabanina geçer
-        \dt                     Tablo listesi
-        \dtS                    Tablo listesi, sistem tablolari dahil
-        \d NESNE                Tablo, view sequence, index için detay bilgi gösterme
-        \dv                     View listesi
-        \di                     Indeks listesi
-        \dn                     Sema listesi
-        \du                     Role/user listesi
-        \dp                     Yetki (privileges) listesi
-        \password KULLANICI     Kullanıcı parolasını değiştirir
+
+# -----------------------------------------------------------------------------
+# Postgresql konsol komutları
+# -----------------------------------------------------------------------------
+
+# SQL script dosyası çalıştırma
+psql -U kullanici -h localhost -d veritabani -f dosya.sql
+psql -U kullanici -h localhost -d veritabani &lt; dosya.sql
+
+su -l postgres
+psql -d veritabani &lt; dosya.sql
+psql -d veritabani -e &lt; dosya.sql  # echo commands
+
+# Komut çıktısını alma
+echo &quot;\l&quot; | psql
+psql -c &quot;\l&quot;
+psql -c &quot;SELECT version()&quot;
+cat dosya.sql | psql
+echo &quot;\l&quot; | psql -o dosya
+echo &quot;\l&quot; | psql &gt; dosya
+
+# Veritabanı dökümünü alma (pg_dump)
+pg_dump veritabani
 
 
-- SQL notları
-        - Serial, timestamp vb alanlar.
-        CREATE TABLE sch.tablo (
-                tablo_id        SERIAL PRIMARY KEY,
-                tablo_foreign   INTEGER NOT NULL REFERENCES sch.tablo2(tablo2_pkey),
-                tablo_kod       VARCHAR(50) NOT NULL UNIQUE,
-                tablo_zaman     TIMESTAMP NOT NULL DEFAULT NOW(),
-                tablo_timeout   TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '15 minutes',
-                tablo_captcha   VARCHAR(6) NOT NULL DEFAULT LPAD(TEXT(TRUNC(RANDOM()*1000000)), 6, '0')
-        );
 
-        - Default degeri kullanmak.
-        UPDATE sch.tablo SET alan = DEFAULT ...
-        INSERT INTO sch.tablo VALUES (DEFAULT, &quot;deger&quot;, ...
+# -----------------------------------------------------------------------------
+# pgsql temel komutlar
+# -----------------------------------------------------------------------------
+&gt;&gt;&gt; \q                      Çıkış
+&gt;&gt;&gt; \?                      Yardım
+&gt;&gt;&gt; \h                      SQL komutlarının listesi
+&gt;&gt;&gt; \h KOMUT                SQL komutu ile ilgili yardım
+&gt;&gt;&gt; \l                      Veritabanlarını listele
+&gt;&gt;&gt; \c VERITABANI           Veritabanina geçer
+&gt;&gt;&gt; \dt                     Tablo listesi
+&gt;&gt;&gt; \dtS                    Tablo listesi, sistem tablolari dahil
+&gt;&gt;&gt; \d NESNE                Tablo, view sequence, index için detay bilgi
+&gt;&gt;&gt; \dv                     View listesi
+&gt;&gt;&gt; \di                     Indeks listesi
+&gt;&gt;&gt; \dn                     Sema listesi
+&gt;&gt;&gt; \du                     Role/user listesi
+&gt;&gt;&gt; \dp                     Yetki (privileges) listesi
+&gt;&gt;&gt; \password KULLANICI     Kullanıcı parolasını değiştirir
 
-        - SQL sonrası oluşan değerleri almak.
-        Değişen kayıt sayısı kadar kayıt geri döner.
-        INSERT INTO sch.tablo VALUES (..) RETURNING (alan1, alan2);
-        UPDATE sch.tablo SET alan1=DEFAULT RETURNING (alan1, alan2);
-
-        - Serial alanın değerini, mevcut maksimum değere bakarak yeniden atama.
-        SELECT SETVAL('field_id_seq', (SELECT MAX(field_id) FROM tablename));
-
-        - Sifreleme fonksiyonlarını kullanabilmek için postgresql-contrib
-          paketini yükledikten sonra veritabanına pgcrypto modulünü yüklemek
-          gerekiyor.
-            \c veritabani
-            CREATE EXTENSION pgcrypto;
+&gt;&gt;&gt; COPY (SELECT version()) TO '/tmp/output'
 
 
-- Psycopg notları
-        - Modulun import edilmesi
-                import psycopg2
-                import psycopg2.extras
 
-        - Bağlantı kurulması
-                def get_connection():def get_connection():
-                        try:
-                                cstr = &quot;host=%s dbname=%s user=%s password=%s&quot; % \
-                                        (PSQL_SERVER, PSQL_DB, PSQL_USER, PSQL_PASSWD)
-                                cnn = psycopg2.connect(cstr)
-                                crs = cnn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+# -----------------------------------------------------------------------------
+# SQL notları
+# -----------------------------------------------------------------------------
 
-                                result = (cnn, crs)
-                        except Exception, err:
-                                if DEBUG:
-                                        raise
-                                else:
-                                        sys.stderr.write(str(err))
+# Serial, timestamp vb alanlar.
+CREATE TABLE sch.tablo (
+tablo_id        SERIAL PRIMARY KEY,
+tablo_foreign   INTEGER NOT NULL REFERENCES sch.tablo2(tablo2_pkey),
+tablo_kod       VARCHAR(50) NOT NULL UNIQUE,
+tablo_zaman     TIMESTAMP NOT NULL DEFAULT NOW(),
+tablo_timeout   TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '15 minutes',
+tablo_captcha   VARCHAR(6) NOT NULL DEFAULT
+                LPAD(TEXT(TRUNC(RANDOM()*1000000)), 6, '0')
+);
 
-                                result = (None, None)
+# Default degeri kullanmak.
+UPDATE sch.tablo SET alan = DEFAULT ...
+INSERT INTO sch.tablo VALUES (DEFAULT, &quot;deger&quot;, ...
 
-                        return result
+# SQL sonrası oluşan değerleri almak.
+Değişen kayıt sayısı kadar kayıt geri döner.
 
-                (cnn, crs) = get_connection()
+INSERT INTO sch.tablo VALUES (..) RETURNING (alan1, alan2);
+UPDATE sch.tablo SET alan1=DEFAULT RETURNING (alan1, alan2);
 
-        - Bağlantının kapatılması
-                def close_connection(cnn, crs):
-                        try:
-                                # Cursori kapat.
-                                try:
-                                        crs.close()
-                                except Exception, err:
-                                        pass
+# Serial alanın değerini, mevcut maksimum değere bakarak yeniden atama.
+SELECT SETVAL('field_id_seq', (SELECT MAX(field_id) FROM tablename));
 
-                                # Veritabani baglantisini kapat.
-                                try:
-                                        cnn.close()
-                                except Exception, err:
-                                        pass
+# pgcrypto modülü
+Sifreleme fonksiyonlarını kullanabilmek için postgresql-contrib
+paketini yükledikten sonra veritabanına pgcrypto modulünü yüklemek
+gerekiyor.
 
-                                result = True
-                        except Exception, err:
-                                if DEBUG:
-                                        raise
-                                else:
-                                        sys.stderr.write(str(err))
+&gt;&gt;&gt; \c veritabani
+&gt;&gt;&gt; CREATE EXTENSION pgcrypto;
 
-                                result = False
 
-                        return result
 
-                close_connection(cnn, crs)
+# -----------------------------------------------------------------------------
+# Fuzzy search
+# -----------------------------------------------------------------------------
 
-        - SQL kodunun parametre ile çalıştırılması
-                sql = &quot;SELECT * FROM tablo WHERE id = %s&quot;
-                par = (1212, )
-                crs.execute(sql, par)
-                rows = crs.fetchall()
+# pg_trgm modulü
+Veritabanı için yüklemek gerekiyor.
 
-        - Çalıştırılan SQL'i parametreler yerlerine konulduktan sonraki şekli.
-                print(crs.mogrify(sql, par))
+CREATE EXTENSION pg_trgm;
+
+
+# Benzerlik
+Default benzerlik eşiği 0.3
+
+SELECT similarity('hello', 'hallo');
+SELECT * FROM ogrenci WHERE soyad % 'bayrak';
+SELECT * FROM ogrenci WHERE similarity(soyad, 'bayrak') &gt; 0.5;
+
+
+# index
+Index olmadan benzerlik araması çok kaynak tüketiyor. Index ile bile 1 milyon
+kaydın üstünde performans sorunu var. Kayıt çoksa, kısmi index kullan.
+
+CREATE INDEX ogrenci_soyad_trigram_idx ON ogrenci 
+    USING gist(soyad gist_trgm_ops);
+
+
+# Kaynaklar
+http://bartlettpublishing.com/site/bartpub/blog/3/entry/350
+
+
+
+# -----------------------------------------------------------------------------
+# Psycopg notları
+# -----------------------------------------------------------------------------
+# Modulun import edilmesi
+import psycopg2
+import psycopg2.extras
+
+# Bağlantı kurulması
+def get_connection(autocommit=False):
+    try:
+        cstr = &quot;host=%s dbname=%s user=%s password=%s&quot; % \
+                (PSQL_SERVER, PSQL_DB, PSQL_USER, PSQL_PASSWD)
+        cnn = psycopg2.connect(cstr)
+        cnn.autocommit = autocommit
+        crs = cnn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        result = (cnn, crs)
+    except Exception, err:
+        if DEBUG:
+            raise
+        else:
+            sys.stderr.write(str(err))
+
+        result = (None, None)
+
+    return result
+
+
+(cnn, crs) = get_connection()
+
+
+# Bağlantının kapatılması
+def close_connection(cnn, crs):
+    # Cursori kapat.
+    try:
+        crs.close()
+    except Exception, err:
+        pass
+
+    # Veritabani baglantisini kapat.
+    try:
+        cnn.close()
+    except Exception, err:
+        pass
+
+    return True
+
+
+close_connection(cnn, crs)
+
+
+# Bağlantı koptuysa yeniden bağlansın
+def refresh_connection(cnn, crs, autocommit=False):
+    try:
+        crs.execute('SELECT 1')
+    except Exception:
+        close_psql_connection(cnn, crs)
+        (cnn, crs) = get_psql_connection(autocommit)
+
+    return (cnn, crs)
+
+(cnn, crs) = refresh_connection(cnn, crs)
+
+
+# SQL kodunun parametre ile çalıştırılması
+sql = &quot;SELECT * FROM tablo WHERE id = %s&quot;
+par = (1212, )
+crs.execute(sql, par)
+rows = crs.fetchall()
+
+for row in rows:
+    print(row['alan_adi'])
+
+
+# Çalıştırılan SQL'i parametreler yerlerine konulduktan sonraki şekli.
+print(crs.mogrify(sql, par))
+
+# commit, rollback
+cnn.commit()
+cnn.rollback()
 </code></pre>
 </body>
 </html>

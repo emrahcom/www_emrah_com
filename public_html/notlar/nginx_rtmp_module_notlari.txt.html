@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>nginx_rtmp_module_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# NGINX-RTMP-MODULE NOTLARI
+# -----------------------------------------------------------------------------
+Notlar, Debian Jessie'ye göre hazırlanmıştır.
+
+
+# -----------------------------------------------------------------------------
+# PAKETLER
+# -----------------------------------------------------------------------------
+
+# /etc/apt/sources.list
+deb http://ftp.us.debian.org/debian/ jessie main non-free contrib
+deb-src http://ftp.us.debian.org/debian/ jessie main non-free contrib
+deb http://security.debian.org/ jessie/updates main contrib non-free
+deb-src http://security.debian.org/ jessie/updates main contrib non-free
+deb http://www.deb-multimedia.org jessie main non-free
+deb-src http://www.deb-multimedia.org jessie main non-free
+
+# Multimedia deposu keyring
+apt-get update
+apt-get install deb-multimedia-keyring
+apt-get update
+
+# Paketler
+apt-get install ffmpeg
+apt-get install dpkg-dev build-essential fakeroot
+apt-get build-dep nginx-extras
+
+
+
+# -----------------------------------------------------------------------------
+# DERLEME
+# -----------------------------------------------------------------------------
+Bu bölümdeki işlemler, normal kullanıcı (non-root) yetkileri ile yapılacak.
+
+# Kaynak kodlar (non-root user)
+su -l emrah
+mkdir source
+cd source
+apt-get source nginx-extras
+wget -k https://github.com/sergey-dryabzhinsky/nginx-rtmp-module/archive/master.zip
+unzip master.zip
+
+# Modülün, kaynak koda eklenmesi
+cp -arp nginx-rtmp-module-master nginx-1.6.2/debian/modules/nginx-rtmp-module
+vim nginx-1.6.2/debian/rules
+    extras_configure_flags := \
+        ...
+        ...
+        # satir 112-114, sadece nginx-rtmp-module satırı eklendi.
+        --add-module=$(MODULESDIR)/nginx-upstream-fair \
+        --add-module=$(MODULESDIR)/nginx-rtmp-module \
+        --add-module=$(MODULESDIR)/ngx_http_substitutions_filter_module
+
+# Derleme
+cd nginx-1.6.2
+dpkg-buildpackage -rfakeroot -uc -b
+
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+cd source
+dpkg -i nginx-common_1.6.2-5+deb8u2_all.deb
+dpkg -i nginx-extras_1.6.2-5+deb8u2_amd64.deb
+dpkg -i nginx-doc_1.6.2-5+deb8u2_all.deb
+apt-mark hold nginx-common nginx-extras nginx-doc
+
+
+
+# -----------------------------------------------------------------------------
+# AYARLAR
+# -----------------------------------------------------------------------------
+# /etc/nginx/nginx.conf
+rtmp_auto_push on;
+rtmp {
+        server {
+                listen 1935;
+                drop_idle_publisher 10s;
+
+                application live {
+                        live on;
+                        idle_streams off;
+
+                        allow publish 127.0.0.1;
+                        allow publish all;
+                        deny publish all;
+                        allow play all;
+
+                        hls on;
+                        hls_path /var/tmp/hls;
+                        hls_fragment 10s;
+                        hls_playlist_length 60s;
+                        hls_sync 300ms;
+                        hls_continuous on;
+                        hls_cleanup on;
+
+                        wait_video on;
+                        wait_key on;
+
+                        record all;
+                        record_path /var/tmp/record;
+                        record_unique on;
+                        record_interval 30m;
+                        record_suffix -%Y%m%d-%T.flv;
+                }
+        }
+}
+
+# /etc/nginx/sites-available/default
+location /hls {
+        alias /var/tmp/hls;
+}
+
+location /video {
+        alias /var/tmp/record;
+        autoindex on;
+}
+
+location /rtmp_stat {
+        rtmp_stat all;
+        rtmp_stat_stylesheet rtmp_stat.xsl;
+}
+
+location /rtmp_stat.xsl {
+        root /var/tmp/;
+}
+
+location /rtmp_control {
+        rtmp_control all;
+        auth_basic &quot;Restricted&quot;;
+        auth_basic_user_file /home/kullanici/nginx/htpasswd;
+}
+
+# rtmp_stat.xsl
+cp source/nginx-1.6.2/debian/modules/nginx-rtmp-module/stat.xsl \
+    /var/tmp/rtmp_stat.xsl
+chown www-data: /var/tmp/rtmp_stat.xsl
+
+# record path
+mkdir /var/tmp/record
+chown www-data: /var/tmp/record
+
+# HLS klasörü ramdisk olacaksa /etc/fstab icinde
+tmpfs  /var/tmp/hls  tmpfs  noatime,size=512M,nr_inodes=10k,mode=1777  0  0
+
+# Belli aralıklarla eski video segmentleri temizlenecekse
+    - /root/scripts/cleanup.sh
+    #!/bin/bash
+    find /var/tmp/hls/ -type f -name &quot;*.ts&quot; -cmin +5 -delete
+    find /var/tmp/hls/ -type f -name &quot;*.m3u8&quot; -cmin +5 -delete
+
+    - /etc/crontab
+    *  *    * * *   root    /root/scripts/cleanup.sh &gt;/dev/null 2&gt;&amp;1
+
+    chmod u+x /root/scripts/cleanup.sh
+
+# restart
+/etc/init.d/nginx configtest
+systemctl restart nginx
+
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+https://github.com/arut/nginx-rtmp-module
+https://github.com/arut/nginx-rtmp-module/wiki/Directives
+https://github.com/sergey-dryabzhinsky/nginx-rtmp-module
+</code></pre>
+</body>
+</html>

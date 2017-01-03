@@ -68,6 +68,10 @@ ffmpeg -i rtmp://85.111.24.138:1935/tv/trtmuzik \
 # MP4 metadata bloğunu dosyanın başına taşıma.
 ffmpeg -i input.mp4 -c:v copy -c:a copy -movflags faststart output.mp4
 
+# Videodan resme çevirme
+ffmpeg -i input.mp4 -an -r 25 -qscale:v 2 \
+-ss 1.0 -t 10.0 -f image2 /tmp/output_%05d.jpg
+
 # Video dosyalarını birleştirme (ffmpeg 1.1 ve sonrası gerekiyor)
 find . -name &quot;par*.flv&quot; -printf &quot;file '%p'\n&quot; &gt; liste.txt
 ffmpeg -f concat -i liste.txt -c:v copy -c:a copy -movflags faststart out.mp4
@@ -77,6 +81,24 @@ veya
 ffmpeg -f concat \
 -i &lt;(find /full/path/ -name &quot;par*.flv&quot; -printf &quot;file '%p'\n&quot;) \
 -c:v copy -c:a copy -movflags faststart out.mp4
+
+veya
+
+ffmpeg -f concat -i liste.txt \
+-c:v copy -c:a copy -movflags faststart out.mp4
+
+liste.txt
+file '/path/video1.mp4'
+file '/path/video2.mp4'
+
+# 2 video yan yana
+ffmpeg -i video1.mp4 -i video2.mp4 \
+-filter_complex &quot;[0:v:0]pad=1280:360[bg]; [bg][1:v:0]overlay=640:0&quot; \
+out.mp4
+
+# Video üzerine resim watermark
+ffmpeg -i video.mp4 -i resim.png \
+-filter_complex &quot;[0:v][1:v] overlay=20:90&quot; out.mp4
 
 
 # Kaynaklar
@@ -208,6 +230,10 @@ aptitude install mjpegtools lame twolame
 # -----------------------------------------------------------------------------
 # NGINX RTMP MODULE
 # -----------------------------------------------------------------------------
+Roman Arutyunyan'ın depoda geliştirme durdu. Güncellemeleri Sergey
+Dryabzhinsky'nin depodan takip et.
+
+https://github.com/sergey-dryabzhinsky/nginx-rtmp-module
 
 # Derleme icin gerekli paketler.
 aptitude install dpkg-dev build-essential fakeroot
@@ -624,6 +650,7 @@ ln -s ../apps-available/geocheck.ini .
 
 # Kaynaklar
 https://github.com/arut/nginx-rtmp-module/wiki/Directives
+https://github.com/sergey-dryabzhinsky/nginx-rtmp-module
 # RTMP/RTSP/MMS/M3U8 adresleri
 http://radyodelisi.blogspot.com/
 </code></pre>

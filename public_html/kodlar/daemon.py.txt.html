@@ -7,7 +7,7 @@
 </head>
 <body>
 <pre><code>
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 ###############################################################################
@@ -32,6 +32,7 @@ import inspect
 
 # -----------------------------------------------------------------------------
 # Temel daemon sinifi
+# -----------------------------------------------------------------------------
 class Daemon:
     def __init__(self, name, pidfile, runfile, stoptimeout=10, debug=0):
         # Daemon'in adi, mesajlarda kullanilacak.
@@ -50,7 +51,7 @@ class Daemon:
         # iyi olur.
         self.stoptimeout = stoptimeout
 
-        # Debug yapiliyor mu? Debug yapiliyorsa ciktilar konsola, yapilmiyorda
+        # Debug yapiliyor mu? Debug yapiliyorsa ciktilar konsola, yapilmiyorsa
         # /dev/null'a yonlendirilecek.
         self.debug = debug
 
@@ -62,17 +63,18 @@ class Daemon:
 
     # -------------------------------------------------------------------------
     # UNIX double-fork magic
+    # -------------------------------------------------------------------------
     def daemonize(self):
         # Birinci fork.
-        # Bu sayede daemon shellden calistirinca tekrar shell'e donulebilecek.
+        # Bu sayede daemon, shellden calistirinca tekrar shell'e donulebilecek.
         try:
             pid = os.fork()
             if pid &gt; 0:
                 # Parenti sonlandir.
                 sys.exit(0)
-        except OSError, e:
-            sys.stderr.write(&quot;fork #1 gerceklestirilemedi: %d (%s)\n&quot; \
-                            % (e.errno, e.stderror))
+        except OSError as err:
+            sys.stderr.write('fork #1 gerceklestirilemedi: %d (%s)\n' \
+                            % (err.errno, err.stderror))
             sys.exit(1)
 
         # Parent baglantisini kopar.
@@ -87,9 +89,9 @@ class Daemon:
             if pid &gt; 0:
                 # Parenti sonlandir.
                 sys.exit(0)
-        except OSError, e:
-            sys.stderr.write(&quot;fork #2 gerceklestirilemedi: %d (%s)\n&quot; \
-                            % (e.errno, e.stderror))
+        except OSError as err:
+            sys.stderr.write('fork #2 gerceklestirilemedi: %d (%s)\n' \
+                            % (err.errno, err.stderror))
             sys.exit(1)
 
         # Debug yapmiyorsak ciktilara ihtiyacimiz yok, /dev/null'a yonlendir.
@@ -97,9 +99,9 @@ class Daemon:
             # Standart dosya tanimlayicilarini yonlendir.
             sys.stdout.flush()
             sys.stderr.flush()
-            sinp = file(os.devnull, 'r')
-            sout = file(os.devnull, 'a+')
-            serr = file(os.devnull, 'a+', 0)
+            sinp = open(os.devnull, 'rb')
+            sout = open(os.devnull, 'ab+')
+            serr = open(os.devnull, 'ab+', 0)
             os.dup2(sinp.fileno(), sys.stdin.fileno())
             os.dup2(sout.fileno(), sys.stdout.fileno())
             os.dup2(serr.fileno(), sys.stderr.fileno())
@@ -108,41 +110,43 @@ class Daemon:
         atexit.register(self.__delpid)
 
         # runfile dosyasini olustur.
-        file(self.runfile, 'w+').write(&quot;1\n&quot;)
+        open(self.runfile, 'w+').write('1\n')
 
         # Pid'i pidfile dosyasina kaydet.
         pid = str(os.getpid())
-        file(self.pidfile, 'w+').write(&quot;%s\n&quot; % pid)
+        open(self.pidfile, 'w+').write('%s\n' % pid)
 
 
     # -------------------------------------------------------------------------
     # Daemon'i baslatan bolum.
+    # -------------------------------------------------------------------------
     def start(self):
         # Daemon zaten calisiyor mu diye kontrol et.
         # Eger kayitli bir pid varsa calisiyordur.
         pid = self.__getpid()
         if pid:
-            sys.stderr.write(&quot;%s zaten calisiyor\n&quot; % self.name)
+            sys.stderr.write('%s zaten calisiyor\n' % self.name)
             sys.exit(1)
 
         # Daemoni baslat.
-        sys.stdout.write(&quot;%s baslatiliyor...\n&quot; % self.name)
+        sys.stdout.write('%s baslatiliyor...\n' % self.name)
         self.daemonize()
         self.run()
 
 
     # -------------------------------------------------------------------------
     # Daemon'i durduran bolum.
+    # -------------------------------------------------------------------------
     def stop(self):
         # Oncelikle calisan bir daemon var mi diye kontrol et.
         # Eger kayitli bir pid yoksa zaten calismiyor demektir.
         pid = self.__getpid()
         if not pid:
-            sys.stderr.write(&quot;%s zaten calismiyor\n&quot; % self.name)
+            sys.stderr.write('%s zaten calismiyor\n' % self.name)
             sys.exit(1)
 
         # Daemon'i durdurma islemlerine basla.
-        sys.stdout.write(&quot;%s durduruluyor&quot; % self.name)
+        sys.stdout.write('%s durduruluyor' % self.name)
 
         # Oncelikle daemon'a kendisini kapatma sansi ver.
         # Kendi kendini kapatamazsa kill edilecek.
@@ -154,36 +158,54 @@ class Daemon:
             while True:
                 os.kill(pid, signal.SIGTERM)
                 time.sleep(0.1)
-        except OSError, err:
+        except OSError as err:
             err = str(err)
 
-            if err.find(&quot;No such process&quot;) &gt; 0:
+            if err.find('No such process') &gt; 0:
                 if os.path.exists(self.pidfile):
                     os.remove(self.pidfile)
             else:
-                print(str(err))
+                sys.stderr.write('%s\n' % (err))
                 sys.exit(1)
 
 
     # -------------------------------------------------------------------------
     # Daemoni yeniden baslatan bolum.
+    # -------------------------------------------------------------------------
     def restart(self):
         self.stop()
         self.start()
 
 
     # -------------------------------------------------------------------------
+    # runfile dosyasini silen bolum. Kendi kendini kapatacak olan daemon
+    # uygulamalarinda, uygulama sonlanirken run dosyasini silmek icin
+    # kullaniliyor.
+    # -------------------------------------------------------------------------
+    def delrun(self):
+        try:
+            os.remove(self.runfile)
+        except Exception:
+            pass
+
+
+    # -------------------------------------------------------------------------
     # pidfile dosyasini silen bolum.
+    # -------------------------------------------------------------------------
     def __delpid(self):
-        os.remove(self.pidfile)
+        try:
+            os.remove(self.pidfile)
+        except Exception:
+            pass
 
 
     # -------------------------------------------------------------------------
     # Pid'i soyleyen bolum.
+    # -------------------------------------------------------------------------
     def __getpid(self):
         # pidfile dosyasina kayitli bir pid var mi?
         try:
-            pf = file(self.pidfile, 'r')
+            pf = open(self.pidfile, 'r')
             pid = int(pf.read().strip())
             pf.close()
         except IOError:
@@ -194,11 +216,15 @@ class Daemon:
 
     # -------------------------------------------------------------------------
     # Daemon'a kendini, kendi imkanlari ile kapatma sansi taniyan bolum.
+    # -------------------------------------------------------------------------
     def __cleanstop(self, pid):
         # runfile siliniyor. Daemon icindeki donguler, bu dosyanin varligini
         # kontrol ediyor. Dosya yoksa dongulerden cikilacak ve daemon temiz bir
         # sekilde sonlanacak.
-        os.remove(self.runfile)
+        try:
+            os.remove(self.runfile)
+        except Exception:
+            pass
 
         # Daemon'in kapanmasini stoptimeout suresince bekle.
         t0 = time.time()
@@ -219,7 +245,7 @@ class Daemon:
             if (time.time() - t0) &gt; self.stoptimeout: break
             time.sleep(1)
 
-        sys.stdout.write(&quot;\n&quot;)
+        sys.stdout.write('\n')
         return result
 
 
@@ -227,9 +253,9 @@ class Daemon:
     # run metodu
     # Alt sinif, bu metodu yeniden yazacak.
     # Daemon kodu, orada yer alacak.
+    # -------------------------------------------------------------------------
     def run(self):
         pass
-
 </code></pre>
 </body>
 </html>

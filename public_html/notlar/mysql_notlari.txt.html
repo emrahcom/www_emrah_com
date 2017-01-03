@@ -29,6 +29,7 @@ FLUSH PRIVILEGES;
     binlog-do-db=VERITABANI
     innodb_flush_log_at_trx_commit=1
     sync_binlog=1
+    skip-slave-start
 
 /etc/init.d mysql restart
 
@@ -61,6 +62,8 @@ mysql -u root -p
 # Slave: /etc/mysql/my.cnf ayarları
     server-id=2
     read_only=TRUE
+    replicate-wild-do-table=dbname.%
+    slave-skip-errors = 1062
 
 /etc/init.d mysql restart
 
@@ -96,70 +99,29 @@ http://www.percona.com/doc/percona-xtrabackup/2.2/howtos/setting_up_replication.
 
 
 # -----------------------------------------------------------------------------
-# /etc/mysql/my.cnf
+# /etc/mysql/conf.d/custom.cnf
 # -----------------------------------------------------------------------------
 Buradaki değerler örnektir, her sistem için ayrı ayralamak gerekmekte.
 /usr/share/doc/mysql-server-5.5/examples klasöründeki örnek ayarlamalardan
 faydalanılabilir.
 
-[client]
-port            = 3306
-socket          = /var/run/mysqld/mysqld.sock
-
-
-[mysqld_safe]
-socket          = /var/run/mysqld/mysqld.sock
-nice            = 0
-
 [mysqld]
-user            = mysql
-pid-file        = /var/run/mysqld/mysqld.pid
-socket          = /var/run/mysqld/mysqld.sock
-port            = 3306
-basedir         = /usr
-datadir         = /var/lib/mysql
-tmpdir          = /tmp
-lc-messages-dir = /usr/share/mysql
-
-skip-external-locking
+bind-address = 0.0.0.0
+max_connections = 100
 skip-name-resolve
 
-bind-address            = 0.0.0.0
-
-key_buffer              = 384M
-max_allowed_packet      = 16M
-thread_stack            = 192K
-thread_cache_size       = 8
-
-myisam-recover          = BACKUP
-
-max_connections         = 100
-wait_timeout            = 300
-table_cache             = 1024
-table_open_cache        = 512
-query_cache_limit       = 10M
-query_cache_size        = 64M
-
-sort_buffer_size        = 2M
-read_buffer_size        = 2M
-read_rnd_buffer_size    = 8M
+key_buffer = 256M
+wait_timeout = 300
+table_open_cache = 4096
+query_cache_limit = 10M
+query_cache_size = 64M
+sort_buffer_size = 2M
+read_buffer_size = 2M
+read_rnd_buffer_size = 2M
 myisam_sort_buffer_size = 64M
 
-log_slow_queries        = /var/log/mysql/mysql-slow.log
-long_query_time         = 2
-expire_logs_days        = 10
-max_binlog_size         = 100M
-
-[mysqldump]
-quick
-quote-names
-max_allowed_packet      = 16M
-
-[isamchk]
-key_buffer              = 16M
-
-!includedir /etc/mysql/conf.d/
-
+log_slow_queries = /var/log/mysql/mysql-slow.log
+long_query_time = 2
 
 
 

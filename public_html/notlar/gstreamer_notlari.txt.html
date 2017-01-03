@@ -14,9 +14,30 @@
 
 
 # -----------------------------------------------------------------------------
+# JESSIE KURULUM
+# -----------------------------------------------------------------------------
+
+# /etc/apt/sources.list
+deb http://www.deb-multimedia.org jessie main non-free
+deb-src http://www.deb-multimedia.org jessie main non-free
+
+apt-get install gstreamer1.0-tools gstreamer1.0-plugins-base \
+gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad \
+libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 \
+libgstreamer-plugins-bad1.0-0 gstreamer1.0-libav gstreamer1.0-alsa \
+gstreamer1.0-x
+
+apt-get install gir1.2-freedesktop gir1.2-gstreamer-1.0
+
+# videoconvert
+&quot;ffmpegcolorspace&quot; yerine artık &quot;videoconvert&quot; kullanılıyor.
+
+
+# -----------------------------------------------------------------------------
 # WHEEZY BACKPORTS'TAN KURULUM
 # -----------------------------------------------------------------------------
-/etc/apt/sources.list
+
+# /etc/apt/sources.list
 deb http://http.debian.net/debian wheezy-backports main
 deb-src http://http.debian.net/debian wheezy-backports main
 
@@ -161,6 +182,16 @@ queue ! ffmpegcolorspace ! x264enc bitrate=768 ! \
 queue ! flvmux name=mux \
 audiotestsrc volume=0 ! audioresample ! audio/x-raw-int,rate=48000 ! \
 queue ! voaacenc bitrate=22050 ! queue ! mux. \
+mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
+
+gst-launch-1.0 -e \
+videotestsrc pattern=0 ! \
+queue ! videoconvert ! \
+x264enc bitrate=512 key-int-max=45 speed-preset=superfast threads=1 ! \
+'video/x-h264,profile=constrained-baseline,framerate=25/1,width=600,height=300' ! \
+queue ! flvmux name=mux \
+audiotestsrc volume=1 ! audioresample ! audioconvert ! \
+queue ! voaacenc bitrate=64000 ! queue ! mux. \
 mux. ! rtmpsink location='rtmp://localhost/live/stream live=1'
 
 # Ekran görüntüsünü izleme

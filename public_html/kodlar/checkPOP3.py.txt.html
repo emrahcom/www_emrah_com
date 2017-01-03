@@ -7,60 +7,107 @@
 </head>
 <body>
 <pre><code>
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding:utf-8 -*-
 
-# zenity paketini yuklenmesi gerekiyor.
+# -----------------------------------------------------------------------------
+# Contact       : emrah.com@gmail.com
+# Depends       : zenity
+#                 apt-get install zenity
+# -----------------------------------------------------------------------------
 
-import getpass
-import poplib
-import time
 import os
+import sys
+import getpass
+import time
+import subprocess
+import html
+import poplib
 from email.header import decode_header
 
 
-INITIAL_WAIT    = 10
-PERIOD          = 300
-HOST            = 'pop.gmail.com'
-DEBUG           = 0
+DEBUG = 0
+DELAY  = 10
+PERIOD = 120
+HOST = 'pop.gmail.com'
+LOGFILE = '/tmp/gpopup.log'
+
+import logging
+logging.basicConfig(filename=LOGFILE, level=logging.DEBUG)
 
 
 
 # -----------------------------------------------------------------------------
-def getLoginInfo():
-    username = raw_input('Username : ')
+def getlogin():
+    username = input('Username : ')
     password = getpass.getpass('Pasword  : ')
+
+    logging.debug('username : %s' % username)
+
     return (username, password)
 
 
 
 # -----------------------------------------------------------------------------
-def getMailInfo(username, password, pid):
-    maillist = []
-
+def getfrompop3(pop):
     try:
+        mails = []
+
+        for n in range(len(pop.list()[1])):
+            mail = {}
+            for key in ('to', 'cc', 'date', 'from', 'subject'):
+                mail[key] = ''
+            items = len(mail)
+
+            for line in pop.retr(n+1)[1]:
+                try:
+                    data = [row[0].decode(row[1] or 'iso-8859-1')
+                            if type(row[0]) is bytes
+                            else row[0]
+                            for row in
+                                decode_header(line.decode(encoding='UTF-8'))]
+                    data = ' '.join(data)
+
+                    if data.lower()[0:5] == 'from:':
+                        mail['from'] = data[5:].strip()
+                    elif data.lower()[0:3] == 'to:':
+                        mail['to'] = data[3:].strip()
+                    elif data.lower()[0:3] == 'cc:':
+                        mail['cc'] = data[3:].strip()
+                    elif data.lower()[0:5] == 'date:':
+                        mail['date'] = data[5:].strip()
+                    elif data.lower()[0:8] == 'subject:':
+                        mail['subject'] = data[8:].strip()
+                    else:
+                        items += 1
+                    items -= 1
+                except Exception as err:
+                    pass
+
+                # if there is no item to search, break loop.
+                if (not items) : break
+
+            if mail['subject'][0:6] == 'rapor:': continue
+            mails.append(mail)
+    except Exception as err:
+        if DEBUG:
+            raise
+        else:
+            logging.debug('getfrompop3 : %s' % str(err))
+
+    return mails
+
+
+
+# -----------------------------------------------------------------------------
+def getmails(username, password, pid):
+    try:
+        mails = []
+
         pop = poplib.POP3_SSL(HOST)
         pop.user(username)
         pop.pass_(password)
-
-        num = len(pop.list()[1])
-        for n in range(num):
-            mTo = mDate = mFrom = mSubject = ''
-
-            for satir in pop.retr(n+1)[1]:
-                satir = decode_header(satir)
-                if satir[0][0][0:6].upper() == &quot;FROM: &quot;:
-                    mFrom = satir[0][0][6:]
-                elif satir[0][0][0:4].upper() == &quot;TO: &quot;:
-                    mTo = satir[0][0][4:]
-                elif satir[0][0][0:6].upper() == &quot;DATE: &quot;:
-                    mDate = satir[0][0][6:]
-                elif satir[0][0][0:8].upper() == &quot;SUBJECT:&quot;:
-                    mSubject = satir[-1:][0][0]
-
-            if mSubject[0:6] == 'rapor:': continue
-            maillist.append([n+1, mFrom, mTo, mDate, mSubject])
-
+        mails = getfrompop3(pop)
         pop.quit()
     except poplib.error_proto:
         if DEBUG:
@@ -70,8 +117,10 @@ def getMailInfo(username, password, pid):
             command += &quot;Connection failed for &lt;b&gt;%s&lt;/b&gt;\n&quot; % (username)
             command += &quot;Pid... [%s]&quot; % (pid)
             command += &quot;' &amp;&quot;
-            os.system(command)
-    except Exception, err:
+
+            logging.debug('getmails : %s' % command)
+            subprocess.call(command, shell=True)
+    except Exception as err:
         if DEBUG:
             raise
         else:
@@ -80,44 +129,38 @@ def getMailInfo(username, password, pid):
             command += &quot;Pid... [%s]\n&quot; % (pid)
             command += &quot;%s&quot; % (str(err))
             command += &quot;' &amp;&quot;
-            os.system(command)
 
-    return maillist
+            logging.debug('getmails : %s' % command)
+            subprocess.call(command, shell=True)
 
-
-
-# -----------------------------------------------------------------------------
-def secureMessage(message):
-    message = message.replace('&amp;','&amp;amp;')
-    message = message.replace('&quot;','&amp;quot;')
-    message = message.replace('&lt;','&amp;lt;')
-    message = message.replace('&gt;','&amp;gt;')
-    message = message.replace('\'','&amp;#39;')
-
-    return message
+    return mails
 
 
 
 # -----------------------------------------------------------------------------
-def showDialog(username, maillist, pid):
+def showmails(username, pid, mails):
     try:
-        if not maillist: return None
+        if not mails: return None
 
         msg = ''
-        for mail in maillist:
-            msg += '&lt;b&gt;From   :&lt;/b&gt; %s\n' % \
-                secureMessage(mail[1])
-            msg += '&lt;b&gt;To     :&lt;/b&gt; %s\n' % \
-                secureMessage(mail[2])
-            msg += '&lt;b&gt;Date   :&lt;/b&gt; %s\n' % \
-                secureMessage(mail[3])
-            msg += '&lt;b&gt;Subject:&lt;/b&gt; %s\n' % \
-                secureMessage(mail[4])
+        for mail in mails:
+            msg += (mail['from'] and
+                    '&lt;b&gt;From   :&lt;/b&gt; %s\n' % html.escape(mail['from']))
+            msg += (mail['to'] and
+                    '&lt;b&gt;To     :&lt;/b&gt; %s\n' % html.escape(mail['to']))
+            msg += (mail['cc'] and
+                    '&lt;b&gt;CC     :&lt;/b&gt; %s\n' % html.escape(mail['cc']))
+            msg += (mail['date'] and
+                    '&lt;b&gt;Date   :&lt;/b&gt; %s\n' % html.escape(mail['date']))
+            msg += (mail['subject'] and
+                    '&lt;b&gt;Subject:&lt;/b&gt; %s\n' % html.escape(mail['subject']))
             msg += '-------------------------------\n'
         msg += '%s... [%s]' % (username, pid)
+        command = ['zenity', '--info', '--text', msg, '&amp;']
 
-        os.system('zenity --info --text &quot;%s&quot; &amp;' % msg)
-    except Exception, err:
+        logging.debug('showmails : %s' % ' '.join(command))
+        subprocess.call(command)
+    except Exception as err:
         if DEBUG:
             raise
         else:
@@ -126,34 +169,45 @@ def showDialog(username, maillist, pid):
             command += &quot;Pid... [%s]\n&quot; % (pid)
             command += &quot;%s&quot; % (str(err))
             command += &quot;' &amp;&quot;
-            os.system(command)
+
+            logging.debug('showmails : %s' % command)
+            subprocess.call(command, shell=True)
 
 
 
 # -----------------------------------------------------------------------------
-def startChecking():
+def main():
+    # Get accounts and fork a process for each one.
     while True:
-        (username, password) = getLoginInfo()
+        (username, password) = getlogin()
 
-        try                 : pid = os.fork()
-        except OSError, e   : pass
+        try:
+            pid = os.fork()
+        except OSError:
+            pass
 
-        if not username: os._exit(0)
-        if pid == 0: break
-        print('%s... [%d]\n' % (username, pid))
+        if not username:
+            sys.exit(0)
 
-    time.sleep(INITIAL_WAIT)
+        if pid == 0:
+            break
+
+        sys.stdout.write('[%s] is added to check list. (pid: %d)\n\n' %
+                         (username, pid))
+
+    # Forked main
+    time.sleep(DELAY)
     pid = os.getpid()
     while True:
-        maillist = getMailInfo(username, password, pid)
-        showDialog(username, maillist, pid)
+        mails = getmails(username, password, pid)
+        showmails(username, pid, mails)
         time.sleep(PERIOD)
 
 
 
 # -----------------------------------------------------------------------------
 if __name__ == '__main__':
-    startChecking()
+    main()
 </code></pre>
 </body>
 </html>

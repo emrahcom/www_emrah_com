@@ -55,7 +55,10 @@ systemctl daemon-reload
 # UNIT
 # -----------------------------------------------------------------------------
 Unit dosyasının '/lib/systemd/system' klasörüne konulması gerekiyor. Sembolik
-link olursa çalışmıyor.
+link olursa çalışmıyor. Son güncellemelerle bu durum değişmiş olabilir.
+
+Dağıtımla gelen unit dosyaları &quot;/lib/systemd/system&quot; altında. Overwrite
+edilenler &quot;/etc/systemd/system&quot; altında.
 
 # /lib/systemd/system/ornek.service
 [Unit]
@@ -75,14 +78,64 @@ ExecStop=/home/emrah/services/myservice.py stop
 WantedBy=multi-user.target
 
 # Unit satırları hakkında
-    Requires : Bu servisin çalışabilmesi için ihtiyaç duyulan servisler.
-    After : Hangi servislerden sonra başlatılması gerektiği. After bölümünde,
-            yer alan servise ihtiyaç duyulduğu anlamına gelmiyor. Sadece o
-            servisten sonra başlaması gerektiği anlamına geliyor.
-    Type : Servis tipi. Double-fork magic ile başlatılan servisler için forking
-            seçilecek.
+    Requires=
+        Bu servisin çalışabilmesi için ihtiyaç duyulan servisler.
+    After=
+        Hangi servislerden sonra başlatılması gerektiği. After bölümünde, yer
+        alan servise ihtiyaç duyulduğu anlamına gelmiyor. Sadece o servisten
+        sonra başlaması gerektiği anlamına geliyor.
+    Type=
+        Servis tipi. Double-fork magic ile başlatılan servisler için forking
+        seçilecek.
+    Restart=on-failure
+        Servis crash olursa yeniden başlatılsın.
+    EnvironmentFile=-/etc/default/ornek
+        Servis için environment değişkenlerinin yer aldığı dosya.
+    PrivateTmp=yes
+        Servise özel /tmp klasörü olsun.
+    InaccessibleDirectories=/home
+        Servisin erişemeyeceği klasörler
+    ReadOnlyDirectories=/var
+        Servis için read-only olan klasörler.
+    MemoryLimit=1G
+        Servis için memory limiti.
+    CPUShares=1500
+        Servis için CPU kullanım oranı.
 
     Satırlar, farklı parametrelerle birden fazla tekrarlanabilir.
+
+# Unit config cat
+systemctl cat ornek.service
+systemctl cat atd.service
+
+
+
+# -----------------------------------------------------------------------------
+# TIMER
+# -----------------------------------------------------------------------------
+Cron benzeri systemd servisi.
+
+# /lib/systemd/system/ornek.
+[Unit]
+Description=ornek adli servisi her saat calistir
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1h
+Unit=ornek.service
+
+[Install]
+WantedBy=multi-user.target
+
+# Unit satırları hakkında
+    OnBootSec=10min
+        Açılıştan 10 dakika sonra ilk çalışma
+    OnUnitActiveSec=1h
+        İlk çalışmadan sonra 1 saat ara ile yeniden çalış
+
+# Timer listesi
+systemctl list-timers
+
 
 
 # -----------------------------------------------------------------------------
@@ -94,6 +147,26 @@ journalctl --boot
 
 # Sadece bir servise ait loglar
 journalctl --unit ssh.service
+
+
+# -----------------------------------------------------------------------------
+# ANALİZ
+# -----------------------------------------------------------------------------
+Sistemin açılma performansını analiz eder.
+
+# Sistemin açılma süresi
+systemd-analyze time
+
+# Hangi servisin açılması ne kadar sürüyor
+systemd-analyze blame
+
+# Kritik servislerin açılışı (ağaş şeklinde)
+systemd-analyze critical-chain
+
+# SVG grafik
+systemd-analyze plot &gt;systemd.svg
+iceweasel systemd.svg
+
 
 
 # -----------------------------------------------------------------------------

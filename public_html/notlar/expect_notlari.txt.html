@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>expect_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# EXPECT NOTLARI
+# -----------------------------------------------------------------------------
+expect komutunun kullanımı hakkındaa notlar.
+
+
+# -----------------------------------------------------------------------------
+# KURULUM
+# -----------------------------------------------------------------------------
+apt-get install expect
+
+
+# -----------------------------------------------------------------------------
+# autoexpect
+# -----------------------------------------------------------------------------
+Bir oturumu izleyip expect dosyası hazırlar.
+
+# Kullanımı
+autoexpect komut
+
+# Parametreler
+-f  oluşacak dosyanın ismi. Belirtilmezse script.exp oluyor.
+
+-c  conservative mode
+    Cevabı göndermeden önce kısa beklemeler koyuyor. Bu bekleme olmazsa bazı
+    programlar hızlı veren cevapları dikkate almıyor.
+
+-p  prompt mode
+    Gelen çıktıların tamamını değiş, sadece son satırı dikkate alıyor.
+
+
+# -----------------------------------------------------------------------------
+# expect
+# -----------------------------------------------------------------------------
+TCL komutları kullanılmakta.
+
+#!/usr/bin/expect -f
+
+# argument
+set arg1 [lindex $argv 0]
+
+# spawn
+spawn komut
+
+# exit
+exit
+
+# expect
+expect &quot;beklenen ifade&quot;
+expect -re &quot;beklenen regex ifade&quot;
+expect -re &quot;\\\[Y/n]:&quot;
+expect eof
+expect &quot;\n&quot; {
+    set raw $expect_out(buffer)
+    set response [string trimright &quot;$raw&quot; &quot;\n&quot;]
+}
+expect {
+    &quot;beklenen1&quot; { send &quot;komut1\n&quot; }
+    &quot;beklenen2&quot; { send &quot;komut2\n&quot; }
+    default { exit }
+}
+
+# expect_out
+expect -re &quot;tarih (.*) olunca&quot;
+if {$expect_out(1,string)!=&quot;2017&quot;} {
+    send &quot;2017 bulundu&quot;
+}
+
+set raw $expect_out(buffer)
+
+# send
+send &quot;text&quot;
+send &quot;\n&quot;
+
+# send_tty
+send_tty &quot;prompt: &quot;
+
+# send_user
+if {$argc&lt;2} {
+    send_user &quot;usage: $argv0 user message\n&quot;
+    exit
+}
+
+# set
+set key1 &quot;value1&quot;
+set timeout 10
+
+
+# -----------------------------------------------------------------------------
+# Pexpect
+# -----------------------------------------------------------------------------
+Python3 expect paketi
+
+# kurulum
+apt-get install python3-pexpect
+
+# ornek
+import pexpect
+child = pexpect.spawn('ftp ftp.openbsd.org')
+child.expect('Name .*: ')
+child.sendline('anonymous')
+
+# after &amp; before
+child.after : beklenen regex'e uyan kısım
+child.before : beklenen kısımdan once gelenler
+
+# close
+child.close()
+
+# expect
+child.expect('&circ;Login.*:')
+child.expect('&circ;Login.*:', timeout=3)
+match_index = child.expect(['&circ;Login.*:', pexpect.EOF], timeout=3)
+
+# send &amp; sendline
+child.send('mypassword\n')
+child.sendline('mypassword')
+
+# exceptions
+pexpect.TIMEOUT
+
+
+# -----------------------------------------------------------------------------
+# KAYNAKLAR
+# -----------------------------------------------------------------------------
+http://www.linux-mag.com/id/699/
+https://pexpect.readthedocs.io/en/stable/index.html
+</code></pre>
+</body>
+</html>
