@@ -10,7 +10,7 @@ E-mail için kullanılan servisler, araçlar vb.
 # -----------------------------------------------------------------------------
 
 # Kurulum
-apt-get install exim4-daemon-light
+apt-get install exim4-daemon-light heirloom-mailx
 
 # Temel ayarlar
 dpkg-reconfigure exim4-config
