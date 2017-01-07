@@ -113,122 +113,93 @@ kurulacak.
 # -----------------------------------------------------------------------------
 # /etc/nginx/sites-available/emrah.com
 # -----------------------------------------------------------------------------
-
 # HTTP emrah.com
 server {
-        listen          80;
-        server_name     emrah.com
-                        www.emrah.com;
-        root            /home/emrah/proje/www_emrah_com/public_html;
-        index           index.html;
-        charset         utf-8;
-        access_log      /var/log/nginx/access.emrah.com.log;
+    listen 80;
+    server_name emrah.com www.emrah.com;
 
-        location /gitweb {
-                alias           /usr/share/gitweb;
-                index           index.cgi;
-                include         fastcgi_params;
-                gzip            off;
-                if ($uri ~ "/gitweb/index.cgi") {
-                        fastcgi_pass    unix:/var/run/fcgiwrap.socket;
-                }
-        }
-
-        location /icinga {
-                alias           /usr/share/icinga/htdocs;
-                index           index.html;
-                auth_basic      "...";
-                auth_basic_user_file    /etc/icinga/htpasswd.users;
-        }
-
-        location /icinga/stylesheets {
-                alias           /etc/icinga/stylesheets;
-        }
-
-        location /cgi-bin/icinga {
-                alias           /usr/lib/cgi-bin/icinga;
-                include         fastcgi_params;
-                gzip            off;
-
-                fastcgi_pass    unix:/var/run/fcgiwrap.socket;
-                fastcgi_param   AUTH_USER       $remote_user;
-                fastcgi_param   REMOTE_USER     $remote_user;
-        }
-
-        location /kuran {
-                autoindex on;
-        }
-
-        location = / {
-                ssi on;
-        }
-
-        location = /index.html {
-                ssi on;
-        }
-}
+    rewrite ^/(.*)$  https://$host/$1; }
 
 
-
-# -----------------------------------------------------------------------------
 # HTTPS emrah.com
 server {
-        listen          30443;
-        server_name     emrah.com
-                        www.emrah.com;
-        root            /home/emrah/proje/www_emrah_com/public_html;
-        index           index.html;
-        charset         utf-8;
-        access_log      /var/log/nginx/access.emrah.com.log;
+    listen 30443;
+    server_name emrah.com www.emrah.com;
 
-        ssl on;
-        ssl_certificate keys/emrah.com.pem;
-        ssl_certificate_key keys/emrah.com.key;
-        ssl_session_timeout 5m;
-        ssl_protocols SSLv3 TLSv1;
-        ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
-        ssl_prefer_server_ciphers on;
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/emrah.com/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/emrah.com/privkey.pem;
+    ssl_session_timeout 5m;
+    #ssl_protocols SSLv3 TLSv1;
+    ssl_protocols TLSv1.1 TLSv1.2;
+    #ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
+    ssl_ciphers AES128-SHA:AES256-SHA:RC4-SHA:DES-CBC3-SHA:RC4-MD5;
+    ssl_prefer_server_ciphers on;
 
-        location /gitweb {
-                alias           /usr/share/gitweb;
-                index           index.cgi;
-                include         fastcgi_params;
-                gzip            off;
-                if ($uri ~ "/gitweb/index.cgi") {
-                        fastcgi_pass    unix:/var/run/fcgiwrap.socket;
-                }
-        }
+    root /home/emrah/proje/www_emrah_com/public_html;
+    index index.html;
+    charset utf-8;
+    access_log /var/log/nginx/access.emrah.com.log;
 
-        location /icinga {
-                alias           /usr/share/icinga/htdocs;
-                index           index.html;
-                auth_basic      "...";
-                auth_basic_user_file    /etc/icinga/htpasswd.users;
-        }
+    # robots.txt icin log olusturma.
+    location = /robots.txt {
+        access_log off;
+        log_not_found off; }
 
-        location /icinga/stylesheets {
-                alias           /etc/icinga/stylesheets;
-        }
+    # favicon.ico icin log olusturma.
+    location = /favicon.ico {
+        access_log off;
+        log_not_found off; }
 
-        location /cgi-bin/icinga {
-                alias           /usr/lib/cgi-bin/icinga;
-                include         fastcgi_params;
-                gzip            off;
+    # gizli dosyalara dogrudan erisim yasak.
+    #location ~ /\. {
+    #    access_log off;
+    #    log_not_found off;
+    #    deny all; }
 
-                fastcgi_pass    unix:/var/run/fcgiwrap.socket;
-                fastcgi_param   AUTH_USER       $remote_user;
-                fastcgi_param   REMOTE_USER     $remote_user;
-        }
+    ## static dosyalar icin farkli header.
+    #location ~* \.(?:ico|css|js|gif|jpe?g|png)$ {
+    #    expires max;
+    #    add_header Pragma public;
+    #    add_header Cache-Control "public, must-revalidate, proxy-revalidate"; }
 
-        location /kuran {
-                autoindex on;
-        }
+    location /gitweb {
+        alias /usr/share/gitweb;
+        index index.cgi;
+        include fastcgi_params;
+        gzip off;
+        if ($uri ~ "/gitweb/index.cgi") {
+            fastcgi_pass unix:/var/run/fcgiwrap.socket; }
+    }
 
-        location = / {
-                ssi on;
-        }
+    location /icinga {
+        alias /usr/share/icinga/htdocs;
+        index index.html;
+        auth_basic "...";
+        auth_basic_user_file /etc/icinga/htpasswd.users; }
 
-        location = /index.html {
-                ssi on;
-        }
+    location /icinga/stylesheets {
+        alias /etc/icinga/stylesheets; }
+
+    location /cgi-bin/icinga {
+        alias /usr/lib/cgi-bin/icinga;
+        include fastcgi_params;
+        gzip off;
+
+        fastcgi_pass unix:/var/run/fcgiwrap.socket;
+        fastcgi_param AUTH_USER $remote_user;
+        fastcgi_param REMOTE_USER $remote_user; }
+
+    location /kuran {
+        autoindex on;
+    }
+
+    location ~* /meal\d+ {
+        autoindex on; }
+
+    location = / {
+        ssi on; }
+
+    location = /index.html {
+        ssi on; }
 }
