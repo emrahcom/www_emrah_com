@@ -2,24 +2,60 @@
 # VMWARE NOTLARI
 # -----------------------------------------------------------------------------
 
+# -----------------------------------------------------------------------------
 # Vmware ESXI'de konsoldan makine klonlama
+# -----------------------------------------------------------------------------
 Bu işlemler esnasında klonlanacak makine ve yeni makine kapalı olmalı.
 
-    - VSphere'de klonlanacak makine ile benzer özelliklere sahip bir
-      oluştur. Disk silineceği için işlem çabuk bitsin diye küçük bir disk
-      boyu seç.
+- VSphere'de klonlanacak makine ile benzer özelliklere sahip bir
+  oluştur. Disk silineceği için işlem çabuk bitsin diye küçük bir disk
+  boyu seç.
 
-    - SSH ile Vmware hosta bağlan.
+- SSH ile Vmware hosta bağlan.
 
-    - Datastore klasörüne geç.
-        cd /vmfs/volumes/DatastoreX
+- Datastore klasörüne geç.
 
-    - Yeni oluşturulan makinenin mevcut disk bilgilerini sil.
-        rm /vmfs/volumes/DatastoreX/yeni_makine/*.vmdk
+  cd /vmfs/volumes/DatastoreX
 
-    - Eski makinedeki diskleri, yeni makineye kopyala. Dİski kopyalarken, yeni
-      makinedeki disk adı, bir önceki komutla siline disk adı ile aynı olmalı.
-        vmkfstools -i /vmfs/volumes/DatastoreX/eski_makine/eski_makine.vmdk \
-        /vmfs/volumes/DatastoreX/yeni_makine/yeni_makine.vmdk
+- Yeni oluşturulan makinenin mevcut disk bilgilerini sil.
 
-    - Yeni makineyi çalıştır.
+  rm /vmfs/volumes/DatastoreX/yeni_makine/*.vmdk
+
+- Eski makinedeki diskleri, yeni makineye kopyala. Dİski kopyalarken, yeni
+  makinedeki disk adı, bir önceki komutla siline disk adı ile aynı olmalı.
+
+  vmkfstools -i /vmfs/volumes/DatastoreX/eski_makine/eski_makine.vmdk \
+  /vmfs/volumes/DatastoreX/yeni_makine/yeni_makine.vmdk
+
+- Yeni makineyi çalıştır.
+
+
+# -----------------------------------------------------------------------------
+# VMDK mount
+# -----------------------------------------------------------------------------
+Debian Jessie'de denendi
+
+# Paketler
+apt-get install qemu --install-recommends
+apt-get install kpartx
+
+# raw disk formatına çevirme
+qemu-img convert makine.vmdk -O makine.img
+
+# mount
+losetup -f makine.img
+losetup
+kpartx -a /dev/loop0
+ls /dev/mapper/loop*
+fdisk -lc
+mount /dev/mapper/loop0p1 /mnt
+
+# dosyalara erişim
+cd /mnt
+ls
+
+# umount
+umount /dev/mapper/loop0p1
+kpartx -d /dev/loop0
+losetup -d /dev/loop0
+losetup
