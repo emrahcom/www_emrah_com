@@ -40,7 +40,7 @@ apt-get install qemu --install-recommends
 apt-get install kpartx
 
 # raw disk formatına çevirme
-qemu-img convert makine.vmdk -O makine.img
+qemu-img convert makine.vmdk -O raw makine.img
 
 # mount
 losetup -f makine.img
