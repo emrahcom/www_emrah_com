@@ -1,9 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding:utf-8 -*-
 
 """
-    file    : zargan.py
-    author      : emrah
+    file        : zargan.py author      : emrah
     usage       : zargan.py word
 
     This script is a console based Zargan interface. Zargan is a
@@ -12,104 +11,23 @@
 
 import re
 import sys
-import urllib
-import socket
-import HTMLParser
+import html
+import requests
 
 # Debug mode. 0 for production, 1 for testing.
 DEBUG = 0
 # Color mode for print out. 0 for no color, 1 for colored print out.
 COLORED = 1
 # Server address and web page.
-PAGE = 'http://www.zargan.com/Mobile/tr/page/search'
-# Regex pattern to parse word list block.
-P_WORD_BLOCK = re.compile('<div id="listResults">(.*?)</div>', re.DOTALL)
-# Regex pattern to parse (word, meaning) pair.
-P_WORD_PAIR  = '.*?<div class="resultFromText">.*?>(.*?)</a>'
-P_WORD_PAIR += '.*?<div class="resultToText">.*?>(.*?)</a>(.*)'
-P_WORD_PAIR  = re.compile(P_WORD_PAIR, re.DOTALL)
-
-
-
-# -----------------------------------------------------------------------------
-def get_response_from_zargan(word):
-    """
-    Get response from Zargan web site for the given word(s). This is
-    an unparsed HTML text.
-    """
-    try:
-        param = urllib.urlencode({'text': word})
-        socket.setdefaulttimeout(5)
-        cnn = urllib.urlopen("%s?%s" % (PAGE, param))
-        buf = cnn.read().decode('utf-8')
-        result = HTMLParser.HTMLParser().unescape(buf)
-    except Exception, err:
-        if DEBUG:
-            raise
-        else:
-            sys.stderr.write('%s\n' % err)
-
-        result = None
-
-    return result
-
-
-
-# -----------------------------------------------------------------------------
-def get_dict_pairs(html):
-    """
-    Parse the unparsed HTML text to get (word, meaning) pairs.
-    """
-    try:
-        result = []
-
-        # Parse (word, meaning) pairs
-        while True:
-            g = P_WORD_PAIR.search(html)
-            if not g:
-                break
-            result.append((g.group(1).strip(), g.group(2).strip()))
-            html = g.group(3)
-    except Exception, err:
-        if DEBUG:
-            raise
-        else:
-            sys.stderr.write('%s\n' % err)
-
-    return result
-
-
-
-# -----------------------------------------------------------------------------
-def print_dict_pairs(pairs):
-    """
-    Print out the (word, meaning) pairs.
-    """
-    try:
-        # If no result found, print out :(
-        if not pairs:
-            sys.stderr.write(':(\n')
-
-        for key, value in pairs:
-            if COLORED:
-                out =  "\033[35m%s\033[0m : " % (key.strip().encode('utf-8'))
-                out += "%s\n" % (value.strip().encode('utf-8'))
-            else:
-                out =  "%s : " % (key.strip().encode('utf-8'))
-                out += "%s\n"    % (value.strip().encode('utf-8'))
-
-            sys.stdout.write(out)
-
-        result = True
-    except Exception, err:
-        if DEBUG:
-            raise
-        else:
-            sys.stderr.write('%s\n' % err)
-
-        result = False
-
-    return result
+PAGE = 'http://www.zargan.com/tr/q'
+# Regex pattern to find translation.
+RE_WORD = re.compile('<span class="red">(.*?)</span>(.*?)(<br>|\n|\r|$)')
+# Regex pattern to find term.
+RE_TERM = '<div class="resultsPane">.*?'
+RE_TERM +='<div class="resultCell">.*?'
+RE_TERM +='<a href="/tr/q/.*?">(.*?)</a>.*?'
+RE_TERM +='<a href="/tr/q/.*?">(.*?)</a>'
+RE_TERM = re.compile(RE_TERM, re.DOTALL)
 
 
 
@@ -124,14 +42,22 @@ if __name__ == '__main__':
         word = ' '.join(sys.argv[1:])
 
         # Get unparsed html response from zargan.com
-        html = get_response_from_zargan(word)
-        # Parse and get (word, meaning) pairs from html output.
-        pairs = get_dict_pairs(html)
-        # Print (word, meaning) pairs.
-        print_dict_pairs(pairs)
+        res = requests.get('{}/{}'.format(PAGE, word))
+        for (scope, translation, end) in RE_WORD.findall(res.text):
+            item = ('(\033[36m{}\033[0m) {}'.format(
+                        html.unescape(scope).strip(),
+                        html.unescape(translation).strip())
+                        if scope
+                        else html.unescape(translation))
+            print(item.strip())
+        for (term, translation) in RE_TERM.findall(res.text):
+            item = '\033[31m{}\033[0m : {}'.format(
+                        html.unescape(term).strip(),
+                        html.unescape(translation).strip())
+            print(item.strip())
 
         sys.exit(0)
-    except Exception, err:
+    except Exception as err:
         if DEBUG:
             raise
         else:
