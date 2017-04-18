@@ -48,6 +48,7 @@ http://stackoverflow.com/questions/1218390/what-is-your-most-productive-shortcut
         Bundle 'gmarik/vundle'
         Bundle 'kevinw/pyflakes-vim'
         Bundle 'Lokaltog/vim-easymotion'
+        Bundle 'ctrlpvim/ctrlp.vim'
 
         # Vundle ile vim pluginlerini yönetmek için vim içindeyken:
             ## .vimrc içinde belirtilen pluginleri yükleme
