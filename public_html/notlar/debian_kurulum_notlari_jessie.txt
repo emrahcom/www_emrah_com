@@ -378,6 +378,8 @@ apt-get install dpkg-dev build-essential fakeroot
 
 - ~/.zshrc (normal kullanıcı)
     bindkey -v
+    HISTSIZE=5000
+    SAVEHIST=5000
     export TMOUT=1200
     setopt autocd
     setopt hist_ignore_space
