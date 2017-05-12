@@ -8,6 +8,15 @@ Komutlar çoğunlukla bash ve zsh ile test edilmiştir.
 stf=$(date +%s.%N);for ((;;));do ctf=$( date +%s.%N ); \
     echo -en "\r$(date -u -d "0 $ctf sec - $stf sec" "+%H:%M:%S.%N")";done
 
+# CPU kullanımı
+apt-get install linux-tools tiptop
+perf stat -a -- sleep 10
+    IPC is < 1.0 - CPU memory I/O yüzünden bekliyor
+    IPC is > 1.0 - CPU hizi yetmiyor
+
+tiptop
+    Process basina IPC degerine bak
+
 # Renkler
 \033 [ <komut> m
 
