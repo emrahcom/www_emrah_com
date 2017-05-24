@@ -491,20 +491,6 @@ apt-get install encfs
 - public erisim icin, root olarak
     encfs --public /home/emrah/.sifreli /home/emrah/mountpoint
 
-
-# cryptsetup
-apt-get install cryptsetup
-modprobe dm_mod
-
-- mount etmek için
-    cryptsetup luksOpen /dev/sdb1 map1
-    mkdir -p /media/map1
-    mount /dev/mapper/map1 /media/map1
-
-- umount etmek için
-    umount /dev/mapper/map1
-    cryptsetup luksClose map1
-
 # cryptsetup target adı değiştirme (Wheezy)
 Crypto diskin sdb2 olduğu ve sdb1'de /boot partitionı olduğunu varsayıldı.
 2. bir sistem ile boot edilir.
