@@ -410,29 +410,23 @@ apt-get install dpkg-dev build-essential fakeroot
 
 # Source Code Pro
 https://github.com/adobe-fonts/source-code-pro
-https://github.com/adobe-fonts/source-code-pro/releases/tag/2.010R-ro/1.030R-it
+https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip
 Download zip
 
 mkdir -p ~/.fonts/Source_Code_Pro
-unzip source-code-pro-*.zip -d ~/.fonts/Source_Code_Pro
+unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
 
 # xterm default font
 . ~/.Xdefaults
-    URxvt.background: black
-    URxvt.foreground: green
-    #URxvt.font: xft:DejaVu Sans Mono:size=10
-    URxvt.font: xft:Source Code Pro:size=11
-    URxvt.scrollBar: false
-
-    XTerm*background: black
-    XTerm*foreground: green
-    XTerm*faceName: Source Code Pro
-    XTerm*faceSize: 12
-    XTerm*termName: xterm-256color
-    XTerm*on2Clicks: word
-    XTerm*on3Clicks: regex [^ \n]+
-    XTerm*on4Clicks: regex [^'"(){}\n]+
-    XTerm*on5Clicks: regex [^\n]+
+    UXTerm*background: black
+    UXTerm*foreground: green
+    UXTerm*faceName: Source Code Pro
+    UXTerm*faceSize: 12
+    UXTerm*termName: xterm-256color
+    UXTerm*on2Clicks: word
+    UXTerm*on3Clicks: regex [^ \n]+
+    UXTerm*on4Clicks: regex [^'"(){}\n]+
+    UXTerm*on5Clicks: regex [^\n]+
 
 # spectrwm kullanılacaksa
 . ~/.xinitrc
