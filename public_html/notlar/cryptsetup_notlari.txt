@@ -47,7 +47,8 @@ sed -i 's/OLDNAME/NEWNAME/' /etc/crypttab
 
 dmsetup rename OLDNAME NEWNAME
 update-initramfs -u
-update-grub
+update-grub  # hata verilse ve /boot/grub altında OLDNAME kullanılan
+             # dosya yoksa sorun yok
 reboot
 
 # luksHeaderBackup

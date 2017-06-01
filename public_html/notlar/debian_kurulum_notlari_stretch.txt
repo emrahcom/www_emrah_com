@@ -1,0 +1,608 @@
+# -----------------------------------------------------------------------------
+# DEBIAN STRETCH KURULUM NOTLARI
+# -----------------------------------------------------------------------------
+Kurulum, Netinstall CD'si ile yapılacak.
+# -----------------------------------------------------------------------------
+# Temel sistemin kurulması
+# -----------------------------------------------------------------------------
+Select a language               : English
+Select your location            : other -> Asia -> Turkey
+Configure locales               : United States en_US.UTF-8
+Additional locales              : tr_TR.UTF-8
+System Locale                   : en_US.UTF-8
+Select a keyboard layout        : PC-style -> Turkish (Q layout)
+Configure the network           : Özel bi durum olmadıkça DHCP kulan.
+                                  Sabit IP adresi alacak makineleri DHCP
+                                  sunucudan ayarla. DNS ayarlamak gerekirse,
+                                  aşağıdakiler kullanılabilir.
+
+                                        208.67.222.222  OpenDNS
+                                        208.67.220.220  OpenDNS
+                                        8.8.8.8         Google
+                                        8.8.4.4         Google
+Configure the clock (time zone) : Europe/Istanbul
+Partitition disks               : Manual
+    Partition table -> gpt
+
+    örnek bölümlendirme 1
+    /       500 MB  sda1    (bootable)
+    /usr      5 GB  sda2    (~3 GB)
+    /var      5 GB  sda3    (~2 GB)
+    /tmp    500 MB  sda4    (tmpfs yapılabilir)
+    swap      1 GB  sda5    (hibernate için ~RAM)
+    /home     X GB  sda6
+
+    örnek bölümlendirme 2
+    /boot   100 MB  sda1    (bootable)
+    crypto    X GB  sda2    (mount to /)
+
+    SSD disk kullanılıyor ve TRIM desteği varsa ext4 partitionlarda discard
+    özelliği aktif hale getirilecek. Bütün partitionlarda noatime özelliği
+    aktif olsun.
+# -----------------------------------------------------------------------------
+# Kurulum sonrası ilk ayarlar
+# -----------------------------------------------------------------------------
+# /etc/apt/apt.conf.d/80recommends
+APT::Install-Recommends "0";
+APT::Install-Suggests "0";
+
+# /etc/apt/sources.list
+deb http://ftp2.de.debian.org/debian/ stretch main non-free contrib
+deb-src http://ftp2.de.debian.org/debian/ stretch main non-free contrib
+deb http://security.debian.org/debian-security stretch/updates main contrib non-free
+deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
+
+# Multimedia deposu kullanilacaksa...
+deb http://www.deb-multimedia.org stretch main non-free
+deb-src http://www.deb-multimedia.org stretch main non-free
+
+# Anahtar yüklemeleri
+## Multimedia
+apt-get install deb-multimedia-keyring
+apt-get update
+
+# Güncelleme
+apt-get update && \
+apt-get -dy dist-upgrade && \
+apt-get autoclean && \
+apt-get dist-upgrade && \
+apt-get autoremove --purge
+
+# İlk aşamada yüklenecek paketler
+apt-get install zsh tmux git vim-nox pyflakes pyflakes3 autojump bridge-utils
+apt-get install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
+
+# Default paketlerden silinecekler
+apt-get purge installation-report reportbug nano
+apt-get purge tasksel tasksel-data task-english os-prober
+rm -rf /var/lib/os-prober
+# autoremove ile silinmemesi icin bu komut gerekli.
+apt-get install openssh-server
+apt-get autoremove --purge
+
+# Grub ayarları
+- Grub için parola
+iki kere parola girilecek, görüntü gelmeyecek.
+
+grub-mkpasswd-pbkdf2 >>/etc/grub.d/01_password
+
+/etc/grub.d/01_password
+    #!/bin/sh
+    # parola grub-mkpasswd-pbkdf2 komutu ile üretiliyor
+    cat <<EOF
+    set superusers="emrah"
+    password_pbkdf2 emrah grub.pbkdf2.sha512.10000.596F22EFFB36830CAF9C22B...
+    EOF
+
+chmod 755 /etc/grub.d/01_password
+
+/etc/grub.d/10_linux (line 134, --unrestricted eklenecek)
+    echo "menuentry '$(echo "$os" | grub_quote)' --unrestricted ${CLASS}
+
+- Değişiklikleri aktif hale getirme
+update-grub
+
+
+# CTRL-ALT-DEL ile sistem kapatilacaksa
+ln -s /lib/systemd/system/poweroff.target \
+      /etc/systemd/system/ctrl-alt-del.target
+systemctl daemon-reload
+
+# /etc/fstab
+noatime eklenecek.
+Trim desteği olan SSD diskler için discard eklenecek.
+
+# /etc/fstab tmpfs ayarları
+USB stick kurulumlarında yapılacak.
+
+tmpfs                                     /tmp             tmpfs       defaults,noatime,mode=1777,size=300M  0    0
+tmpfs                                     /var/log         tmpfs       defaults,noatime,mode=0755,size=100M  0    0
+tmpfs           /var/cache/browser        tmpfs            noatime,size=150M,nr_inodes=10k,mode=1777         0    0
+
+# SSH ayarları
+- /etc/ssh/sshd_config
+Port 22                                 # standart port kullanilmayacak
+PermitRootLogin prohibit-password
+
+- /etc/ssh/ssh_config
+ServerAliveInterval 100                 # SSH baglantisi yaptigimizda, sunucudan kopmamamiz icin
+                                        # her 100 saniyede bir ping gonderir.
+
+# /etc/dhcp/dhclient.conf
+prepend domain-name-servers 208.67.220.220, 8.8.4.4;
+timeout 10;
+
+# /etc/network/interfaces (Emrah özel kurulum için)
+# Bu kısım henüz test edilmedi
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+allow-hotplug eth0
+iface eth0 inet manual
+
+# The primary wireless interface
+allow-hotplug wlan0
+iface wlan0 inet manual
+
+# bridge
+auto br0
+iface br0 inet dhcp
+bridge_ports eth0
+bridge_stp off
+bridge_fd 0
+bridge_maxwait 0
+#bridge_hw aa:bb:cc:dd:ee:ff
+
+# br0:0
+auto br0:0
+iface br0:0 inet static
+address 192.168.0.9
+netmask 255.255.255.0
+
+# br0:1 (videojet)
+auto br0:1
+iface br0:1 inet static
+address 192.168.1.9
+netmask 255.255.255.0
+
+# br0:2
+auto br0:2
+iface br0:2 inet static
+address 192.168.2.9
+netmask 255.255.255.0
+
+# br0:3 (talia)
+auto br0:3
+iface br0:3 inet static
+address 172.16.244.9
+netmask 255.255.255.0
+
+# br0:4 (sip)
+auto br0:4
+iface br0:4 inet static
+address 192.168.18.9
+netmask 255.255.255.0
+
+
+# reboot
+- Normal kurulum
+reboot
+
+- USB Stick kurulumu
+mkdir -p /var/cache/browser
+rm -rf /tmp/* /var/log/*; sync; reboot
+# -----------------------------------------------------------------------------
+# Paketlerin Kurulumu
+# -----------------------------------------------------------------------------
+# python (temel) paketleri
+apt-get install python3 ipython3 bpython3
+apt-get install python ipython bpython -d
+apt-get install pypy -d
+
+# LXC
+apt-get install lxc debootstrap
+
+# monitoring paketleri
+apt-get install htop iotop tiptop
+apt-get install atop powertop sysstat -d
+apt-get install nethogs iftop bmon bwm-ng
+apt-get install --install-recommends sysdig             # Sistem cagrilarini analiz
+
+# network paketleri
+apt-get install fping arping mtr curl httpie dnsutils whois
+apt-get install heirloom-mailx
+apt-get install sshuttle sudo                           # VPN over SSH
+apt-get install --install-recommends openvpn            # SSL VPN client olacaksa
+apt-get install nmap tcpdump
+apt-get install ngrep netcat-openbsd telnet
+apt-get install minicom                                 # Seri porttan bağlanan cihazlar için
+apt-get install wvdial usb-modeswitch                   # USB 3G modem kullanılacaksa
+apt-get install pptp-linux                              # VPN tunel icin
+apt-get install nuttcp                                  # Network performan olcme
+apt-get install ethtool net-tools
+
+# parallel komut çalıştırma
+apt-get install parallel
+
+# IRC, jabber, gtalk
+apt-get install weechat-curses weechat-plugins bitlbee
+
+# soft raid olacaksa
+apt-get install mdadm
+
+# firmware
+apt-get install firmware-linux-free
+
+# firmware (non-free depo)
+apt-get install firmware-linux-nonfree firmware-misc-nonfree --install-recommends
+apt-get install atmel-firmware firmware-atheros firmware-bnx2 firmware-bnx2x
+apt-get install firmware-brcm80211 firmware-cavium firmware-ipw2x00
+apt-get install firmware-iwlwifi firmware-libertas firmware-myricom
+apt-get install firmware-netxen firmware-realtek zd1211-firmware
+apt-get install firmware-b43-installer
+
+# wireless manager
+USB stick kurulumlarında wireless araçları olsun
+Diğer makinelerde wireless adaptör varsa olsun
+
+apt-get install wicd-curses wicd-cli rfkill
+
+# dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
+apt-get install bzip2 zip unzip diffutils patch ack
+apt-get install tree autojump parted
+apt-get install lftp ncftp rsync
+apt-get install ccrypt cryptsetup
+apt-get install pwgen                                   # Random parola üretmek için
+apt-get install sshfs -d
+apt-get install cifs-utils smbclient -d
+apt-get install ntfs-3g -d
+
+# Veritabanı istemcileri
+apt-get install postgresql-client
+apt-get install mysql-client
+apt-get install sqlite3
+apt-get install sqsh                                    # MS SQL ve Sybase shell
+
+# CD/DVD paketleri
+apt-get install wodim dvd+rw-tools
+
+# Multimedia
+apt-get install alsa-base alsa-utils -d
+apt-get install pulseaudio pulseaudio-utils
+apt-get install mplayer ffmpeg
+apt-get install tpp                                     # text presentation program
+
+# Programlama paketleri
+apt-get install vim-nox                                 # script destekli vim
+apt-get install git                                     # versiyon kontrol sistemi
+apt-get install python3-pudb                            # Python debugger
+apt-get install python3-nose                            # unittest
+apt-get install python3-pexpect                         # shell uygulamalarını interaktif çalıştırma
+apt-get install python3-psutil                          # cpu, memory, process vb takip için
+apt-get install pychecker pylint pyflakes pyflakes3     # kod kalitesi ve hata kontrol
+apt-get install python3-psycopg2                        # PostgreSQL kullanılacaksa
+apt-get install python3-simplejson python3-lxml         # JSON ve XML kullanılacaksa
+apt-get install python3-pycurl                          # Curl paketi
+apt-get install python3-requests                        # HTTP kütüphanesi, arkada urllib3 kullanıyor
+apt-get install python3-ipy python-ipaddr               # IP handling
+apt-get install python3-netifaces                       # Network device
+apt-get install python3-openssl python3-crypto          # Güvenlik ve şifreleme
+apt-get install python-serial python-parallel           # Seri ve parallel portan haberleşme için
+apt-get install php-cli                                 # komut satırından PHP
+
+# PostgreSQL
+apt-get install postgresql postgresql-contrib
+apt-get install phppgadmin                              # PostrgreSQL icin web UI olacaksa...
+
+# Masaüstü paketleri
+apt-get install --install-recommends xorg
+apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
+apt-get install xterm
+apt-get install ttf-dejavu-core ttf-dejavu-extra
+apt-get install xtrlock unclutter numlockx -d
+apt-get install scrot                                   # screen capture
+apt-get install redshift -d                             # gün ışığına göre monitor ayari...
+apt-get install iceweasel
+apt-get install flashplugin-nonfree -d
+apt-get install smplayer
+apt-get install pavucontrol                             # pulsaudio icin ses kontrol GUI
+apt-get install x11vnc xvnc4viewer rdesktop
+apt-get install zathura                                 # pdf okuyucu
+apt-get install chromium                                # alternatif browser gerekecekse...
+apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
+apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
+
+# Debian kaynak kod paketleri ile çalışılacaksa
+apt-get install dpkg-dev build-essential fakeroot
+# -----------------------------------------------------------------------------
+# Yazılımların ayarlanması
+# -----------------------------------------------------------------------------
+# LXC ayarları
+- Template kurulumları
+    lxc-create -n jessie -t debian -- -r jessie
+    lxc-create -n wheezy -t debian -- -r wheezy
+    lxc-create -n squeeze -t debian -- -r squeeze
+
+# sshuttle
+- visudo
+    emrah   ALL=NOPASSWD: /usr/sbin/sshuttle
+
+# zsh
+- ~/.zshrc (root için)
+    bindkey -v
+    export TMOUT=1200
+    setopt autocd
+    setopt hist_ignore_space
+
+    alias ls='ls --color=auto'
+    alias ..="cd .."
+    alias ...="cd ../.."
+    alias ....="cd ../../.."
+    alias .....="cd ../../../.."
+    alias ......="cd ../../../../.."
+
+- ~/.zshrc (normal kullanıcı)
+    bindkey -v
+    HISTSIZE=5000
+    SAVEHIST=5000
+    export TMOUT=1200
+    setopt autocd
+    setopt hist_ignore_space
+
+    # proxy
+    alias proxy="ssh -ND 8080 emrah"
+
+    # spectrwm kullanilacaksa
+    alias x='ssh-agent startx'
+
+    # rxvt-unicode-256color kullanilacaksa
+    case "$TERM" in
+        rxvt-unicode-256color)
+        TERM=rxvt-unicode
+        ;;
+    esac
+
+    alias ls='ls --color=auto'
+    alias ..="cd .."
+    alias ...="cd ../.."
+    alias ....="cd ../../.."
+    alias .....="cd ../../../.."
+    alias ......="cd ../../../../.."
+    . /usr/share/autojump/autojump.sh
+
+    alias z='~/bin/zargan.py'
+    zz(){
+            z $@ | more
+    }
+    zl(){
+            z $@ 2>/dev/null | head -10
+    }
+
+    update_hosts(){
+        HOSTS=`cat <<EOF
+            host1
+            host2
+            host3
+    EOF
+
+        for h in `echo $HOSTS`; do
+            echo update $h
+            ssh -t $h "apt-get update"
+            ssh -t $h "apt-get autoclean"
+            ssh -t $h "apt-get -dy dist-upgrade"
+            echo
+        done
+
+        for h in `echo $HOSTS`; do
+            echo upgrade $h
+            ssh -t $h "apt-get dist-upgrade"
+            ssh -t $h "apt-get autoremove"
+        done
+    }
+
+# tmux
+. /root/.tmux.conf
+. ~/.tmux.conf
+    bind '"' split-window -c "#{pane_current_path}"
+    bind % split-window -h -c "#{pane_current_path}"
+    bind c new-window -c "#{pane_current_path}"
+
+# Source Code Pro
+https://github.com/adobe-fonts/source-code-pro
+https://github.com/adobe-fonts/source-code-pro/releases/tag/2.010R-ro/1.030R-it
+Download zip
+
+mkdir -p ~/.fonts/Source_Code_Pro
+unzip source-code-pro-*.zip -d ~/.fonts/Source_Code_Pro
+
+# xterm default font
+. ~/.Xdefaults
+    URxvt.background: black
+    URxvt.foreground: green
+    #URxvt.font: xft:DejaVu Sans Mono:size=10
+    URxvt.font: xft:Source Code Pro:size=11
+    URxvt.scrollBar: false
+
+    XTerm*background: black
+    XTerm*foreground: green
+    XTerm*faceName: Source Code Pro
+    XTerm*faceSize: 12
+    XTerm*termName: xterm-256color
+    XTerm*on2Clicks: word
+    XTerm*on3Clicks: regex [^ \n]+
+    XTerm*on4Clicks: regex [^'"(){}\n]+
+    XTerm*on5Clicks: regex [^\n]+
+
+# spectrwm kullanılacaksa
+. ~/.xinitrc
+    exec /usr/bin/spectrwm
+
+. ~/.spectrwm.conf
+    bar_at_bottom           = 1
+    modkey                  = Mod4
+    program[lock]           = xtrlock
+    program[iceweasel]      = iceweasel
+    bind[iceweasel]         = MOD+Shift+f
+    program[bpython3]       = x-terminal-emulator -T "bpython3" -e /usr/bin/bpython3
+    bind[bpython3]          = MOD+Shift+p
+    program[bpython]        = x-terminal-emulator -T "bpython" -e /usr/bin/bpython
+    bind[bpython]           = MOD+Shift+o
+    program[weechat]        = x-terminal-emulator -T "Weechat" -xrm "*metaSendsEscape:true" -e tmux new-session /usr/bin/weechat
+    bind[weechat]           = MOD+Shift+w
+    program[mplayer_mute]   = sh -c "echo mute > /tmp/mplayer.pipe"
+    bind[mplayer_mute]      = Pause
+    program[mplayer_vol_l]  = sh -c "echo 'volume -1' > /tmp/mplayer.pipe"
+    bind[mplayer_vol_l]     = XF86AudioLowerVolume
+    program[mplayer_vol_r]  = sh -c "echo 'volume +1' > /tmp/mplayer.pipe"
+    bind[mplayer_vol_r]     = XF86AudioRaiseVolume
+
+# ~/bin/
+    - capture_screen
+    Ekran görüntüsünü alıp SimpleHTTPServer ile web'ten yayınlar.
+    Pencere yöneticisi için kısayol oluşturulsun.
+
+    #!/bin/bash
+
+    mkdir -p /tmp/screenshot
+    scrot /tmp/screenshot/screenshot.png
+    echo '<html><body><img src="screenshot.png" /></body></html>' >
+    /tmp/screenshot/index.html
+
+    x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow \
+    -fn "-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1" \
+    -T "Capture Screen" -e /bin/bash -c \
+    "/sbin/ifconfig eth | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1; \
+    echo -e '\n\n'; \
+    cd /tmp/screenshot && python -m SimpleHTTPServer 9999"
+
+    - zargan.py
+    Kod deposundan kopyalanacak.
+
+# iceweasel
+- Vimperator manuel olarak eklensin.
+    Menu çubuğuna mouse sağ tuş, açılan menuden:
+        Liberator Statusline Toolbar iptal
+
+    ~/.vimperatorrc
+     :set gui=nonavigation
+
+- Pentadactyl manuel olarak eklensin.
+  Şu an için vimperator kullan.
+    mkdir -p ~/.pentadactyl/info/default
+
+- NoScript manuel olarak eklensin.
+
+- Adblock plus manuel olarak eklensin.
+
+- DuckDuckGo plus manuel olarak eklensin.
+  references içinde özelleştirme yapılacak. Göz at.
+
+- Türk Trust'ı güvenilir sertifika sağlayıcılar listesinden çıkar.
+    preferences -> Advanced -> Encryption -> View Certificates
+    -> Authorities -> (Seçimi yap) -> Delete or Distrust
+
+    Bu işlem sonrasında otorite, listede kalacak ama güvenilir
+    olduğunu belirten OK işareti kalkacak.
+
+    Silinecekler:
+    . 2005 TÜRKTRUST
+    . E-Tuğra EBG
+    . EBG Bilişim
+    . Elektronik Bilgi Güvenliği (E-Guven)
+    . TÜBİTAK
+    . TÜRKTRUST
+
+- Proxy kullanılacaksa
+    Preferences -> Advanced -> Network -> Settings
+    Manual Proxy Configuration
+        SOCKS Host      localhost
+        SOCKS Port      8080
+        SOCKS Type      SOCKS v5
+
+        Remote DNS (ok)
+
+- preferences
+    . Main -> When Iceweasel starts: Show a blank page
+    . Content -> Languages -> Choose -> Turkish (En üstte)
+    . Privacy -> Never Remember History
+    . Privacy -> Location Bar -> Nothing
+    . Security -> Block reported attack sites -> İptal
+    . Security -> Block reported web forgeries -> İptal
+    . Security -> Remember passwords for sites -> İptal
+    . Advanced -> General -> Warn me when web sites try to redirect or
+                  reload the page -> Aktif
+    . Advanced -> General -> Check my spelling as I type -> İptal
+    . Advanced -> Update -> Search Engines -> İptal
+
+- about:config
+    browser.cache.disk.enable                       false
+    browser.sessionstore.interval                   60000
+    network.http.pipelining                         true
+    network.prefetch-next                           false
+
+# bitlbee
+- /etc/bitlbee/bitlbee.conf
+    DaemonInterface = 127.0.0.1
+    AuthMode = Closed
+    AuthPassword = md5:...
+
+- md5 değerini bulmak için
+    bitlbee -x hash parola1
+
+- /etc/init.d/bitlbee restart
+
+# weechat
+- Ayarların default değerlerle oluşması için weechat-curses bir kere
+başlatılır.
+
+- ~/.weechat/weechat.conf
+    item_time_format = "%a, %d %b %Y %H:%M"
+
+- ~/.weechat/logger.conf
+    auto_log = off
+
+- ~/.weechat/irc.conf
+    [server_default]
+    nicks = "emrah,emrah_,emrah__"
+    realname = "emrah"
+    username = "emrah"
+
+    [server]
+    freenode.addresses = "chat.freenode.net/7000"
+    freenode.ssl = on
+    freenode.ssl_dhkey_size = 512
+    freenode.password = "parola"
+    freenode.autoconnect = on
+    freenode.autoreconnect = on
+    freenode.autoreconnect_delay = 10
+    freenode.nicks = "emrah,emrah_,emrah__"
+    freenode.username = "emrah"
+    freenode.realname = "emrah"
+    freenode.autojoin = "#gnu,#debian"
+    freenode.autorejoin = on
+    freenode.autorejoin_delay = 1
+    bitlbee_loc.addresses = "127.0.0.1/6667"
+    bitlbee_loc.ssl = off
+    bitlbee_loc.password = "parola1"
+    bitlbee_loc.autoconnect = on
+    bitlbee_loc.autoreconnect = on
+    bitlbee_loc.autoreconnect_delay = 10
+    bitlbee_loc.nicks = "emrah,emrah_,emrah__"
+    bitlbee_loc.username = "emrah"
+    bitlbee_loc.realname = "emrah"
+    bitlbee_loc.command = "/msg nickserv identify parola2"
+    bitlbee_loc.autorejoin = on
+    bitlbee_loc.autorejoin_delay = 1
+
+- bitlbee hesabının açılması
+    register parola2
+    set charset utf-8
+
+    # gtalk
+    account add jabber emrah@gmail.com
+    account gtalk set ssl true
+    account gtalk set server talk.google.com
+    account gtalk set port 5223
+    account gtalk set password "parola_gtalk"
+    account gtalk on
