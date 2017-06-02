@@ -102,7 +102,6 @@ chmod 755 /etc/grub.d/01_password
 - Değişiklikleri aktif hale getirme
 update-grub
 
-
 # CTRL-ALT-DEL ile sistem kapatilacaksa
 ln -s /lib/systemd/system/poweroff.target \
       /etc/systemd/system/ctrl-alt-del.target
@@ -128,63 +127,6 @@ PermitRootLogin prohibit-password
 ServerAliveInterval 100                 # SSH baglantisi yaptigimizda, sunucudan kopmamamiz icin
                                         # her 100 saniyede bir ping gonderir.
 
-# /etc/dhcp/dhclient.conf
-prepend domain-name-servers 208.67.220.220, 8.8.4.4;
-timeout 10;
-
-# /etc/network/interfaces (Emrah özel kurulum için)
-# Bu kısım henüz test edilmedi
-auto lo
-iface lo inet loopback
-
-# The primary network interface
-allow-hotplug eth0
-iface eth0 inet manual
-
-# The primary wireless interface
-allow-hotplug wlan0
-iface wlan0 inet manual
-
-# bridge
-auto br0
-iface br0 inet dhcp
-bridge_ports eth0
-bridge_stp off
-bridge_fd 0
-bridge_maxwait 0
-#bridge_hw aa:bb:cc:dd:ee:ff
-
-# br0:0
-auto br0:0
-iface br0:0 inet static
-address 192.168.0.9
-netmask 255.255.255.0
-
-# br0:1 (videojet)
-auto br0:1
-iface br0:1 inet static
-address 192.168.1.9
-netmask 255.255.255.0
-
-# br0:2
-auto br0:2
-iface br0:2 inet static
-address 192.168.2.9
-netmask 255.255.255.0
-
-# br0:3 (talia)
-auto br0:3
-iface br0:3 inet static
-address 172.16.244.9
-netmask 255.255.255.0
-
-# br0:4 (sip)
-auto br0:4
-iface br0:4 inet static
-address 192.168.18.9
-netmask 255.255.255.0
-
-
 # reboot
 - Normal kurulum
 reboot
@@ -192,6 +134,40 @@ reboot
 - USB Stick kurulumu
 mkdir -p /var/cache/browser
 rm -rf /tmp/* /var/log/*; sync; reboot
+# -----------------------------------------------------------------------------
+# systemd-networkd
+# -----------------------------------------------------------------------------
+# /etc/systemd/network/90-bridge.netdev
+[NetDev]
+Name=br0
+Kind=bridge
+
+# /etc/systemd/network/91-bridge-ports.network
+[Match]
+Name=en*
+
+[Network]
+Bridge=br0
+
+# /etc/systemd/network/92-bridge.network
+[Match]
+Name=br0
+
+[Network]
+DHCP=yes
+Address=172.16.244.9/24
+Address=192.168.0.9/24
+Address=192.168.1.9/24
+Address=192.168.2.9/24
+
+# systemd-networkd
+systemctl enable systemd-networkd
+systemctl restart systemd-networkd
+
+# /etc/resolv.conf
+nameserver 208.67.220.220
+nameserver 208.67.222.222
+nameserver 8.8.4.4
 # -----------------------------------------------------------------------------
 # Paketlerin Kurulumu
 # -----------------------------------------------------------------------------
@@ -300,16 +276,16 @@ apt-get install --install-recommends xorg
 apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
 apt-get install xterm
 apt-get install ttf-dejavu-core ttf-dejavu-extra
-apt-get install xtrlock unclutter numlockx -d
+apt-get install xtrlock unclutter
 apt-get install scrot                                   # screen capture
 apt-get install redshift -d                             # gün ışığına göre monitor ayari...
-apt-get install iceweasel
-apt-get install flashplugin-nonfree -d
+apt-get install firefox-esr --install-recommends
+apt-get install flashplugin-nonfree
 apt-get install smplayer
 apt-get install pavucontrol                             # pulsaudio icin ses kontrol GUI
 apt-get install x11vnc xvnc4viewer rdesktop
 apt-get install zathura                                 # pdf okuyucu
-apt-get install chromium                                # alternatif browser gerekecekse...
+apt-get install chromium fonts-liberation               # alternatif browser gerekecekse...
 apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
 apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
 
@@ -401,13 +377,6 @@ apt-get install dpkg-dev build-essential fakeroot
         done
     }
 
-# tmux
-. /root/.tmux.conf
-. ~/.tmux.conf
-    bind '"' split-window -c "#{pane_current_path}"
-    bind % split-window -h -c "#{pane_current_path}"
-    bind c new-window -c "#{pane_current_path}"
-
 # Source Code Pro
 https://github.com/adobe-fonts/source-code-pro
 https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip
@@ -430,14 +399,15 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
 
 # spectrwm kullanılacaksa
 . ~/.xinitrc
+    #/home/emrah/proje/browser_live/mozilla2ram.sh
     exec /usr/bin/spectrwm
 
 . ~/.spectrwm.conf
     bar_at_bottom           = 1
     modkey                  = Mod4
     program[lock]           = xtrlock
-    program[iceweasel]      = iceweasel
-    bind[iceweasel]         = MOD+Shift+f
+    program[firefox]        = firefox-esr
+    bind[firefox]           = MOD+Shift+f
     program[bpython3]       = x-terminal-emulator -T "bpython3" -e /usr/bin/bpython3
     bind[bpython3]          = MOD+Shift+p
     program[bpython]        = x-terminal-emulator -T "bpython" -e /usr/bin/bpython
@@ -500,7 +470,6 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     olduğunu belirten OK işareti kalkacak.
 
     Silinecekler:
-    . 2005 TÜRKTRUST
     . E-Tuğra EBG
     . EBG Bilişim
     . Elektronik Bilgi Güvenliği (E-Guven)
