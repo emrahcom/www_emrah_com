@@ -56,9 +56,18 @@ deb-src http://security.debian.org/debian-security stretch/updates main contrib 
 deb http://www.deb-multimedia.org stretch main non-free
 deb-src http://www.deb-multimedia.org stretch main non-free
 
+# Ring kurulacaksa...
+deb https://dl.ring.cx/ring-nightly/debian_9/ ring main
+
 # Anahtar yüklemeleri
 ## Multimedia
 apt-get install deb-multimedia-keyring
+apt-get update
+
+## Ring
+apt-get install apt-transport-https dirmngr
+apt-key adv --keyserver pgp.mit.edu --recv-keys \
+    A295D773307D25A33AE72F2F64CD5FA175348F84
 apt-get update
 
 # Güncelleme
@@ -274,11 +283,10 @@ apt-get install phppgadmin                              # PostrgreSQL icin web U
 # Masaüstü paketleri
 apt-get install --install-recommends xorg
 apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
+apt-get install dbus-x11
 apt-get install xterm
-apt-get install ttf-dejavu-core ttf-dejavu-extra
 apt-get install xtrlock unclutter
 apt-get install scrot                                   # screen capture
-apt-get install redshift -d                             # gün ışığına göre monitor ayari...
 apt-get install firefox-esr --install-recommends
 apt-get install flashplugin-nonfree
 apt-get install smplayer
@@ -288,6 +296,7 @@ apt-get install zathura                                 # pdf okuyucu
 apt-get install chromium fonts-liberation               # alternatif browser gerekecekse...
 apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
 apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
+apt-get install -t ring ring-daemon ring                # kendi deposundan kurulacak
 
 # Debian kaynak kod paketleri ile çalışılacaksa
 apt-get install dpkg-dev build-essential fakeroot
