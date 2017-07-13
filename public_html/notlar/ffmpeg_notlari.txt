@@ -1,0 +1,50 @@
+# -----------------------------------------------------------------------------
+# FFPEG
+# -----------------------------------------------------------------------------
+Usually tested with Debian Stretch.
+
+# -----------------------------------------------------------------------------
+# Installation
+# -----------------------------------------------------------------------------
+# /etc/apt/sources.list
+deb http://www.deb-multimedia.org stretch main non-free
+deb-src http://www.deb-multimedia.org stretch main non-free
+
+apt -oAcquire::AllowInsecureRepositories=true update
+apt --allow-unauthenticated install deb-multimedia-keyring
+apt update
+apt install ffmpeg
+
+# -----------------------------------------------------------------------------
+# Examples
+# -----------------------------------------------------------------------------
+# Test stream to MPEG-TS
+KEY_FRAME_INTERVAL=2
+ffmpeg -re \
+    -f lavfi -i testsrc=size=1024x576:rate=24 \
+    -f lavfi -i sine=f=220:b=1 -af "volume=0.1" \
+    -c:v libx264 -preset ultrafast -profile:v main -tune zerolatency \
+    -force_key_frames "expr:gte(t,n_forced*$KEY_FRAME_INTERVAL)" \
+    -pix_fmt yuv420p -bsf:v h264_mp4toannexb \
+    -c:a libfdk_aac \
+    -f mpegts http://172.22.9.22:8000/livestream/publish/test
+
+Choice the suitable KEY_FRAME_INTERVAL according to the segment argument of
+HLS/DASH at stream server.
+    segment <= KEY_FRAME_INTERVAL <= 2*segment
+
+# Test stream to RTMP
+KEY_FRAME_INTERVAL=2
+ffmpeg -re \
+    -f lavfi -i testsrc=size=1024x576:rate=24 \
+    -f lavfi -i sine=f=220:b=1 -af "volume=0.1" \
+    -c:v libx264 -preset ultrafast -profile:v main -tune zerolatency \
+    -force_key_frames "expr:gte(t,n_forced*$KEY_FRAME_INTERVAL)" \
+    -pix_fmt yuv420p \
+    -c:a libfdk_aac \
+    -f flv rtmp://172.22.9.22/livestream/publish/test
+
+# -----------------------------------------------------------------------------
+# Links
+# -----------------------------------------------------------------------------
+https://ffmpeg.org/
