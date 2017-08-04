@@ -396,7 +396,7 @@ apt install dpkg-dev build-essential fakeroot
     [distutils]
     index-servers =
       pypi
-      pypitest
+      testpypi
 
     [pypi]
     repository=https://pypi.python.org/pypi/
