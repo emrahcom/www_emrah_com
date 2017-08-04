@@ -402,7 +402,7 @@ apt install dpkg-dev build-essential fakeroot
     repository=https://pypi.python.org/pypi/
     username=emrah
 
-    [pypitest]
+    [testpypi]
     repository: https://test.pypi.org/legacy/
     username=emrah
 
