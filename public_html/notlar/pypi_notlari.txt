@@ -1,0 +1,83 @@
+PyPI NOTLARI
+============
+Debian Stretch makinede Python3 ile test edilmiştir.
+
+### Paketler
+apt-get install python3-pip
+pip3 install --upgrade pip setuptools wheel twine
+
+### PyPI hesabı
+https://pypi.python.org/pypi
+    -> Register
+
+### ~/.pypirc
+[distutils]
+index-servers =
+  pypi
+  testpypi
+
+[pypi]
+repository=https://upload.pypi.org/legacy/
+username=emrah
+
+[testpypi]
+repository=https://test.pypi.org/legacy/
+username=emrah
+
+### Klasör yapısı
+├── .gitignore
+├── LICENSE
+├── README.md
+├── setup.cfg
+├── setup.py
+└── mypackage
+    └── __init__.py
+
+### .gitignore
+*~
+*.sw?
+*.log
+*.pyc
+*.egg
+*.egg-info/
+build/
+dist/
+sdist/
+__pycache__/
+
+### setup.cfg
+[metadata]
+description-file = README.md
+
+### setup.py
+from setuptools import setup
+
+setup(
+    name='mypackage',
+    version='0.1.5',
+    packages=['mypackage'],
+    description='Python MyPackage module',
+    url = 'https://github.com/emrahcom/python-mypackage-module',
+    author = 'emrah',
+    author_email = 'emrah.com@gmail.com',
+    license='MIT',
+    keywords = 'word1 word2 word3',
+    install_requires=['requests'],
+    python_requires='>=3',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3'
+    ]
+)
+
+### Build
+python3 setup.py bdist_wheel
+
+### Upload
+twine upload -r testpypi dist/*-0.1.5-*  # test deposu
+twine upload dist/*-0.1.5-*
+
+### pip ile paketi depodan kurma
+pip3 install mypackage
