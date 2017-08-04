@@ -393,17 +393,17 @@ apt install dpkg-dev build-essential fakeroot
 
 # PyPI
 . ~/.pypirc
-    [distutils]
+[distutils]
     index-servers =
       pypi
       testpypi
 
     [pypi]
-    repository=https://pypi.python.org/pypi/
+    repository=https://upload.pypi.org/legacy/
     username=emrah
 
     [testpypi]
-    repository: https://test.pypi.org/legacy/
+    repository=https://test.pypi.org/legacy/
     username=emrah
 
 # Source Code Pro
