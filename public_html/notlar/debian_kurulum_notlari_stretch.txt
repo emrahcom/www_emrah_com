@@ -265,7 +265,7 @@ apt install php-cli                                 # komut satırından PHP
 
 # Python
 apt install python3-pip
-pip3 install --upgrade pip setuptools twine
+pip3 install --upgrade pip setuptools wheel twine
 
 apt install python3-pudb                            # Python debugger
 apt install python3-nose                            # unittest
