@@ -61,33 +61,33 @@ deb https://dl.ring.cx/ring-nightly/debian_9/ ring main
 
 # Anahtar yüklemeleri
 ## Multimedia
-apt-get install deb-multimedia-keyring
-apt-get update
+apt install deb-multimedia-keyring
+apt update
 
 ## Ring
-apt-get install apt-transport-https dirmngr
+apt install apt-transport-https dirmngr
 apt-key adv --keyserver pgp.mit.edu --recv-keys \
     A295D773307D25A33AE72F2F64CD5FA175348F84
-apt-get update
+apt update
 
 # Güncelleme
-apt-get update && \
-apt-get -dy dist-upgrade && \
-apt-get autoclean && \
-apt-get dist-upgrade && \
-apt-get autoremove --purge
+apt update && \
+apt -dy dist-upgrade && \
+apt autoclean && \
+apt dist-upgrade && \
+apt autoremove --purge
 
 # İlk aşamada yüklenecek paketler
-apt-get install zsh tmux git vim-nox pyflakes pyflakes3 autojump bridge-utils
-apt-get install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
+apt install zsh tmux git vim-nox pyflakes pyflakes3 autojump bridge-utils
+apt install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
 
 # Default paketlerden silinecekler
-apt-get purge installation-report reportbug nano
-apt-get purge tasksel tasksel-data task-english os-prober
+apt purge installation-report reportbug nano
+apt purge tasksel tasksel-data task-english os-prober
 rm -rf /var/lib/os-prober
 # autoremove ile silinmemesi icin bu komut gerekli.
-apt-get install openssh-server
-apt-get autoremove --purge
+apt install openssh-server
+apt autoremove --purge
 
 # Grub ayarları
 - Grub için parola
@@ -181,125 +181,130 @@ nameserver 8.8.4.4
 # Paketlerin Kurulumu
 # -----------------------------------------------------------------------------
 # python (temel) paketleri
-apt-get install python3 ipython3 bpython3
-apt-get install python ipython bpython -d
-apt-get install pypy -d
+apt install python3 ipython3 bpython3
+apt install python ipython bpython -d
+apt install pypy -d
 
 # LXC
-apt-get install lxc debootstrap
+apt install lxc debootstrap
 
 # monitoring paketleri
-apt-get install htop iotop tiptop
-apt-get install atop powertop sysstat -d
-apt-get install nethogs iftop bmon bwm-ng
-apt-get install --install-recommends sysdig             # Sistem cagrilarini analiz
+apt install htop iotop tiptop
+apt install atop powertop sysstat -d
+apt install nethogs iftop bmon bwm-ng
+apt install --install-recommends sysdig             # Sistem cagrilarini analiz
 
 # network paketleri
-apt-get install fping arping mtr curl httpie dnsutils whois
-apt-get install heirloom-mailx
-apt-get install sshuttle sudo                           # VPN over SSH
-apt-get install --install-recommends openvpn            # SSL VPN client olacaksa
-apt-get install nmap tcpdump
-apt-get install ngrep netcat-openbsd telnet
-apt-get install minicom                                 # Seri porttan bağlanan cihazlar için
-apt-get install wvdial usb-modeswitch                   # USB 3G modem kullanılacaksa
-apt-get install pptp-linux                              # VPN tunel icin
-apt-get install nuttcp                                  # Network performan olcme
-apt-get install ethtool net-tools
+apt install fping arping mtr curl httpie dnsutils whois
+apt install heirloom-mailx
+apt install sshuttle sudo                           # VPN over SSH
+apt install --install-recommends openvpn            # SSL VPN client olacaksa
+apt install nmap tcpdump
+apt install ngrep netcat-openbsd telnet
+apt install minicom                                 # Seri porttan bağlanan cihazlar için
+apt install wvdial usb-modeswitch                   # USB 3G modem kullanılacaksa
+apt install pptp-linux                              # VPN tunel icin
+apt install nuttcp                                  # Network performan olcme
+apt install ethtool net-tools
 
 # parallel komut çalıştırma
-apt-get install parallel
+apt install parallel
 
 # IRC, jabber, gtalk
-apt-get install weechat-curses weechat-plugins bitlbee
+apt install weechat-curses weechat-plugins bitlbee
 
 # soft raid olacaksa
-apt-get install mdadm
+apt install mdadm
 
 # firmware
-apt-get install firmware-linux-free
+apt install firmware-linux-free
 
 # firmware (non-free depo)
-apt-get install firmware-linux-nonfree firmware-misc-nonfree --install-recommends
-apt-get install atmel-firmware firmware-atheros firmware-bnx2 firmware-bnx2x
-apt-get install firmware-brcm80211 firmware-cavium firmware-ipw2x00
-apt-get install firmware-iwlwifi firmware-libertas firmware-myricom
-apt-get install firmware-netxen firmware-realtek zd1211-firmware
-apt-get install firmware-b43-installer
+apt install firmware-linux-nonfree firmware-misc-nonfree --install-recommends
+apt install atmel-firmware firmware-atheros firmware-bnx2 firmware-bnx2x
+apt install firmware-brcm80211 firmware-cavium firmware-ipw2x00
+apt install firmware-iwlwifi firmware-libertas firmware-myricom
+apt install firmware-netxen firmware-realtek zd1211-firmware
+apt install firmware-b43-installer
 
 # wireless manager
 USB stick kurulumlarında wireless araçları olsun
 Diğer makinelerde wireless adaptör varsa olsun
 
-apt-get install wicd-curses wicd-cli rfkill
+apt install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
-apt-get install bzip2 zip unzip diffutils patch ack
-apt-get install tree autojump parted
-apt-get install lftp ncftp rsync
-apt-get install ccrypt cryptsetup
-apt-get install pwgen                                   # Random parola üretmek için
-apt-get install sshfs -d
-apt-get install cifs-utils smbclient -d
-apt-get install ntfs-3g -d
+apt install bzip2 zip unzip diffutils patch ack
+apt install tree autojump parted
+apt install lftp ncftp rsync
+apt install ccrypt cryptsetup
+apt install pwgen                                   # Random parola üretmek için
+apt install sshfs -d
+apt install cifs-utils smbclient -d
+apt install ntfs-3g -d
 
 # Veritabanı istemcileri
-apt-get install postgresql-client
-apt-get install mysql-client
-apt-get install sqlite3
-apt-get install sqsh                                    # MS SQL ve Sybase shell
+apt install postgresql-client
+apt install mysql-client
+apt install sqlite3
+apt install sqsh                                    # MS SQL ve Sybase shell
 
 # CD/DVD paketleri
-apt-get install wodim dvd+rw-tools
+apt install wodim dvd+rw-tools
 
 # Multimedia
-apt-get install alsa-base alsa-utils -d
-apt-get install pulseaudio pulseaudio-utils
-apt-get install mplayer ffmpeg
-apt-get install tpp                                     # text presentation program
+apt install alsa-base alsa-utils -d
+apt install pulseaudio pulseaudio-utils
+apt install mplayer ffmpeg
+apt install tpp                                     # text presentation program
 
 # Programlama paketleri
-apt-get install vim-nox                                 # script destekli vim
-apt-get install git                                     # versiyon kontrol sistemi
-apt-get install python3-pudb                            # Python debugger
-apt-get install python3-nose                            # unittest
-apt-get install python3-pexpect                         # shell uygulamalarını interaktif çalıştırma
-apt-get install python3-psutil                          # cpu, memory, process vb takip için
-apt-get install pychecker pylint pyflakes pyflakes3     # kod kalitesi ve hata kontrol
-apt-get install python3-psycopg2                        # PostgreSQL kullanılacaksa
-apt-get install python3-simplejson python3-lxml         # JSON ve XML kullanılacaksa
-apt-get install python3-pycurl                          # Curl paketi
-apt-get install python3-requests                        # HTTP kütüphanesi, arkada urllib3 kullanıyor
-apt-get install python3-ipy python-ipaddr               # IP handling
-apt-get install python3-netifaces                       # Network device
-apt-get install python3-openssl python3-crypto          # Güvenlik ve şifreleme
-apt-get install python-serial python-parallel           # Seri ve parallel portan haberleşme için
-apt-get install php-cli                                 # komut satırından PHP
+apt install vim-nox                                 # script destekli vim
+apt install git                                     # versiyon kontrol sistemi
+apt install php-cli                                 # komut satırından PHP
+
+# Python
+apt install python3-pip
+pip3 install --upgrade pip setuptools twine
+
+apt install python3-pudb                            # Python debugger
+apt install python3-nose                            # unittest
+apt install python3-pexpect                         # shell uygulamalarını interaktif çalıştırma
+apt install python3-psutil                          # cpu, memory, process vb takip için
+apt install pychecker pylint pyflakes pyflakes3     # kod kalitesi ve hata kontrol
+apt install python3-psycopg2                        # PostgreSQL kullanılacaksa
+apt install python3-simplejson python3-lxml         # JSON ve XML kullanılacaksa
+apt install python3-pycurl                          # Curl paketi
+apt install python3-requests                        # HTTP kütüphanesi, arkada urllib3 kullanıyor
+apt install python3-ipy python-ipaddr               # IP handling
+apt install python3-netifaces                       # Network device
+apt install python3-openssl python3-crypto          # Güvenlik ve şifreleme
+apt install python-serial python-parallel           # Seri ve parallel portan haberleşme için
 
 # PostgreSQL
-apt-get install postgresql postgresql-contrib
-apt-get install phppgadmin                              # PostrgreSQL icin web UI olacaksa...
+apt install postgresql postgresql-contrib
+apt install phppgadmin                              # PostrgreSQL icin web UI olacaksa...
 
 # Masaüstü paketleri
-apt-get install --install-recommends xorg
-apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
-apt-get install dbus-x11
-apt-get install xterm
-apt-get install xtrlock unclutter
-apt-get install scrot                                   # screen capture
-apt-get install firefox-esr --install-recommends
-apt-get install flashplayer-mozilla                     # multimedia deposundan...
-apt-get install smplayer
-apt-get install pavucontrol                             # pulsaudio icin ses kontrol GUI
-apt-get install x11vnc xvnc4viewer rdesktop
-apt-get install zathura                                 # pdf okuyucu
-apt-get install chromium fonts-liberation               # alternatif browser gerekecekse...
-apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
-apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
-apt-get install -t ring ring-daemon ring                # kendi deposundan kurulacak
+apt install --install-recommends xorg
+apt install --install-recommends spectrwm           # spectrwm kullanilacaksa...
+apt install dbus-x11
+apt install xterm
+apt install xtrlock unclutter
+apt install scrot                                   # screen capture
+apt install firefox-esr --install-recommends
+apt install flashplayer-mozilla                     # multimedia deposundan...
+apt install smplayer
+apt install pavucontrol                             # pulsaudio icin ses kontrol GUI
+apt install x11vnc xvnc4viewer rdesktop
+apt install zathura                                 # pdf okuyucu
+apt install chromium fonts-liberation               # alternatif browser gerekecekse...
+apt install libreoffice --install-recommends        # office uygulamalari gerekecekse...
+apt install gimp --install-recommends               # resim düzenlemek gerekecekse...
+apt install -t ring ring-daemon ring                # kendi deposundan kurulacak
 
 # Debian kaynak kod paketleri ile çalışılacaksa
-apt-get install dpkg-dev build-essential fakeroot
+apt install dpkg-dev build-essential fakeroot
 # -----------------------------------------------------------------------------
 # Yazılımların ayarlanması
 # -----------------------------------------------------------------------------
@@ -385,6 +390,21 @@ apt-get install dpkg-dev build-essential fakeroot
             ssh -t $h "apt-get autoremove"
         done
     }
+
+# PyPI
+. ~/.pypirc
+    [distutils]
+    index-servers =
+      pypi
+      pypitest
+
+    [pypi]
+    repository=https://pypi.python.org/pypi/
+    username=emrah
+
+    [pypitest]
+    repository: https://test.pypi.org/legacy/
+    username=emrah
 
 # Source Code Pro
 https://github.com/adobe-fonts/source-code-pro
