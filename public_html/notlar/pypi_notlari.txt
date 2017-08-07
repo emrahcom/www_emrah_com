@@ -79,5 +79,8 @@ python3 setup.py bdist_wheel
 twine upload -r testpypi dist/*-0.1.5-*  # test deposu
 twine upload dist/*-0.1.5-*
 
+### pip ile paketi test deposundan kurma
+pip3 install mypackage -i https://testpypi.python.org/pypi
+
 ### pip ile paketi depodan kurma
 pip3 install mypackage
