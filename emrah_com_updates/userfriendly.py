@@ -26,15 +26,17 @@ try:
 
     # UserFriendly blogunu olusturacak icerigi guncelle.
     block = """
-		<a href="http://www.userfriendly.org/"
-		title="Başka karikatürler de görmek istiyorsanız, tıklayınız">
-		<img src="http://www.userfriendly.org/%s" alt="" />
-		</a>
-		<br />
-		<span class="h3">
-		<a href="http://www.userfriendly.org">From UserFriendly.org</a><br />
-		Copyright © 2004 J.D. &quot;Illiad&quot; Frazer.
-		</span><br />""" % (link)
+    <div id="userfriendly" class="row">
+        <div class="col-12 text-center">
+            <a href="http://www.userfriendly.org/" class="nav-link">
+                <img src="%s" class="img-fluid" alt="" /><br/>
+            </a>
+            <a href="http://www.userfriendly.org/" class="nav-link">
+                <small>From UserFriendly.org</small>
+            </a>
+            <small>Copyright © J.D. &quot;Illiad&quot; Frazer.</small>
+        </div>
+    </div>""" % (link)
 
     # UserFriendly blogunu olusturacak icerigi tasiyan dosyayi guncelle.
     with open(FILE, 'w') as f:

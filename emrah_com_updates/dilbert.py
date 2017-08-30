@@ -26,15 +26,17 @@ try:
 
     # Dilbert blogunu olusturacak icerigi guncelle.
     block = """
-        <a href="http://www.dilbert.com/"
-        title="Başka karikatürler de görmek istiyorsanız, tıklayınız">
-        <img src="http://assets.amuniversal.com/%s" alt="" />
-        </a>
-        <br />
-        <span class="h3">
-        <a href="http://www.dilbert.com">From Dilbert.com</a><br />
-        Copyright © Scott Adams, Inc./Dist. by UFS, Inc.
-        </span><br />""" % (link)
+    <div id="dilbert" class="row">
+        <div class="col-12 text-center">
+            <a href="http://www.dilbert.com" class="nav-link">
+                <img src="%s" class="img-fluid" alt="" /><br/>
+            </a>
+            <a href="http://www.dilbert.com" class="nav-link">
+                <small>From Dilbert.com</small>
+            </a>
+            <small>Copyright © Scott Adams</small>
+        </div>
+    </div>""" % (link)
 
     # Dilbert blogunu olusturacak icerigi tasiyan dosyayi guncelle.
     with open(FILE, 'w') as f:
