@@ -306,14 +306,14 @@ try:
     with open(INC, 'w') as f:
         f.write("""    <div id="kuran" class="row">
         <div class="col-12">
-            <nav class="nav flex-column">"""
+            <nav class="nav flex-column">""")
 
         f.write(block1)
         f.write(block2)
 
         f.write("""            </nav>
         </div>
-    </div>"""
+    </div>""")
 
 
     sys.exit(0)
