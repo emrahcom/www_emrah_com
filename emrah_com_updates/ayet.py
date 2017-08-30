@@ -298,7 +298,7 @@ def get_block(mealno, sure, ayetno):
         with open(ayetpath, 'r') as f:
             ayet = f.read().strip()
 
-        block = """                <a class="nav-link" href="%s" title="%s meali: %s %s"><i class="fa fa-random fa-color"></i>%s</a>
+        block = """                <a class="nav-link" href="%s" title="%s meali: %s %s"><i class="fa fa-random fa-color"></i> %s</a>
                 """ % (surelink, mealler[mealno], encode(suread),
                        ayetno, encode(ayet))
 
