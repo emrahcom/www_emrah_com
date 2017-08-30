@@ -270,6 +270,21 @@ def encode(txt):
 
 
 # --------------------------------------------------------------------
+# URL icinde olmamasi gereken karakterleri duzenler
+def urlencode(txt):
+    try:
+        txt = txt.replace(' ', '%20')
+        txt = txt.replace('(', '%28')
+        txt = txt.replace(')', '%29')
+
+        return txt
+    except Exception, err:
+        sys.stderr.write(str(err))
+        return ''
+
+
+
+# --------------------------------------------------------------------
 # Verilen meal numarasina gore ayet blogunu olusturur.
 def get_block(mealno, sure, ayetno):
     try:
@@ -277,10 +292,7 @@ def get_block(mealno, sure, ayetno):
         surekod = sure[mealno][1]
         ayetpath = '%s/meal%s/%s/%s/index.html' % \
                    (BASEDIR, mealno, surekod, ayetno)
-
-        surekod = surekod.replace('(', '%28')
-        surekod = surekod.replace(')', '%29')
-        surelink = 'meal%s/%s/sure.txt' % (mealno, surekod)
+        surelink = 'meal%s/%s/sure.txt' % (mealno, urlencode(surekod))
 
         # Ayet metnini al.
         with open(ayetpath, 'r') as f:
