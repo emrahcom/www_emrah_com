@@ -29,7 +29,7 @@ try:
     <div id="dilbert" class="row">
         <div class="col-12 text-center">
             <a href="http://www.dilbert.com" class="nav-link">
-                <img src="%s" class="img-fluid" alt="" /><br/>
+                <img src="http://assets.amuniversal.com/%s" class="img-fluid" alt="" /><br/>
             </a>
             <a href="http://www.dilbert.com" class="nav-link">
                 <small>From Dilbert.com</small>

@@ -29,7 +29,7 @@ try:
     <div id="userfriendly" class="row">
         <div class="col-12 text-center">
             <a href="http://www.userfriendly.org/" class="nav-link">
-                <img src="%s" class="img-fluid" alt="" /><br/>
+                <img src="http://www.userfriendly.org/%s" class="img-fluid" alt="" /><br/>
             </a>
             <a href="http://www.userfriendly.org/" class="nav-link">
                 <small>From UserFriendly.org</small>
