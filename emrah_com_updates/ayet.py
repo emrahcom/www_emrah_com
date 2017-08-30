@@ -281,14 +281,9 @@ def get_block(mealno, sure, ayetno):
         with open(ayetpath, 'r') as f:
             ayet = f.read().strip()
 
-        block = """
-		<span class="h3">
-		&gt;&gt;&gt;
-                <a href="%s" title="%s meali: %s %s">
-		%s
-		</a></span>""" % (surelink, mealler[mealno],
-                                  encode(suread), ayetno,
-                                  encode(ayet))
+        block = """                <a class="nav-link" href="%s" title="%s meali: %s %s"><i class="fa fa-random fa-color"></i>%s</a>
+                """ % (surelink, mealler[mealno], encode(suread),
+                       ayetno, encode(ayet))
 
         return block
     except Exception, err:
@@ -309,9 +304,17 @@ try:
 
     # Include file icerigini kaydet.
     with open(INC, 'w') as f:
+        f.write("""    <div id="kuran" class="row">
+        <div class="col-12">
+            <nav class="nav flex-column">"""
+
         f.write(block1)
-        f.write('\n\n		<br />\n')
         f.write(block2)
+
+        f.write("""            </nav>
+        </div>
+    </div>"""
+
 
     sys.exit(0)
 except Exception, err:
