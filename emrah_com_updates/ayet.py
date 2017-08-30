@@ -4,6 +4,17 @@
 import sys
 import random
 
+
+# header block
+HEADER="""
+    <div id="kuran" class="row">
+        <div class="col-12">
+            <nav class="nav flex-column">"""
+# footer block
+FOOTER="""
+            </nav>
+        </div>
+    </div>\n"""
 # Meallerin yer aldigi ana klasor.
 BASEDIR = '/home/emrah/proje/www_emrah_com/public_html'
 # Ayet blogunun yer aldigi include dosya.
@@ -298,9 +309,9 @@ def get_block(mealno, sure, ayetno):
         with open(ayetpath, 'r') as f:
             ayet = f.read().strip()
 
-        block = """                <a class="nav-link" href="%s" title="%s meali: %s %s"><i class="fa fa-random fa-color"></i> %s</a>
-                """ % (surelink, mealler[mealno], encode(suread),
-                       ayetno, encode(ayet))
+        block = """
+                <a class="nav-link" href="%s" title="%s meali: %s %s"><i class="fa fa-random fa-color"></i> %s</a>""" % (
+                surelink, mealler[mealno], encode(suread), ayetno, encode(ayet))
 
         return block
     except Exception, err:
@@ -321,17 +332,10 @@ try:
 
     # Include file icerigini kaydet.
     with open(INC, 'w') as f:
-        f.write("""    <div id="kuran" class="row">
-        <div class="col-12">
-            <nav class="nav flex-column">""")
-
+        f.write(HEADER)
         f.write(block1)
         f.write(block2)
-
-        f.write("""            </nav>
-        </div>
-    </div>""")
-
+        f.write(FOOTER)
 
     sys.exit(0)
 except Exception, err:
