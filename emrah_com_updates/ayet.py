@@ -275,10 +275,11 @@ def get_block(mealno, sure, ayetno):
     try:
         suread = sure[mealno][0]
         surekod = sure[mealno][1]
-        surekod = surekod.replace('(', '%28')
-        surekod = surekod.replace(')', '%29')
         ayetpath = '%s/meal%s/%s/%s/index.html' % \
                    (BASEDIR, mealno, surekod, ayetno)
+
+        surekod = surekod.replace('(', '%28')
+        surekod = surekod.replace(')', '%29')
         surelink = 'meal%s/%s/sure.txt' % (mealno, surekod)
 
         # Ayet metnini al.
