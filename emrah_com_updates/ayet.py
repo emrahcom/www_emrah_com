@@ -259,6 +259,8 @@ def encode(txt):
         txt = txt.replace('~', '&tilde;')
         txt = txt.replace('–', '&ndash;')
         txt = txt.replace('—', '&mdash;')
+        txt = txt.replace('(', '&#40;')
+        txt = txt.replace(')', '&#41;')
 
         return txt
     except Exception, err:
