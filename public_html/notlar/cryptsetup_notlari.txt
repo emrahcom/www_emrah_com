@@ -79,3 +79,26 @@ reboot
 
 # /etc/crypttab example
 mycrypt UUID=47fa2fee-4c32-8200-9cea-63b592c92ed2 none luks,keyscript=/root/scripts/key.sh
+
+
+# -----------------------------------------------------------------------------
+# RESIZE
+# -----------------------------------------------------------------------------
+Sadece disk büyütmede geçerli... Stretch ile test edildi.
+
+# install parted
+apt-get install parted
+
+# resize partition
+parted /dev/sdb
+    print
+    resizepart
+       Partition number? 1
+       End? 300GB
+    print
+
+# resize LUKS
+cryptsetup resize map1 -v
+
+# resize file system (ext4)
+resize2fs /dev/mapper/map1
