@@ -1,0 +1,31 @@
+VIRTUALBOX NOTLARI
+==================
+Debian Stretch ile test edilmiştir.
+
+
+Install
+=======
+
+### /etc/apt/sources.list
+deb http://download.virtualbox.org/virtualbox/debian stretch contrib
+
+### Repo key
+wget https://www.virtualbox.org/download/oracle_vbox_2016.asc
+apt-key add oracle_vbox_2016.asc
+
+### Install
+apt update
+apt install virtualbox-5.2 --install-recommends
+
+
+Konsol
+======
+### Resize disk (only for VDI disk)
+
+VBoxManage modifyhd disk.vdi --resize 20480
+
+
+Kaynaklar
+=========
+https://wiki.debian.org/VirtualBox
+
