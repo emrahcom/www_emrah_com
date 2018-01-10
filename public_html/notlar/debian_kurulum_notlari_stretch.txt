@@ -432,7 +432,9 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     exec /usr/bin/spectrwm
 
 . ~/.spectrwm.conf
+    disable_border          = 1
     bar_at_bottom           = 1
+    maximize_hide_bar       = 1
     modkey                  = Mod4
     program[lock]           = xtrlock
     program[firefox]        = firefox-esr
