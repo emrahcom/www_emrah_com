@@ -146,6 +146,9 @@ rm -rf /tmp/* /var/log/*; sync; reboot
 # -----------------------------------------------------------------------------
 # systemd-networkd
 # -----------------------------------------------------------------------------
+# /etc/network/interfaces
+Comment network interfaces except loopback
+
 # /etc/systemd/network/90-bridge.netdev
 [NetDev]
 Name=br0
@@ -237,7 +240,7 @@ apt install wicd-curses wicd-cli rfkill
 apt install bzip2 zip unzip diffutils patch ack
 apt install tree autojump parted
 apt install lftp ncftp rsync
-apt install ccrypt cryptsetup
+apt install ccrypt cryptsetup encfs
 apt install pwgen                                   # Random parola üretmek için
 apt install sshfs -d
 apt install cifs-utils smbclient -d
@@ -267,15 +270,18 @@ apt install php-cli                                 # komut satırından PHP
 apt install python3-pip
 pip3 install --upgrade pip setuptools wheel twine
 
+pip3 install --upgrade pexpect                      # shell uygulamalarını interaktif çalıştırma 
+pip3 install --upgrade requests                     # HTTP kütüphanesi, arkada urllib3 kullanıyor
+pip3 install s3cmd                                  # S3 object storage işlemleri
+
+# Bu paketleri pip3 ile kurmayı dene. Henüz test edilmedi.
 apt install python3-pudb                            # Python debugger
 apt install python3-nose                            # unittest
-apt install python3-pexpect                         # shell uygulamalarını interaktif çalıştırma
 apt install python3-psutil                          # cpu, memory, process vb takip için
 apt install pychecker pylint pyflakes pyflakes3     # kod kalitesi ve hata kontrol
 apt install python3-psycopg2                        # PostgreSQL kullanılacaksa
 apt install python3-simplejson python3-lxml         # JSON ve XML kullanılacaksa
 apt install python3-pycurl                          # Curl paketi
-apt install python3-requests                        # HTTP kütüphanesi, arkada urllib3 kullanıyor
 apt install python3-ipy python-ipaddr               # IP handling
 apt install python3-netifaces                       # Network device
 apt install python3-openssl python3-crypto          # Güvenlik ve şifreleme
