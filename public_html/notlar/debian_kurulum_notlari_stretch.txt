@@ -105,8 +105,8 @@ grub-mkpasswd-pbkdf2 >>/etc/grub.d/01_password
 
 chmod 755 /etc/grub.d/01_password
 
-/etc/grub.d/10_linux (line 134, --unrestricted eklenecek)
-    echo "menuentry '$(echo "$os" | grub_quote)' --unrestricted ${CLASS}
+/etc/grub.d/10_linux (line 34, --unrestricted eklenecek)
+    CLASS="--class gnu-linux --class gnu --class os --unrestricted"
 
 - Değişiklikleri aktif hale getirme
 update-grub
