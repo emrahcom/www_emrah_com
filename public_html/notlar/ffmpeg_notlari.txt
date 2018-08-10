@@ -44,7 +44,12 @@ ffmpeg -re \
     -c:a libfdk_aac \
     -f flv rtmp://172.22.9.22/livestream/publish/test
 
+# RTSP play (only video)
+ffplay -stimeout 10 -allowed_media_types video -rtsp_transport tcp \
+    rtsp://user:passwd@1.2.3.4//media/video1
+
 # -----------------------------------------------------------------------------
 # Links
 # -----------------------------------------------------------------------------
 https://ffmpeg.org/
+https://ffmpeg.org/ffmpeg-protocols.html#rtsp
