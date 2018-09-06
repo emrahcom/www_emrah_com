@@ -1,34 +1,42 @@
 # -----------------------------------------------------------------------------
 # FLASK NOTLARI
 # -----------------------------------------------------------------------------
-Notlar, Debian Jessie ve Python 3.x için hazırlanmıştır.
+Notlar, Debian Stretch ve Python 3.x için hazırlanmıştır.
 
 
 
 # -----------------------------------------------------------------------------
-# FLASK KURULUM
+# KURULUM
 # -----------------------------------------------------------------------------
 Recommended paketlerin default olarak kurulmadığı varsayıldı. Nginx ve UWSGI
 ile birlikte çalışacak şekilde yapılandırılıyor.
 
 # Global Paketler
-apt-get install nginx-extras
-apt-get install uwsgi uwsgi-plugin-python3 --install-recommends
-apt-get install python3-pip
-# Derlenerek kurulacak Python paketleri olacaksa
-apt-get install build-essential python3-dev libffi-dev
+apt install nginx-extras ssl-cert
+apt install redis-server
+apt --install-recommends install uwsgi uwsgi-plugin-python3
+apt --install-recommends install python3-pip
 
 # Lokal Python Paketleri
+Projenin yapısına sadece kullanılacak olan paketler yüklenecek.
+
 su -l emrah
-pip3 install --user Flask
-pip3 install --user Flask-WTF WTForms
-pip3 install --user Flask-SQLAlchemy
+pip3 install --user --upgrade setuptools
+pip3 install --user flask flask-restful
+pip3 install --user flask-session redis
+pip3 install --user sqlalchemy schema
+pip3 install --user requests
+pip3 install --user psycopg2
+pip3 install --user mysql-connector
 
+# -----------------------------------------------------------------------------
+# AYARLAR
+# -----------------------------------------------------------------------------
 # Flask Proje Klasörü
-mkdir -p /home/emrah/myproject/app/{static,templates,views}
-cd myproject
+mkdir -p ~/myproject/app/{static,templates,views}
+cd ~/myproject
 
-# /home/emrah/myproject/run.ini
+# ~/myproject/run.ini
 [uwsgi]
 plugins = python
 uid = emrah
@@ -44,18 +52,19 @@ socket = 127.0.0.1:8000
 callable = app
 chdir = /home/emrah/myproject/
 wsgi-file = /home/emrah/myproject/run.py
+#disable-logging = true
 
-# /home/emrah/myproject/run.py
+# ~/myproject/run.py
 from app import app
 
 if __name__ == '__main__':
     app.debug = True
     app.run()
 
-# /home/emrah/myproject/config.py
+# ~/myproject/config.py
 DEBUG = True
 
-# /home/emrah/myproject/app/__init__.py
+# ~/myproject/app/__init__.py
 from flask import Flask
 
 app = Flask(__name__)
@@ -66,8 +75,7 @@ def hello_world():
     return 'Hello World!'
 
 # test run
-su -l emrah
-python3 /home/emrah/myproject/run.py
+python3 ~/myproject/run.py
 
 <ctrl>+C
 
@@ -111,29 +119,24 @@ app = Flask(__name__)
 from werkzeug.debug import DebuggedApplication
 app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
 
-
-
 # -----------------------------------------------------------------------------
 # UPGRADE
 # -----------------------------------------------------------------------------
 Kullanıcı yerel deponun güncellenmesi. Normal kullanıcı olarak çalıştırılır.
 
-for p in `pip3 list -lo | cut -d ' ' -f1`
+for p in `pip3 list --local --format=legacy | cut -d ' ' -f1`
 do
     echo "### $p ###"
     pip3 install --upgrade --user $p
 done
 
-
-
 # -----------------------------------------------------------------------------
-# STRUCTURE
+# BASE STRUCTURE
 # -----------------------------------------------------------------------------
 myproject
 │
 ├── app
 │   ├── __init__.py
-│   ├── forms.py
 │   ├── models.py
 │   ├── static
 │   │   ├── logo.png
@@ -173,45 +176,55 @@ if __name__ == '__main__':
 
 # myproject/app/__init__.py
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
 
 app = Flask(__name__)
 app.config.from_object('config')
-db = SQLAlchemy(app)
+Session(app)
 
 from app import models
-from app.views.bp1 import bp1
-from app.views.bp2 import bp2
+from app.views.bp1 import bp as bp1
+from app.views.bp2 import bp as bp2
 app.register_blueprint(bp1, url_prefix='/')
 app.register_blueprint(bp2, url_prefix='/bp2')
 
 # myproject/app/models.py
-from app import db
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import (Column, Integer, String)
+from sqlalchemy.orm import sessionmaker, scoped_session
+from config import SQLALCHEMY_DATABASE_URI
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False, server_default='')
+engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)
+Base = declarative_base()
 
-db.create_all()
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(255), nullable=False, server_default='')
+
+Base.metadata.create_all(engine)
+DBSession = scoped_session(sessionmaker(bind=engine))
 
 # myproject/app/views/__init__.py
 touch myproject/app/views/__init__.py
 
 # myproject/app/views/bp1.py
 from flask import Blueprint
-bp1 = Blueprint('bp1', __name__)
+bp = Blueprint('bp1', __name__)
 
-@bp1.route('/')
+@bp.route('/')
 def hello_world():
     return 'Hello World!!!'
 
 # myproject/app/views/bp2.py
 from flask import Blueprint, render_template, abort
 from jinja2 import TemplateNotFound
-bp2 = Blueprint('bp2', __name__, template_folder='../templates/bp2')
+bp = Blueprint('bp2', __name__, template_folder='../templates/bp2')
 
-@bp2.route('/page3')
+@bp.route('/page3')
 def page3():
     try:
         return render_template('page3.html')
@@ -219,15 +232,13 @@ def page3():
         abort(404)
 
 # templates
-mkdir -p myproject/app/templates/{bp1,bp2}
-touch myproject/app/templates/bp1/{layout,page1,page2}.html
-touch myproject/app/templates/bp2/{layout,page3,page4}.html
+mkdir -p ~/myproject/app/templates/{bp1,bp2}
+touch ~/myproject/app/templates/bp1/{layout,page1,page2}.html
+touch ~/myproject/app/templates/bp2/{layout,page3,page4}.html
 
 # Test
 systemctl restart uwsgi
 curl http://127.0.0.1/
-
-
 
 # -----------------------------------------------------------------------------
 # FLASK SERVER SIDE SESSION
@@ -236,12 +247,11 @@ Burada Redis ile kullanımı yer almakta. Farklı SESSION_TYPE seçilerek oturum
 verileri memcached, veritabanı veya dosya sisteminde de tutulabilir.
 
 # Global Paketler
-apt-get install redis-server
+apt install redis-server
 
 # Lokal Python Paketleri
 su -l emrah
-pip3 install --user redis
-pip3 install --user Flask-Session
+pip3 install --user flask-session redis
 
 # Örnek kod
 from flask import Flask, session
@@ -256,31 +266,22 @@ Session(app)
 username = session.get('username', 'not set')
 session['username'] = 'emrah'
 
-
-
 # -----------------------------------------------------------------------------
-# FLASK-SQLALCHEMY
+# SQLALCHEMY
 # -----------------------------------------------------------------------------
-Flask-SQLAlchemy, tamamen SQLAlchemy gibi davranmamakta. Özellikle Flask
-kullanılırken doğrudan SQLAlchemy kullanmak yerine Flask-SQLAlchemy kullanmanın
-bazı avantajları var. Örneğin session yönetimi gibi...
+PostgreSQL veya MariaDB kullanımına göre ilgili paketler seçilir.
 
-# Global Paketler (postgresql varsa)
-apt-get install postgresql postgresql-contrib
-
-# Veritabani paketleri binary olarak Debian deposundan veya derlenerek Python
-# deposundan kurulabilir.
+# PostgreSQL kullanılacaksa
+apt install postgresql postgresql-contrib
 su -l emrah
+pip3 install --user sqlalchemy schema
 pip3 install --user psycopg2
-        veya
-apt-get install python3-psycopg2
-apt-get install python3-mysql.connector
 
-# Lokal Python Paketleri
+# MariaDB kullanılacaksa
+apt install mariadb-server
 su -l emrah
-pip3 install --user Flask-SQLAlchemy
-
-
+pip3 install --user sqlalchemy schema
+pip3 install --user mysql-connector
 
 # -----------------------------------------------------------------------------
 # FLASK-MAIL
@@ -327,6 +328,24 @@ systemctl restart uwsgi
 curl http://127.0.0.1/sendmail
 
 
+
+
+
+
+
+
+
+
+
+# -----------------------------------------------------------------------------
+# ESKİ NOTLAR
+# -----------------------------------------------------------------------------
+
+# Lokal Python Paketleri
+su -l emrah
+pip3 install --user Flask
+pip3 install --user Flask-WTF WTForms
+pip3 install --user Flask-SQLAlchemy
 
 # -----------------------------------------------------------------------------
 # FLASK-USER
