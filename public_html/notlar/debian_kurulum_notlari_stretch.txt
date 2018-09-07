@@ -525,6 +525,7 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
 - preferences
     . Main -> When Iceweasel starts: Show a blank page
     . Content -> Languages -> Choose -> Turkish (En üstte)
+    . Privacy -> manage your Do Not Track settings -> Always apply Do Not Track
     . Privacy -> Never Remember History
     . Privacy -> Location Bar -> Nothing
     . Security -> Block reported attack sites -> İptal
@@ -540,6 +541,8 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     browser.sessionstore.interval                   60000
     network.http.pipelining                         true
     network.prefetch-next                           false
+    privacy.trackingprotection.enabled              true
+    privacy.trackingprotection.ui.enabled           true
 
 # bitlbee
 - /etc/bitlbee/bitlbee.conf
