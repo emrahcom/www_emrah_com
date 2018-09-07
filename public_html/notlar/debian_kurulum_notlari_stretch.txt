@@ -480,7 +480,7 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     - zargan.py
     Kod deposundan kopyalanacak.
 
-# iceweasel
+# Firefox
 - Vimperator manuel olarak eklensin.
     Menu çubuğuna mouse sağ tuş, açılan menuden:
         Liberator Statusline Toolbar iptal
@@ -523,7 +523,7 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
         Remote DNS (ok)
 
 - preferences
-    . Main -> When Iceweasel starts: Show a blank page
+    . Main -> When Firefox starts: Show a blank page
     . Content -> Languages -> Choose -> Turkish (En üstte)
     . Privacy -> manage your Do Not Track settings -> Always apply Do Not Track
     . Privacy -> Never Remember History
@@ -543,6 +543,14 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     network.prefetch-next                           false
     privacy.trackingprotection.enabled              true
     privacy.trackingprotection.ui.enabled           true
+
+- second profile
+    firefox-esr -no-remote -ProfileManager
+        "second" adlı profili oluştur.
+
+    cd ~/.mozilla/firefox
+    rm XXX.second
+    cp -arp YYY.default ZZZ.second
 
 # bitlbee
 - /etc/bitlbee/bitlbee.conf
