@@ -24,6 +24,10 @@ Konsol
 
 VBoxManage modifyhd disk.vdi --resize 20480
 
+veya menuden
+
+File -> Virtual Media Manager
+
 ### NAT network
 VBoxManage natnetwork add -t NETWORK_NAME -n "192.168.15.0/24" -e -dhcp on
 VBoxManage natnetwork list
