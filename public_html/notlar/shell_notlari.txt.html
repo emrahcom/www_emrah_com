@@ -13,6 +13,19 @@
 Komutlar çoğunlukla bash ve zsh ile test edilmiştir.
 
 
+# Kronometre
+stf=$(date +%s.%N);for ((;;));do ctf=$( date +%s.%N ); \
+    echo -en &quot;\r$(date -u -d &quot;0 $ctf sec - $stf sec&quot; &quot;+%H:%M:%S.%N&quot;)&quot;;done
+
+# CPU kullanımı
+apt-get install linux-tools tiptop
+perf stat -a -- sleep 10
+    IPC is &lt; 1.0 - CPU memory I/O yüzünden bekliyor
+    IPC is &gt; 1.0 - CPU hizi yetmiyor
+
+tiptop
+    Process basina IPC degerine bak
+
 # Renkler
 \033 [ &lt;komut&gt; m
 
@@ -486,20 +499,6 @@ apt-get install encfs
 
 - public erisim icin, root olarak
     encfs --public /home/emrah/.sifreli /home/emrah/mountpoint
-
-
-# cryptsetup
-apt-get install cryptsetup
-modprobe dm_mod
-
-- mount etmek için
-    cryptsetup luksOpen /dev/sdb1 map1
-    mkdir -p /media/map1
-    mount /dev/mapper/map1 /media/map1
-
-- umount etmek için
-    umount /dev/mapper/map1
-    cryptsetup luksClose map1
 
 # cryptsetup target adı değiştirme (Wheezy)
 Crypto diskin sdb2 olduğu ve sdb1'de /boot partitionı olduğunu varsayıldı.

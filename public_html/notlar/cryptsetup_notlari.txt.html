@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>cryptsetup_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+# -----------------------------------------------------------------------------
+# CRYPTSETUP NOTLARI
+# -----------------------------------------------------------------------------
+Debian Jessie ile denendi.
+
+
+# -----------------------------------------------------------------------------
+# YÜKLEME
+# -----------------------------------------------------------------------------
+apt-get install cryptsetup
+modprobe dm_mod
+
+
+# -----------------------------------------------------------------------------
+# KULLANIMI
+# -----------------------------------------------------------------------------
+# luksFormat
+cryptsetup --verbose --verify-passphrase luksFormat /dev/sdb1
+
+# luksOpen
+cryptsetup luksOpen /dev/sdb1 map1
+mkfs.ext4 /dev/mapper/map1
+
+# Mount
+mkdir /mnt/sdb1
+mount /dev/mapper/map1 /mnt/sdb1
+
+# Umount
+umount /mnt/sdb1
+cryptsetup luksClose map1
+
+# luksAddKey
+apt-get install sharutils
+
+head -c2880 /dev/urandom | uuencode -m - | head -n 65 | tail -n 64 &gt;/tmp/key.txt
+cryptsetup luksAddKey /dev/sdb1 /tmp/key.txt
+
+# luksAddKey with key-slot
+cryptsetup luksAddKey /dev/sdb1 /tmp/key.txt --key-slot 1
+
+# luksOpen with key
+cryptsetup luksOpen /dev/sdb1 map1 --key-file /tmp/key.txt
+
+# Rename device name
+sed -i 's/OLDNAME/NEWNAME/' /etc/fstab
+sed -i 's/OLDNAME/NEWNAME/' /etc/crypttab
+
+dmsetup rename OLDNAME NEWNAME
+update-initramfs -u
+update-grub  # hata verilse ve /boot/grub altında OLDNAME kullanılan
+             # dosya yoksa sorun yok
+reboot
+
+# luksHeaderBackup
+cryptsetup luksHeaderBackup /dev/sdb1 --header-backup-file luksheader.bck
+
+
+# -----------------------------------------------------------------------------
+# AUTO REBOOT
+# -----------------------------------------------------------------------------
+mkdir -p /root/scripts
+
+cat &lt;&lt;END &gt; /root/scripts/key.sh
+#!/bin/sh
+if [ -z &quot;\`grep init /proc/cmdline\`&quot; ]
+then
+exec cat &lt;&lt;EOF
+$(cat /tmp/key.txt)
+EOF
+fi
+END
+
+chmod 700 /root/scripts/key.sh
+
+sed -i 's/none luks$/none luks,keyscript=\/root\/scripts\/key.sh/' /etc/crypttab
+
+update-initramfs -u
+reboot
+
+# /etc/crypttab example
+mycrypt UUID=47fa2fee-4c32-8200-9cea-63b592c92ed2 none luks,keyscript=/root/scripts/key.sh
+
+
+# -----------------------------------------------------------------------------
+# RESIZE
+# -----------------------------------------------------------------------------
+Sadece disk büyütmede geçerli... Stretch ile test edildi.
+
+# install parted
+apt-get install parted
+
+# resize partition
+parted /dev/sdb
+    print
+    resizepart
+       Partition number? 1
+       End? 300GB
+    print
+
+# resize LUKS
+cryptsetup resize map1 -v
+
+# resize file system (ext4)
+resize2fs /dev/mapper/map1
+</code></pre>
+</body>
+</html>

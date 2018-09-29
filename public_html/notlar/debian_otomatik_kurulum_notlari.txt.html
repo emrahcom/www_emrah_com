@@ -61,6 +61,15 @@ xorriso -as mkisofs -o debian_custom.iso \
 
 
 # -----------------------------------------------------------------------------
+# PRESEED.CFG
+# -----------------------------------------------------------------------------
+Mevcut kurulum için verilmiş cevapları içeren preseed.cfg elde edilmek
+istenirse
+
+apt-get install debconf-utils
+debconf-get-selections --installer &gt; /tmp/preseed.cfg
+
+# -----------------------------------------------------------------------------
 # KAYNAKLAR
 # -----------------------------------------------------------------------------
 https://www.debian.org/releases/stable/i386/apb.html

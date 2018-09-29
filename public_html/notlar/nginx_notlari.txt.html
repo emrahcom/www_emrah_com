@@ -105,7 +105,7 @@ hazırlandı. Eski sürümlerde bazı özellikler mevcut değil.
 
     from cgi import parse_qs
 
-    def application(environ, start_response):
+    def application(env, start_response):
         args = parse_qs(env['wsgi.input'].read())
         status = '200 OK'
         output = 'Hello World'
@@ -122,7 +122,7 @@ hazırlandı. Eski sürümlerde bazı özellikler mevcut değil.
     plugins = python
     uid = emrah
     gid = www-data
-    socket = /var/run/uwsgi/app/myapp.socket
+    socket = /var/run/uwsgi/app/myapp/socket
     wsgi-file = /home/kullanici/wsgi/myapp.py
 
 
@@ -135,7 +135,7 @@ ln -s ../apps-available/myapp.ini .
 /etc/nginx/sites-enabled/default
     location /myapp {
         include uwsgi_params;
-        uwsgi_pass unix:/var/run/uwsgi/app/myapp.socket;
+        uwsgi_pass unix:/var/run/uwsgi/app/myapp/socket;
     }
 
 /etc/init.d/nginx restart

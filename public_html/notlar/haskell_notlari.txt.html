@@ -52,6 +52,7 @@ Haskell Yorumlayıcıları ve Derleyicileri
                 Haskell98 standartlarına uyumlu derleyici ve yorumlayıcı.
                 Yorumlayıcısı   Hugs'a göre daha yavaş ama daha yetenekli.
 
+                apt-get install ghc     ( jessie için   )
                 apt-get install ghc5    ( sarge için    )
                 apt-get install ghc6    ( etch için     )
 
@@ -535,12 +536,12 @@ Recursion
         * örnek 3:
                 filtre p []     = []
                 filtre p (x:xs) =
-                        if p x:
+                        if p x
                         then x : filtre p xs
                         else filtre p xs
 
 
-                Test&gt;filtre Char.isUpper &quot;meRhABa&quot;
+                Test&gt;filtre Data.Char.isUpper &quot;meRhABa&quot;
                 &quot;RAB&quot;
 
 

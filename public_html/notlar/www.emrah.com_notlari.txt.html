@@ -7,115 +7,144 @@
 </head>
 <body>
 <pre><code>
-# -----------------------------------------------------------------------------
-# www.emrah.com notları
-# -----------------------------------------------------------------------------
+WWW.EMRAH.COM
+=============
+Debian Stretch box...
 
-Bu dökümanda, www.emrah.com için yapılan işlemlerle ilgili notlar yer alır.
+SYSTEM
+======
 
+### swap file
+dd if=/dev/zero of=/swapfile bs=1M count=1024
+chmod 600 /swapfile
+mkswap /swapfile
+echo &quot;/swapfile  none  swap  sw  0  0&quot; &gt;&gt; /etc/fstab
+reboot
 
+### packages
+echo 'APT::Install-Recommends &quot;0&quot;;' &gt;/etc/apt/apt.conf.d/80recommends
+echo 'APT::Install-Suggests &quot;0&quot;;'  &gt;&gt;/etc/apt/apt.conf.d/80recommends
+apt update &amp;&amp; apt autoclean &amp;&amp; apt dist-upgrade &amp;&amp; apt autoremove --purge
+apt purge tasksel tasksel-data nano
+apt install tmux zsh vim autojump
+apt install git rsync
+apt install htop iotop curl dnsutils whois ack-grep
+apt install python3 ipython3 bpython3
+apt install pyflakes
+apt install sslh  # standalone
+apt instal nginx-extras ssl-cert
+apt install certbot --install-recommends
 
-# -----------------------------------------------------------------------------
-# WEB İÇERİĞİNİN GIT DEPOSU İLE YÖNETİLMESİ
-# -----------------------------------------------------------------------------
+### /etc/ssh/sshd_config
+PermitRootLogin without-password
+PasswordAuthentication no
 
-# Git kurulumu (web sunucu, root)
-    aptitude install git
+### sslh
+/etc/default/sslh
+    run=yes
+    DAEMON_OPTS=&quot;--user sslh --listen 0.0.0.0:443 --ssh 127.0.0.1:XXX --ssl 127.0.0.1:10443 --pidfile /var/run/sslh/sslh.pid&quot;
 
+### certbot
+certbot certonly --webroot -w /home/emrah/proje/www_emrah_com/public_html \
+    -d emrah.com -d www.emrah.com
+chmod 755 /etc/letsencrypt/{archive,live}
 
-# Ana Git deposunun oluşturulması (web sunucu, emrah)
-    mkdir &tilde;/repositories
-    cd &tilde;/repositories
-    mkdir www_emrah_com.git
-    cd www_emrah_com.git
-    git init --bare
+### user
+usermod -l emrah debian
+usermod -d /home/emrah emrah
+usermod -s /bin/zsh emrah
+mv /home/debian /home/emrah
+groupmod -n emrah debian
 
+### zsh
+su -l emrah
+    (2 for zsh)
 
-# Yerel Git deposunun oluşturulması (web sunucu, emrah)
-    mkdir &tilde;/proje
-    cd &tilde;/proje
-    git clone --no-hardlinks &tilde;/repositories/www_emrah_com.git
+### /home/emrah/.zshrc
+bindkey -v
+HISTSIZE=5000
+SAVEHIST=5000
+alias ls='ls --color=auto'
+alias ..=&quot;cd ..&quot;
+alias ...=&quot;cd ../..&quot;
+alias ....=&quot;cd ../../..&quot;
+alias .....=&quot;cd ../../../..&quot;
+alias ......=&quot;cd ../../../../..&quot;
+. /usr/share/autojump/autojump.sh
+export TMOUT=1800
+setopt hist_ignore_space
 
+### /root/.zshrc
+cp /home/emrah/.zshrc &tilde;/
 
-# Yerel Git deposunun oluşturulması (desktop, emrah)
-    mkdir &tilde;/proje
-    cd &tilde;/proje
-    git clone ssh://emrah@emrah.com:22/&tilde;/repositories/www_emrah_com.git
+### passwd
+passwd
+passwd emrah
 
+# vim
+See vim notes
 
-# Web içeriğinin Git depoya yüklenmesi (desktop, emrah)
-    mkdir -p &tilde;/proje/www_emrah_com/public_html
-    cd &tilde;/proje/www_emrah_com/public_html
-    (web içeriği bu kısma yüklenir)
-
-    mkdir -p &tilde;/proje/www_emrah_com/emrah_com_updates
-    cd &tilde;/proje/www_emrah_com/emrah_com_updates
-    (site ile ilgili scriptler buraya yüklenir)
-
-    cd &tilde;/proje/www_emrah_com
-    git add -A
-    git commit -m &quot;web icerigi yuklendi&quot;
-    git push origin master
-
-
-# Web sunucudaki yerel deponun güncellenmesi (web sunucu, emrah)
-    cd &tilde;/proje/www_emrah_com
-    git stash
-    git pull
-    git stash clear
-
-
-# Gitweb kurulumu (root)
-  Nginx +  fastcgi ile kullanılacak.
-
-    aptitude install gitweb fcgiwrap
-
-    vim /etc/gitweb.conf
-        #$projectroot = &quot;/var/cache/git&quot;;
-        $projectroot = &quot;/home/emrah/repositories&quot;;
-
-
-    vim /etc/nginx/sites-enabled/emrah.com
-        server {
-            ...
-            ...
-            location /gitweb {
-                alias       /usr/share/gitweb;
-                index       index.cgi;
-                include     fastcgi_params;
-                gzip        off;
-                if ($uri &tilde; &quot;/gitweb/index.cgi&quot;) {
-                    fastcgi_pass    unix:/var/run/fcgiwrap.socket;
-                }
-            }
-            ...
-            ...
-
-
-    /etc/init.d/fcgiwrap restart
-    /etc/init.d/nginx configtest
-    /etc/init.d/nginx restart
-
-
-
-# -----------------------------------------------------------------------------
-# WEB İÇERİĞİ GÜNCELLEME SCRIPTLERİNİN CRONTAB İLE ÇALIŞTIRILMASI
-# -----------------------------------------------------------------------------
-
+# scripts
+mkdir &tilde;/scripts
+echo '#!/bin/bash' &gt; &tilde;/scripts/apt.sh
+echo 'apt update &amp;&amp; apt -dy dist-upgrade' &gt;&gt; &tilde;/scripts/apt.sh
+chmod u+x /root/scripts/apt.sh
 vim /etc/crontab
-01 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/update.py
-03 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/dilbert.py
-05 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/userfriendly.py
+    19 05   * * *   root    /root/scripts/apt.sh &gt;/dev/null 2&gt;&amp;1
+
+
+WEB CONTENTS
+============
+
+### Git repos
+su -l emrah
+mkdir &tilde;/repositories
+cd &tilde;/repositories
+mkdir www_emrah_com.git
+cd www_emrah_com.git
+git init --bare
+
+### Local git repo
+su -l emrah
+mkdir &tilde;/proje
+cd &tilde;/proje
+git clone --no-hardlinks &tilde;/repositories/www_emrah_com.git
+
+### Local git repo (on my desktop)
+mkdir &tilde;/proje
+cd &tilde;/proje
+git clone ssh://emrah@emrah.com:22/&tilde;/repositories/www_emrah_com.git
+
+### Web contents (on my desktop)
+mkdir -p &tilde;/proje/www_emrah_com/public_html
+cd &tilde;/proje/www_emrah_com/public_html
+    (install the contents here)
+
+mkdir -p &tilde;/proje/www_emrah_com/emrah_com_updates
+cd &tilde;/proje/www_emrah_com/emrah_com_updates
+    (install the web related scripts here)
+
+cd &tilde;/proje/www_emrah_com
+git add -A
+git commit -m &quot;initial web contents&quot;
+git push origin master
+
+### Update web site
+cd &tilde;/proje/www_emrah_com
+git stash
+git pull
+git stash clear
+
+
+UPDATE SCRIPTS
+==============
+
+### /etc/crontab
+19 05   * * *   root    /root/scripts/apt.sh &gt;/dev/null 2&gt;&amp;1
+03 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/dilbert.sh
+05 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/userfriendly.sh
 07 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/txt2html.py
 09 *    * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/ayet.py
-
-
-
-# -----------------------------------------------------------------------------
-# ICINGA KURULUMU
-# -----------------------------------------------------------------------------
-http://www.emrah.com/notlar/icinga_notlari.txt sayfasında notlara göre Icinga
-kurulacak.
 
 
 
@@ -129,22 +158,14 @@ server {
 
     rewrite &circ;/(.*)$  https://$host/$1; }
 
-
 # HTTPS emrah.com
 server {
-    listen 30443;
-    server_name emrah.com www.emrah.com;
-
-    ssl on;
-    ssl_certificate /etc/letsencrypt/live/emrah.com/cert.pem;
+    listen 10443;
+    ssl_certificate /etc/letsencrypt/live/emrah.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/emrah.com/privkey.pem;
-    ssl_session_timeout 5m;
-    #ssl_protocols SSLv3 TLSv1;
-    ssl_protocols TLSv1.1 TLSv1.2;
-    #ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
-    ssl_ciphers AES128-SHA:AES256-SHA:RC4-SHA:DES-CBC3-SHA:RC4-MD5;
-    ssl_prefer_server_ciphers on;
+    ssl on;
 
+    server_name emrah.com www.emrah.com;
     root /home/emrah/proje/www_emrah_com/public_html;
     index index.html;
     charset utf-8;
@@ -160,44 +181,9 @@ server {
         access_log off;
         log_not_found off; }
 
-    # gizli dosyalara dogrudan erisim yasak.
-    #location &tilde; /\. {
-    #    access_log off;
-    #    log_not_found off;
-    #    deny all; }
-
-    ## static dosyalar icin farkli header.
-    #location &tilde;* \.(?:ico|css|js|gif|jpe?g|png)$ {
-    #    expires max;
-    #    add_header Pragma public;
-    #    add_header Cache-Control &quot;public, must-revalidate, proxy-revalidate&quot;; }
-
-    location /gitweb {
-        alias /usr/share/gitweb;
-        index index.cgi;
-        include fastcgi_params;
-        gzip off;
-        if ($uri &tilde; &quot;/gitweb/index.cgi&quot;) {
-            fastcgi_pass unix:/var/run/fcgiwrap.socket; }
-    }
-
-    location /icinga {
-        alias /usr/share/icinga/htdocs;
-        index index.html;
-        auth_basic &quot;...&quot;;
-        auth_basic_user_file /etc/icinga/htpasswd.users; }
-
-    location /icinga/stylesheets {
-        alias /etc/icinga/stylesheets; }
-
-    location /cgi-bin/icinga {
-        alias /usr/lib/cgi-bin/icinga;
-        include fastcgi_params;
-        gzip off;
-
-        fastcgi_pass unix:/var/run/fcgiwrap.socket;
-        fastcgi_param AUTH_USER $remote_user;
-        fastcgi_param REMOTE_USER $remote_user; }
+    # static dosyalar icin farkli header.
+    location &tilde;* \.(?:ico|gif|jpe?g|png)$ {
+        expires max; }
 
     location /kuran {
         autoindex on;

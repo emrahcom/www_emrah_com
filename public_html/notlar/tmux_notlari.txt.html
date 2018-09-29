@@ -97,6 +97,11 @@ ctrl+b :                komut modu
 set status off          status barı kapatır
 setw synchronize-panes  pencereleri senkronize eder.
                         aynı komut bütün pencerelerde çalışır.
+move-window -t n	pencereyi, kullanılmayan N. pencere olarak set eder.
+join-pane -s [ses]:n	Bir oturumdaki N. penceredeki aktif paneli, bulunulan
+			pencereye taşır. AYnı oturum içindeyken :n kullanılır.
+join-pane -t [ses]:n	Aktif paneli, oturumdaki N. pencereye taşır. Aynı
+			oturum içindeyken :n kullanılır.
 </code></pre>
 </body>
 </html>

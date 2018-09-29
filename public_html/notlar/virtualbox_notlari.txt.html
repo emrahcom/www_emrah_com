@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8" />
+<title>virtualbox_notlari.txt</title>
+</head>
+<body>
+<pre><code>
+VIRTUALBOX NOTLARI
+==================
+Debian Stretch ile test edilmiştir.
+
+
+Install
+=======
+
+### /etc/apt/sources.list
+deb http://download.virtualbox.org/virtualbox/debian stretch contrib
+
+### Repo key
+wget https://www.virtualbox.org/download/oracle_vbox_2016.asc
+apt-key add oracle_vbox_2016.asc
+
+### Install
+apt update
+apt install virtualbox-5.2 --install-recommends
+
+
+Konsol
+======
+### Resize disk (only for VDI disk)
+
+VBoxManage modifyhd disk.vdi --resize 20480
+
+veya menuden
+
+File -&gt; Virtual Media Manager
+
+### NAT network
+VBoxManage natnetwork add -t NETWORK_NAME -n &quot;192.168.15.0/24&quot; -e -dhcp on
+VBoxManage natnetwork list
+VBoxManage natnetwork remove --netname NETWORK_NAME
+
+veya menuden
+
+File -&gt; Preferences -&gt; Network
+
+### Host-only network
+VBoxManage hostonlyif create
+VBoxManage hostonlyif remove vboxnet0
+
+veya menuden
+
+File -&gt; Host Network Manager
+
+
+Kaynaklar
+=========
+https://wiki.debian.org/VirtualBox
+
+</code></pre>
+</body>
+</html>

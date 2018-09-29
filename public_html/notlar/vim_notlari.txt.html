@@ -57,6 +57,7 @@ http://stackoverflow.com/questions/1218390/what-is-your-most-productive-shortcut
         Bundle 'gmarik/vundle'
         Bundle 'kevinw/pyflakes-vim'
         Bundle 'Lokaltog/vim-easymotion'
+        Bundle 'ctrlpvim/ctrlp.vim'
 
         # Vundle ile vim pluginlerini yönetmek için vim içindeyken:
             ## .vimrc içinde belirtilen pluginleri yükleme
@@ -119,6 +120,7 @@ highlight cursorcolumn cterm=none ctermfg=7 ctermbg=4
 autocmd BufNewFile,BufRead *.py,*.tmpl call CodingSet0()
 autocmd BufNewFile,BufRead *.php call CodingSet0()
 autocmd BufNewFile,BufRead *.sql call CodingSet0()
+autocmd BufNewFile,BufRead *.md call CodingSet0()
 autocmd BufNewFile,BufRead OKUBENI,README,*.txt call CodingSet1()
 autocmd BufNewFile,BufRead *.html,*.css,*.js call CodingSet2()
 
