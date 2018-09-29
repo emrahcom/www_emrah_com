@@ -482,76 +482,54 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     Kod deposundan kopyalanacak.
 
 # Firefox
-- Vimperator manuel olarak eklensin.
-    Menu çubuğuna mouse sağ tuş, açılan menuden:
-        Liberator Statusline Toolbar iptal
-
-    ~/.vimperatorrc
-     :set gui=nonavigation
-
-- Pentadactyl manuel olarak eklensin.
-  Şu an için vimperator kullan.
-    mkdir -p ~/.pentadactyl/info/default
-
-- NoScript manuel olarak eklensin.
-
-- Adblock plus manuel olarak eklensin.
-
-- DuckDuckGo plus manuel olarak eklensin.
-  references içinde özelleştirme yapılacak. Göz at.
-
-- Türk Trust'ı güvenilir sertifika sağlayıcılar listesinden çıkar.
-    preferences -> Advanced -> Encryption -> View Certificates
-    -> Authorities -> (Seçimi yap) -> Delete or Distrust
-
-    Bu işlem sonrasında otorite, listede kalacak ama güvenilir
-    olduğunu belirten OK işareti kalkacak.
-
-    Silinecekler:
-    . E-Tuğra EBG
-    . EBG Bilişim
-    . Elektronik Bilgi Güvenliği (E-Guven)
-    . TÜBİTAK
-    . TÜRKTRUST
-
-- Proxy kullanılacaksa
-    Preferences -> Advanced -> Network -> Settings
-    Manual Proxy Configuration
-        SOCKS Host      localhost
-        SOCKS Port      8080
-        SOCKS Type      SOCKS v5
-
-        Remote DNS (ok)
-
 - preferences
-    . Main -> When Firefox starts: Show a blank page
-    . Content -> Languages -> Choose -> Turkish (En üstte)
-    . Privacy -> manage your Do Not Track settings -> Always apply Do Not Track
-    . Privacy -> Never Remember History
-    . Privacy -> Location Bar -> Nothing
-    . Security -> Block reported attack sites -> İptal
-    . Security -> Block reported web forgeries -> İptal
-    . Security -> Remember passwords for sites -> İptal
-    . Advanced -> General -> Warn me when web sites try to redirect or
-                  reload the page -> Aktif
-    . Advanced -> General -> Check my spelling as I type -> İptal
-    . Advanced -> Update -> Search Engines -> İptal
+    . General -> When Firefox starts: Show a blank page
+    . General -> Home page: https://emrah.com/
+    . General -> Language -> Choose -> Turkish (add, move down)
+    . General -> Language -> Check your spelling as you type: false
+    . General -> Downloads -> Always ask you where to save files: true
+    . General -> Firefox Updates -> Automatically update search engines: False
+    . General -> Network Proxy -> Settings
+        Manual Proxy Configuration
+        SOCKS Host: localhost
+        SOCKS Port: 28080
+        SOCKS Type: SOCKS v5
+        No Proxy for: localhost, 127.0.0.1, 192.168.1.0/24
+        Proxy DNS when using SOCKS v5: true
+    . Search -> Default Search Engine: DuckDuckGo
+    . Privacy & Security -> Forms & Passwords
+        -> Remember logins and passwords for websites: False
+    . Privacy & Security -> History -> Never Remeber History
+    . Privacy & Security -> Tracking Protection -> Always
+    . Privacy & Security -> Block dangerous downloads: False
+    . Privacy & Security -> Certificates -> View Certificates -> Authorities
+      -> Delete or Distrust
+        E-Tuğra (silinecek)
+        TUBITAK (silinecek)
+        TURKTRUST (silinecek)
+
+      Bu işlem sonrasında otorite, listede kalacak ama güvenilir olduğunu
+      belirten OK işareti kalkacak.
 
 - about:config
     browser.cache.disk.enable                       false
     browser.sessionstore.interval                   60000
-    network.http.pipelining                         true
     network.prefetch-next                           false
-    privacy.trackingprotection.enabled              true
-    privacy.trackingprotection.ui.enabled           true
+
+- Add-ons
+    . Tridactyl
+    . Adblock Plus
+    . NoScript Security Suite by Giorgio Maone
 
 - second profile
     firefox-esr -no-remote -ProfileManager
         "second" adlı profili oluştur.
 
     cd ~/.mozilla/firefox
-    rm XXX.second
-    cp -arp YYY.default ZZZ.second
+    DEFAULT=$(ls | grep .default)
+    SECOND=$(ls | grep .second)
+    rm -rf $SECOND
+    cp -arp $DEFAULT $SECOND
 
 # bitlbee
 - /etc/bitlbee/bitlbee.conf
