@@ -3,3 +3,5 @@
 *.log
 *.pyc
 *__pycache__/
+public_html/medya/dilbert.gif
+public_html/medya/userfriendly.gif
