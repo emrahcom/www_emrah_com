@@ -1,0 +1,61 @@
+OPENSSL NOTLARI
+===============
+Debian Stretch makinede test edildi.
+
+### Paketler
+apt install openssl
+
+### Sertifika otoritesi (CA) için private key
+openssl genrsa -des3 -out myCA.key -passout pass:mypass1 2048
+openssl rsa -in myCA.key -noout -text -check -passin pass:mypass1
+
+### Sertifika otoritesi (CA) için kök sertifika
+openssl req -new -x509 -nodes -days 10950 -key myCA.key -out myCA.pem \
+    -passin pass:mypass1 -subj \
+    "/C=TR/ST=-/L=Istanbul/O=myCA/OU=ARGE/CN=myca.net/emailAddress=arge@myca.net"
+openssl x509 -in myCA.pem -noout -text
+
+### Alan için private key
+openssl genrsa -out mycompany.com.key -passout pass:mypass2 2048
+openssl rsa -in mycompany.com.key -noout -text -check -passin pass:mypass2
+
+### Alan için sertifika istek belgesi
+openssl req -new -key mycompany.com.key -out mycompany.com.csr -subj \
+    "/C=TR/ST=-/L=Istanbul/O=myCompany/OU=ARGE/CN=mycompany.com/emailAddress=arge@mycompany.com"
+openssl req -in mycompany.com.csr -noout -text -verify
+
+### Extension dosyası
+Birden fazla alan adi ve IP aynı sertifika içinde yer alacaksa extension
+dosyası gerekir.
+
+    mycompany.ext
+        authorityKeyIdentifier=keyid,issuer
+        basicConstraints=CA:FALSE
+        keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+        subjectAltName = @alt_names
+
+        [alt_names]
+        DNS.1 = mycompany.net
+        DNS.2 = mycompany.org
+        DNS.3 = *.mycompany.com
+        DNS.4 = *.mycompany.net
+        DNS.5 = *.mycompany.org
+
+### Alan için sertifika
+openssl x509 -req -CA myCA.pem -CAkey myCA.key -passin pass:mypass1 \
+    -CAcreateserial -in mycompany.com.csr -out mycompany.com.pem \
+    -extfile mycompany.ext -days 10950
+openssl x509 -in mycompany.com.pem -noout -text
+openssl verify -CAfile myCA.pem mycompany.com.pem
+
+cat myCA.srl
+
+
+### Fullchain
+cat mycompany.com.pem myca.pem > mycompany.com.bundle.pem ???
+
+### Kaynaklar
+https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
+https://gist.github.com/Soarez/9688998
+https://www.sslshopper.com/article-most-common-openssl-commands.html
+
