@@ -132,9 +132,8 @@ UPDATE SCRIPTS
 
 ### /etc/crontab
 19 05   * * *   root    /root/scripts/apt.sh >/dev/null 2>&1
-01 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/update.py
-03 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/dilbert.py
-05 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/userfriendly.py
+03 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/dilbert.sh
+05 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/userfriendly.sh
 07 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/txt2html.py
 09 *    * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/ayet.py
 
