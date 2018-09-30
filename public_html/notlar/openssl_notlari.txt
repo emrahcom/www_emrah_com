@@ -5,6 +5,39 @@ Debian Stretch makinede test edildi.
 ### Paketler
 apt install openssl
 
+### Self-signed sertifika
+Sertifika otoritesi (CA) için passphrase olmayan private key ve kök sertifika
+oluşturmakla aynı şekilde yapılıyor.
+
+### Sertifika otoritesi (CA) için passphrase olmayan private key ve kök sertifika
+openssl req -nodes -new -x509 -days 10950 -keyout myCA.key -out myCA.pem \
+    -subj \
+    "/C=TR/ST=-/L=Istanbul/O=myCA/OU=ARGE/CN=myca.net/emailAddress=arge@myca.net"
+openssl rsa -in myCA.key -noout -text -check
+openssl x509 -in myCA.pem -noout -text
+
+### Alan için passphrase olmayan private key ve sertifika istek belgesi
+openssl req -nodes -newkey rsa:2048 -keyout mycompany.com.key \
+    -out mycompany.com.csr -subj \
+    "/C=TR/ST=-/L=Istanbul/O=myCompany/OU=ARGE/CN=mycompany.com/emailAddress=arge@mycompany.com"
+openssl rsa -in mycompany.com.key -noout -text -check
+openssl req -in mycompany.com.csr -noout -text -verify
+
+### Alan için sertifika
+openssl x509 -req -CA myCA.pem -CAkey myCA.key -CAcreateserial -days 10950 \
+    -in mycompany.com.csr -out mycompany.com.pem
+openssl x509 -in mycompany.com.pem -noout -text
+openssl verify -CAfile myCA.pem mycompany.com.pem
+cat myCA.srl
+
+### Chain sertifika
+root sertifikaya erişene kadar bütün sertifikalar sırası ile aynı dosyaya
+eklenir. root sertifika eklenmeyecek.
+
+cat mycompany.com.pem myca.pem > mycompany.com.fullchain.pem
+
+
+
 ### Sertifika otoritesi (CA) için private key
 openssl genrsa -des3 -out myCA.key -passout pass:mypass1 2048
 openssl rsa -in myCA.key -noout -text -check -passin pass:mypass1
@@ -48,14 +81,8 @@ openssl x509 -req -CA myCA.pem -CAkey myCA.key -passin pass:mypass1 \
 openssl x509 -in mycompany.com.pem -noout -text
 openssl verify -CAfile myCA.pem mycompany.com.pem
 
-cat myCA.srl
-
-
-### Fullchain
-cat mycompany.com.pem myca.pem > mycompany.com.bundle.pem ???
-
 ### Kaynaklar
 https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
 https://gist.github.com/Soarez/9688998
 https://www.sslshopper.com/article-most-common-openssl-commands.html
-
+https://www.shellhacks.com/create-csr-openssl-without-prompt-non-interactive/
