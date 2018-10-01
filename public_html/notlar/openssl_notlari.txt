@@ -2,9 +2,16 @@ OPENSSL NOTLARI
 ===============
 Debian Stretch makinede test edildi.
 
+# -----------------------------------------------------------------------------
+# INSTALL
+# -----------------------------------------------------------------------------
 ### Paketler
 apt install openssl
 
+
+# -----------------------------------------------------------------------------
+# GENERATE CERTIFICATE LIKE A CA (without passphrase)
+# -----------------------------------------------------------------------------
 ### Self-signed sertifika
 Sertifika otoritesi (CA) için passphrase olmayan private key ve kök sertifika
 oluşturmakla aynı şekilde yapılıyor.
@@ -37,7 +44,9 @@ eklenir. root sertifika eklenmeyecek.
 cat mycompany.com.pem myca.pem > mycompany.com.fullchain.pem
 
 
-
+# -----------------------------------------------------------------------------
+# GENERATE CERTIFICATE LIKE A CA (with passphrase)
+# -----------------------------------------------------------------------------
 ### Sertifika otoritesi (CA) için private key
 openssl genrsa -des3 -out myCA.key -passout pass:mypass1 2048
 openssl rsa -in myCA.key -noout -text -check -passin pass:mypass1
@@ -81,7 +90,30 @@ openssl x509 -req -CA myCA.pem -CAkey myCA.key -passin pass:mypass1 \
 openssl x509 -in mycompany.com.pem -noout -text
 openssl verify -CAfile myCA.pem mycompany.com.pem
 
-### Kaynaklar
+
+# -----------------------------------------------------------------------------
+# CLIENT SIDE
+# -----------------------------------------------------------------------------
+### update ca-certificates database
+CA sertifikası, ca-certificates veritabanına eklenirse curl, wget vb
+uygulamalar için parametre ile CA sertifikasını belirtmeye gerek kalmıyor.
+Browser gibi uygulamalar, bu veritabanını kullanmıyor, kendi veritabanlarını
+kullanıyorlar.
+
+apt install ca-certificates
+cp myCA.pem /usr/local/share/ca-certificates/myCA.crt
+update-ca-certificates
+
+### curl with custom CA certificate
+curl --cacert myCA.pem https://...
+
+### wget with custom CA certificate
+wget --ca-certificate=myCA.pem https://...
+
+
+# -----------------------------------------------------------------------------
+# Kaynaklar
+# -----------------------------------------------------------------------------
 https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
 https://gist.github.com/Soarez/9688998
 https://www.sslshopper.com/article-most-common-openssl-commands.html
