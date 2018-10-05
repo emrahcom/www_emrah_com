@@ -494,7 +494,7 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
         SOCKS Host: localhost
         SOCKS Port: 28080
         SOCKS Type: SOCKS v5
-        No Proxy for: localhost, 127.0.0.1, 192.168.0.0/24, 172.16.0.0/12, 10.0.0.0/8
+        No Proxy for: localhost, 127.0.0.1, 192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8
         Proxy DNS when using SOCKS v5: true
     . Search -> Default Search Engine: DuckDuckGo
     . Privacy & Security -> Forms & Passwords
