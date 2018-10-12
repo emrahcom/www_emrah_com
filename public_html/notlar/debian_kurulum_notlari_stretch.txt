@@ -302,7 +302,8 @@ apt install firefox-esr --install-recommends
 apt install flashplayer-mozilla                     # multimedia deposundan...
 apt install smplayer
 apt install pavucontrol                             # pulsaudio icin ses kontrol GUI
-apt install x11vnc xvnc4viewer rdesktop
+apt install x11vnc xvnc4viewer
+apt install freerdp-x11 libfreerdp-plugins-standard # better rdesktop
 apt install zathura                                 # pdf okuyucu
 apt install chromium fonts-liberation               # alternatif browser gerekecekse...
 apt install libreoffice --install-recommends        # office uygulamalari gerekecekse...
