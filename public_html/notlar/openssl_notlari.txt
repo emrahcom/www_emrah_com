@@ -112,6 +112,29 @@ wget --ca-certificate=myCA.pem https://...
 
 
 # -----------------------------------------------------------------------------
+# CA CERTIFICATE FOR FIREFOX & CHROMIUM
+# -----------------------------------------------------------------------------
+### Packages
+apt install libnss3-tools
+
+### find DBs
+find ~ -name cert9.db
+
+### Delete certificate if already exists
+certutil -n "myCA" -D -d sql:/home/myuser/.pki/nssdb/
+certutil -n "myCA" -D -d sql:/home/myuser/.mozilla/firefox/XXXXXX.default/
+
+### Add certificate
+certutil -A -n "myCA" -t "TCu,Cu,Tu" -i myCA.pem \
+    -d sql:/home/myuser/.pki/nssdb/
+certutil -A -n "myCA" -t "TCu,Cu,Tu" -i myCA.pem \
+    -d sql:/home/myuser/.mozilla/firefox/XXXXXX.default/
+
+### List certificates
+certutil -L -d sql:/home/myuser/.pki/nssdb/
+certutil -L -d sql:/home/myuser/.mozilla/firefox/XXXXXX.default/
+
+# -----------------------------------------------------------------------------
 # Kaynaklar
 # -----------------------------------------------------------------------------
 https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
