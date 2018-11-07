@@ -68,7 +68,8 @@ openssl req -in mycompany.com.csr -noout -text -verify
 
 ### Extension dosyası
 Birden fazla alan adi ve IP aynı sertifika içinde yer alacaksa extension
-dosyası gerekir.
+dosyası gerekir. Extension dosyası varken CN dikkate alınmıyor. Bu nedenle
+default alan adının da dosya içinde yer alması gerekiyor.
 
     mycompany.ext
         authorityKeyIdentifier=keyid,issuer
@@ -77,11 +78,12 @@ dosyası gerekir.
         subjectAltName = @alt_names
 
         [alt_names]
-        DNS.1 = mycompany.net
-        DNS.2 = mycompany.org
-        DNS.3 = *.mycompany.com
-        DNS.4 = *.mycompany.net
-        DNS.5 = *.mycompany.org
+        DNS.1 = mycompany.com
+        DNS.2 = mycompany.net
+        DNS.3 = mycompany.org
+        DNS.4 = *.mycompany.com
+        DNS.5 = *.mycompany.net
+        DNS.6 = *.mycompany.org
 
 ### Alan için sertifika
 openssl x509 -req -CA myCA.pem -CAkey myCA.key -passin pass:mypass1 \
