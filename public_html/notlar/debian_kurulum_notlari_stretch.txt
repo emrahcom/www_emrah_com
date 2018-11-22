@@ -185,8 +185,7 @@ nameserver 8.8.4.4
 # -----------------------------------------------------------------------------
 # python (temel) paketleri
 apt install python3 ipython3 bpython3
-apt install python ipython bpython -d
-apt install pypy -d
+apt install python3-pip
 
 # LXC
 apt install lxc debootstrap
@@ -267,16 +266,14 @@ apt install git                                     # versiyon kontrol sistemi
 apt install php-cli                                 # komut satırından PHP
 
 # Python
-apt install python3-pip
-pip3 install --upgrade pip setuptools wheel twine
-
-pip3 install --upgrade pexpect                      # shell uygulamalarını interaktif çalıştırma 
+apt install python3-pip --install-recommends
+pip3 install --upgrade setuptools wheel
+pip3 install --upgrade pexpect                      # shell uygulamalarını interaktif çalıştırma
 pip3 install --upgrade requests                     # HTTP kütüphanesi, arkada urllib3 kullanıyor
-pip3 install s3cmd                                  # S3 object storage işlemleri
+pip3 install --upgrade s3cmd                        # S3 object storage işlemleri
+pip3 install --upgrade grip                         # MarkDown viewer
 
 # Bu paketleri pip3 ile kurmayı dene. Henüz test edilmedi.
-apt install python3-pudb                            # Python debugger
-apt install python3-nose                            # unittest
 apt install python3-psutil                          # cpu, memory, process vb takip için
 apt install pychecker pylint pyflakes pyflakes3     # kod kalitesi ve hata kontrol
 apt install python3-psycopg2                        # PostgreSQL kullanılacaksa
