@@ -80,6 +80,9 @@ reboot
 # /etc/crypttab example
 mycrypt UUID=47fa2fee-4c32-8200-9cea-63b592c92ed2 none luks,keyscript=/root/scripts/key.sh
 
+# /etc/crypttab with keyfile
+mycrypt UUID=47fa2fee-4c32-8200-9cea-63b592c92ed2 /etc/keys/mykey luks
+
 
 # -----------------------------------------------------------------------------
 # RESIZE
