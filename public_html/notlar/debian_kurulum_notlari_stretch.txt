@@ -523,6 +523,7 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     . Noscript whitelist temizlenir.
     . Bir kere boş tab açılıp Tridactyl için izin verilir.
     . Noscript izni verilecek sitelere bir kere girilir.
+       . duckduckgo
        . demo siteler
        . player (dash, hls)
        . egroupware
