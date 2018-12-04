@@ -519,6 +519,18 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     . Adblock Plus
     . NoScript Security Suite by Giorgio Maone
 
+- Diğer
+    . Noscript whitelist temizlenir.
+    . Bir kere boş tab açılıp Tridactyl için izin verilir.
+    . Noscript izni verilecek sitelere bir kere girilir.
+       . demo siteler
+       . player (dash, hls)
+       . egroupware
+       . github, ycombinator, wttr.in, debian, pypi
+       . bankalar, yemeksepeti
+       . digital ocean
+       . radyolar
+
 - second profile
     firefox-esr -no-remote -ProfileManager
         "second" adlı profili oluştur.
