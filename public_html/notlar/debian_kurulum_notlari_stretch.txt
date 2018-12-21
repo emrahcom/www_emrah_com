@@ -324,7 +324,7 @@ apt install -d dpkg-dev build-essential fakeroot
 
 # sshuttle
 - visudo
-    emrah   ALL=NOPASSWD: /usr/sbin/sshuttle, /bin/systemctl suspend
+    emrah   ALL=NOPASSWD: /usr/bin/sshuttle, /bin/systemctl suspend
 
 # zsh
 - ~/.zshrc (root için)
