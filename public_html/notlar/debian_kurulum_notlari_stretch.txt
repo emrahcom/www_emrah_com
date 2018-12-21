@@ -78,7 +78,7 @@ apt dist-upgrade && \
 apt autoremove --purge
 
 # İlk aşamada yüklenecek paketler
-apt install zsh tmux git vim-nox pyflakes pyflakes3 autojump bridge-utils
+apt install zsh tmux git vim-nox autojump bridge-utils
 apt install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
 
 # Default paketlerden silinecekler
@@ -123,9 +123,10 @@ Trim desteği olan SSD diskler için discard eklenecek.
 # /etc/fstab tmpfs ayarları
 USB stick kurulumlarında yapılacak.
 
-tmpfs                                     /tmp             tmpfs       defaults,noatime,mode=1777,size=300M  0    0
-tmpfs                                     /var/log         tmpfs       defaults,noatime,mode=0755,size=100M  0    0
-tmpfs           /var/cache/browser        tmpfs            noatime,size=150M,nr_inodes=10k,mode=1777         0    0
+/dev/mapper/crypto-usb  /                   ext4    noatime,errors=remount-ro                   0  1
+tmpfs                   /tmp                tmpfs   defaults,noatime,mode=1777,size=300M        0  0
+tmpfs                   /var/log            tmpfs   defaults,noatime,mode=0755,size=100M        0  0
+tmpfs                   /var/cache/browser  tmpfs   noatime,size=150M,nr_inodes=10k,mode=1777   0  0
 
 # SSH ayarları
 - /etc/ssh/sshd_config
@@ -184,39 +185,41 @@ nameserver 8.8.4.4
 # Paketlerin Kurulumu
 # -----------------------------------------------------------------------------
 # python (temel) paketleri
-apt install python3 ipython3 bpython3
+apt install python3 bpython3
 apt install python3-pip
 
 # LXC
 apt install lxc debootstrap
 
 # monitoring paketleri
-apt install htop iotop tiptop
-apt install atop powertop sysstat -d
-apt install nethogs iftop bmon bwm-ng
-apt install --install-recommends sysdig             # Sistem cagrilarini analiz
+apt install htop iotop tiptop bmon
+apt install -d atop powertop sysstat
+apt install -d nethogs iftop bwm-ng
+apt install -d --install-recommends sysdig          # Sistem cagrilarini analiz
 
 # network paketleri
-apt install fping arping mtr curl httpie dnsutils whois
+apt install fping arping mtr curl dnsutils whois
 apt install heirloom-mailx
 apt install sshuttle sudo                           # VPN over SSH
 apt install --install-recommends openvpn            # SSL VPN client olacaksa
 apt install nmap tcpdump
-apt install ngrep netcat-openbsd telnet
-apt install minicom                                 # Seri porttan bağlanan cihazlar için
-apt install wvdial usb-modeswitch                   # USB 3G modem kullanılacaksa
-apt install pptp-linux                              # VPN tunel icin
-apt install nuttcp                                  # Network performan olcme
-apt install ethtool net-tools
+apt install ngrep netcat-openbsd
+apt install -d telnet
+apt install -d minicom                              # Seri porttan bağlanan cihazlar için
+apt install -d httpie                               # curl alternatif
+apt install -d wvdial usb-modeswitch                # USB 3G modem kullanılacaksa
+apt install -d pptp-linux                           # VPN tunel icin
+apt install -d nuttcp                               # Network performan olcme
+apt install -d ethtool net-tools
 
 # parallel komut çalıştırma
-apt install parallel
+apt install -d parallel
 
 # IRC, jabber, gtalk
-apt install weechat-curses weechat-plugins bitlbee
+apt install -d weechat-curses weechat-plugins bitlbee
 
 # soft raid olacaksa
-apt install mdadm
+apt install -d mdadm
 
 # firmware
 apt install firmware-linux-free
@@ -236,34 +239,34 @@ Diğer makinelerde wireless adaptör varsa olsun
 apt install wicd-curses wicd-cli rfkill
 
 # dosyalar, dosya sistemi, uzaktan dosya sistemlerine erişim ile ilgili paketler
-apt install bzip2 zip unzip diffutils patch ack
-apt install tree autojump parted
+apt install bzip2 zip unzip ack
+apt install autojump parted
 apt install lftp ncftp rsync
 apt install ccrypt cryptsetup encfs
 apt install pwgen                                   # Random parola üretmek için
-apt install sshfs -d
-apt install cifs-utils smbclient -d
-apt install ntfs-3g -d
+apt install -d diffutils patch tree
+apt install -d sshfs
+apt install -d cifs-utils smbclient
+apt install -d ntfs-3g
 
 # Veritabanı istemcileri
-apt install postgresql-client
-apt install mysql-client
-apt install sqlite3
-apt install sqsh                                    # MS SQL ve Sybase shell
+apt install -d postgresql-client
+apt install -d mysql-client
+apt install -d sqlite3
+apt install -d sqsh                                 # MS SQL ve Sybase shell
 
 # CD/DVD paketleri
-apt install wodim dvd+rw-tools
+apt install -d wodim dvd+rw-tools
 
 # Multimedia
-apt install alsa-base alsa-utils -d
+apt install -d alsa-base alsa-utils
 apt install pulseaudio pulseaudio-utils
 apt install mplayer ffmpeg
-apt install tpp                                     # text presentation program
 
 # Programlama paketleri
 apt install vim-nox                                 # script destekli vim
 apt install git                                     # versiyon kontrol sistemi
-apt install php-cli                                 # komut satırından PHP
+apt install -d php-cli                              # komut satırından PHP
 
 # Python
 apt install python3-pip --install-recommends
@@ -274,19 +277,19 @@ pip3 install --upgrade s3cmd                        # S3 object storage işlemle
 pip3 install --upgrade grip                         # MarkDown viewer
 
 # Bu paketleri pip3 ile kurmayı dene. Henüz test edilmedi.
-apt install python3-psutil                          # cpu, memory, process vb takip için
-apt install pychecker pylint pyflakes pyflakes3     # kod kalitesi ve hata kontrol
-apt install python3-psycopg2                        # PostgreSQL kullanılacaksa
-apt install python3-simplejson python3-lxml         # JSON ve XML kullanılacaksa
-apt install python3-pycurl                          # Curl paketi
-apt install python3-ipy python-ipaddr               # IP handling
-apt install python3-netifaces                       # Network device
-apt install python3-openssl python3-crypto          # Güvenlik ve şifreleme
-apt install python-serial python-parallel           # Seri ve parallel portan haberleşme için
+apt install -d python3-psutil                       # cpu, memory, process vb takip için
+apt install -d pychecker pylint pyflakes pyflakes3  # kod kalitesi ve hata kontrol
+apt install -d python3-psycopg2                     # PostgreSQL kullanılacaksa
+apt install -d python3-simplejson python3-lxml      # JSON ve XML kullanılacaksa
+apt install -d python3-pycurl                       # Curl paketi
+apt install -d python3-ipy python-ipaddr            # IP handling
+apt install -d python3-netifaces                    # Network device
+apt install -d python3-openssl python3-crypto       # Güvenlik ve şifreleme
+apt install -d python-serial python-parallel        # Seri ve parallel portan haberleşme için
 
 # PostgreSQL
-apt install postgresql postgresql-contrib
-apt install phppgadmin                              # PostrgreSQL icin web UI olacaksa...
+apt install -d postgresql postgresql-contrib
+apt install -d phppgadmin                           # PostrgreSQL icin web UI olacaksa...
 
 # Masaüstü paketleri
 apt install --install-recommends xorg
@@ -306,10 +309,10 @@ apt install chromium fonts-liberation               # alternatif browser gerekec
 apt install libreoffice --install-recommends        # office uygulamalari gerekecekse...
 apt install gimp --install-recommends               # resim düzenlemek gerekecekse...
 apt install krita --install-recommends              # resim düzenlemek gerekecekse...
-apt install -t ring ring-daemon ring                # kendi deposundan kurulacak
+apt install -d -t ring ring-daemon ring             # kendi deposundan kurulacak
 
 # Debian kaynak kod paketleri ile çalışılacaksa
-apt install dpkg-dev build-essential fakeroot
+apt install -d dpkg-dev build-essential fakeroot
 # -----------------------------------------------------------------------------
 # Yazılımların ayarlanması
 # -----------------------------------------------------------------------------
@@ -321,7 +324,7 @@ apt install dpkg-dev build-essential fakeroot
 
 # sshuttle
 - visudo
-    emrah   ALL=NOPASSWD: /usr/sbin/sshuttle
+    emrah   ALL=NOPASSWD: /usr/sbin/sshuttle, /bin/systemctl suspend
 
 # zsh
 - ~/.zshrc (root için)
