@@ -437,6 +437,7 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
 # spectrwm kullanılacaksa
 . ~/.xinitrc
     #/home/emrah/proje/browser_live/mozilla2ram.sh
+    xset r rate 250 60
     exec /usr/bin/spectrwm
 
 . ~/.spectrwm.conf
