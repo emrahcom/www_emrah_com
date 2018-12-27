@@ -261,7 +261,7 @@ apt install -d wodim dvd+rw-tools
 # Multimedia
 apt install -d alsa-base alsa-utils
 apt install pulseaudio pulseaudio-utils
-apt install mplayer ffmpeg
+apt install mpv ffmpeg
 
 # Programlama paketleri
 apt install vim-nox                                 # script destekli vim
