@@ -1,0 +1,61 @@
+NBD NOTLARI
+===========
+Network Block Device
+
+## Server
+nbd-server paketi kurulur.
+
+#### Server kurulum
+```
+apt-get install nbd-server
+```
+
+#### Server ayarları
+
+###### /etc/nbd-server/conf.d/debian.conf
+```
+[stretch]
+exportname = /home/iso/debian-stretch-amd64.iso
+readonly = true
+
+[jessie]
+exportname = /home/iso/debian-jessie-amd64.iso
+readonly = true
+```
+
+###### Çalıştırma
+```
+systemctl start nbd-server.service
+```
+
+
+## Client
+nbd-client paketi kurulur.
+
+#### Client kurulum
+```
+apt-get install nbd-client
+```
+
+#### Device bağlama
+```
+nbd-client my_server_address -N stretch /dev/nbd0
+nbd-client my_server_address -N jessie /dev/nbd1
+
+mount /dev/nbd0 /media/cdrom
+```
+
+#### Device disconnect
+```
+umount /dev/nbd0
+nbd-client -d /dev/nbd0
+```
+
+#### Client Options
+
+* -t (timeout): connection timeout
+* -p (persist): bağlantı koparsa yeniden bağlan
+* -C (connections): bu device için kaç bağlantı kullanılacağı. Sayı artarsa
+  hız artar.
+* -c (check): bağlantı var mı diye kontrol et
+* -s (swap): swap olarak kullan.

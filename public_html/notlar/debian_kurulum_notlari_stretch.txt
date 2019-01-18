@@ -246,6 +246,7 @@ apt install ccrypt cryptsetup encfs
 apt install pwgen                                   # Random parola üretmek için
 apt install -d diffutils patch tree
 apt install -d sshfs
+apt install -d nbd-client nbd-server
 apt install -d cifs-utils smbclient
 apt install -d ntfs-3g
 
