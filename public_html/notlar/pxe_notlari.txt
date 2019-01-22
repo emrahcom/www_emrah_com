@@ -1,0 +1,66 @@
+PXE NOTLARI
+===========
+Bu kurulunda `dnsmasq`, proxy DHCP olarak kullanılmıştır. Yani ortamda bir DHCP
+sunucu var, `dnsmasq` sadece TFTP yönlendirmesini yapıyor. TFTP sunucu, yine
+`dnsmasq`
+
+## Kurulum
+```
+apt-get install dnsmasq
+apt-get install pxelinux syslinux syslinux-common syslinux-utils
+```
+
+## /etc/dnsmasq/pxe
+```
+bind-interfaces
+interface=eth0
+port=0
+
+dhcp-range=192.168.1.0,proxy
+dhcp-boot=pxelinux.0
+dhcp-no-override
+
+enable-tftp
+tftp-root=/var/lib/tftp
+pxe-service=x86PC,'myTFP',pxelinux
+
+log-dhcp
+```
+
+## TFTP
+```
+mkdir -p /var/lib/tftp/pxelinux.cfg
+cd /var/lib/tftp/
+cp /usr/lib/PXELINUX/pxelinux.0 .
+cp /usr/lib/syslinux/modules/bios/{ldlinux,libmenu,libutil,menu}.c32 .
+```
+
+## Kernel ve initrd
+```
+mkdir -p /var/lib/tftp/stretch
+cd /var/lib/tftp/stretch
+
+wget -O /tmp/netboot.tar.gz \
+    http://ftp.nl.debian.org/debian/dists/stretch/main/installer-amd64/current/images/netboot/netboot.tar.gz
+tar zxf /tmp/netboot.tar.gz -C /tmp
+cp /tmp/debian-installer/amd64/{initrd.gz,linux,bootnetx64.efi} .
+```
+
+## /var/lib/tftp/pxelinux.cfg/default
+```
+DEFAULT menu.c32
+PROMPT 0
+
+MENU TITLE My Boot Loader
+
+LABEL localboot
+    MENU DEFAULT
+    MENU LABEL ^Boot Local Disk
+    localboot 0
+
+LABEL Debian
+    MENU LABEL Install ^Debian
+    KERNEL stretch/linux
+    INITRD stretch/initrd.gz
+    APPEND console-keymaps-at/keymap=tr locale=en_US vga=788 --- quiet
+```
