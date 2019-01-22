@@ -1,8 +1,8 @@
 PXE NOTLARI
 ===========
-Bu kurulunda `dnsmasq`, proxy DHCP olarak kullanılmıştır. Yani ortamda bir DHCP
+Bu kurulumda `dnsmasq`, proxy DHCP olarak kullanılmıştır. Yani ortamda bir DHCP
 sunucu var, `dnsmasq` sadece TFTP yönlendirmesini yapıyor. TFTP sunucu, yine
-`dnsmasq`
+`dnsmasq`...
 
 ## Kurulum
 ```
