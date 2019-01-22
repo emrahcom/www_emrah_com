@@ -10,7 +10,7 @@ apt-get install dnsmasq
 apt-get install pxelinux syslinux syslinux-common syslinux-utils
 ```
 
-## /etc/dnsmasq/pxe
+## /etc/dnsmasq.d/pxe
 ```
 bind-interfaces
 interface=eth0
@@ -63,4 +63,10 @@ LABEL Debian
     KERNEL stretch/linux
     INITRD stretch/initrd.gz
     APPEND console-keymaps-at/keymap=tr locale=en_US vga=788 --- quiet
+```
+
+## dnsmasq test
+```
+dnsmasq -d --pid-file=/run/dnsmasq/dnsmasq-pxe.pid -u dnsmasq \
+    --conf-dir=/etc/dnsmasq.d --local-service
 ```
