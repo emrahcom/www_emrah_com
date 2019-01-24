@@ -56,12 +56,19 @@ deb-src http://security.debian.org/debian-security stretch/updates main contrib 
 deb http://www.deb-multimedia.org stretch main non-free
 deb-src http://www.deb-multimedia.org stretch main non-free
 
+# x2go kullanılacaksa...
+deb http://packages.x2go.org/debian stretch main
+
 # Ring kurulacaksa...
 deb https://dl.ring.cx/ring-nightly/debian_9/ ring main
 
 # Anahtar yüklemeleri
 ## Multimedia
 apt install deb-multimedia-keyring
+apt update
+
+## x2go
+apt-get install x2go-keyring
 apt update
 
 ## Ring
@@ -303,6 +310,7 @@ apt install firefox-esr --install-recommends
 apt install flashplayer-mozilla                     # multimedia deposundan...
 apt install smplayer
 apt install pavucontrol                             # pulsaudio icin ses kontrol GUI
+apt install x2goclient
 apt install x11vnc xvnc4viewer
 apt install freerdp-x11 libfreerdp-plugins-standard # better rdesktop
 apt install zathura                                 # pdf okuyucu
