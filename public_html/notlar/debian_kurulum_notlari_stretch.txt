@@ -210,7 +210,7 @@ apt install heirloom-mailx
 apt install sshuttle sudo                           # VPN over SSH
 apt install --install-recommends openvpn            # SSL VPN client olacaksa
 apt install nmap tcpdump
-apt install ngrep netcat-openbsd
+apt install ngrep netcat-openbsd socat
 apt install -d telnet
 apt install -d minicom                              # Seri porttan bağlanan cihazlar için
 apt install -d httpie                               # curl alternatif
