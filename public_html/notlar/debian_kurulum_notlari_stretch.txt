@@ -59,6 +59,9 @@ deb-src http://www.deb-multimedia.org stretch main non-free
 # x2go kullanılacaksa...
 deb http://packages.x2go.org/debian stretch main
 
+# riot.im kurulacaksa...
+deb https://riot.im/packages/debian/ stretch main
+
 # Ring kurulacaksa...
 deb https://dl.ring.cx/ring-nightly/debian_9/ ring main
 
@@ -69,6 +72,11 @@ apt update
 
 ## x2go
 apt-get install x2go-keyring
+apt update
+
+## riot.im
+wget -qNP /tmp/ https://riot.im/packages/debian/repo-key.asc
+apt-key add /tmp/repo-key.asc
 apt update
 
 ## Ring
@@ -318,6 +326,7 @@ apt install chromium fonts-liberation               # alternatif browser gerekec
 apt install libreoffice --install-recommends        # office uygulamalari gerekecekse...
 apt install gimp --install-recommends               # resim düzenlemek gerekecekse...
 apt install krita --install-recommends              # resim düzenlemek gerekecekse...
+apt install riot-web                                # Matrix client
 apt install -d -t ring ring-daemon ring             # kendi deposundan kurulacak
 
 # Debian kaynak kod paketleri ile çalışılacaksa
