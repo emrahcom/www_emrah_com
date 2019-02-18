@@ -176,6 +176,10 @@ server {
     location ~* \.(?:ico|gif|jpe?g|png)$ {
         expires max; }
 
+    # markdown
+    location ~* \.(?:md|markdown)$ {
+        default_type "text/plain; charset=utf-8"; }
+
     location /kuran {
         autoindex on;
     }

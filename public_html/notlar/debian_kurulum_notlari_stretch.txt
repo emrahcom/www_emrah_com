@@ -540,6 +540,7 @@ unzip 1.050R-it.zip -d ~/.fonts/Source_Code_Pro
     . Tridactyl
     . Adblock Plus
     . NoScript Security Suite by Giorgio Maone
+    . Markdown Viewer Webext
 
 - Diğer
     . Noscript whitelist temizlenir.
