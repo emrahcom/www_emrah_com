@@ -549,8 +549,8 @@ EOF
 ```
 
 #### Source Code Pro
-https://github.com/adobe-fonts/source-code-pro
-https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip
+https://github.com/adobe-fonts/source-code-pro   
+https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip   
 Download zip
 
 ```bash
