@@ -1,50 +1,54 @@
-# -----------------------------------------------------------------------------
-# DEBIAN STRETCH KURULUM NOTLARI
-# -----------------------------------------------------------------------------
+DEBIAN STRETCH KURULUM NOTLARI
+==============================
 Kurulum, Netinstall CD'si ile yapılacak.
-# -----------------------------------------------------------------------------
-# Temel sistemin kurulması
-# -----------------------------------------------------------------------------
-Select a language               : English
-Select your location            : other -> Asia -> Turkey
-Configure locales               : United States en_US.UTF-8
-Additional locales              : tr_TR.UTF-8
-System Locale                   : en_US.UTF-8
-Select a keyboard layout        : PC-style -> Turkish (Q layout)
-Configure the network           : Özel bi durum olmadıkça DHCP kulan.
-                                  Sabit IP adresi alacak makineleri DHCP
-                                  sunucudan ayarla. DNS ayarlamak gerekirse,
-                                  aşağıdakiler kullanılabilir.
 
-                                        208.67.222.222  OpenDNS
-                                        208.67.220.220  OpenDNS
-                                        8.8.8.8         Google
-                                        8.8.4.4         Google
-Configure the clock (time zone) : Europe/Istanbul
-Partitition disks               : Manual
-    Partition table -> gpt
+## Temel sistemin kurulması
+__Select a language__: English
+__Select your location__: other -> Asia -> Turkey
+__Configure locales__: United States en_US.UTF-8
+__Additional locales__: tr_TR.UTF-8
+__System Locale__: en_US.UTF-8
+__Select a keyboard layout__: PC-style -> Turkish (Q layout)
+__Configure the network__: Özel bi durum olmadıkça DHCP kulan.
+__DNS__:
+```
+208.67.222.222
+208.67.220.220
+8.8.8.8
+8.8.4.4
+```
 
-    örnek bölümlendirme 1
-    /       500 MB  sda1    (bootable)
-    /usr      5 GB  sda2    (~3 GB)
-    /var      5 GB  sda3    (~2 GB)
-    /tmp    500 MB  sda4    (tmpfs yapılabilir)
-    swap      1 GB  sda5    (hibernate için ~RAM)
-    /home     X GB  sda6
+__Configure the clock (time zone)__: Europe/Istanbul
+__Partitition disks__: Manual
+__Partition table__: gpt
 
-    örnek bölümlendirme 2
-    /boot   100 MB  sda1    (bootable)
-    crypto    X GB  sda2    (mount to /)
+* örnek bölümlendirme 1
+```
+/       500 MB  sda1    (bootable)
+/usr      5 GB  sda2    (~3 GB)
+/var      5 GB  sda3    (~2 GB)
+/tmp    500 MB  sda4    (tmpfs yapılabilir)
+swap      1 GB  sda5    (hibernate için ~RAM)
+/home     X GB  sda6
+```
 
-    SSD disk kullanılıyor ve TRIM desteği varsa ext4 partitionlarda discard
-    özelliği aktif hale getirilecek. Bütün partitionlarda noatime özelliği
-    aktif olsun.
-# -----------------------------------------------------------------------------
-# Kurulum sonrası ilk ayarlar
-# -----------------------------------------------------------------------------
-# /etc/apt/apt.conf.d/80recommends
+* örnek bölümlendirme 2
+```
+/boot   100 MB  sda1    (bootable)
+crypto    X GB  sda2    (mount to /)
+```
+
+SSD disk kullanılıyor ve TRIM desteği varsa ext4 partitionlarda discard
+özelliği aktif hale getirilecek. Bütün partitionlarda noatime özelliği
+aktif olsun.
+
+
+## Kurulum sonrası ilk ayarlar
+#### /etc/apt/apt.conf.d/80recommends
+```
 APT::Install-Recommends "0";
 APT::Install-Suggests "0";
+```
 
 # /etc/apt/sources.list
 deb http://ftp2.de.debian.org/debian/ stretch main non-free contrib
