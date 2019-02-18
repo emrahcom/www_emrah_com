@@ -3,13 +3,13 @@ DEBIAN STRETCH KURULUM NOTLARI
 Kurulum, Netinstall CD'si ile yapılacak.
 
 ## Temel sistemin kurulması
-__Select a language__: English
-__Select your location__: other -> Asia -> Turkey
-__Configure locales__: United States en_US.UTF-8
-__Additional locales__: tr_TR.UTF-8
-__System Locale__: en_US.UTF-8
-__Select a keyboard layout__: PC-style -> Turkish (Q layout)
-__Configure the network__: Özel bi durum olmadıkça DHCP kulan.
+__Select a language__: English   
+__Select your location__: other -> Asia -> Turkey   
+__Configure locales__: United States en_US.UTF-8   
+__Additional locales__: tr_TR.UTF-8   
+__System Locale__: en_US.UTF-8   
+__Select a keyboard layout__: PC-style -> Turkish (Q layout)   
+__Configure the network__: Özel bi durum olmadıkça DHCP kulan   
 __DNS__:
 ```
 208.67.222.222
@@ -18,11 +18,11 @@ __DNS__:
 8.8.4.4
 ```
 
-__Configure the clock (time zone)__: Europe/Istanbul
-__Partitition disks__: Manual
-__Partition table__: gpt
+__Configure the clock (time zone)__: Europe/Istanbul   
+__Partitition disks__: Manual   
+__Partition table__: gpt   
 
-* örnek bölümlendirme 1
+#### örnek bölümlendirme 1
 ```
 /       500 MB  sda1    (bootable)
 /usr      5 GB  sda2    (~3 GB)
@@ -32,7 +32,7 @@ swap      1 GB  sda5    (hibernate için ~RAM)
 /home     X GB  sda6
 ```
 
-* örnek bölümlendirme 2
+#### örnek bölümlendirme 2
 ```
 /boot   100 MB  sda1    (bootable)
 crypto    X GB  sda2    (mount to /)
@@ -50,11 +50,13 @@ APT::Install-Recommends "0";
 APT::Install-Suggests "0";
 ```
 
-# /etc/apt/sources.list
+#### /etc/apt/sources.list
+```
 deb http://ftp2.de.debian.org/debian/ stretch main non-free contrib
 deb-src http://ftp2.de.debian.org/debian/ stretch main non-free contrib
 deb http://security.debian.org/debian-security stretch/updates main contrib non-free
 deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
+```
 
 # Multimedia deposu kullanilacaksa...
 deb http://www.deb-multimedia.org stretch main non-free
