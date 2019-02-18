@@ -2,7 +2,8 @@ DEBIAN STRETCH KURULUM NOTLARI
 ==============================
 Kurulum, Netinstall CD'si ile yapılacak.
 
-## Temel sistemin kurulması
+Temel sistemin kurulması
+------------------------
 __Select a language__: English   
 __Select your location__: other -> Asia -> Turkey   
 __Configure locales__: United States en_US.UTF-8   
@@ -22,7 +23,7 @@ __Configure the clock (time zone)__: Europe/Istanbul
 __Partitition disks__: Manual   
 __Partition table__: gpt   
 
-#### örnek bölümlendirme 1
+## örnek bölümlendirme 1
 ```
 /       500 MB  sda1    (bootable)
 /usr      5 GB  sda2    (~3 GB)
@@ -32,7 +33,7 @@ swap      1 GB  sda5    (hibernate için ~RAM)
 /home     X GB  sda6
 ```
 
-#### örnek bölümlendirme 2
+## örnek bölümlendirme 2
 ```
 /boot   100 MB  sda1    (bootable)
 crypto    X GB  sda2    (mount to /)
@@ -43,7 +44,8 @@ SSD disk kullanılıyor ve TRIM desteği varsa ext4 partitionlarda discard
 aktif olsun.
 
 
-## Kurulum sonrası ilk ayarlar
+Kurulum sonrası ilk ayarlar
+---------------------------
 #### /etc/apt/apt.conf.d/80recommends
 ```
 APT::Install-Recommends "0";
@@ -58,113 +60,157 @@ deb http://security.debian.org/debian-security stretch/updates main contrib non-
 deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
 ```
 
-# Multimedia deposu kullanilacaksa...
+#### Multimedia deposu kullanilacaksa...
+```
 deb http://www.deb-multimedia.org stretch main non-free
 deb-src http://www.deb-multimedia.org stretch main non-free
+```
 
-# x2go kullanılacaksa...
+#### x2go kullanılacaksa...
+```
 deb http://packages.x2go.org/debian stretch main
+```
 
-# riot.im kurulacaksa...
+#### riot.im kurulacaksa...
+```
 deb https://riot.im/packages/debian/ stretch main
+```
 
-# Ring kurulacaksa...
+#### Ring kurulacaksa...
+```
 deb https://dl.ring.cx/ring-nightly/debian_9/ ring main
+```
 
-# Anahtar yüklemeleri
-## Multimedia
+## Anahtar yüklemeleri
+#### Multimedia
+```bash
 apt install deb-multimedia-keyring
 apt update
+```
 
-## x2go
+#### x2go
+```bash
 apt-get install x2go-keyring
 apt update
+```
 
-## riot.im
+#### riot.im
+```bash
 wget -qNP /tmp/ https://riot.im/packages/debian/repo-key.asc
 apt-key add /tmp/repo-key.asc
 apt update
+```
 
-## Ring
+#### Ring
+```bash
 apt install apt-transport-https dirmngr
 apt-key adv --keyserver pgp.mit.edu --recv-keys \
     A295D773307D25A33AE72F2F64CD5FA175348F84
 apt update
+```
 
-# Güncelleme
+## Güncelleme
+```bash
 apt update && \
 apt -dy dist-upgrade && \
 apt autoclean && \
 apt dist-upgrade && \
 apt autoremove --purge
+```
 
-# İlk aşamada yüklenecek paketler
+## İlk aşamada yüklenecek paketler
+```bash
 apt install zsh tmux git vim-nox autojump bridge-utils
 apt install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
+```
 
-# Default paketlerden silinecekler
+## Default paketlerden silinecekler
+```bash
 apt purge installation-report reportbug nano
 apt purge tasksel tasksel-data task-english os-prober
 rm -rf /var/lib/os-prober
 # autoremove ile silinmemesi icin bu komut gerekli.
 apt install openssh-server
 apt autoremove --purge
+```
 
-# Grub ayarları
-- Grub için parola
-iki kere parola girilecek, görüntü gelmeyecek.
+## Grub ayarları
+Grub için parola iki kere girilecek, görüntü gelmeyecek.
 
+```bash
 grub-mkpasswd-pbkdf2 >>/etc/grub.d/01_password
+```
 
-/etc/grub.d/01_password
-    #!/bin/sh
-    # parola grub-mkpasswd-pbkdf2 komutu ile üretiliyor
-    cat <<EOF
-    set superusers="emrah"
-    password_pbkdf2 emrah grub.pbkdf2.sha512.10000.596F22EFFB36830CAF9C22B...
-    EOF
+#### /etc/grub.d/01_password
+```
+#!/bin/sh
+# parola grub-mkpasswd-pbkdf2 komutu ile üretiliyor
+cat <<EOF
+set superusers="emrah"
+password_pbkdf2 emrah grub.pbkdf2.sha512.10000.596F22EFFB36830CAF9C22B...
+EOF
+```
 
+```bash
 chmod 755 /etc/grub.d/01_password
+```
 
-/etc/grub.d/10_linux (line 34, --unrestricted eklenecek)
+#### /etc/grub.d/10_linux
+line 34, --unrestricted eklenecek
+```
     CLASS="--class gnu-linux --class gnu --class os --unrestricted"
+```
 
-- Değişiklikleri aktif hale getirme
+```bash
 update-grub
+```
 
-# CTRL-ALT-DEL ile sistem kapatilacaksa
+## CTRL-ALT-DEL ile sistem kapatilacaksa
+```bash
 ln -s /lib/systemd/system/poweroff.target \
       /etc/systemd/system/ctrl-alt-del.target
 systemctl daemon-reload
+```
 
-# /etc/fstab
+## /etc/fstab
 noatime eklenecek.
 Trim desteği olan SSD diskler için discard eklenecek.
 
-# /etc/fstab tmpfs ayarları
+## /etc/fstab tmpfs ayarları
 USB stick kurulumlarında yapılacak.
 
+```
 /dev/mapper/crypto-usb  /                   ext4    noatime,errors=remount-ro                   0  1
 tmpfs                   /tmp                tmpfs   defaults,noatime,mode=1777,size=300M        0  0
 tmpfs                   /var/log            tmpfs   defaults,noatime,mode=0755,size=100M        0  0
 tmpfs                   /var/cache/browser  tmpfs   noatime,size=150M,nr_inodes=10k,mode=1777   0  0
+```
 
-# SSH ayarları
-- /etc/ssh/sshd_config
+## SSH ayarları
+#### /etc/ssh/sshd_config
+```
 Port 22                                 # standart port kullanilmayacak
 PermitRootLogin prohibit-password
+```
 
-- /etc/ssh/ssh_config
+#### /etc/ssh/ssh_config
+```
 ServerAliveInterval 100                 # SSH baglantisi yaptigimizda, sunucudan kopmamamiz icin
                                         # her 100 saniyede bir ping gonderir.
+```
 
-# reboot
-- Normal kurulum
+## reboot
+#### Normal kurulum
+```bash
 reboot
+```
 
-- USB Stick kurulumu
+#### USB Stick kurulumu
+```bash
 mkdir -p /var/cache/browser
 rm -rf /tmp/* /var/log/*; sync; reboot
+```
+
 # -----------------------------------------------------------------------------
 # systemd-networkd
 # -----------------------------------------------------------------------------
