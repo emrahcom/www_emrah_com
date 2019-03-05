@@ -48,6 +48,13 @@ create mask = 0744
 directory mask = 0755
 ```
 
+#### NTLM ile erişime izin verme
+/etc/samba/smb.conf dosyasında `[global]` içinde
+
+```
+ntlm auth = true
+```
+
 
 ## smbclient
 #### paylaşımları listeleme
