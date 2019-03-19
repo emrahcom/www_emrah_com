@@ -7,5 +7,6 @@ SRC=$(curl -s https://dilbert.com/ | \
       head -1 | cut -d '"' -f2)
 
 [ -z "$SRC" ] && exit 1
+SRC="https:$SRC"
 
 wget -q -O $DEST $SRC
