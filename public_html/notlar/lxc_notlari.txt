@@ -80,6 +80,7 @@ apt-get install iptables
 lxc-create -n test -t debian
 lxc-create -n test -t debian -- -r surum_adi
 lxc-create -n jessie -t debian -- -r jessie
+lxc-create -n buster -t download -- -d debian -r buster -a amd64
 
 # Container klonlama
 lxc-clone -o template_makine -n yeni_makine
