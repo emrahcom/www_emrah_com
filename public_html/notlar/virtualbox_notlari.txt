@@ -25,6 +25,12 @@ VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-$VERSION.vbox-ext
 VBoxManage list extpacks
 
 
+Install (Debian Buster)
+=======================
+apt-get install virtualbox --install-recommends
+apt-get install virtualbox-ext-pack
+
+
 Konsol
 ======
 ### Resize disk (only for VDI disk)
