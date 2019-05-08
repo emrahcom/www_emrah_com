@@ -74,7 +74,7 @@ deb http://packages.x2go.org/debian stretch main
 
 #### riot.im kurulacaksa...
 ```
-deb https://riot.im/packages/debian/ stretch main
+deb https://riot.im/packages/debian/ stable main
 ```
 
 #### Ring kurulacaksa...
