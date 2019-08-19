@@ -284,7 +284,7 @@ apt install -d --install-recommends sysdig          # Sistem cagrilarini analiz
 
 #### network paketleri
 ```bash
-apt install fping arping mtr curl dnsutils whois
+apt install fping arping arp-scan mtr curl dnsutils whois
 apt install heirloom-mailx
 apt install sshuttle sudo                           # VPN over SSH
 apt install --install-recommends openvpn            # SSL VPN client olacaksa
