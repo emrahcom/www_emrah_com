@@ -22,15 +22,18 @@ apt install git rsync
 apt install htop iotop curl dnsutils whois ack-grep
 apt install python3 ipython3 bpython3
 apt install pyflakes
-apt install sslh  # standalone
-apt instal nginx-extras ssl-cert
+apt install sslh  # standalone, yeni kurulumda iptal edildi.
+apt install nginx-extras ssl-cert
 apt install certbot --install-recommends
+apt install goaccess
 
 ### /etc/ssh/sshd_config
 PermitRootLogin without-password
 PasswordAuthentication no
 
 ### sslh
+sslh yeni kurulumda kullanılmadı. Web sunucu loglarında IP görünmüyor.
+
 /etc/default/sslh
     run=yes
     DAEMON_OPTS="--user sslh --listen 0.0.0.0:443 --ssh 127.0.0.1:XXX --ssl 127.0.0.1:10443 --pidfile /var/run/sslh/sslh.pid"
@@ -151,7 +154,7 @@ server {
 
 # HTTPS emrah.com
 server {
-    listen 10443;
+    listen 443;
     ssl_certificate /etc/letsencrypt/live/emrah.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/emrah.com/privkey.pem;
     ssl on;
@@ -193,3 +196,10 @@ server {
     location = /index.html {
         ssi on; }
 }
+
+# -----------------------------------------------------------------------------
+# /etc/nginx/sites-available/default
+# -----------------------------------------------------------------------------
+SSL ayarları açılacak. HTTPS ile IP adresine gelen varsa boş sayfa görsün.
+
+"ssl on;" eklemek gerekiyor.
