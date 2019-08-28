@@ -25,7 +25,7 @@ apt install pyflakes
 apt install sslh  # standalone, yeni kurulumda iptal edildi.
 apt install nginx-extras ssl-cert
 apt install certbot --install-recommends
-apt install goaccess
+apt install goaccess --install-recommends
 
 ### /etc/ssh/sshd_config
 PermitRootLogin without-password
