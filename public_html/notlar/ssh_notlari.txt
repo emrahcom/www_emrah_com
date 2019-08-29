@@ -39,9 +39,10 @@ bir dosya adı kullanmak gerekebilir.
 
 # ssh-agent'ın çalıştırılması
 
-ssh-agent, konsola geçildiğinde otomatik olarak çalışır. Ayrıca bir işlem
-yapmaya gerek yok.
-        ssh-agent /bin/bash     ( başlatmak için        )
+ssh-agent, masaüstü içinden konsola geçildiğinde otomatik olarak çalışır.
+Ayrıca bir işlem yapmaya gerek yok.
+        ssh-agent startx        ( masaüstü için         )
+        ssh-agent /bin/bash     ( shell için            )
         ssh-agent -k            ( öldürmek için         )
 
 
@@ -56,6 +57,9 @@ doğru bir şekilde karar verebilir.
 
 Hafızadaki bütün anahtarları silmek için:
 ssh-add -D
+
+Hafızadaki bütün anahtarları listelemek için:
+ssh-add -L
 
 
 
@@ -76,7 +80,8 @@ ssh 12.12.12.12 ls -al
 
 
 
-# ssh sunucuya sadece key kullanılarak bağlanılması isteniyorsa ve parola ile
+# Parola ile bağlantıyı yasaklama
+ssh sunucuya sadece key kullanılarak bağlanılması isteniyorsa ve parola ile
 girişe izin verilmeyecekse
 
 /etc/sshd_config
@@ -96,8 +101,9 @@ ssh -o PasswordAuthentication=no domain.com
 
 
 
-# Key'e göre bağlanan kullanıcının, shell yerine başka bir programı başlatıyor
-olması için sunucuda ~/.ssh/authorized_keys dosyasında:
+# SSH anahtara göre izinler
+SSH anahtara göre bağlanan kullanıcının, shell yerine başka bir programı
+başlatıyor olması için sunucuda ~/.ssh/authorized_keys dosyasında:
 
 command='/usr/bin/python' ssh-rsa ....
 restrict,pty,command='/usr/bin/python' ssh-rsa ....
@@ -343,7 +349,8 @@ ssh -ND 8080 -p22 host2
 # -----------------------------------------------------------------------------
 
 HTTPS, OpenVPN ve SSH servislerini aynı port üzerinden kullanılmasını sağlar.
-Çoğunlukla tercih edilen port 443
+Çoğunlukla tercih edilen port 443...
+HTTPS loglarında remote IP alınamıyor.
 
 
 # Kurulum
@@ -366,3 +373,153 @@ HTTPS, OpenVPN ve SSH servislerini aynı port üzerinden kullanılmasını sağl
 # Yeni ayarlarla başlatma
 
     /etc/init.d/sslh restart
+
+
+
+# -----------------------------------------------------------------------------
+# REMOTE MAKİNELER İÇİN TERS TÜNEL
+# -----------------------------------------------------------------------------
+Bu kısımda router arkasından Internet'e bağlanan ama her an uzaktan erişebilmek
+istediğimiz mobil cihazlar için yapılacak ayarlar yer almaktadır. Öncelikle
+ters tünelin kurulabilmesi için Internet'te yer alan SSH sunucu bir makine
+(container) kurulur. Daha sonra remote makinede ters tüneli sürekli ayakta
+tutacak ayarlar yapılır.
+
+## host
+#### Container
+* Host makineyi eb-base ile kur. Debian Buster container...
+* Ters tünel portları, container makineye yönlendirilecek.
+
+/etc/nftables.conf -> eb-nat -> prerouting
+
+```
+iif "eth0" tcp dport 60000-60100 dnat to 172.22.22.254
+```
+
+#### SSH server
+* Açık parola ile bağlantıya izin verilmeyecek.
+* GatewayPorts aktif hale getirilecek.
+
+/etc/ssh/sshd_config
+
+```
+PasswordAuthentication no
+GatewayPorts yes
+```
+
+#### vpn kullanıcısı ve anahtarı
+vpn için bir kullanıcı hesabı ve passphrase'i olmayan bir SSH anahtar
+oluşturulur.
+
+```
+cd /root/.ssh/
+ssh-keygen -f em-vpn
+```
+
+```
+adduser vpn --disabled-password --shell /bin/zsh --gecos ''
+chmod 700 /home/vpn
+
+mkdir /home/vpn/.ssh
+chmod 700 /home/vpn/.ssh
+cp /root/.ssh/authorized_keys /home/vpn/.ssh/
+chmod 644 /home/vpn/.ssh/authorized_keys
+chown vpn:vpn /home/vpn/.ssh -R
+
+echo -n 'command="/bin/sleep 86400" ' >> /home/vpn/.ssh/authorized_keys
+cat /root/.ssh/em-vpn.pub >> /home/vpn/.ssh/authorized_keys
+```
+
+
+## remote
+Router arkasında kalan ve ters tünel kuracak olan makinede yapılacak ayarlar.
+Bu makinedeki hesaplara bağlanabilmek için bağlanacak kişilerin public
+anahtarlarının önceden yüklenmiş olması gerekmektedir.
+
+Güvenlik için açık parola ile bağlantıya izin verilmemesi iyi olur.
+
+#### sshd_config
+/etc/ssh/sshd_config
+
+```
+PasswordAuthentication no
+```
+
+#### vpn kullanıcısı
+```
+adduser vpn --disabled-password --shell /bin/zsh --gecos ''
+chmod 700 /home/vpn
+
+mkdir /home/vpn/.ssh
+chmod 700 /home/vpn/.ssh
+cp /root/.ssh/authorized_keys /home/vpn/.ssh/
+chmod 644 /home/vpn/.ssh/authorized_keys
+cp em-vpn em-vpn.pub /home/vpn/.ssh/
+chown vpn:vpn /home/vpn/.ssh -R
+```
+
+#### kullanıcı ssh config
+Her makine için sıraki port tahsis edilsin.
+
+/home/vpn/.ssh/config
+
+```
+Host em-vpn
+    Hostname mydomain.com
+    User vpn
+    Port 30254
+    DynamicForward 8888
+    RemoteForward 60090 localhost:22
+    IdentityFile ~/.ssh/em-vpn
+    ConnectTimeout 10
+    ServerAliveInterval 15
+    ServerAliveCountMax 3
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    BatchMode yes
+    LogLevel ERROR
+```
+
+#### systemd
+Ters tüneli sürekli ayakta tutacak olan systemd servisi...
+
+/etc/systemd/system/em-vpn.service
+
+```
+[Unit]
+Description=My VPN
+After=network-online.target
+
+[Service]
+User=vpn
+Group=vpn
+WorkingDirectory=/home/vpn
+ExecStart=/usr/bin/ssh em-vpn
+Restart=always
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+systemctl daemon-reload
+systemctl restart em-vpn.service
+```
+
+#### Komut
+systemd servisi olmadan geçici olarak tünel açılacaksa...
+
+```
+ssh -q -p 30254 -ND 8888 -R 60090:localhost:22 -l vpn -i ~/.ssh/em-vpn \
+    mydomain.com
+```
+
+
+## client
+remote makinede anahtarı yüklü bir client ile ters tünelden remote makineye
+bağlanılabilir.
+
+```
+ssh -p 60090 remote_user@mydomain.com
+```
