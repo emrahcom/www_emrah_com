@@ -393,7 +393,7 @@ tutacak ayarlar yapılır.
 /etc/nftables.conf -> eb-nat -> prerouting
 
 ```
-iif "eth0" tcp dport 60000-60100 dnat to 172.22.22.254
+iif "eth0" tcp dport 60000-60100 dnat to 172.22.22.251
 ```
 
 #### SSH server
@@ -467,7 +467,7 @@ Her makine için sıraki port tahsis edilsin.
 Host em-vpn
     Hostname mydomain.com
     User vpn
-    Port 30254
+    Port 10251
     DynamicForward 8888
     RemoteForward 60090 localhost:22
     IdentityFile ~/.ssh/em-vpn
@@ -511,7 +511,7 @@ systemctl restart em-vpn.service
 systemd servisi olmadan geçici olarak tünel açılacaksa...
 
 ```
-ssh -q -p 30254 -ND 8888 -R 60090:localhost:22 -l vpn -i ~/.ssh/em-vpn \
+ssh -q -p 10251 -ND 8888 -R 60090:localhost:22 -l vpn -i ~/.ssh/em-vpn \
     mydomain.com
 ```
 
