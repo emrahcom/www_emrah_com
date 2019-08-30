@@ -442,7 +442,10 @@ Güvenlik için açık parola ile bağlantıya izin verilmemesi iyi olur.
 /etc/ssh/sshd_config
 
 ```
+Port 10251
 PasswordAuthentication no
+ClientAliveInterval 30
+ClientAliveCountMax 3
 ```
 
 #### vpn kullanıcısı
