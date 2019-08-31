@@ -471,8 +471,21 @@ Host em-vpn
     Hostname mydomain.com
     User vpn
     Port 10251
-    DynamicForward 8888
     RemoteForward 60090 localhost:22
+    IdentityFile ~/.ssh/em-vpn
+    ConnectTimeout 10
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    BatchMode yes
+    LogLevel ERROR
+
+Host em-sock
+    Hostname mydomain.com
+    User vpn
+    Port 10251
+    DynamicForward 8888
     IdentityFile ~/.ssh/em-vpn
     ConnectTimeout 10
     ServerAliveInterval 15
@@ -484,14 +497,14 @@ Host em-vpn
 ```
 
 #### systemd
-Ters tüneli sürekli ayakta tutacak olan systemd servisi...
 
-/etc/systemd/system/em-vpn.service
+###### /etc/systemd/system/em-vpn.service
+Ters tüneli sürekli ayakta tutacak olan systemd servisi...
 
 ```
 [Unit]
 Description=My VPN
-After=network-online.target
+After=network.target
 
 [Service]
 User=vpn
@@ -505,9 +518,33 @@ RestartSec=2s
 WantedBy=multi-user.target
 ```
 
+###### /etc/systemd/system/em-sock.service
+Socks proxy'i sürekli ayakta tutacak olan systemd servisi...
+
+```
+[Unit]
+Description=My Socks Proxy
+After=network.target
+
+[Service]
+User=vpn
+Group=vpn
+WorkingDirectory=/home/vpn
+ExecStart=/usr/bin/ssh em-sock
+Restart=always
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target
+```
+
 ```
 systemctl daemon-reload
+systemctl enable em-vpn.service
+systemctl enable em-sock.service
+
 systemctl restart em-vpn.service
+systemctl restart em-sock.service
 ```
 
 #### Komut
