@@ -12,6 +12,18 @@ mkswap /swapfile
 echo "/swapfile  none  swap  sw  0  0" >> /etc/fstab
 reboot
 
+### hostname
+self-signed SSL sertifika oluşmadan (ssl-cert paketi yüklenmeden) önce hostname
+değişsin.
+
+/etc/hostname
+myhost
+
+/etc/hosts
+127.0.1.1 myhost.mydomain.loc myhost
+
+reboot
+
 ### packages
 echo 'APT::Install-Recommends "0";' >/etc/apt/apt.conf.d/80recommends
 echo 'APT::Install-Suggests "0";'  >>/etc/apt/apt.conf.d/80recommends
@@ -201,5 +213,24 @@ server {
 # /etc/nginx/sites-available/default
 # -----------------------------------------------------------------------------
 SSL ayarları açılacak. HTTPS ile IP adresine gelen varsa boş sayfa görsün.
-
 "ssl on;" eklemek gerekiyor.
+80 portundan gelen 443 portuna yönlendirilsin.
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+
+    rewrite ^/(.*)$  https://$host/$1;
+}
+
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    include snippets/snakeoil.conf;
+    ssl on;
+
+    root /var/www/html;
+    ...
+    ...
+}
