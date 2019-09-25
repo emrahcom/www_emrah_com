@@ -27,13 +27,15 @@ __Partition table__: gpt
 
 #### USB stick için örnek bölümlendirme
 ```
-/boot   100 MB  sda1    (bootable)
+/boot   200 MB  sda1    (bootable)
 crypto    X GB  sda2    (mount to /)
 ```
 
 SSD disk kullanılıyor ve TRIM desteği varsa ext4 partitionlarda discard
 özelliği aktif hale getirilecek. Bütün partitionlarda noatime özelliği
 aktif olsun.
+
+crypto disk adı değiştirilecekse `cryptsetup` notlarına bak.
 
 
 Kurulum sonrası ilk ayarlar
@@ -73,8 +75,9 @@ deb https://riot.im/packages/debian buster main
 #### Anahtar yüklemeleri
 ###### Multimedia
 ```bash
-apt install deb-multimedia-keyring
-apt update
+apt-get update --allow-insecure-repositories
+apt-get install deb-multimedia-keyring
+apt-get update
 ```
 
 ###### x2go
