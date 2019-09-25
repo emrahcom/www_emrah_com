@@ -1,6 +1,7 @@
-DEBIAN STRETCH KURULUM NOTLARI
+DEBIAN BUSTER KURULUM NOTLARI
 ==============================
 Kurulum, Netinstall CD'si ile yapılacak.
+Stretch notlarına göre düzenleniyor, henüz test edilmedi.
 
 
 Temel sistemin kurulması
@@ -24,17 +25,7 @@ __Configure the clock (time zone)__: Europe/Istanbul
 __Partitition disks__: Manual   
 __Partition table__: gpt   
 
-#### örnek bölümlendirme 1
-```
-/       500 MB  sda1    (bootable)
-/usr      5 GB  sda2    (~3 GB)
-/var      5 GB  sda3    (~2 GB)
-/tmp    500 MB  sda4    (tmpfs yapılabilir)
-swap      1 GB  sda5    (hibernate için ~RAM)
-/home     X GB  sda6
-```
-
-#### örnek bölümlendirme 2
+#### USB stick için örnek bölümlendirme
 ```
 /boot   100 MB  sda1    (bootable)
 crypto    X GB  sda2    (mount to /)
@@ -55,31 +46,28 @@ APT::Install-Suggests "0";
 
 #### /etc/apt/sources.list
 ```
-deb http://ftp2.de.debian.org/debian/ stretch main non-free contrib
-deb-src http://ftp2.de.debian.org/debian/ stretch main non-free contrib
-deb http://security.debian.org/debian-security stretch/updates main contrib non-free
-deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
+deb http://ftp2.de.debian.org/debian buster main non-free contrib
+deb-src http://ftp2.de.debian.org/debian buster main non-free contrib
+deb http://ftp2.de.debian.org/debian buster-updates main non-free contrib
+deb-src http://ftp2.de.debian.org/debian buster-updates main non-free contrib
+deb http://security.debian.org/debian-security buster/updates main contrib non-free
+deb-src http://security.debian.org/debian-security buster/updates main contrib non-free
 ```
 
 #### Multimedia deposu kullanilacaksa...
 ```
-deb http://www.deb-multimedia.org stretch main non-free
-deb-src http://www.deb-multimedia.org stretch main non-free
+deb http://www.deb-multimedia.org buster main non-free
+deb-src http://www.deb-multimedia.org buster main non-free
 ```
 
 #### x2go kullanılacaksa...
 ```
-deb http://packages.x2go.org/debian stretch main
+deb http://packages.x2go.org/debian buster main
 ```
 
 #### riot.im kurulacaksa...
 ```
-deb https://riot.im/packages/debian/ stable main
-```
-
-#### Ring kurulacaksa...
-```
-deb https://dl.ring.cx/ring-nightly/debian_9/ ring main
+deb https://riot.im/packages/debian buster main
 ```
 
 #### Anahtar yüklemeleri
@@ -102,37 +90,29 @@ apt-key add /tmp/repo-key.asc
 apt update
 ```
 
-###### Ring
-```bash
-apt install apt-transport-https dirmngr
-apt-key adv --keyserver pgp.mit.edu --recv-keys \
-    A295D773307D25A33AE72F2F64CD5FA175348F84
-apt update
-```
-
 #### Güncelleme
 ```bash
-apt update && \
-apt -dy dist-upgrade && \
-apt autoclean && \
-apt dist-upgrade && \
-apt autoremove --purge
+apt-get update && \
+apt-get autoclean && \
+apt-get -dy dist-upgrade && \
+apt-get dist-upgrade && \
+apt-get autoremove --purge
 ```
 
 #### İlk aşamada yüklenecek paketler
 ```bash
-apt install zsh tmux git vim-nox autojump bridge-utils
-apt install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
+apt-get install zsh tmux git vim-nox autojump bridge-utils
+apt-get install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
 ```
 
 #### Default paketlerden silinecekler
 ```bash
-apt purge installation-report reportbug nano
-apt purge tasksel tasksel-data task-english os-prober
+apt-get purge installation-report reportbug nano
+apt-get purge tasksel tasksel-data task-english os-prober
 rm -rf /var/lib/os-prober
 # autoremove ile silinmemesi icin bu komut gerekli.
-apt install openssh-server
-apt autoremove --purge
+apt-get install openssh-server
+apt-get autoremove --purge
 ```
 
 #### Grub ayarları
@@ -191,13 +171,8 @@ tmpfs                   /var/cache/browser  tmpfs   noatime,size=150M,nr_inodes=
 ###### /etc/ssh/sshd_config
 ```
 Port 22                                 # standart port kullanilmayacak
-PermitRootLogin prohibit-password
-```
-
-###### /etc/ssh/ssh_config
-```
-ServerAliveInterval 100                 # SSH baglantisi yaptigimizda, sunucudan kopmamamiz icin
-                                        # her 100 saniyede bir ping gonderir.
+PasswordAuthentication no
+GatewayPorts yes                        # tünel üzerinden komşu makineye ulaşılacaksa
 ```
 
 #### reboot
@@ -225,11 +200,17 @@ Name=br0
 Kind=bridge
 ```
 
+#### /etc/systemd/network/90-dummy.netdev
+```
+[NetDev]
+Name=dummy0
+Kind=dummy
+```
+
 #### /etc/systemd/network/91-bridge-ports.network
 ```
 [Match]
-#Name=en*
-Name=wlp*
+Name=dummy0
 
 [Network]
 Bridge=br0
@@ -241,11 +222,7 @@ Bridge=br0
 Name=br0
 
 [Network]
-DHCP=yes
-Address=172.16.244.9/24
-Address=192.168.0.9/24
-Address=192.168.1.9/24
-Address=192.168.2.9/24
+Address=172.17.17.1/24
 ```
 
 #### systemd-networkd
@@ -261,26 +238,38 @@ nameserver 208.67.222.222
 nameserver 8.8.4.4
 ```
 
+#### /etc/sysctl.d/90-ip-forward.conf
+```
+net.ipv4.ip_forward=1
+```
+
+#### iptables
+```bash
+apt-get install iptables-persistent
+iptables -t nat -A POSTROUTING -s 172.17.17.0/24 -o wlp9s0 -j MASQUERADE
+iptables-save > /etc/iptables/rules.v4
+```
+
 
 Paketlerin Kurulumu
 -------------------
 #### python (temel) paketleri
 ```bash
-apt install python3 bpython3
-apt install python3-pip
+apt-get install python3 bpython3
+apt-get install python3-pip
 ```
 
 #### LXC
 ```bash
-apt install lxc debootstrap
+apt-get install lxc debootstrap
 ```
 
 #### monitoring paketleri
 ```bash
-apt install htop iotop tiptop bmon
-apt install -d atop powertop sysstat
-apt install -d nethogs iftop bwm-ng
-apt install -d --install-recommends sysdig          # Sistem cagrilarini analiz
+apt-get install htop iotop tiptop bmon
+apt-get install -d atop powertop sysstat
+apt-get install -d nethogs iftop bwm-ng
+apt-get install -d --install-recommends sysdig          # Sistem cagrilarini analiz
 ```
 
 #### network paketleri
@@ -303,16 +292,6 @@ apt install -d ethtool net-tools
 #### parallel komut çalıştırma
 ```bash
 apt install -d parallel
-```
-
-#### IRC, jabber, gtalk
-```bash
-apt install -d weechat-curses weechat-plugins bitlbee
-```
-
-#### soft raid olacaksa
-```bash
-apt install -d mdadm
 ```
 
 #### firmware
