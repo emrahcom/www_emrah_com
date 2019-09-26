@@ -62,35 +62,10 @@ deb http://www.deb-multimedia.org buster main non-free
 deb-src http://www.deb-multimedia.org buster main non-free
 ```
 
-#### x2go kullanılacaksa...
-```
-deb http://packages.x2go.org/debian buster main
-```
-
-#### riot.im kurulacaksa...
-```
-deb https://riot.im/packages/debian buster main
-```
-
-#### Anahtar yüklemeleri
-###### Multimedia
 ```bash
 apt-get update --allow-insecure-repositories
 apt-get install deb-multimedia-keyring
 apt-get update
-```
-
-###### x2go
-```bash
-apt-get install x2go-keyring
-apt update
-```
-
-###### riot.im
-```bash
-wget -qNP /tmp/ https://riot.im/packages/debian/repo-key.asc
-apt-key add /tmp/repo-key.asc
-apt update
 ```
 
 #### Güncelleme
@@ -104,17 +79,14 @@ apt-get autoremove --purge
 
 #### İlk aşamada yüklenecek paketler
 ```bash
-apt-get install zsh tmux git vim-nox autojump bridge-utils
-apt-get install dbus libpam-systemd (container içine kurulumlarda gerekebilir)
+apt-get install zsh tmux vim-nox autojump bridge-utils
 ```
 
 #### Default paketlerden silinecekler
 ```bash
 apt-get purge installation-report reportbug nano
-apt-get purge tasksel tasksel-data task-english os-prober
+apt-get purge os-prober
 rm -rf /var/lib/os-prober
-# autoremove ile silinmemesi icin bu komut gerekli.
-apt-get install openssh-server
 apt-get autoremove --purge
 ```
 
@@ -165,6 +137,7 @@ USB stick kurulumlarında yapılacak.
 
 ```
 /dev/mapper/crypto-usb  /                   ext4    noatime,errors=remount-ro                   0  1
+UUID=xxxxxx             /boot               ext4    noatime                                     0  2
 tmpfs                   /tmp                tmpfs   defaults,noatime,mode=1777,size=300M        0  0
 tmpfs                   /var/log            tmpfs   defaults,noatime,mode=0755,size=100M        0  0
 tmpfs                   /var/cache/browser  tmpfs   noatime,size=150M,nr_inodes=10k,mode=1777   0  0
@@ -174,8 +147,8 @@ tmpfs                   /var/cache/browser  tmpfs   noatime,size=150M,nr_inodes=
 ###### /etc/ssh/sshd_config
 ```
 Port 22                                 # standart port kullanilmayacak
-PasswordAuthentication no
-GatewayPorts yes                        # tünel üzerinden komşu makineye ulaşılacaksa
+PasswordAuthentication no               # parola ile giris kapatilacaksa
+GatewayPorts yes                        # tunel uzerinden komsu makineye ulasilacaksa
 ```
 
 #### reboot
@@ -193,6 +166,11 @@ rm -rf /tmp/* /var/log/*; sync; reboot
 
 systemd-networkd
 ----------------
+#### dnsmasq
+```bash
+apt-get install dnsmasq
+```
+
 #### /etc/network/interfaces
 Comment network interfaces except loopback
 
@@ -236,8 +214,8 @@ systemctl restart systemd-networkd
 
 #### /etc/resolv.conf
 ```
+nameserver 127.0.0.1
 nameserver 208.67.220.220
-nameserver 208.67.222.222
 nameserver 8.8.4.4
 ```
 
@@ -256,6 +234,12 @@ iptables-save > /etc/iptables/rules.v4
 
 Paketlerin Kurulumu
 -------------------
+#### base paketler
+```bash
+apt-get install iputils-ping net-tools procps xz-utils
+apt-get install ack jq
+```
+
 #### python (temel) paketleri
 ```bash
 apt-get install python3 bpython3
@@ -272,44 +256,35 @@ apt-get install lxc debootstrap
 apt-get install htop iotop tiptop bmon
 apt-get install -d atop powertop sysstat
 apt-get install -d nethogs iftop bwm-ng
-apt-get install -d --install-recommends sysdig          # Sistem cagrilarini analiz
 ```
 
 #### network paketleri
 ```bash
-apt install fping arping arp-scan mtr curl dnsutils whois
-apt install heirloom-mailx
-apt install sshuttle sudo                           # VPN over SSH
-apt install --install-recommends openvpn            # SSL VPN client olacaksa
-apt install nmap tcpdump
-apt install ngrep netcat-openbsd socat
-apt install -d telnet
-apt install -d minicom                              # Seri porttan bağlanan cihazlar için
-apt install -d httpie                               # curl alternatif
-apt install -d wvdial usb-modeswitch                # USB 3G modem kullanılacaksa
-apt install -d pptp-linux                           # VPN tunel icin
-apt install -d nuttcp                               # Network performan olcme
-apt install -d ethtool net-tools
-```
-
-#### parallel komut çalıştırma
-```bash
-apt install -d parallel
+apt-get install wget ca-certificates
+apt-get install fping arping arp-scan mtr curl dnsutils whois
+apt-get install s-nail
+apt-get install sshuttle sudo                           # VPN over SSH
+apt-get install --install-recommends openvpn            # SSL VPN client olacaksa
+apt-get install nmap tcpdump
+apt-get install ngrep netcat-openbsd socat
+apt-get install -d telnet
+apt-get install -d minicom                              # Seri porttan bağlanan cihazlar için
 ```
 
 #### firmware
 ```bash
-apt install firmware-linux-free
+apt-get install firmware-linux-free
 ```
 
 #### firmware (non-free depo)
 ```bash
-apt install firmware-linux-nonfree firmware-misc-nonfree --install-recommends
-apt install atmel-firmware firmware-atheros firmware-bnx2 firmware-bnx2x
-apt install firmware-brcm80211 firmware-cavium firmware-ipw2x00
-apt install firmware-iwlwifi firmware-libertas firmware-myricom
-apt install firmware-netxen firmware-realtek zd1211-firmware
-apt install firmware-b43-installer
+apt-get install firmware-linux --install-recommends
+apt-get install firmware-atheros firmware-bnx2 firmware-bnx2x
+apt-get install firmware-brcm80211 firmware-cavium firmware-ipw2x00
+apt-get install firmware-iwlwifi firmware-libertas firmware-myricom
+apt-get install firmware-netronome firmware-netxen firmware-qlogic
+apt-get install firmware-ralink firmware-realtek firmware-zd1211
+apt-get install firmware-b43-installer
 ```
 
 #### wireless manager
@@ -317,120 +292,96 @@ USB stick kurulumlarında wireless araçları olsun
 Diğer makinelerde wireless adaptör varsa olsun
 
 ```bash
-apt install wicd-curses wicd-cli rfkill
+apt-get install wicd-curses wicd-cli rfkill
 ```
 
 #### dosyalar, dosya sistemi, uzak dosya sistemi
 ```bash
-apt install bzip2 zip unzip ack
-apt install autojump parted
-apt install lftp ncftp rsync
-apt install ccrypt cryptsetup encfs
-apt install pwgen                                   # Random parola üretmek için
-apt install -d diffutils patch tree
-apt install -d sshfs
-apt install -d nbd-client nbd-server
-apt install -d cifs-utils smbclient
-apt install -d ntfs-3g
+apt-get install bzip2 zip unzip unrar
+apt-get install autojump parted
+apt-get install rsync
+apt-get install ccrypt cryptsetup encfs
+apt-get install pwgen                                   # Random parola üretmek için
+apt-get install -d lftp ncftp
+apt-get install -d diffutils patch tree
+apt-get install -d sshfs
+apt-get install -d nbd-client nbd-server
+apt-get install -d cifs-utils smbclient
+apt-get install -d ntfs-3g
 ```
 
 #### Veritabanı istemcileri
 ```bash
-apt install -d postgresql-client
-apt install -d mysql-client
-apt install -d sqlite3
-apt install -d sqsh                                 # MS SQL ve Sybase shell
+apt-get install -d postgresql-client
+apt-get install -d mariadb-client
+apt-get install -d sqlite3
+apt-get install -d sqsh                                 # MS SQL ve Sybase shell
 ```
 
 #### CD/DVD paketleri
 ```bash
-apt install -d wodim dvd+rw-tools
+apt-get install -d wodim dvd+rw-tools
 ```
 
 #### Multimedia
 ```bash
-apt install -d alsa-base alsa-utils
-apt install pulseaudio pulseaudio-utils
-apt install mpv ffmpeg
+apt-get install -d alsa-utils
+apt-get install pulseaudio pulseaudio-utils
+apt-get install mpv ffmpeg
 ```
 
 #### Programlama paketleri
 ```bash
-apt install vim-nox                                 # script destekli vim
-apt install git                                     # versiyon kontrol sistemi
-apt install -d php-cli                              # komut satırından PHP
+apt-get install vim-nox                                 # script destekli vim
+apt-get install git                                     # versiyon kontrol sistemi
+apt-get install -d php-cli                              # komut satırından PHP
 ```
 
 #### Python
 ```bash
-apt install python3-pip --install-recommends
+apt-get install python3-pip --install-recommends
 pip3 install --upgrade setuptools wheel
 pip3 install --upgrade flake8
 pip3 install --upgrade pexpect                      # shell uygulamalarını interaktif çalıştırma
 pip3 install --upgrade requests                     # HTTP kütüphanesi, arkada urllib3 kullanıyor
+pip3 install --upgrade sqlalchemy                   # veritabani işlemleri
 pip3 install --upgrade s3cmd                        # S3 object storage işlemleri
 pip3 install --upgrade grip                         # MarkDown viewer
-```
-
-#### Bu paketleri pip3 ile kurmayı dene.
-Henüz test edilmedi.
-```bash
-apt install -d python3-psutil                       # cpu, memory, process vb takip için
-apt install -d pychecker pylint pyflakes pyflakes3  # kod kalitesi ve hata kontrol
-apt install -d python3-psycopg2                     # PostgreSQL kullanılacaksa
-apt install -d python3-simplejson python3-lxml      # JSON ve XML kullanılacaksa
-apt install -d python3-pycurl                       # Curl paketi
-apt install -d python3-ipy python-ipaddr            # IP handling
-apt install -d python3-netifaces                    # Network device
-apt install -d python3-openssl python3-crypto       # Güvenlik ve şifreleme
-apt install -d python-serial python-parallel        # Seri ve parallel portan haberleşme için
-```
-
-#### PostgreSQL
-```bash
-apt install -d postgresql postgresql-contrib
-apt install -d phppgadmin                           # PostrgreSQL icin web UI olacaksa...
+pip3 install --upgrade flask flask_session flask_restful
+pip3 install --upgrade redis schema
 ```
 
 #### Masaüstü paketleri
 ```bash
-apt install --install-recommends xorg
-apt install --install-recommends spectrwm           # spectrwm kullanilacaksa...
-apt install dbus-x11
-apt install xterm
-apt install xtrlock unclutter
-apt install scrot                                   # screen capture
-apt install firefox-esr --install-recommends
-apt install flashplayer-mozilla                     # multimedia deposundan...
-apt install smplayer
-apt install pavucontrol                             # pulsaudio icin ses kontrol GUI
-apt install x2goclient
-apt install x11vnc xvnc4viewer
-apt install freerdp-x11 libfreerdp-plugins-standard # better rdesktop
-apt install zathura                                 # pdf okuyucu
-apt install chromium fonts-liberation               # alternatif browser gerekecekse...
-apt install libreoffice --install-recommends        # office uygulamalari gerekecekse...
-apt install gimp --install-recommends               # resim düzenlemek gerekecekse...
-apt install krita --install-recommends              # resim düzenlemek gerekecekse...
-apt install riot-web desktop-file-utils             # Matrix client
-apt install -d -t ring ring-daemon ring             # kendi deposundan kurulacak
+apt-get install --install-recommends xorg
+apt-get install --install-recommends spectrwm           # spectrwm kullanilacaksa...
+apt-get install dbus-x11
+apt-get install xterm
+apt-get install xtrlock unclutter
+apt-get install scrot                                   # screen capture
+apt-get install firefox-esr --install-recommends
+apt-get install flashplayer-mozilla                     # multimedia deposundan...
+apt-get install smplayer
+apt-get install pavucontrol                             # pulsaudio icin ses kontrol GUI
+apt-get install x11vnc xvnc4viewer
+apt-get install freerdp2-x11                            # better rdesktop
+apt-get install zathura                                 # pdf okuyucu
+apt-get install chromium fonts-liberation               # alternatif browser gerekecekse...
+apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
+apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
+apt-get install krita --install-recommends              # resim düzenlemek gerekecekse...
 ```
 
 #### Debian kaynak kod paketleri ile çalışılacaksa
 ```bash
-apt install -d dpkg-dev build-essential fakeroot
+apt-get install -d dpkg-dev build-essential fakeroot
 ```
 
 
 Yazılımların ayarlanması
 ------------------------
 #### LXC ayarları
-Template kurulumları
-```bash
-lxc-create -n jessie -t debian -- -r jessie
-lxc-create -n wheezy -t debian -- -r wheezy
-lxc-create -n squeeze -t debian -- -r squeeze
-```
+Template kurulumları. Buster ve apt-cacher-ng için container kurulabilir.
 
 #### sshuttle
 ###### visudo
@@ -490,28 +441,6 @@ zz(){
 }
 zl(){
         z $@ 2>/dev/null | head -10
-}
-
-update_hosts(){
-    HOSTS=`cat <<EOF
-        host1
-        host2
-        host3
-EOF
-
-    for h in `echo $HOSTS`; do
-        echo update $h
-        ssh -t $h "apt-get update"
-        ssh -t $h "apt-get autoclean"
-        ssh -t $h "apt-get -dy dist-upgrade"
-        echo
-    done
-
-    for h in `echo $HOSTS`; do
-        echo upgrade $h
-        ssh -t $h "apt-get dist-upgrade"
-        ssh -t $h "apt-get autoremove"
-    done
 }
 ```
 
@@ -588,26 +517,6 @@ bind[mplayer_vol_r]     = XF86AudioRaiseVolume
 ```
 
 #### ~/bin/
-###### capture_screen
-Ekran görüntüsünü alıp SimpleHTTPServer ile web'ten yayınlar.
-Pencere yöneticisi için kısayol oluşturulsun.
-
-```
-#!/bin/bash
-
-mkdir -p /tmp/screenshot
-scrot /tmp/screenshot/screenshot.png
-echo '<html><body><img src="screenshot.png" /></body></html>' >
-/tmp/screenshot/index.html
-
-x-terminal-emulator -vb +sb -fg NavajoWhite1 -bg black -cr yellow \
--fn "-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1" \
--T "Capture Screen" -e /bin/bash -c \
-"/sbin/ifconfig eth | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1; \
-echo -e '\n\n'; \
-cd /tmp/screenshot && python -m SimpleHTTPServer 9999"
-```
-
 ###### zargan.py
 Kod deposundan kopyalanacak.
 
@@ -682,84 +591,4 @@ DEFAULT=$(ls | grep .default)
 SECOND=$(ls | grep .second)
 rm -rf $SECOND
 cp -arp $DEFAULT $SECOND
-```
-
-#### bitlbee
-###### /etc/bitlbee/bitlbee.conf
-```
-DaemonInterface = 127.0.0.1
-AuthMode = Closed
-AuthPassword = md5:...
-```
-
-###### md5 değerini bulmak için
-```bash
-bitlbee -x hash parola1
-```
-
-```bash
-/etc/init.d/bitlbee restart
-```
-
-#### weechat
-Ayarların default değerlerle oluşması için weechat-curses bir kere
-başlatılır.
-
-###### ~/.weechat/weechat.conf
-```
-item_time_format = "%a, %d %b %Y %H:%M"
-```
-
-###### ~/.weechat/logger.conf
-```
-auto_log = off
-```
-
-###### ~/.weechat/irc.conf
-```
-[server_default]
-nicks = "emrah,emrah_,emrah__"
-realname = "emrah"
-username = "emrah"
-
-[server]
-freenode.addresses = "chat.freenode.net/7000"
-freenode.ssl = on
-freenode.ssl_dhkey_size = 512
-freenode.password = "parola"
-freenode.autoconnect = on
-freenode.autoreconnect = on
-freenode.autoreconnect_delay = 10
-freenode.nicks = "emrah,emrah_,emrah__"
-freenode.username = "emrah"
-freenode.realname = "emrah"
-freenode.autojoin = "#gnu,#debian"
-freenode.autorejoin = on
-freenode.autorejoin_delay = 1
-bitlbee_loc.addresses = "127.0.0.1/6667"
-bitlbee_loc.ssl = off
-bitlbee_loc.password = "parola1"
-bitlbee_loc.autoconnect = on
-bitlbee_loc.autoreconnect = on
-bitlbee_loc.autoreconnect_delay = 10
-bitlbee_loc.nicks = "emrah,emrah_,emrah__"
-bitlbee_loc.username = "emrah"
-bitlbee_loc.realname = "emrah"
-bitlbee_loc.command = "/msg nickserv identify parola2"
-bitlbee_loc.autorejoin = on
-bitlbee_loc.autorejoin_delay = 1
-```
-
-###### bitlbee hesabının açılması
-```
-register parola2
-set charset utf-8
-
-# gtalk
-account add jabber emrah@gmail.com
-account gtalk set ssl true
-account gtalk set server talk.google.com
-account gtalk set port 5223
-account gtalk set password "parola_gtalk"
-account gtalk on
 ```
