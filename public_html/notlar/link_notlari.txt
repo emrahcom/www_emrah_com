@@ -1,6 +1,9 @@
 GEÇİCİ LİNKLER
 --------------
 
+. How Do Individual Contributors Get Stuck
+  http://www.elidedbranches.com/2017/01/how-do-individual-contributors-get.html
+
 . Writing clean, testable, high quality code in Python
   https://www.ibm.com/developerworks/aix/library/au-cleancode/
 
