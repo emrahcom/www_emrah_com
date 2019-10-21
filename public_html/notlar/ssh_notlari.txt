@@ -473,6 +473,7 @@ Host em-vpn
     Port 10251
     RemoteForward 60090 localhost:22
     IdentityFile ~/.ssh/em-vpn
+    IdentitiesOnly yes
     ConnectTimeout 10
     ServerAliveInterval 60
     ServerAliveCountMax 3
@@ -487,6 +488,7 @@ Host em-sock
     Port 10251
     DynamicForward 8888
     IdentityFile ~/.ssh/em-vpn
+    IdentitiesOnly yes
     ConnectTimeout 10
     ServerAliveInterval 15
     ServerAliveCountMax 3
