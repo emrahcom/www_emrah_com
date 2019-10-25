@@ -522,9 +522,12 @@ Kod deposundan kopyalanacak.
 
 #### Firefox
 ###### preferences
-* General -> Language -> Check your spelling as you type: false
-* General -> Downloads -> Always ask you where to save files: true
-* General -> Firefox Updates -> Automatically update search engines: False
+* General -> Language -> Choice: Turkish (bottom)
+* General -> Language -> Check your spelling as you type: Off
+* General -> Downloads -> Always ask you where to save files: On
+* General -> Firefox Updates -> Automatically update search engines: Off
+* General -> Browsing -> Recommend extensions as you browse: Off
+* General -> Browsing -> Recommend features as you browse: Off
 * General -> Network Proxy -> Settings
 ```
   Manual Proxy Configuration
@@ -538,11 +541,15 @@ Kod deposundan kopyalanacak.
 * Home -> Homepage and new windows: Custom URLS (https://emrah.com/)
 * Home -> New tabs: Blank Page
 * Search -> Default Search Engine: DuckDuckGo
-* Privacy & Security -> Content Blocking -> Custom
-  * Trackers -> In all windows
+* Privacy & Security -> Content Blocking -> Strict
 * Privacy & Security -> Do Not Track -> Always
-* Privacy & Security -> Logins & Passwords -> disable (Ask to save...)
-* Privacy & Security -> History -> Never Remeber History
+* Privacy & Security -> Cookies and Site Data -> Delete cookies and site data
+  when Firefox is closed: On
+* Privacy & Security -> Logins & Passwords -> Off (Ask to save...)
+* Privacy & Security -> History -> Use Custom Settings -> Clear history when
+  Firefox closes: On
+* Privacy & Security -> Permissions -> Prevent accessibility services from
+  accessing your browser: On
 * Privacy & Security -> Security -> Block dangerous and deceptive content: False
 * Privacy & Security -> Certificates -> View Certificates -> Authorities
   -> Delete or Distrust
@@ -567,6 +574,7 @@ belirten OK işareti kalkacak.
 * Markdown Viewer Webext
 * Dark Reader
 * Worldwide Radio
+* Privacy Badger
 
 ###### Diğer
 * Noscript whitelist temizlenir.
