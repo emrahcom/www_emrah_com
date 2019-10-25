@@ -522,9 +522,6 @@ Kod deposundan kopyalanacak.
 
 #### Firefox
 ###### preferences
-* General -> When Firefox starts: Show a blank page
-* General -> Home page: https://emrah.com/
-* General -> Language -> Choose -> Turkish (add, move down)
 * General -> Language -> Check your spelling as you type: false
 * General -> Downloads -> Always ask you where to save files: true
 * General -> Firefox Updates -> Automatically update search engines: False
@@ -532,17 +529,21 @@ Kod deposundan kopyalanacak.
 ```
   Manual Proxy Configuration
   SOCKS Host: localhost
-  SOCKS Port: 28080
+  SOCKS Port: 8888
   SOCKS Type: SOCKS v5
   No Proxy for: localhost, 127.0.0.1, 192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8
   Proxy DNS when using SOCKS v5: true
 ```
+
+* Home -> Homepage and new windows: Custom URLS (https://emrah.com/)
+* Home -> New tabs: Blank Page
 * Search -> Default Search Engine: DuckDuckGo
-* Privacy & Security -> Forms & Passwords
-  -> Remember logins and passwords for websites: False
+* Privacy & Security -> Content Blocking -> Custom
+  * Trackers -> In all windows
+* Privacy & Security -> Do Not Track -> Always
+* Privacy & Security -> Logins & Passwords -> disable (Ask to save...)
 * Privacy & Security -> History -> Never Remeber History
-* Privacy & Security -> Tracking Protection -> Always
-* Privacy & Security -> Block dangerous downloads: False
+* Privacy & Security -> Security -> Block dangerous and deceptive content: False
 * Privacy & Security -> Certificates -> View Certificates -> Authorities
   -> Delete or Distrust
 ```
@@ -558,17 +559,17 @@ belirten OK işareti kalkacak.
 * __browser.cache.disk.enable__: false
 * __browser.sessionstore.interval__: 60000
 * __network.prefetch-next__: false
-* __intl.charset.fallback.utf8_for_file__: true
 
 ###### Add-ons
-* Tridactyl
-* Adblock Plus
+* Vim Vixen
+* uBlock Origin
 * NoScript Security Suite by Giorgio Maone
 * Markdown Viewer Webext
+* Dark Reader
+* Worldwide Radio
 
 ###### Diğer
 * Noscript whitelist temizlenir.
-* Bir kere boş tab açılıp Tridactyl için izin verilir.
 * Noscript izni verilecek sitelere bir kere girilir.
   * duckduckgo
   * demo siteler
