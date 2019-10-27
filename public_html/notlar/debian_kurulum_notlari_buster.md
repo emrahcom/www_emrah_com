@@ -237,7 +237,7 @@ Paketlerin Kurulumu
 #### base paketler
 ```bash
 apt-get install iputils-ping net-tools procps xz-utils
-apt-get install ack jq
+apt-get install ack jq fzf
 ```
 
 #### python (temel) paketleri
@@ -433,7 +433,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
-. /usr/share/autojump/autojump.sh
+source /usr/share/autojump/autojump.sh
+source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 alias z='~/bin/zargan.py'
 zz(){
