@@ -405,6 +405,8 @@ iif "eth0" tcp dport 60000-60100 dnat to 172.22.22.251
 ```
 PasswordAuthentication no
 GatewayPorts yes
+ClientAliveInterval 10
+ClientAliveCountMax 3
 ```
 
 #### vpn kullanıcısı ve anahtarı
@@ -475,7 +477,7 @@ Host em-vpn
     IdentityFile ~/.ssh/em-vpn
     IdentitiesOnly yes
     ConnectTimeout 10
-    ServerAliveInterval 60
+    ServerAliveInterval 10
     ServerAliveCountMax 3
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
@@ -490,7 +492,7 @@ Host em-sock
     IdentityFile ~/.ssh/em-vpn
     IdentitiesOnly yes
     ConnectTimeout 10
-    ServerAliveInterval 15
+    ServerAliveInterval 10
     ServerAliveCountMax 3
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
