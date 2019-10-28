@@ -588,17 +588,3 @@ belirten OK işareti kalkacak.
   * bankalar, yemeksepeti
   * digital ocean
   * radyolar
-
-###### second profile
-__second__ adlı profili oluştur.
-```bash
-firefox-esr -no-remote -ProfileManager
-```
-
-```bash
-cd ~/.mozilla/firefox
-DEFAULT=$(ls | grep .default)
-SECOND=$(ls | grep .second)
-rm -rf $SECOND
-cp -arp $DEFAULT $SECOND
-```
