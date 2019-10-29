@@ -360,7 +360,6 @@ apt-get install xterm
 apt-get install xtrlock unclutter
 apt-get install scrot                                   # screen capture
 apt-get install firefox-esr --install-recommends
-apt-get install flashplayer-mozilla                     # multimedia deposundan...
 apt-get install smplayer
 apt-get install pavucontrol                             # pulsaudio icin ses kontrol GUI
 apt-get install x11vnc xvnc4viewer
