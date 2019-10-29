@@ -341,6 +341,7 @@ apt-get install -d php-cli                              # komut satırından PHP
 ```bash
 apt-get install python3-pip --install-recommends
 pip3 install --upgrade setuptools wheel
+pip3 install --upgrade ddgr                         # DuckDuckGo konsol
 pip3 install --upgrade flake8
 pip3 install --upgrade pexpect                      # shell uygulamalarını interaktif çalıştırma
 pip3 install --upgrade requests                     # HTTP kütüphanesi, arkada urllib3 kullanıyor
