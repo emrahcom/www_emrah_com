@@ -261,12 +261,13 @@ apt-get install -d nethogs iftop bwm-ng
 #### network paketleri
 ```bash
 apt-get install wget ca-certificates
-apt-get install fping arping arp-scan mtr curl dnsutils whois
+apt-get install fping arping arp-scan curl dnsutils whois
 apt-get install s-nail
 apt-get install sshuttle sudo                           # VPN over SSH
 apt-get install --install-recommends openvpn            # SSL VPN client olacaksa
 apt-get install nmap tcpdump
 apt-get install ngrep netcat-openbsd socat
+apt-get install -d mtr
 apt-get install -d telnet
 apt-get install -d minicom                              # Seri porttan bağlanan cihazlar için
 ```
