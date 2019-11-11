@@ -335,6 +335,7 @@ apt-get install mpv ffmpeg
 ```bash
 apt-get install vim-nox                                 # script destekli vim
 apt-get install git                                     # versiyon kontrol sistemi
+apt-get install -d npm                                  # javascript paketleri
 apt-get install -d php-cli                              # komut satırından PHP
 ```
 
