@@ -1,7 +1,7 @@
 DEBIAN BUSTER KURULUM NOTLARI
 ==============================
 Kurulum, Netinstall CD'si ile yapılacak.
-Stretch notlarına göre düzenleniyor, henüz test edilmedi.
+UEFI modu öncelikli, sorun varsa legacy moduna geçilsin.
 
 
 Temel sistemin kurulması
@@ -27,19 +27,36 @@ __Partition table__: gpt
 
 #### USB stick için örnek bölümlendirme
 ```
-/boot   200 MB  sda1    (bootable)
-crypto    X GB  sda2    (mount to /)
+/efi    600 MB  sda1    (bootable)
+/boot   200 MB  sda2
+crypto    X GB  sda3    (mount to /)
 ```
 
-SSD disk kullanılıyor ve TRIM desteği varsa ext4 partitionlarda discard
-özelliği aktif hale getirilecek. Bütün partitionlarda noatime özelliği
+SSD disk kullanılıyor ve TRIM desteği varsa ve crypto kullanılmıyorsa
+ext4 partitionlarda discard özelliği aktif hale getirilecek. Crypto varsa
+discard özelliği crypttab'da geliyor. Bütün partitionlarda noatime özelliği
 aktif olsun.
+
+crypto swap'te bozulma çok oluyor ve makine açılışını engelliyor. Ya swap
+kullanılmasın ya da normal (crypto olmayan) swap kullanılsın.
 
 crypto disk adı değiştirilecekse `cryptsetup` notlarına bak.
 
 
 Kurulum sonrası ilk ayarlar
 ---------------------------
+#### EFI
+`secure boot` aktif değilken makine açılıp aşağıdaki işlemler yapılabilir veya
+başka bir sistemden EFI partition'ı mount edilip yapılabilir. Daha sonra
+`secure boot` aktif hale getirilebilir.
+
+```bash
+cd /boot/efi/EFI
+cp -arp debian BOOT
+cd BOOT
+cp shimx64.efi BOOTX64.efi
+```
+
 #### /etc/apt/apt.conf.d/80recommends
 ```
 APT::Install-Recommends "0";
@@ -91,6 +108,7 @@ apt-get autoremove --purge
 ```
 
 #### Grub ayarları
+Grub default timeout kısaltılabilir.
 Grub için parola iki kere girilecek, görüntü gelmeyecek.
 
 ```bash
@@ -138,6 +156,8 @@ USB stick kurulumlarında yapılacak.
 ```
 /dev/mapper/crypto-usb  /                   ext4    noatime,errors=remount-ro                   0  1
 UUID=xxxxxx             /boot               ext4    noatime                                     0  2
+UUID=yyyyyy             /boot/efi           vfat    umask=0077                                  0  1
+UUID=zzzzzz             none                swap    sw                                          0  0
 tmpfs                   /tmp                tmpfs   defaults,noatime,mode=1777,size=300M        0  0
 tmpfs                   /var/log            tmpfs   defaults,noatime,mode=0755,size=100M        0  0
 tmpfs                   /var/cache/browser  tmpfs   noatime,size=150M,nr_inodes=10k,mode=1777   0  0
@@ -227,7 +247,7 @@ net.ipv4.ip_forward=1
 #### iptables
 ```bash
 apt-get install iptables-persistent
-iptables -t nat -A POSTROUTING -s 172.17.17.0/24 -o wlp9s0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.17.17.0/24 -o wlp1s0 -j MASQUERADE
 iptables-save > /etc/iptables/rules.v4
 ```
 
@@ -372,7 +392,11 @@ apt-get install chromium fonts-liberation               # alternatif browser ger
 apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
 apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
 apt-get install krita --install-recommends              # resim düzenlemek gerekecekse...
+apt-get install redshift                                # monitor renk sıcaklığı
 ```
+
+#### Virtualbox
+Virtualbox notlarına bak.
 
 #### Debian kaynak kod paketleri ile çalışılacaksa
 ```bash
