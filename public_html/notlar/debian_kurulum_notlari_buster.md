@@ -263,7 +263,7 @@ apt-get install ack jq fzf
 #### python (temel) paketleri
 ```bash
 apt-get install python3 bpython3
-apt-get install python3-pip
+apt-get install python3-pip  --install-recommends
 ```
 
 #### LXC
