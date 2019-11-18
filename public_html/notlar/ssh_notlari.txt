@@ -345,6 +345,43 @@ ssh -ND 8080 -p22 host2
 
 
 # -----------------------------------------------------------------------------
+# REMOTE AUDIO OVER SSH
+# -----------------------------------------------------------------------------
+Uzak makinedeki mikrofon sesini SSH üzerinden dinleme... Dinleyecek makinede
+`ffplay` veya `mpv` gibi bir player'ın yüklü olması gerekir. Mikrofonuna
+erişilecek makinede `alsa-utils` yüklü olması gerekir.
+
+# remote
+```
+apt-get install alsa-utils flac vorbis-tools
+```
+
+# local
+```
+apt-get install ffplay
+```
+
+# remote audio
+Komutlar düşük bant genişliğinden yükseğe doğru sıralanmıştır. `oggenc` CPU
+kullanımı biraz daha yüksek olabilir.
+
+```
+ssh "arecord -f cd -D plughw:0 | oggenc -" | ffplay -nodisp -
+ssh "arecord -f cd -D plughw:0 | flac - -o -" | ffplay -nodisp -
+ssh "arecord -f cd -D plughw:0" | ffplay -nodisp -
+```
+
+# device
+Device bulmak için uzak makinede
+
+```
+arecord -l
+arecord -L
+```
+
+
+
+# -----------------------------------------------------------------------------
 # SSLH
 # -----------------------------------------------------------------------------
 
