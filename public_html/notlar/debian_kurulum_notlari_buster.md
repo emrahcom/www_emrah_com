@@ -346,9 +346,9 @@ apt-get install -d wodim dvd+rw-tools
 
 #### Multimedia
 ```bash
-apt-get install -d alsa-utils
-apt-get install pulseaudio pulseaudio-utils
-apt-get install mpv ffmpeg
+apt-get install alsa-utils pulseaudio pulseaudio-utils
+apt-get install mpv ffmpeg ffplay
+apt-get install -d flac vorbis-tools
 ```
 
 #### Programlama paketleri
