@@ -1,13 +1,13 @@
 VIRTUALBOX NOTLARI
 ==================
-Debian Stretch ile test edilmiştir.
+Debian Buster ile test edilmiştir.
 
 
 Install
 =======
 
 ### /etc/apt/sources.list
-deb http://download.virtualbox.org/virtualbox/debian stretch contrib
+deb http://download.virtualbox.org/virtualbox/debian buster contrib
 
 ### Repo key
 wget https://www.virtualbox.org/download/oracle_vbox_2016.asc
@@ -15,20 +15,16 @@ apt-key add oracle_vbox_2016.asc
 
 ### Install
 apt update
-apt install virtualbox-6.0 --install-recommends
+apt-get install virtualbox-6.0 --install-recommends
 
 ### Extension pack
+Sadece bilgi için... Kurmaya gerek yok.
+
 cd /tmp
 VERSION=$(apt-cache show virtualbox-6.0 | grep Version | egrep -o "6.0[0-9.]*")
 wget https://download.virtualbox.org/virtualbox/$VERSION/Oracle_VM_VirtualBox_Extension_Pack-$VERSION.vbox-extpack
 VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-$VERSION.vbox-extpack
 VBoxManage list extpacks
-
-
-Install (Debian Buster)
-=======================
-apt-get install virtualbox --install-recommends
-apt-get install virtualbox-ext-pack
 
 
 Konsol
@@ -62,4 +58,3 @@ File -> Host Network Manager
 Kaynaklar
 =========
 https://wiki.debian.org/VirtualBox
-
