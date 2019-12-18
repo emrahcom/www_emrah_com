@@ -15,13 +15,13 @@ apt-key add oracle_vbox_2016.asc
 
 ### Install
 apt update
-apt-get install virtualbox-6.0 --install-recommends
+apt-get install virtualbox-6.1 --install-recommends
 
 ### Extension pack
 Sadece bilgi için... Kurmaya gerek yok.
 
 cd /tmp
-VERSION=$(apt-cache show virtualbox-6.0 | grep Version | egrep -o "6.0[0-9.]*")
+VERSION=$(apt-cache show virtualbox-6.1 | grep Version | egrep -o "6.1[0-9.]*")
 wget https://download.virtualbox.org/virtualbox/$VERSION/Oracle_VM_VirtualBox_Extension_Pack-$VERSION.vbox-extpack
 VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-$VERSION.vbox-extpack
 VBoxManage list extpacks
