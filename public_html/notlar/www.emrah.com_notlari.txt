@@ -155,7 +155,7 @@ UPDATE SCRIPTS
 
 
 # -----------------------------------------------------------------------------
-# /etc/nginx/sites-available/emrah.com
+# /etc/nginx/sites-available/emrah.com.conf
 # -----------------------------------------------------------------------------
 # HTTP emrah.com
 server {
@@ -187,26 +187,38 @@ server {
         access_log off;
         log_not_found off; }
 
-    # static dosyalar icin farkli header.
+    # kuran -> meal
+    ocation /kuran {
+        autoindex on;
+        expires max; }
+
+    # meal
+    location ~* /meal\d+ {
+        autoindex on;
+        expires max; }
+
+    # static
     location ~* \.(?:ico|gif|jpe?g|png)$ {
+        expires max; }
+    location ~* \.(?:db|deb|gz|pdf)$ {
         expires max; }
 
     # markdown
     location ~* \.(?:md|markdown)$ {
-        default_type "text/plain; charset=utf-8"; }
+        default_type "text/plain; charset=utf-8";
+        expires 30d; }
 
-    location /kuran {
-        autoindex on;
-    }
-
-    location ~* /meal\d+ {
-        autoindex on; }
+    # txt / html
+    location ~* \.(?:txt| html)$ {
+        expires 30d; }
 
     location = / {
-        ssi on; }
+        ssi on;
+        expires 30d; }
 
     location = /index.html {
-        ssi on; }
+        ssi on;
+        expires 30d; }
 }
 
 # -----------------------------------------------------------------------------
