@@ -595,7 +595,8 @@ belirten OK işareti kalkacak.
 * __network.prefetch-next__: false
 
 ###### Add-ons
-* Vim Vixen
+* Tridactyl
+x Vim Vixen (don't install while tridactyl)
 * uBlock Origin
 * NoScript Security Suite by Giorgio Maone
 * Markdown Viewer Webext
