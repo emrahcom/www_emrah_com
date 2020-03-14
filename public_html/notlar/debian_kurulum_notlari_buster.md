@@ -605,6 +605,7 @@ x Vim Vixen (don't install while tridactyl)
 * Privacy Badger
 
 ###### Diğer
+* :set searchengine=duckduckgo
 * Noscript whitelist temizlenir.
 * Noscript izni verilecek sitelere bir kere girilir.
   * duckduckgo
