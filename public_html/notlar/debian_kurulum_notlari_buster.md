@@ -393,6 +393,7 @@ apt-get install libreoffice --install-recommends        # office uygulamalari ge
 apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
 apt-get install krita --install-recommends              # resim düzenlemek gerekecekse...
 apt-get install redshift                                # monitor renk sıcaklığı
+apt-get install brightnessctl                           # monitor parlaklığı
 ```
 
 #### Virtualbox
@@ -413,6 +414,7 @@ Template kurulumları. Buster ve apt-cacher-ng için container kurulabilir.
 ###### visudo
 ```
 emrah   ALL=NOPASSWD: /usr/bin/sshuttle, /bin/systemctl suspend
+emrah   ALL=NOPASSWD: /usr/bin/brightnessctl
 ```
 
 #### zsh
