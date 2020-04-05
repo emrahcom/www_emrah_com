@@ -63,6 +63,11 @@ APT::Install-Recommends "0";
 APT::Install-Suggests "0";
 ```
 
+#### /etc/apt/apt.conf.d/90pipeline-depth
+```
+Acquire::http { Pipeline-Depth "800"; }
+```
+
 #### /etc/apt/sources.list
 ```
 deb http://ftp2.de.debian.org/debian buster main non-free contrib
