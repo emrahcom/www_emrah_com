@@ -191,29 +191,38 @@ rm -rf /tmp/* /var/log/*; sync; reboot
 
 systemd-networkd
 ----------------
-#### dnsmasq
-```bash
-apt-get install dnsmasq
-```
-
 #### /etc/network/interfaces
 Comment network interfaces except loopback
 
-#### /etc/systemd/network/90-bridge.netdev
-```
-[NetDev]
-Name=br0
-Kind=bridge
-```
-
-#### /etc/systemd/network/90-dummy.netdev
+#### /etc/systemd/network/90-dummy0.netdev
 ```
 [NetDev]
 Name=dummy0
 Kind=dummy
 ```
 
-#### /etc/systemd/network/91-bridge-ports.network
+#### /etc/systemd/network/90-dummy1.netdev
+```
+[NetDev]
+Name=dummy1
+Kind=dummy
+```
+
+#### /etc/systemd/network/91-br0.netdev
+```
+[NetDev]
+Name=br0
+Kind=bridge
+```
+
+#### /etc/systemd/network/91-br1.netdev
+```
+[NetDev]
+Name=br1
+Kind=bridge
+```
+
+#### /etc/systemd/network/92-br0-ports.network
 ```
 [Match]
 Name=dummy0
@@ -222,7 +231,16 @@ Name=dummy0
 Bridge=br0
 ```
 
-#### /etc/systemd/network/92-bridge.network
+#### /etc/systemd/network/92-br1-ports.network
+```
+[Match]
+Name=dummy1
+
+[Network]
+Bridge=br1
+```
+
+#### /etc/systemd/network/93-br0.network
 ```
 [Match]
 Name=br0
@@ -231,11 +249,44 @@ Name=br0
 Address=172.17.17.1/24
 ```
 
+#### /etc/systemd/network/93-br1.network
+```
+[Match]
+Name=br1
+
+[Network]
+Address=192.168.2.1/24
+```
+
 #### systemd-networkd
 ```bash
 systemctl enable systemd-networkd
 systemctl restart systemd-networkd
 ```
+
+
+#### dnsmasq
+```bash
+apt-get install dnsmasq
+```
+
+#### /etc/dnsmasq.d/my-networks
+```
+bind-interfaces
+interface=br0
+interface=br1
+
+dhcp-range=interface:br0,172.17.17.100,172.17.17.200,48h
+dhcp-range=interface:br1,192.168.2.100,192.168.2.200,48h
+dhcp-host=11:22:33:44:55:66,192.168.2.2
+
+address=/dc1.kurum.loc/192.168.2.10
+```
+
+```bash
+systemctl restart dnsmasq.service
+```
+
 
 #### /etc/resolv.conf
 ```
@@ -253,6 +304,7 @@ net.ipv4.ip_forward=1
 ```bash
 apt-get install iptables-persistent
 iptables -t nat -A POSTROUTING -s 172.17.17.0/24 -o wlp1s0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -o wlp1s0 -j MASQUERADE
 iptables-save > /etc/iptables/rules.v4
 ```
 
