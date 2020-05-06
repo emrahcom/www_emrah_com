@@ -90,6 +90,16 @@ apt-get install deb-multimedia-keyring
 apt-get update
 ```
 
+#### Riot deposu
+```
+deb https://riot.im/packages/debian buster main
+```
+
+```bash
+curl -sL https://riot.im/packages/debian/repo-key.asc | apt-key add -
+apt-get update
+```
+
 #### Güncelleme
 ```bash
 apt-get update && \
@@ -449,6 +459,7 @@ apt-get install chromium chromium-sandbox fonts-liberation
 apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
 apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
 apt-get install krita --install-recommends              # resim düzenlemek gerekecekse...
+apt-get install riot-desktop
 apt-get install redshift                                # monitor renk sıcaklığı
 apt-get install brightnessctl                           # monitor parlaklığı
 ```
