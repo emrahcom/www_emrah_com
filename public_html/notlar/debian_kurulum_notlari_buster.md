@@ -78,18 +78,6 @@ deb http://security.debian.org/debian-security buster/updates main contrib non-f
 deb-src http://security.debian.org/debian-security buster/updates main contrib non-free
 ```
 
-#### Multimedia deposu kullanilacaksa...
-```
-deb http://www.deb-multimedia.org buster main non-free
-deb-src http://www.deb-multimedia.org buster main non-free
-```
-
-```bash
-apt-get update --allow-insecure-repositories
-apt-get install deb-multimedia-keyring
-apt-get update
-```
-
 #### Riot deposu
 ```
 deb https://riot.im/packages/debian buster main
