@@ -21,3 +21,17 @@ unzip deno-x86_64-unknown-linux-gnu.zip
 manual
 ======
 https://deno.land/manual
+
+format
+======
+
+```bash
+deno fmt --check
+deno fmt
+cat script.ts | deno fmt -
+```
+
+```
+// deno-fmt-ignore
+// deno-fmt-ignore-file
+```
