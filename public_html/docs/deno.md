@@ -1,7 +1,9 @@
 Deno
 ====
 
-## installation
+installation
+============
+https://github.com/denoland/deno/releases
 
 ```bash
 curl -sSf https://github.com/denoland/deno/releases | \
@@ -15,3 +17,7 @@ unzip deno-x86_64-unknown-linux-gnu.zip
 
 ./deno info
 ```
+
+manual
+======
+https://deno.land/manual
