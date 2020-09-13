@@ -3,7 +3,7 @@
 *.log
 *.pyc
 *__pycache__/
-public_html/medya/dilbert.gif
-public_html/medya/userfriendly.gif
+public_html/media/dilbert.gif
+public_html/media/userfriendly.gif
 public_html/celtx/Celtx-2.9.7-64.tar.bz2
 public_html/celtx/CeltxPlus-2.9.7_Mac.zip

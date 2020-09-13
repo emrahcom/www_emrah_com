@@ -1,0 +1,237 @@
+OpenTSA Notlari
+---------------
+
+- Derleme
+        . Derleme sonrası oluşan dosyalar ve openssl.cnf dosyası
+          http://www.emrah.com/media/opentsa.tar.gz
+
+        . Kullanılmış olan openssl sürümü 0.9.8c
+          http://www.openssl.org/source/openssl-0.9.8c.tar.gz
+
+        . Kullanılmış olan OpenTSA yaması
+          http://www.opentsa.org/ts/ts-20060923-0_9_8c-patch.gz
+
+        . Derleme Debian Etch'de yapıldı, Debian Lenny'de sorun çıkıyor.
+
+        . libwww-curl-perl paketi yüklenecek
+          aptitude install libwww-curl-perl
+
+        . Derleme sonrasi oluşan tsget programında WWW::Curl::easy diye geçen yerler WWW::Curl::Easy yapıldı.
+          Perl modulü /usr/lib/perl5/Easy.pm olarak geçiyor.
+
+        . Oluşan dosyaların sisteme kopyalanması
+          Bu dosyalar sadece zaman damgası işlemleri için kullanılacak.
+          Hem opentsa istemci makineye hem de opentsa sunucu makineye konulacak
+          Diğer işler için sistemde mevcut olan openssl kullanılacak yoksa güvenlik sorunu yaşanabilir
+
+                su -
+                mkdir /usr/local/bin/ssl
+                cp openssl /usr/local/bin/ssl/
+                cp tsget /usr/local/bin/ssl/
+                chmod 755 /usr/local/bin/ssl/openssl
+                chmod 755 /usr/local/bin/ssl/tsget
+
+
+
+- OpenTSA sunucu makinenin ayarlanması
+        . /etc/ssl/openssl.cnf dosyasında TSA için gerekli değişiklikler yapılacak
+          openssl.cnf.patch içeriği aşağıda
+          değişiklikten önce eski dosyanın kopyası alınsın
+                cp /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf.old
+
+        . Damgalama işlemini yapacak olan kullanıcının ayarları
+
+                cd
+                mkdir ca
+                chmod 0700 ca
+                cd ca
+                mkdir private
+                mkdir newcerts
+                echo '100001' > serial
+                touch index.txt
+
+
+                # ana sertifikanın oluşturulması
+                  diger sertifikalar oluşturulurken bu sertifika kullanılacak
+
+                openssl req -new -x509 -newkey rsa:2048 -days 3650 -out cacert.pem -keyout private/cakey.pem
+                        Enter PEM pass phrase           : parola123
+                        Country Name                    : TR
+                        State or Province Name          : Avrupa
+                        Locality Name                   : Istanbul
+                        Organization Name               : Sirket Ltd
+                        Organizational Unit Name        : Network
+                        Common Name                     : Emrah
+                        Email Address                   : mail@host.com
+
+
+                # TSA icin gizli anahtarin olusturulmasi
+
+                openssl genrsa -aes256 -out tsakey.pem 2048
+
+
+                # TSA için sertifika otoritesinden sertifika istemek için request dosyasının oluşturulması
+
+                openssl req -new -key tsakey.pem -out tsareq.csr
+                        Enter pass phrase for tsakey.pem: parola123
+                        Diğer sorulara yukarıdaki cevapların aynısı verilecek
+                        Ekstra sorulara cevap vermeye gerek yok
+
+
+                # TSA için sertifika otoritesinden sertifika isteme
+                  Daha önceden oluşturulmuş ana sertifika kullanılarak
+                  TSA'nın gizli anahtarına uygun sertifika üretiliyor
+                  Komutun verildiği yer önemli
+
+                cd
+                openssl ca -days 3650 -in ca/tsareq.csr -out ca/tsacert.pem
+                mv ca/tsakey.pem ca/private/
+
+
+
+- OpenTSA sunucuda kullanılacak komutlar
+
+        . Damgalama (komutun verildiği yer önemli)
+          Bu komutu openssl.cnf dosyasındaki path'i görecek yerden vermek gerekiyor
+          Veya o dosyada verilen klasor yolu çalışma anına bağlı olmamalı
+          Komuttaki "request.tsq" adlı damgalama talep dosyasını, istemci gönderecek
+
+          cd
+          /usr/local/bin/ssl/openssl ts -reply -queryfile request.tsq -out response.tsr \
+                -token_out -config /etc/ssl/openssl.cnf -passin pass:parola123
+
+
+
+- OpenTSA istemcide kullanılacak komutlar
+
+        . Damga istek dosyasının oluşturulması
+          /usr/local/bin/ssl/openssl ts -query -data dosya -no_nonce -out request.tsq
+
+        . Damga istek dosyasının okunabilir çıktısı
+          /usr/local/bin/ssl/openssl ts -query -in request.tsq -text
+
+        . Damganın doğruluğunun kontrol edilmesi
+          "dosya" dosyası, damgalanmış olan ve şu an damga ile uyumlu olup olmadığı kontrol edilen veri dosyası
+          "response.tsr" dosyası, sunucudan gelen damga dosyası
+          "cacert.pem" dosyası, sunucu tarafından dağıtılan CA için public sertifika
+          "tsacert.pem" dosyası, sunucu tarafından dağıtılan TSA için public sertifika
+
+          /usr/local/bin/ssl/openssl ts -verify -data dosya -in response.tsr -token_in -CAfile cacert.pem -untrusted tsacert.pem
+
+
+
+- OpenTSA sunucu için Apache kullanılacaksa
+  request.tsq base64 ile encode edildikten sonra web sayfasına POST edilmeli
+  Web sayfası imzalama işlemini gerçekleştirdikten sonra response.tsr dosyasını
+  base64 ile encode edip cevap olarak döndürür.
+
+        . Apache2 ve mod_python kurulacak
+          aptitude install apache2 libapache2-mod-python
+
+        . Web uygulamanın çalışacağı klasör oluşturulacak
+          cd /var/www
+          mkdir tsa
+          cd tsa
+          touch index.html
+
+        . Apache2 için yapılacak ayarlar
+          /etc/apache2/sites-available/default
+
+                <Directory /var/www/tsa>
+                        Options -Indexes FollowSymLinks MultiViews
+                        AllowOverride None
+                        Order allow,deny
+                        Allow from all
+                        SetHandler mod_python
+                        PythonHandler mod_python.publisher
+                        PythonDebug Off
+                </Directory>
+
+
+          /etc/apache2/conf.d/security
+
+                ServerTokens Prod
+                ServerSignature Off
+                TraceEnable Off
+
+
+        . Python sayfası
+          /var/www/tsa/index.py
+          bkz. http://www.emrah.com/codes/tsa_index.py.txt
+
+
+        . Apache yeniden başlatılacak
+          /etc/init.d/apache2 restart
+
+
+
+- openssl.cnf.patch
+
+--- /etc/ssl/openssl.cnf        2009-01-07 20:04:38.000000000 +0200
++++ openssl.cnf 2009-12-18 22:57:59.000000000 +0200
+@@ -21,12 +21,17 @@ oid_section         = new_oids
+
+ [ new_oids ]
+
+-# We can add new OIDs in here for use by 'ca' and 'req'.
++# We can add new OIDs in here for use by 'ca', 'req' and 'ts'.
+ # Add a simple OID like this:
+ # testoid1=1.2.3.4
+ # Or use config file substitution like this:
+ # testoid2=${testoid1}.5.6
+
++# Policies used by the TSA examples.
++tsa_policy1 = 1.2.3.4.1
++tsa_policy2 = 1.2.3.4.5.6
++tsa_policy3 = 1.2.3.4.5.7
++
+ ####################################################################
+ [ ca ]
+ default_ca     = CA_default            # The default ca section
+@@ -34,7 +39,7 @@ default_ca    = CA_default            # The default c
+ ####################################################################
+ [ CA_default ]
+
+-dir            = ./demoCA              # Where everything is kept
++dir            = ./ca                  # Where everything is kept
+ certs          = $dir/certs            # Where the issued certs are kept
+ crl_dir                = $dir/crl              # Where the issued crl are kept
+ database       = $dir/index.txt        # database index file.
+@@ -207,6 +212,9 @@ authorityKeyIdentifier=keyid,issuer
+ #nsCaPolicyUrl
+ #nsSslServerName
+
++# This is required for TSA certificates.
++extendedKeyUsage = critical,timeStamping
++
+ [ v3_req ]
+
+ # Extensions to add to a certificate request
+@@ -311,3 +319,27 @@ authorityKeyIdentifier=keyid,issuer:alwa
+
+ # This really needs to be in place for it to be a proxy certificate.
+ proxyCertInfo=critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo
++
++
++####################################################################
++[ tsa ]
++
++default_tsa = TSA_default                              # the default TSA section
++
++[ TSA_default ]
++
++# These are used by the TSA reply generation only.
++dir                    = ./ca                                  # TSA root directory
++serial                 = $dir/tsaserial                        # The current serial number (mandatory)
++crypto_device          = builtin                               # OpenSSL engine to use for signing
++signer_cert            = $dir/tsacert.pem                      # The TSA signing certificate (optional)
++certs                  = $dir/cacert.pem                       # Certificate chain to include in reply (optional)
++signer_key             = $dir/private/tsakey.pem               # The TSA private key (optional)
++default_policy         = tsa_policy1                           # Policy if request did not specify it (optional)
++other_policies         = tsa_policy2, tsa_policy3              # acceptable policies (optional)
++digests                        = md5, sha1                             # Acceptable message digests (mandatory)
++accuracy               = secs:1, millisecs:500, microsecs:100  # (optional)
++clock_precision_digits = 0                                     # number of digits after dot. (optional)
++ordering               = yes                                   # Is ordering defined for timestamps? (optional, default: no)
++tsa_name               = yes                                   # Must the TSA name be included in the reply? (optional, default: no)
++ess_cert_id_chain      = no                                    # Must the ESS cert id chain be included? (optional, default: no)

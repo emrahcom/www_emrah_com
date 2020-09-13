@@ -1,0 +1,70 @@
+Yazılım Projesi Geliştirme Notları
+----------------------------------
+
+- Dökümantasyon
+        . Genel dökümanlar, proje klasörü altında yer alan 'doc/' klasöründe toplanacak
+        . Ayrıca her klasöre, klasör altında yer alan dosyalarla ilgili açıklamaları içeren OKUBENI dosyası konulacak
+        . 'doc/' altına projenin tamamını kabaca açıklayan bir diagram... Bunun için 'bouml' kullanılsın
+        . doc/OKUBENI içine
+                . iletişim bilgileri
+                . çalışılacak olan ortam, donanım, işletim sistemi hakkında bilgi
+                . kullanılacak olan hazır uygulamalar hakkinda bilgi
+                . kurulum notları
+        . 'doc/' altına kullanılan cihazlarla ilgili gelen dökümanlar
+        . 'doc/' altına haberleşme protokollerini açıklayan dökümanlar
+        . 'doc/hata_notlari.txt' dosyasında rastlanılan sorunlar, sorunun nedenleri ve çözümü ile ilgili bilgiler olacak.
+        . 'doc/Changelog' dosyasında yapılan değişikliklerin kayıtları tutulacak.
+
+
+- Sistem Ayarları
+        . Değişiklik yapılan her sistem dosyasının bir kopyası 'config/' klasörüne konulacak
+        . 'config/surum' içine sürümün numarası yazılacak
+        . Kendi uygulamalarımız tarafından kullanılan ve veritabanı formatında olmayan ayar dosyaları bu klasörde tutulacak
+
+
+- Kod geçmişinin takibi ve yedekleme
+        . Kod geçmişinin takibi için git kullanılacak
+          http://emrah.com/docs/git_notlari.txt
+        . Proje ana klasöründe 'git init' yapılacak ve daha sonraki değişikliklerde add, commit v.s.
+        . Değişiklik yapılan her günün sonunda rsync ile yeni yedek alınacak.
+        . Yedekleme öncesi 'git commit' ile sürüm kontrol sistemini güncellemeyi unutma
+        . CD/DVD ve uzak makinede de yedek tut
+
+
+- Veritabanı
+        . Veritabanları ile ilgili dosyalar 'databases/' klasörüne konulacak
+        . Veritabanlarını oluşturan SQL betikleri (create.sql v.b.)
+        . Default değerleri giren SQL komutları (insert.sql v.b.)
+          Veritabanlarını oluştururken tool kullanılmasın
+
+
+- Daemonlar
+        . Arkaplanda sürekli çalışacak olan servis yazılımlarının kodları 'daemon/' klasörüne konulacak
+        . Python ile yazılan daemonlar için
+          http://emrah.com/docs/python_daemon_notlari.txt
+
+
+- GUI
+        . Arayüz ile ilgili kodlar 'gui/' klasörüne konulacak
+        . Arayüz ile ilgili medya dosyaları (arkaplan resimleri, ikonlar vs) bu klasöre konulacak
+
+
+- Web
+        . Web arayüzleri ile ilgili kodlar 'web/' klasörüne konulacak.
+
+
+- Test
+        . Test betikleri 'test/' klasörüne konulacak
+        . Python kodlarında unittest için python-nose kullan
+          http://emrah.com/docs/python_nose_notlari.txt
+        . Kodlar, hata oluştuğunda
+                . geliştirme aşamasında hatayı raise eden
+                . kullanım aşamasında programı sonlandırmayan ama hata mesajını loglayan şekilde yazılacak
+                . finally kullanımına dikkat et; bazı durumlarda raise edilen hatanın üst koda geçirilmesinde sorun oluyor
+                  mümkün olduğunca finally kullanma
+
+
+- Araçlar
+        . Sistemin işleyisi ile ilgili olmayan ama bir aşamada bir işi kolaylaştırmak için kullanılmış olan
+          bütün uygulamalar, kodlar, dosyalar vb 'utils/' klasörüne konulacak
+          Örneğin projede kullanılacak bazı verileri başka bir kaynaktan alıp projede kullanılmaya uygun hale çeviren betikler...

@@ -5,8 +5,8 @@ from glob       import glob
 from os.path    import basename, exists
 
 HOME                = '/home/emrah/proje/www_emrah_com'
-DIRECTORIES         = [ 'public_html/notlar',
-                        'public_html/kodlar']
+DIRECTORIES         = [ 'public_html/docs',
+                        'public_html/codes']
 
 
 
