@@ -1,6 +1,7 @@
 *~
 *.sw?
 *.log
+*.txt.html
 *.pyc
 *__pycache__/
 public_html/media/dilbert.gif
