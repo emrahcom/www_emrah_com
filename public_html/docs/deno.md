@@ -12,10 +12,18 @@ curl -sSf https://github.com/denoland/deno/releases | \
 mkdir deno
 cd deno
 
-wget https://github.com/denoland/deno/releases/download/v1.3.3/deno-x86_64-unknown-linux-gnu.zip
+LATEST=$(curl -sSf https://github.com/denoland/deno/releases | \
+    grep -o "/denoland/deno/releases/download/.*/deno-.*linux.*\.zip" | \
+    head -n1)
+
+wget -O deno-x86_64-unknown-linux-gnu.zip https://github.com/$LATEST
 unzip deno-x86_64-unknown-linux-gnu.zip
 
+./deno --version
 ./deno info
+
+cp deno /usr/local/bin
+deno --version
 ```
 
 manual
