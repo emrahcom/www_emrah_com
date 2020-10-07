@@ -88,13 +88,13 @@ curl -sL https://riot.im/packages/debian/repo-key.asc | apt-key add -
 apt-get update
 ```
 
-#### Visual Studio Code deposu
+#### vscodium deposu
 ```
-deb http://packages.microsoft.com/repos/vscode stable main
+deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs/ vscodium main
 ```
 
 ```bash
-curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | apt-key add -
 apt-get update
 ```
 
@@ -420,7 +420,7 @@ apt-get install -d flac vorbis-tools
 ```bash
 apt-get install git                                     # versiyon kontrol sistemi
 apt-get install vim-nox                                 # script destekli vim
-apt-get install code                                    # visual studio code
+apt-get install vscodium                                # vscodium
 apt-get install -d npm                                  # javascript paketleri
 apt-get install -d php-cli                              # komut satırından PHP
 ```
