@@ -447,7 +447,7 @@ apt-get install chromium chromium-sandbox fonts-liberation
 apt-get install libreoffice --install-recommends        # office uygulamalari gerekecekse...
 apt-get install gimp --install-recommends               # resim düzenlemek gerekecekse...
 apt-get install krita --install-recommends              # resim düzenlemek gerekecekse...
-apt-get install riot-desktop
+apt-get install element-desktop
 apt-get install redshift                                # monitor renk sıcaklığı
 apt-get install brightnessctl                           # monitor parlaklığı
 ```
@@ -589,8 +589,8 @@ program[firefox]        = firefox-esr
 bind[firefox]           = MOD+Shift+f
 program[bpython3]       = x-terminal-emulator -T "bpython3" -e /usr/bin/bpython3
 bind[bpython3]          = MOD+Shift+p
-program[riot-desktop]   = riot-desktop
-bind[riot-desktop]      = MOD+shift+r
+program[element-desktop]= element-desktop
+bind[element-desktop]   = MOD+shift+r
 program[wicd]           = x-terminal-emulator -e /usr/bin/wicd-curses
 bind[wicd]              = MOD+shift+w
 program[mplayer_mute]   = sh -c "echo mute > /tmp/mplayer.pipe"
