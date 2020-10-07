@@ -88,6 +88,16 @@ curl -sL https://riot.im/packages/debian/repo-key.asc | apt-key add -
 apt-get update
 ```
 
+#### Visual Studio Code deposu
+```
+deb http://packages.microsoft.com/repos/vscode stable main
+```
+
+```bash
+curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+apt-get update
+```
+
 #### Güncelleme
 ```bash
 apt-get update && \
@@ -408,8 +418,9 @@ apt-get install -d flac vorbis-tools
 
 #### Programlama paketleri
 ```bash
-apt-get install vim-nox                                 # script destekli vim
 apt-get install git                                     # versiyon kontrol sistemi
+apt-get install vim-nox                                 # script destekli vim
+apt-get install code                                    # visual studio code
 apt-get install -d npm                                  # javascript paketleri
 apt-get install -d php-cli                              # komut satırından PHP
 ```
@@ -591,6 +602,8 @@ program[bpython3]       = x-terminal-emulator -T "bpython3" -e /usr/bin/bpython3
 bind[bpython3]          = MOD+Shift+p
 program[element-desktop]= element-desktop
 bind[element-desktop]   = MOD+shift+r
+program[visual-studio]  = code
+bind[visual-studio]     = MOD+shift+s
 program[wicd]           = x-terminal-emulator -e /usr/bin/wicd-curses
 bind[wicd]              = MOD+shift+w
 program[mplayer_mute]   = sh -c "echo mute > /tmp/mplayer.pipe"
@@ -604,6 +617,9 @@ bind[mplayer_vol_r]     = XF86AudioRaiseVolume
 #### ~/bin/
 ###### zargan.py
 Kod deposundan kopyalanacak.
+
+#### Visual Studio Code
+`CTRL+P` -> `ext vscodevim` -> `install`
 
 #### Firefox
 ###### preferences
