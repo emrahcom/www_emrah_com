@@ -420,7 +420,7 @@ apt-get install -d flac vorbis-tools
 ```bash
 apt-get install git                                     # versiyon kontrol sistemi
 apt-get install vim-nox                                 # script destekli vim
-apt-get install vscodium                                # vscodium
+apt-get install codium                                  # visual studio codium
 apt-get install -d npm                                  # javascript paketleri
 apt-get install -d php-cli                              # komut satırından PHP
 ```
