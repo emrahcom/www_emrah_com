@@ -598,20 +598,20 @@ modkey                  = Mod4
 program[lock]           = xtrlock
 program[firefox]        = firefox-esr
 bind[firefox]           = MOD+Shift+f
+program[vscodium]       = codium
+bind[vscodium]          = MOD+shift+v
+program[chromium]       = chromium
+bind[chromium]          = MOD+shift+c
+program[pavucontrol]    = pavucontrol
+bind[pavucontrol]       = MOD+shift+a
 program[bpython3]       = x-terminal-emulator -T "bpython3" -e /usr/bin/bpython3
 bind[bpython3]          = MOD+Shift+p
+program[mute]           = bash -c "echo cycle mute | socat - /tmp/mpv.socat"
+bind[mute]              = MOD+Scroll_Lock
 program[element-desktop]= element-desktop
-bind[element-desktop]   = MOD+shift+r
-program[visual-studio]  = code
-bind[visual-studio]     = MOD+shift+s
+bind[element-desktop]   = MOD+shift+m
 program[wicd]           = x-terminal-emulator -e /usr/bin/wicd-curses
-bind[wicd]              = MOD+shift+w
-program[mplayer_mute]   = sh -c "echo mute > /tmp/mplayer.pipe"
-bind[mplayer_mute]      = Pause
-program[mplayer_vol_l]  = sh -c "echo 'volume -1' > /tmp/mplayer.pipe"
-bind[mplayer_vol_l]     = XF86AudioLowerVolume
-program[mplayer_vol_r]  = sh -c "echo 'volume +1' > /tmp/mplayer.pipe"
-bind[mplayer_vol_r]     = XF86AudioRaiseVolume
+bind[wicd]              = MOD+shift+n
 ```
 
 #### ~/bin/
