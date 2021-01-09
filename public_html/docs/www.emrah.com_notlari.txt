@@ -188,7 +188,7 @@ server {
         log_not_found off; }
 
     # kuran -> meal
-    ocation /kuran {
+    location /kuran {
         autoindex on;
         expires max; }
 
