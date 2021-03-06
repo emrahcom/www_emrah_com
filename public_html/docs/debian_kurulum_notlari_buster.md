@@ -286,7 +286,7 @@ interface=br1
 
 dhcp-range=interface:br0,172.17.17.100,172.17.17.200,48h
 dhcp-range=interface:br1,192.168.2.100,192.168.2.200,48h
-dhcp-host=11:22:33:44:55:66,192.168.2.2
+dhcp-host=11:22:33:44:55:66,hostname,192.168.2.2
 
 address=/dc1.kurum.loc/192.168.2.10
 ```
