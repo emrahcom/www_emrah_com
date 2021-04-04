@@ -369,6 +369,7 @@ kullanımı biraz daha yüksek olabilir.
 ssh "arecord -f cd -D plughw:0 | oggenc -" | ffplay -nodisp -
 ssh "arecord -f cd -D plughw:0 | flac - -o -" | ffplay -nodisp -
 ssh "arecord -f cd -D plughw:0" | ffplay -nodisp -
+ssh "arecord -f cd -D plughw:0" | aplay -
 ```
 
 # device
