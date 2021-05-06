@@ -22,7 +22,7 @@ ln -s libpng16.so.16 /usr/lib/x86_64-linux-gnu/libpng12.so.0
 * Type: Application
 * Name: Celtx
 * Command: /usr/local/celtx/celtx
-* Icon: /usr/local/celtx/icons/mozicon128.pn
+* Icon: /usr/local/celtx/icons/mozicon128.png
 
 
 ## mime-type
