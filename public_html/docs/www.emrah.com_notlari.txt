@@ -51,7 +51,7 @@ sslh yeni kurulumda kullanılmadı. Web sunucu loglarında IP görünmüyor.
     DAEMON_OPTS="--user sslh --listen 0.0.0.0:443 --ssh 127.0.0.1:XXX --ssl 127.0.0.1:10443 --pidfile /var/run/sslh/sslh.pid"
 
 ### certbot
-certbot certonly --webroot -w /home/emrah/proje/www_emrah_com/public_html \
+certbot certonly --webroot -w /home/emrah/web/www_emrah_com/public_html \
     -d emrah.com -d www.emrah.com
 chmod 755 /etc/letsencrypt/{archive,live}
 
@@ -104,39 +104,39 @@ WEB CONTENTS
 
 ### Git repos
 su -l emrah
-mkdir ~/repositories
-cd ~/repositories
+mkdir ~/git-repo
+cd ~/git-repo
 mkdir www_emrah_com.git
 cd www_emrah_com.git
 git init --bare
 
 ### Local git repo
 su -l emrah
-mkdir ~/proje
-cd ~/proje
-git clone --no-hardlinks ~/repositories/www_emrah_com.git
+mkdir ~/web
+cd ~/web
+git clone --no-hardlinks ~/git-repo/www_emrah_com.git
 
 ### Local git repo (on my desktop)
-mkdir ~/proje
-cd ~/proje
-git clone ssh://emrah@emrah.com:22/~/repositories/www_emrah_com.git
+mkdir ~/git-repo
+cd ~/git-repo
+git clone ssh://emrah@emrah.com:22/~/git-repo/www_emrah_com.git
 
 ### Web contents (on my desktop)
-mkdir -p ~/proje/www_emrah_com/public_html
-cd ~/proje/www_emrah_com/public_html
+mkdir -p ~/git-repo/www_emrah_com/public_html
+cd ~/git-repo/www_emrah_com/public_html
     (install the contents here)
 
-mkdir -p ~/proje/www_emrah_com/emrah_com_updates
-cd ~/proje/www_emrah_com/emrah_com_updates
+mkdir -p ~/git-repo/www_emrah_com/emrah_com_updates
+cd ~/git-repo/www_emrah_com/emrah_com_updates
     (install the web related scripts here)
 
-cd ~/proje/www_emrah_com
+cd ~/git-repo/www_emrah_com
 git add -A
 git commit -m "initial web contents"
 git push origin master
 
 ### Update web site
-cd ~/proje/www_emrah_com
+cd ~/web/www_emrah_com
 git stash
 git pull
 git stash clear
@@ -147,10 +147,10 @@ UPDATE SCRIPTS
 
 ### /etc/crontab
 19 05   * * *   root    /root/scripts/apt.sh >/dev/null 2>&1
-03 01   * * *   emrah   bash /home/emrah/proje/www_emrah_com/emrah_com_updates/dilbert.sh
-05 01   * * *   emrah   bash /home/emrah/proje/www_emrah_com/emrah_com_updates/userfriendly.sh
-07 01   * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/txt2html.py
-09 *    * * *   emrah   /home/emrah/proje/www_emrah_com/emrah_com_updates/ayet.py
+03 01   * * *   emrah   bash /home/emrah/web/www_emrah_com/emrah_com_updates/dilbert.sh
+05 01   * * *   emrah   bash /home/emrah/web/www_emrah_com/emrah_com_updates/userfriendly.sh
+07 01   * * *   emrah   /home/emrah/web/www_emrah_com/emrah_com_updates/txt2html.py
+09 *    * * *   emrah   /home/emrah/web/www_emrah_com/emrah_com_updates/ayet.py
 
 
 
@@ -172,7 +172,7 @@ server {
     ssl on;
 
     server_name emrah.com www.emrah.com;
-    root /home/emrah/proje/www_emrah_com/public_html;
+    root /home/emrah/web/www_emrah_com/public_html;
     index index.html;
     charset utf-8;
     access_log /var/log/nginx/access.emrah.com.log;
