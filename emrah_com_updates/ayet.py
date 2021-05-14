@@ -16,9 +16,9 @@ FOOTER="""
         </div>
     </div>\n"""
 # Meallerin yer aldigi ana klasor.
-BASEDIR = '/home/emrah/proje/www_emrah_com/public_html'
+BASEDIR = '/home/emrah/web/www_emrah_com/public_html'
 # Ayet blogunun yer aldigi include dosya.
-INC = '/home/emrah/proje/www_emrah_com/public_html/inc/kuran.html'
+INC = '/home/emrah/web/www_emrah_com/public_html/inc/kuran.html'
 
 # Meal listesi.
 mealler = { 1: 'Muhammed Esed',
