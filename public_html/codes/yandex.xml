@@ -1,9 +1,0 @@
-<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/"
-              xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
-<os:ShortName>Yandex</os:ShortName>
-<os:Description>Search Yandex for items added/updated in the last 24 hours</os:Description>
-<os:InputEncoding>UTF-8</os:InputEncoding>
-<os:Url type="text/html" method="GET" template="https://www.yandex.com/yandsearch">
-  <os:Param name="text" value="{searchTerms}"/>
-</os:Url>
-</SearchPlugin>
