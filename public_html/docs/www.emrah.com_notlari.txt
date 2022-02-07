@@ -150,8 +150,6 @@ UPDATE SCRIPTS
 03 01   * * *   emrah   bash /home/emrah/web/www_emrah_com/emrah_com_updates/dilbert.sh
 05 01   * * *   emrah   bash /home/emrah/web/www_emrah_com/emrah_com_updates/userfriendly.sh
 07 01   * * *   emrah   /home/emrah/web/www_emrah_com/emrah_com_updates/txt2html.py
-09 *    * * *   emrah   /home/emrah/web/www_emrah_com/emrah_com_updates/ayet.py
-
 
 
 # -----------------------------------------------------------------------------
@@ -186,16 +184,6 @@ server {
     location = /favicon.ico {
         access_log off;
         log_not_found off; }
-
-    # kuran -> meal
-    location /kuran {
-        autoindex on;
-        expires max; }
-
-    # meal
-    location ~* /meal\d+ {
-        autoindex on;
-        expires max; }
 
     # static
     location ~* \.(?:ico|gif|jpe?g|png)$ {
