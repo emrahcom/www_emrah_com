@@ -591,7 +591,9 @@ exec /usr/bin/spectrwm
 
 ###### ~/.spectrwm.conf
 ```
+clock_format            = %a %b %d %T %Z %Y
 program[screenshot_all] = bash -c "scrot /tmp/scrot-$(date +'%Y-%m-%d-%H%M%S').png"
+
 disable_border          = 1
 bar_at_bottom           = 1
 maximize_hide_bar       = 1
