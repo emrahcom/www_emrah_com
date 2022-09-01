@@ -597,24 +597,21 @@ program[screenshot_all] = bash -c "scrot /tmp/scrot-$(date +'%Y-%m-%d-%H%M%S').p
 disable_border          = 1
 bar_at_bottom           = 1
 maximize_hide_bar       = 1
+bar_font                = -*-terminus-medium-*-*-*-*-*-*-*-*-*-*-*
+
 modkey                  = Mod4
+
 program[lock]           = xtrlock
 program[firefox]        = firefox-esr
 bind[firefox]           = MOD+Shift+f
-program[vscodium]       = codium
-bind[vscodium]          = MOD+shift+v
 program[chromium]       = chromium
 bind[chromium]          = MOD+shift+c
 program[pavucontrol]    = pavucontrol
 bind[pavucontrol]       = MOD+shift+a
 program[bpython3]       = x-terminal-emulator -T "bpython3" -e /usr/bin/bpython3
 bind[bpython3]          = MOD+Shift+p
-program[mute]           = bash -c "echo cycle mute | socat - /tmp/mpv.socat"
-bind[mute]              = MOD+Scroll_Lock
 program[element-desktop]= element-desktop
 bind[element-desktop]   = MOD+shift+m
-program[wicd]           = x-terminal-emulator -e /usr/bin/wicd-curses
-bind[wicd]              = MOD+shift+n
 ```
 
 #### ~/bin/
