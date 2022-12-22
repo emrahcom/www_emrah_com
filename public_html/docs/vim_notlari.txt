@@ -92,6 +92,7 @@ set hidden
 set encoding=utf-8
 set bg=dark
 set scrolloff=3
+set showcmd
 
 nnoremap <up> <nop>
 nnoremap <down> <nop>
