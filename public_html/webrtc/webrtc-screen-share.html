@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Screen Sharing</title>
+</head>
+<body>
+  <div style="width: 80%; margin: auto; padding: 10px;">
+    <button id="start"> Start Screen Sharing</button>
+    <button id="stop"> Stop</button>
+  </div>
+
+  <div style="width: 80%; margin: auto; background: grey;">
+    <video id="video" autoplay playsinline muted></video>
+  </div>
+
+  <script type="text/javascript">
+    const videoElem = document.getElementById("video");
+    const startElem = document.getElementById("start");
+    const stopElem = document.getElementById("stop");
+
+    // Options for getDisplayMedia()
+    var displayMediaOptions = {
+      video: {
+        cursor: "always",
+        height: 1000,
+        width: 1200
+      },
+      audio: false
+    };
+
+    // Set event listeners for the start and stop buttons
+    startElem.addEventListener("click", function(evt) {
+      startCapture();
+    }, false);
+    stopElem.addEventListener("click", function(evt) {
+      stopCapture();
+    }, false);
+
+    // startCapture
+    async function startCapture() {
+      try {
+        videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+        dumpOptions();
+      } catch(err) {
+        console.error("Error: " + err);
+      }
+    }
+
+    // stopCapture
+    function stopCapture(evt) {
+      let tracks = videoElem.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoElem.srcObject = null;
+    }
+
+    // dumpOptions
+    function dumpOptions() {
+      const videoTrack = videoElem.srcObject.getVideoTracks()[0];
+      console.info("Track settings:");
+      console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+      console.info("Track constraints:");
+      console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+    }
+  </script>
+</body>
+</html>
