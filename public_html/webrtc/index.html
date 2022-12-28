@@ -16,94 +16,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Example Widget</title>
+  <title>Screen Sharing Widget</title>
 
-    <!--
-        TESTING IN ELEMENT WEB
-        ----------------------
-
-        To test this widget in Element Web, set up the widget library so it
-        can be resolved properly (run `yarn build` and copy api.js from the dist/ to this directory), 
-        then serve this directory off a web server.
-        An easy web server can be made with the http-server NPM package.
-
-        Once served, use the following command to add the widget to a room:
-            /addwidget http://localhost:8080/#/?widgetId=$matrix_widget_id&userId=$matrix_user_id
-
-        The widget should then load and present an interface for sticking the
-        widget to the screen (if approved for the capability). It is recommended
-        to have the JS console open to watch for errors and to see how the widget
-        works.
-
-        Note: this uses the fragment to pass parameters to avoid leaking widget
-        information to the web server. It is recommended to take a similar approach
-        with your own widgets.
-    -->
-
-    <!-- CSS is just for aesthetics and not important to the example -->
-    <link href="index.css" rel="stylesheet" />
+  <!-- CSS is just for aesthetics and not important to the example -->
+  <link href="index.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- The widget will be loaded into this container -->
-    <div id="container">Loading...</div>
+  <!-- The widget will be loaded into this container -->
+  <div id="container">Loading...</div>
 
-    <!-- Include the widget library -->
-    <script src="api.js"></script>
+  <div style="width: 80%; margin: auto; padding: 10px;">
+    <button id="start"> Start Screen Sharing</button>
+    <button id="stop"> Stop</button>
+  </div>
 
-    <!-- Bring in some utilities that aren't critical to the example -->
-    <script src="utils.js"></script>
+  <div style="width: 80%; margin: auto; background: grey;">
+    <video id="video" autoplay playsinline muted></video>
+  </div>
 
-    <!-- The actual widget functionality -->
-    <script type="text/javascript">
+  <!-- Include the widget library -->
+  <script src="api.js"></script>
+
+  <!-- Bring in some utilities that aren't critical to the example -->
+  <script src="utils.js"></script>
+
+  <!-- The actual widget functionality -->
+  <script type="text/javascript">
     try {
-        const qs = parseFragment();
-        const widgetId = assertParam(qs, 'widgetId');
-        const userId = assertParam(qs, 'userId');
-        let isSticky = false;
+      const qs = parseFragment();
+      const widgetId = assertParam(qs, 'widgetId');
+      const userId = assertParam(qs, 'userId');
+      let isSticky = false;
 
-        // Set up the widget API as soon as possible to avoid problems with the client
-        const widgetApi = new mxwidgets.WidgetApi(widgetId);
-        widgetApi.requestCapability(mxwidgets.MatrixCapabilities.AlwaysOnScreen);
+      // Set up the widget API as soon as possible to avoid problems with the client
+      const widgetApi = new mxwidgets.WidgetApi(widgetId);
+      widgetApi.requestCapability(mxwidgets.MatrixCapabilities.AlwaysOnScreen);
 
-        widgetApi.on("ready", function() {
-            // Fill in the basic widget details now that we're allowed to operate.
-            document.getElementById("container").innerHTML = "Hello <span id='userId'></span>!<br /><br />"
-                + "Currently stuck on screen: <span id='stickyState'></span><br /><br />"
-                + "<button onclick='toggleSticky()'>Toggle sticky state</button>";
+      widgetApi.on("ready", function() {
+        // Fill in the basic widget details now that we're allowed to operate.
+        document.getElementById("container").innerHTML = "Hello <span id='userId'></span>!<br /><br />"
+          + "Currently stuck on screen: <span id='stickyState'></span><br /><br />"
+          + "<button onclick='toggleSticky()'>Toggle sticky state</button>";
 
-            // Fill in the user ID using innerText to avoid XSS
-            document.getElementById("userId").innerText = userId;
+        // Fill in the user ID using innerText to avoid XSS
+        document.getElementById("userId").innerText = userId;
 
-            // Update the UI and ensure that we end up not sticky to start
-            sendStickyState();
+        // Update the UI and ensure that we end up not sticky to start
+        sendStickyState();
+      });
+
+      // Start the widget as soon as possible too, otherwise the client might time us out.
+      widgetApi.start();
+
+      function toggleSticky() {
+        // called by the button when clicked - toggle the sticky state
+        isSticky = !isSticky;
+        sendStickyState();
+      }
+
+      function updateStickyState() {
+        document.getElementById("stickyState").innerText = isSticky.toString();
+      }
+
+      function sendStickyState() {
+        updateStickyState(); // update first to make the UI go faster than the request
+        widgetApi.setAlwaysOnScreen(isSticky).then(function(r) {
+          console.log("[Widget] Client responded with: ", r);
+        }).catch(function(e) {
+          handleError(e);
         });
-
-        // Start the widget as soon as possible too, otherwise the client might time us out.
-        widgetApi.start();
-
-        function toggleSticky() {
-            // called by the button when clicked - toggle the sticky state
-            isSticky = !isSticky;
-            sendStickyState();
-        }
-
-        function updateStickyState() {
-            document.getElementById("stickyState").innerText = isSticky.toString();
-        }
-
-        function sendStickyState() {
-            updateStickyState(); // update first to make the UI go faster than the request
-            widgetApi.setAlwaysOnScreen(isSticky).then(function(r) {
-                console.log("[Widget] Client responded with: ", r);
-            }).catch(function(e) {
-                handleError(e);
-            });
-        }
+      }
     } catch (e) {
-        handleError(e);
+      handleError(e);
     }
-    </script>
+  </script>
 
-    hello
+  <script type="text/javascript">
+    const videoElem = document.getElementById("video");
+    const startElem = document.getElementById("start");
+    const stopElem = document.getElementById("stop");
+
+    // Options for getDisplayMedia()
+    var displayMediaOptions = {
+      video: {
+        cursor: "always",
+        height: 1000,
+        width: 1200
+      },
+      audio: false
+    };
+
+    // Set event listeners for the start and stop buttons
+    startElem.addEventListener("click", function(evt) {
+      startCapture();
+    }, false);
+    stopElem.addEventListener("click", function(evt) {
+      stopCapture();
+    }, false);
+
+    // startCapture
+    async function startCapture() {
+      try {
+        videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+        dumpOptions();
+      } catch(err) {
+        console.error("Error: " + err);
+      }
+    }
+
+    // stopCapture
+    function stopCapture(evt) {
+      let tracks = videoElem.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoElem.srcObject = null;
+    }
+
+    // dumpOptions
+    function dumpOptions() {
+      const videoTrack = videoElem.srcObject.getVideoTracks()[0];
+      console.info("Track settings:");
+      console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+      console.info("Track constraints:");
+      console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+    }
+  </script>
 </body>
 </html>
