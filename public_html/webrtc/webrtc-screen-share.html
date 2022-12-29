@@ -11,6 +11,10 @@
     <button id="stop"> Stop</button>
   </div>
 
+  <div id="info" style="width: 80%; margin: auto; padding: 10px;">
+    loaded
+  </div>
+
   <div style="width: 80%; margin: auto; background: grey;">
     <video id="video" autoplay playsinline muted></video>
   </div>
@@ -19,6 +23,7 @@
     const videoElem = document.getElementById("video");
     const startElem = document.getElementById("start");
     const stopElem = document.getElementById("stop");
+    const infoElem = document.getElementById("info");
 
     // Options for getDisplayMedia()
     var displayMediaOptions = {
@@ -32,9 +37,11 @@
 
     // Set event listeners for the start and stop buttons
     startElem.addEventListener("click", function(evt) {
+      infoElem.innerText = "start - clicked";
       startCapture();
     }, false);
     stopElem.addEventListener("click", function(evt) {
+      infoElem.innerText = "stop - clicked";
       stopCapture();
     }, false);
 
@@ -42,9 +49,12 @@
     async function startCapture() {
       try {
         videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+        infoElem.innerText = "srcObject - passed";
         dumpOptions();
+        infoElem.innerText = "dumpOptions - passed";
       } catch(err) {
-        console.error("Error: " + err);
+        infoElem.innerText = `Error: ${err}`;
+        console.error("Error - " + err);
       }
     }
 
