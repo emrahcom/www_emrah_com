@@ -1,18 +1,3 @@
-<!--
- Copyright 2020 The Matrix.org Foundation C.I.C.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-         http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +22,7 @@
       const qs = parseFragment();
       const widgetId = assertParam(qs, 'widgetId');
       const userId = assertParam(qs, 'userId');
-      let isSticky = false;
+      const isSticky = false;
 
       // Set up the widget API as soon as possible to avoid problems with the client
       const widgetApi = new mxwidgets.WidgetApi(widgetId);
@@ -52,34 +37,16 @@
           ></iframe>
         `;
 
-        // Fill in the user ID using innerText to avoid XSS
-        document.getElementById("userId").innerText = userId;
-
         // Update the UI and ensure that we end up not sticky to start
-        sendStickyState();
-      });
-
-      // Start the widget as soon as possible too, otherwise the client might time us out.
-      widgetApi.start();
-
-      function toggleSticky() {
-        // called by the button when clicked - toggle the sticky state
-        isSticky = !isSticky;
-        sendStickyState();
-      }
-
-      function updateStickyState() {
-        document.getElementById("stickyState").innerText = isSticky.toString();
-      }
-
-      function sendStickyState() {
-        updateStickyState(); // update first to make the UI go faster than the request
         widgetApi.setAlwaysOnScreen(isSticky).then(function(r) {
           console.log("[Widget] Client responded with: ", r);
         }).catch(function(e) {
           handleError(e);
         });
-      }
+      });
+
+      // Start the widget as soon as possible too, otherwise the client might time us out.
+      widgetApi.start();
     } catch (e) {
       handleError(e);
     }
