@@ -633,7 +633,7 @@ Kod deposundan kopyalanacak.
 ```
   Manual Proxy Configuration
   SOCKS Host: localhost
-  SOCKS Port: 8888
+  SOCKS Port: 65022
   SOCKS Type: SOCKS v5
   No Proxy for: localhost, 127.0.0.1, 192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8
   Proxy DNS when using SOCKS v5: true

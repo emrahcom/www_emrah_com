@@ -526,7 +526,7 @@ Host em-sock
     Hostname mydomain.com
     User vpn
     Port 10251
-    DynamicForward 8888
+    DynamicForward 65022
     IdentityFile ~/.ssh/em-vpn
     IdentitiesOnly yes
     ConnectTimeout 10
@@ -593,7 +593,7 @@ systemctl restart em-sock.service
 systemd servisi olmadan geçici olarak tünel açılacaksa...
 
 ```
-ssh -q -p 10251 -ND 8888 -R 60090:localhost:22 -l vpn -i ~/.ssh/em-vpn \
+ssh -q -p 10251 -ND 65022 -R 60090:localhost:22 -l vpn -i ~/.ssh/em-vpn \
     mydomain.com
 ```
 
