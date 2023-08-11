@@ -51,8 +51,7 @@ sslh yeni kurulumda kullanılmadı. Web sunucu loglarında IP görünmüyor.
     DAEMON_OPTS="--user sslh --listen 0.0.0.0:443 --ssh 127.0.0.1:XXX --ssl 127.0.0.1:10443 --pidfile /var/run/sslh/sslh.pid"
 
 ### certbot
-certbot certonly --webroot -w /home/emrah/web/www_emrah_com/public_html \
-    -d emrah.com -d www.emrah.com
+certbot certonly --webroot -w /var/www/html -d emrah.com -d www.emrah.com
 chmod 755 /etc/letsencrypt/{archive,live}
 
 ### user
@@ -172,6 +171,11 @@ server {
     index index.html;
     charset utf-8;
     access_log /var/log/nginx/access.emrah.com.log;
+
+    # lets encrypt
+    location /.well-known/ {
+        root /var/www/html/;
+    }
 
     # robots.txt icin log olusturma.
     location = /robots.txt {
