@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+    crossorigin="anonymous"
+  />
+</head>
+
+<body style="height: 100vh;">
+  <div class="container-fluid justify-content-center h-100">
+    <div class="row justify-content-center mt-1" style="height:90%">
+      <div class="col text-center">
+        <div id="locNode" class="h-75"></div>
+        <p class="fw-bold fs-4 text-primary">Local view</p>
+      </div>
+      <div class="col text-center">
+        <div id="remNode" class="h-75"></div>
+        <div id="playback" class="row h-75" hidden>
+          <video id="video" class="w-100 mb-0 mt-auto" src=""></video>
+        </div>
+        <p class="fw-bold fs-4 text-primary">Remote view</p>
+        <button
+          id="record-button"
+          type="button"
+          class="btn btn-lg btn-primary"
+          disabled
+          onclick="startRecording()"
+        >
+          Record
+        </button>
+        <button
+          id="stop-button"
+          type="button"
+          class="btn btn-lg btn-primary"
+          disabled
+          onclick="stopRecording()"
+        >
+          Stop
+        </button>
+        <button
+          id="play-button"
+          type="button"
+          class="btn btn-lg btn-primary"
+          disabled
+          onclick="playback()"
+        >
+          Play
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+  crossorigin="anonymous"
+></script>
+<script src='/external_api.js'></script>
+<script>
+let locUserId, locFrame, locWindow;
+let remUserId, remFrame, remWindow;
+let remTracks, rec, blobUrl;
+
+const domain = window.location.host;
+const roomName = `room-${crypto.randomUUID()}`;
+const locOptions = {
+  roomName: roomName,
+  width: '100%',
+  height: '100%',
+  parentNode: document.querySelector('#locNode'),
+  jwt: "",
+  configOverwrite: {
+    connectionIndicators: {
+      autoHide: false,
+    },
+    disableInviteFunctions: true,
+    disableLocalVideoFlip: true,
+    disableModeratorIndicator: true,
+    disableProfile: true,
+    disableRemoteMute: true,
+    disableSelfViewSettings: true,
+    disableShortcuts: true,
+    disableTileView: false,
+    doNotStoreRoom: true,
+    enableInsecureRoomNameWarning: false,
+    filmstrip: {
+      disableResizable: true,
+      disableStageFilmstrip: true,
+      disableTopPanel: true,
+    },
+    hiddenDomain: domain,
+    hideConferenceSubject: true,
+    hideConferenceTimer: true,
+    hideDisplayName: true,
+    hideParticipantsStats: true,
+    notifications: [],
+    p2p:   {
+      enabled: false,
+    },
+    prejoinConfig: {
+      enabled: false,
+    },
+    remoteVideoMenu: {
+      disabled: true,
+    },
+    requireDisplayName: false,
+    startWithAudioMuted: true,
+    startWithVideoMuted: true,
+    tileView: {
+      disabled: false,
+      numberOfVisibleTiles: 1,
+    },
+    toolbarButtons: [ 'camera', 'microphone' ],
+    toolbarConfig: { alwaysVisible: true },
+  },
+  interfaceConfigOverwrite: {
+    DISABLE_VIDEO_BACKGROUND: true,
+    JITSI_WATERMARK_LINK: 'about',
+    VERTICAL_FILMSTRIP: false,
+  },
+};
+
+const remOptions = {
+  roomName: roomName,
+  width: '100%',
+  height: '100%',
+  parentNode: document.querySelector('#remNode'),
+  jwt: "",
+  configOverwrite: {
+    connectionIndicators: {
+      autoHide: false,
+    },
+    disableInviteFunctions: true,
+    disableLocalVideoFlip: true,
+    disableModeratorIndicator: true,
+    disableProfile: true,
+    disableRemoteMute: true,
+    disableSelfViewSettings: true,
+    disableShortcuts: true,
+    disableTileView: true,
+    doNotStoreRoom: true,
+    enableInsecureRoomNameWarning: false,
+    filmstrip: {
+      disableResizable: true,
+      disableStageFilmstrip: true,
+      disableTopPanel: true,
+    },
+    hideConferenceSubject: true,
+    hideConferenceTimer: true,
+    hideDisplayName: true,
+    hideParticipantsStats: true,
+    notifications: [],
+    p2p:   {
+      enabled: false,
+    },
+    prejoinConfig: {
+      enabled: false,
+    },
+    remoteVideoMenu: {
+      disabled: true,
+    },
+    requireDisplayName: false,
+    startWithAudioMuted: true,
+    startWithVideoMuted: true,
+    tileView: {
+      disabled: true,
+      numberOfVisibleTiles: 1,
+    },
+    toolbarButtons: [],
+  },
+  interfaceConfigOverwrite: {
+    DISABLE_VIDEO_BACKGROUND: true,
+    VERTICAL_FILMSTRIP: true,
+  },
+};
+
+// -----------------------------------------------------------------------------
+function generateBlob(e, mediaData) {
+  console.error("generateBlob");
+  console.error(e);
+  console.error(mediaData);
+  const blob = new Blob(mediaData, { type: "video/webm" });
+  blobUrl = URL.createObjectURL(blob);
+  console.error(`'${blobUrl}'`);
+}
+
+// -----------------------------------------------------------------------------
+function startRecording() {
+  const remTracks = remWindow.APP.store.getState()['features/base/tracks'];
+  let tracks = [];
+  let data = [];
+
+  remTracks.forEach((t) => tracks.push(t.jitsiTrack.track));
+  stream = new MediaStream(tracks);
+  rec = new MediaRecorder(stream);
+  console.error(rec);
+
+  rec.ondataavailable = (event) => data.push(event.data);
+  rec.onstop = (event) => generateBlob(event, data);
+
+  recordButton.disabled = true;
+  playButton.disabled = true;
+  stopButton.disabled = false;
+
+  rec.start();
+  console.error("start talking");
+}
+
+// -----------------------------------------------------------------------------
+function stopRecording() {
+  console.error("stop talking");
+  rec.stop();
+
+  stopButton.disabled = true;
+  recordButton.disabled = false;
+  playButton.disabled = false;
+}
+
+// -----------------------------------------------------------------------------
+async function playback() {
+console.error("playback");
+console.error(`'${blobUrl}'`);
+
+recordButton.disabled = true;
+playButton.disabled = true;
+stopButton.disabled = true;
+
+video.addEventListener("ended", (event) => {
+  playbackDiv.hidden = true;
+  remNodeDiv.hidden = false;
+
+  recordButton.disabled = false;
+  playButton.disabled = false;
+  stopButton.disabled = true;
+});
+
+video.setAttribute("src", blobUrl);
+remNodeDiv.hidden = true;
+playbackDiv.hidden = false;
+video.play();
+}
+
+// -----------------------------------------------------------------------------
+async function initializeUI() {
+  try {
+    console.error("initializeUI");
+
+    if (!loc._myUserID) throw new Error();
+    if (!rem._myUserID) throw new Error();
+    locUserId = loc._myUserID;
+    remUserId = rem._myUserID;
+
+    loc.pinParticipant(locUserId);
+    rem.pinParticipant(locUserId);
+    loc.executeCommand('setTileView', true);
+    rem.executeCommand('setTileView', false);
+
+    locFrame = loc.getIFrame();
+    locWindow = locFrame.contentWindow;
+    remFrame = rem.getIFrame();
+    remWindow = remFrame.contentWindow;
+
+    locWindow.APP.conference.muteAudio(false)
+    locWindow.APP.conference.muteVideo(false)
+    remWindow.APP.conference.muteAudio(true)
+    remWindow.APP.conference.muteVideo(true)
+    rem.executeCommand('setParticipantVolume', locUserId, 0)
+
+    remTracks = remWindow.APP.store.getState()['features/base/tracks'];
+    if (remTracks.length < 2) {
+        console.error("tracks are not ready");
+        throw new Error();
+    }
+    console.error("tracks are ready");
+    console.error(remTracks);
+
+    recordButton.disabled = false;
+  } catch(e) {
+    setTimeout(function() {
+      initializeUI();
+    },
+    2000);
+  }
+}
+
+// -----------------------------------------------------------------------------
+function closeFilmStrip(e, api) {
+  if (e.visible) api.executeCommand('toggleFilmStrip');
+}
+
+// -----------------------------------------------------------------------------
+function switchToTileView(e, api) {
+  if (!e.enabled) api.executeCommand('setTileView', true);
+}
+
+// -----------------------------------------------------------------------------
+const remNodeDiv = document.getElementById("remNode");
+const playbackDiv = document.getElementById("playback");
+const video = document.getElementById("video");
+const recordButton = document.getElementById("record-button");
+const stopButton = document.getElementById("stop-button");
+const playButton = document.getElementById("play-button");
+
+const loc = new JitsiMeetExternalAPI(domain, locOptions);
+const rem = new JitsiMeetExternalAPI(domain, remOptions);
+loc.addListener('filmstripDisplayChanged', (e) => closeFilmStrip(e, loc));
+loc.addListener('tileViewChanged', (e) => switchToTileView(e, loc));
+rem.addListener('filmstripDisplayChanged', (e) => closeFilmStrip(e, rem));
+
+initializeUI();
+</script>
+</html>
